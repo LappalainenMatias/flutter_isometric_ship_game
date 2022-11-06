@@ -1,7 +1,6 @@
 import 'package:anki/square_types.dart';
 import 'package:flutter/material.dart';
-import '../testing_data/test_boards.dart';
-import 'dart:math';
+import '../map_generator.dart';
 
 class Board extends StatefulWidget {
   const Board({super.key});
@@ -18,13 +17,12 @@ class _BoardState extends State<Board> {
   }
 
   Widget _buildGridView() {
-    var squares = testBoard1;
-    var width = sqrt(squares.length).floor();
+    var map = MapGenerator().generateRandomMap(20, 20);
     return GridView.count(
-        crossAxisCount: width,
-        children: squares
+        crossAxisCount: map.width,
+        children: map.squares
             .map((item) => Container(
-                  color: item.color,
+                  color: item.type.color,
                 ))
             .toList());
   }
