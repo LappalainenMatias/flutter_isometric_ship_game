@@ -1,9 +1,10 @@
 import 'package:anki/square.dart';
 
-class BoardState {
+class Map {
   var width = 0;
+  var height = 0;
   List<Square> squares = [];
 
-  BoardState(this.width, this.squares);
+  Map(this.width, this.height, this.squares);
 }
 
