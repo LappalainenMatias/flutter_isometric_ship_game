@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 enum SquareType {
   grass,
-  wall,
-  goal,
+  rock,
   water,
 }
 
@@ -12,14 +12,17 @@ extension SquareTypeExtension on SquareType {
     switch (this) {
       case SquareType.grass:
         return Colors.green;
-      case SquareType.wall:
+      case SquareType.rock:
         return Colors.grey;
-      case SquareType.goal:
-        return Colors.yellow;
       case SquareType.water:
         return Colors.blue;
       default:
         return Colors.black;
     }
+  }
+
+  static SquareType get getRandomType {
+    List<SquareType> values = SquareType.values;
+    return values[Random().nextInt(values.length)];
   }
 }
