@@ -1,14 +1,14 @@
 import 'package:anki/square.dart';
 import 'package:anki/square_types.dart';
-
-import 'map.dart';
+import 'model/map.dart';
 
 class MapGenerator {
-  Map generateRandomMap(var width, var height) {
+  MapModel generateRandomMap(int width, int height) {
     List<Square> squares = [];
     for (var i = 0; i < width * height; i++) {
-      squares.add(Square(SquareTypeExtension.getRandomType, false));
+      squares.add(Square(SquareTypeExtension.getRandomType, false,
+          i.remainder(width), (i / height).floor()));
     }
-    return Map(width, height, squares);
+    return MapModel(width, height, squares);
   }
 }
