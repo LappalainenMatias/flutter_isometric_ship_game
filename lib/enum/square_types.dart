@@ -15,9 +15,9 @@ extension SquareTypeExtension on SquareType {
       case SquareType.grass:
         return Colors.green;
       case SquareType.trees:
-        return Colors.green[900]!;
+        return Colors.green;
       case SquareType.mountain:
-        return Colors.grey[600]!;
+        return Colors.grey;
       case SquareType.rock:
         return Colors.grey;
       case SquareType.water:
