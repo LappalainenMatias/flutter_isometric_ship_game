@@ -11,7 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => PlayerModel()),
         ChangeNotifierProvider(
-            create: (context) => MapGenerator().generateRandomMap(20, 15)),
+            create: (context) => MapGenerator().realisticRandomMap(20, 20)),
       ],
       child: const MyApp(),
     ),
