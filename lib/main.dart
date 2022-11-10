@@ -2,7 +2,8 @@ import 'package:anki/map_generator.dart';
 import 'package:anki/model/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'widgets/board.dart';
+import 'model/map.dart';
+import 'widget/board.dart';
 
 void main() {
   runApp(
@@ -46,15 +47,16 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
+    var map = Provider.of<MapModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       body: Column(
         children: [
-          Flexible(
-            child: const Board(),
+          const Flexible(
             flex: 5,
+            child: Board(),
           ),
           Flexible(
             flex: 1,
@@ -66,8 +68,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                         onPressed: () {
                           player.y = player.y - 1;
+                          map.updateSquareVisibility(player);
                         },
-                        child: Text("U"))
+                        child: const Text("U"))
                   ],
                 ),
                 Row(
@@ -76,18 +79,21 @@ class _MyHomePageState extends State<MyHomePage> {
                     ElevatedButton(
                         onPressed: () {
                           player.x = player.x - 1;
+                          map.updateSquareVisibility(player);
                         },
-                        child: Text("L")),
+                        child: const Text("L")),
                     ElevatedButton(
                         onPressed: () {
                           player.y = player.y + 1;
+                          map.updateSquareVisibility(player);
                         },
-                        child: Text("D")),
+                        child: const Text("D")),
                     ElevatedButton(
                         onPressed: () {
                           player.x = player.x + 1;
+                          map.updateSquareVisibility(player);
                         },
-                        child: Text("R")),
+                        child: const Text("R")),
                   ],
                 ),
               ],
