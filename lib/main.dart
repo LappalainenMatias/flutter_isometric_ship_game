@@ -6,12 +6,17 @@ import 'model/map.dart';
 import 'widget/board.dart';
 
 void main() {
+  int mapWidth = 20;
+  int mapHeight = 20;
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => PlayerModel()),
         ChangeNotifierProvider(
-            create: (context) => MapGenerator().realisticRandomMap(20, 20)),
+            create: (context) => PlayerModel(
+                2, (mapWidth / 2).round(), (mapHeight / 2).round())),
+        ChangeNotifierProvider(
+            create: (context) =>
+                MapGenerator().realisticRandomMap(mapWidth, mapHeight)),
       ],
       child: const MyApp(),
     ),

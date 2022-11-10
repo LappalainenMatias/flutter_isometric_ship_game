@@ -8,6 +8,9 @@ class PlayerModel extends ChangeNotifier {
   var _x = 0;
   var _y = 0;
 
+
+  PlayerModel(this._visibility, this._x, this._y);
+
   void moveDown(MapModel mapModel) {
     if (!mapModel.squares.containsKey(Point(_x, _y + 1))) return;
     if (mapModel.squares[Point(_x, _y + 1)]!.type != SquareType.water) {
