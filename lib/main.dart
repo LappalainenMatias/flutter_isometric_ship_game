@@ -11,7 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (context) => PlayerModel()),
         ChangeNotifierProvider(
-            create: (context) => MapGenerator().generateRandomMap(10, 10)),
+            create: (context) => MapGenerator().generateRandomMap(20, 15)),
       ],
       child: const MyApp(),
     ),
@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     ElevatedButton(
                         onPressed: () {
-                          player.y = player.y - 1;
+                          player.moveUp(map);
                           map.updateSquareVisibility(player);
                         },
                         child: const Text("U"))
@@ -78,19 +78,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     ElevatedButton(
                         onPressed: () {
-                          player.x = player.x - 1;
+                          player.moveLeft(map);
                           map.updateSquareVisibility(player);
                         },
                         child: const Text("L")),
                     ElevatedButton(
                         onPressed: () {
-                          player.y = player.y + 1;
+                          player.moveDown(map);
                           map.updateSquareVisibility(player);
                         },
                         child: const Text("D")),
                     ElevatedButton(
                         onPressed: () {
-                          player.x = player.x + 1;
+                          player.moveRight(map);
                           map.updateSquareVisibility(player);
                         },
                         child: const Text("R")),

@@ -27,7 +27,7 @@ class _BoardState extends State<Board> {
             Container(
               color: item.color,
               child: item.x == player.x && item.y == player.y
-                  ? Center(child: const Text("P"))
+                  ? const Center(child: Text("P"))
                   : null,
             ))
             .toList());

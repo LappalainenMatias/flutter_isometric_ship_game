@@ -7,8 +7,8 @@ import 'dart:math';
 class MapGenerator {
   MapModel generateRandomMap(int width, int height) {
     Map<Point, Square> squares = {};
-    for (var y = 0; y < width; y++) {
-      for (var x = 0; x < height; x++) {
+    for (var y = 0; y < height; y++) {
+      for (var x = 0; x < width; x++) {
         squares[Point(x, y)] = Square(SquareTypeExtension.getRandomType, false,
             x, y, SquareVisibility.unseen);
       }
