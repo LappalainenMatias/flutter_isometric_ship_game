@@ -1,8 +1,6 @@
 import 'package:anki/model/player.dart';
-import 'package:anki/square_types.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../map_generator.dart';
 import '../model/map.dart';
 
 class Board extends StatefulWidget {
@@ -24,12 +22,12 @@ class _BoardState extends State<Board> {
     var map = Provider.of<MapModel>(context, listen: false);
     return GridView.count(
         crossAxisCount: map.width,
-        children: map.squares
+        children: map.squares.values
             .map((item) =>
             Container(
-              color: item.type.color,
+              color: item.color,
               child: item.x == player.x && item.y == player.y
-                  ? const Text("P")
+                  ? Center(child: const Text("P"))
                   : null,
             ))
             .toList());
