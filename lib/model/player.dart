@@ -4,41 +4,55 @@ import '../enum/square_types.dart';
 import 'map.dart';
 
 class PlayerModel extends ChangeNotifier {
+  List<Function> _actions = [];
   var _visibility = 2;
   var _x = 0;
   var _y = 0;
 
-
   PlayerModel(this._visibility, this._x, this._y);
 
-  void moveDown(MapModel mapModel) {
-    if (!mapModel.squares.containsKey(Point(_x, _y + 1))) return;
-    if (mapModel.squares[Point(_x, _y + 1)]!.type != SquareType.water) {
+  set actions(List<Function> actions) {
+    _actions = actions;
+  }
+
+  void doActions(MapModel map) {
+    for (var action in _actions) {
+      action(this, map);
+    }
+  }
+
+  void moveDown(MapModel map) {
+    if (!map.squares.containsKey(Point(_x, _y + 1))) return;
+    if (map.squares[Point(_x, _y + 1)]!.type != SquareType.water) {
       _y += 1;
+      map.updateSquareVisibility(this);
       notifyListeners();
     }
   }
 
-  void moveUp(MapModel mapModel) {
-    if (!mapModel.squares.containsKey(Point(_x, _y - 1))) return;
-    if (mapModel.squares[Point(_x, _y - 1)]!.type != SquareType.water) {
+  void moveUp(MapModel map) {
+    if (!map.squares.containsKey(Point(_x, _y - 1))) return;
+    if (map.squares[Point(_x, _y - 1)]!.type != SquareType.water) {
       _y -= 1;
+      map.updateSquareVisibility(this);
       notifyListeners();
     }
   }
 
-  void moveLeft(MapModel mapModel) {
-    if (!mapModel.squares.containsKey(Point(_x - 1, _y))) return;
-    if (mapModel.squares[Point(_x - 1, _y)]!.type != SquareType.water) {
+  void moveLeft(MapModel map) {
+    if (!map.squares.containsKey(Point(_x - 1, _y))) return;
+    if (map.squares[Point(_x - 1, _y)]!.type != SquareType.water) {
       _x -= 1;
+      map.updateSquareVisibility(this);
       notifyListeners();
     }
   }
 
-  void moveRight(MapModel mapModel) {
-    if (!mapModel.squares.containsKey(Point(_x + 1, _y))) return;
-    if (mapModel.squares[Point(_x + 1, _y)]!.type != SquareType.water) {
+  void moveRight(MapModel map) {
+    if (!map.squares.containsKey(Point(_x + 1, _y))) return;
+    if (map.squares[Point(_x + 1, _y)]!.type != SquareType.water) {
       _x += 1;
+      map.updateSquareVisibility(this);
       notifyListeners();
     }
   }

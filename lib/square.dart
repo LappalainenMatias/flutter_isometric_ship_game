@@ -8,9 +8,8 @@ class Square {
   final int y;
   SquareType type;
   SquareVisibility visibility;
-  bool containsPlayer;
 
-  Square(this.type, this.containsPlayer, this.x, this.y, this.visibility);
+  Square(this.type, this.x, this.y, this.visibility);
 
   Color get color {
     if (visibility == SquareVisibility.unseen) return Colors.black;

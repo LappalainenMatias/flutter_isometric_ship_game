@@ -4,16 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/map.dart';
 import 'widget/board.dart';
+import 'actions.dart';
 
 void main() {
-  int mapWidth = 20;
-  int mapHeight = 20;
+  int mapWidth = 8;
+  int mapHeight = 8;
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
             create: (context) => PlayerModel(
-                2, (mapWidth / 2).round(), (mapHeight / 2).round())),
+                3, (mapWidth / 2).round(), (mapHeight / 2).round())),
         ChangeNotifierProvider(
             create: (context) =>
                 MapGenerator().realisticRandomMap(mapWidth, mapHeight)),
@@ -26,9 +27,13 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    var player = Provider.of<PlayerModel>(context, listen: false);
+    var map = Provider.of<MapModel>(context, listen: false);
+    player.actions = [
+      moveRandomDirection,
+    ];
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -65,41 +70,54 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Flexible(
             flex: 1,
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
                   children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          player.moveUp(map);
-                          map.updateSquareVisibility(player);
-                        },
-                        child: const Text("U"))
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              player.moveUp(map);
+                              map.updateSquareVisibility(player);
+                            },
+                            child: const Text("U"))
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                            onPressed: () {
+                              player.moveLeft(map);
+                              map.updateSquareVisibility(player);
+                            },
+                            child: const Text("L")),
+                        ElevatedButton(
+                            onPressed: () {
+                              player.moveDown(map);
+                              map.updateSquareVisibility(player);
+                            },
+                            child: const Text("D")),
+                        ElevatedButton(
+                            onPressed: () {
+                              player.moveRight(map);
+                              map.updateSquareVisibility(player);
+                            },
+                            child: const Text("R")),
+                      ],
+                    ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                        onPressed: () {
-                          player.moveLeft(map);
-                          map.updateSquareVisibility(player);
-                        },
-                        child: const Text("L")),
-                    ElevatedButton(
-                        onPressed: () {
-                          player.moveDown(map);
-                          map.updateSquareVisibility(player);
-                        },
-                        child: const Text("D")),
-                    ElevatedButton(
-                        onPressed: () {
-                          player.moveRight(map);
-                          map.updateSquareVisibility(player);
-                        },
-                        child: const Text("R")),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        player.doActions(map);
+                      },
+                      child: const Text("actions")),
                 ),
               ],
             ),
