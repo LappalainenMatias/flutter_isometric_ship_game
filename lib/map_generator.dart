@@ -41,7 +41,7 @@ class MapGenerator {
             SquareTypeExtension.getValueBasedOnHeight(noise[Point(x, y)]!),
             x,
             y,
-            SquareVisibility.seen);
+            SquareVisibility.unseen);
       }
     }
     return MapModel(width, height, squares);

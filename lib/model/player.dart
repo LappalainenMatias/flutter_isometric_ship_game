@@ -5,24 +5,34 @@ import '../enum/actions.dart' as GameAction;
 import 'map.dart';
 
 class PlayerModel extends ChangeNotifier {
-  List<GameAction.Action> _actions = [];
-  var _visibility = 2;
+  List<GameAction.Action> actions = [];
+  var _visibility = 1;
   var _x = 0;
   var _y = 0;
+  var movementSpeedMs = 100;
+  var hearts = 3;
+  var stopped = true;
+  var startedDoActions = false;
 
   PlayerModel(this._visibility, this._x, this._y);
 
-  set actions(List<GameAction.Action> actions) {
-    _actions = actions;
+  void stopMovement() {
+    stopped = true;
+    notifyListeners();
   }
 
-
-  List<GameAction.Action> get actions => _actions;
+  void startMovement() {
+    stopped = false;
+    notifyListeners();
+  }
 
   void doActions(MapModel map) {
-    for (var action in _actions) {
-      action.function(this, map);
+    for (var action in actions) {
+      if (!stopped) action.function(this, map);
     }
+    Future.delayed(Duration(milliseconds: movementSpeedMs), (){
+      doActions(map);
+    });
   }
 
   void moveDown(MapModel map) {

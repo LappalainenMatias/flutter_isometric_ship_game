@@ -7,8 +7,8 @@ import 'widget/board.dart';
 import 'enum/actions.dart' as GameAction;
 
 void main() {
-  int mapWidth = 8;
-  int mapHeight = 8;
+  int mapWidth = 20;
+  int mapHeight = 20;
   runApp(
     MultiProvider(
       providers: [
@@ -55,6 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
     var map = Provider.of<MapModel>(context, listen: false);
+    if(!player.startedDoActions) player.doActions(map);
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
@@ -80,7 +81,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text("player.hearts = ${player.hearts}"),
         Text("player.visibility = ${player.visibility}"),
+        Text("player.movementSpeedMS = ${player.movementSpeedMs}"),
         const Text("WHILE NOT gameOver"),
         ...player.actions.map((e) => Text(e.syntax)).toList(),
       ],
@@ -136,10 +139,19 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Padding(
               padding: const EdgeInsets.only(left: 16.0),
               child: ElevatedButton(
-                  onPressed: () {
-                    player.doActions(map);
+                onPressed: () {
+                  if (player.stopped) {
+                    player.startMovement();
+                  } else {
+                    player.stopMovement();
+                  }
+                },
+                child: Consumer<PlayerModel>(
+                  builder: (context, cart, child) {
+                    return Text(player.stopped ? "stopped" : "running");
                   },
-                  child: const Text("actions")),
+                ),
+              ),
             ),
           ),
         ],
