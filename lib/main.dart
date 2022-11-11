@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/map.dart';
 import 'widget/board.dart';
-import 'actions.dart';
+import 'enum/actions.dart' as GameAction;
 
 void main() {
   int mapWidth = 8;
@@ -30,10 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
-    var map = Provider.of<MapModel>(context, listen: false);
-    player.actions = [
-      moveRandomDirection,
-    ];
+    player.actions = [GameAction.Action.moveRandomDirection];
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -65,63 +62,86 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Column(
         children: [
           const Flexible(
-            flex: 5,
+            flex: 3,
             child: Board(),
           ),
+          _buildProgramSyntax(),
           Flexible(
             flex: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              player.moveUp(map);
-                              map.updateSquareVisibility(player);
-                            },
-                            child: const Text("U"))
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        ElevatedButton(
-                            onPressed: () {
-                              player.moveLeft(map);
-                              map.updateSquareVisibility(player);
-                            },
-                            child: const Text("L")),
-                        ElevatedButton(
-                            onPressed: () {
-                              player.moveDown(map);
-                              map.updateSquareVisibility(player);
-                            },
-                            child: const Text("D")),
-                        ElevatedButton(
-                            onPressed: () {
-                              player.moveRight(map);
-                              map.updateSquareVisibility(player);
-                            },
-                            child: const Text("R")),
-                      ],
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: ElevatedButton(
+            child: _buildTestingButtons(player, map),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgramSyntax() {
+    var player = Provider.of<PlayerModel>(context, listen: false);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text("player.visibility = ${player.visibility}"),
+        const Text("WHILE NOT gameOver"),
+        ...player.actions.map((e) => Text(e.syntax)).toList(),
+      ],
+    );
+  }
+
+  Widget _buildTestingButtons(PlayerModel player, MapModel map) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
                       onPressed: () {
-                        player.doActions(map);
+                        player.moveUp(map);
+                        map.updateSquareVisibility(player);
                       },
-                      child: const Text("actions")),
-                ),
-              ],
+                      child: const Text("U"))
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        player.moveLeft(map);
+                        map.updateSquareVisibility(player);
+                      },
+                      child: const Text("L")),
+                  ElevatedButton(
+                      onPressed: () {
+                        player.moveDown(map);
+                        map.updateSquareVisibility(player);
+                      },
+                      child: const Text("D")),
+                  ElevatedButton(
+                      onPressed: () {
+                        player.moveRight(map);
+                        map.updateSquareVisibility(player);
+                      },
+                      child: const Text("R")),
+                ],
+              ),
+            ],
+          ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 16.0),
+              child: ElevatedButton(
+                  onPressed: () {
+                    player.doActions(map);
+                  },
+                  child: const Text("actions")),
             ),
-          )
+          ),
         ],
       ),
     );

@@ -14,7 +14,7 @@ class _BoardState extends State<Board> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(32.0), child: _buildGridView());
+        padding: const EdgeInsets.all(32.0), child: Container(width: 300, child: _buildGridView()));
   }
 
   Widget _buildGridView() {
