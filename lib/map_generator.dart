@@ -1,7 +1,8 @@
 import 'package:anki/square.dart';
-import 'enum/square_types.dart';
+import 'enum/square_type.dart';
 import 'enum/square_visibility.dart';
 import 'model/map.dart';
+import 'enum/item.dart';
 import 'dart:math';
 
 class MapGenerator {
@@ -9,8 +10,8 @@ class MapGenerator {
     Map<Point, Square> squares = {};
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
-        squares[Point(x, y)] = Square(
-            SquareTypeExtension.getRandomType, x, y, SquareVisibility.unseen);
+        squares[Point(x, y)] = Square(SquareTypeExtension.getRandomType, x, y,
+            SquareVisibility.unseen, []);
       }
     }
     return MapModel(width, height, squares);
@@ -37,11 +38,10 @@ class MapGenerator {
     }
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
-        squares[Point(x, y)] = Square(
-            SquareTypeExtension.getValueBasedOnHeight(noise[Point(x, y)]!),
-            x,
-            y,
-            SquareVisibility.unseen);
+        SquareType st =
+            SquareTypeExtension.getValueBasedOnHeight(noise[Point(x, y)]!);
+        squares[Point(x, y)] = Square(st, x, y, SquareVisibility.unseen,
+            ItemExtension.getRandomItems(st));
       }
     }
     return MapModel(width, height, squares);

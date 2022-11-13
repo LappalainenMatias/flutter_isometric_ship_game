@@ -1,15 +1,17 @@
 import 'dart:ui';
 import 'enum/square_visibility.dart';
-import 'enum/square_types.dart';
+import 'enum/square_type.dart';
 import 'package:flutter/material.dart';
+import 'enum/item.dart';
 
 class Square {
   final int x;
   final int y;
+  List<Item> items = [];
   SquareType type;
   SquareVisibility visibility;
 
-  Square(this.type, this.x, this.y, this.visibility);
+  Square(this.type, this.x, this.y, this.visibility, this.items);
 
   Color get color {
     if (visibility == SquareVisibility.unseen) return Colors.black;

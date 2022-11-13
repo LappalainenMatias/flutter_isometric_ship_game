@@ -32,8 +32,18 @@ extension SquareTypeExtension on SquareType {
     return values[Random().nextInt(values.length)];
   }
 
+  bool get supportsItems {
+    if (this == SquareType.water) return false;
+    return true;
+  }
+
+  bool isMovable() {
+    if (this == SquareType.water) return false;
+    return true;
+  }
+
   static SquareType getValueBasedOnHeight(double height) {
-    if (height > 0.70) return SquareType.mountain;
+    if (height > 0.72) return SquareType.mountain;
     if (height > 0.55) return SquareType.rock;
     if (height > 0.53) return SquareType.trees;
     if (height > 0.4) return SquareType.grass;

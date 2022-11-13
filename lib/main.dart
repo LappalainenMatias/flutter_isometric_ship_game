@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'model/map.dart';
 import 'widget/board.dart';
-import 'enum/actions.dart' as GameAction;
+import 'enum/action.dart' as GameAction;
 
 void main() {
   int mapWidth = 20;
@@ -32,11 +32,11 @@ class MyApp extends StatelessWidget {
     var player = Provider.of<PlayerModel>(context, listen: false);
     player.actions = [GameAction.Action.moveRandomDirection];
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Survival game',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Survival'),
     );
   }
 }
@@ -58,7 +58,11 @@ class _MyHomePageState extends State<MyHomePage> {
     if(!player.startedDoActions) player.doActions(map);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Consumer<PlayerModel>(
+          builder: (context, cart, child) {
+            return Text("hearts = ${player.hearts}");
+          },
+        ),
       ),
       body: Column(
         children: [
@@ -81,7 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("player.hearts = ${player.hearts}"),
+        Text("player.maxHearts = ${player.maxHearts}"),
         Text("player.visibility = ${player.visibility}"),
         Text("player.movementSpeedMS = ${player.movementSpeedMs}"),
         const Text("WHILE NOT gameOver"),
