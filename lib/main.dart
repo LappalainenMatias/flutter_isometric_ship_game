@@ -14,7 +14,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(
             create: (context) => PlayerModel(
-                3, (mapWidth / 2).round(), (mapHeight / 2).round())),
+                5, (mapWidth / 2).round(), (mapHeight / 2).round())),
         ChangeNotifierProvider(
             create: (context) =>
                 MapGenerator().realisticRandomMap(mapWidth, mapHeight)),
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
-    player.actions = [GameAction.Action.moveRandomDirection];
+    player.actions = [GameAction.Action.moveTowardItem, GameAction.Action.moveRandomDirection];
     return MaterialApp(
       title: 'Survival game',
       theme: ThemeData(
@@ -55,7 +55,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
     var map = Provider.of<MapModel>(context, listen: false);
-    if(!player.startedDoActions) player.doActions(map);
+    if (!player.startedDoActions) player.doActions(map);
     return Scaffold(
       appBar: AppBar(
         title: Consumer<PlayerModel>(

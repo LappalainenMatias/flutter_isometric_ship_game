@@ -1,17 +1,18 @@
 import 'package:anki/enum/item.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'dart:math';
 import '../enum/square_type.dart';
-import '../enum/action.dart' as GameAction;
+import '../enum/action.dart' as player_action;
 import '../square.dart';
 import 'map.dart';
 
 class PlayerModel extends ChangeNotifier {
-  List<GameAction.Action> actions = [];
+  List<player_action.Action> actions = [];
   var _visibility = 1;
   var _x = 0;
   var _y = 0;
-  var movementSpeedMs = 200;
+  var movementSpeedMs = 1000;
   var maxHearts = 3;
   var hearts = 1;
   var stopped = true;
@@ -42,7 +43,11 @@ class PlayerModel extends ChangeNotifier {
 
   void doActions(MapModel map) {
     for (var action in actions) {
-      if (!stopped) action.function(this, map);
+      if (!stopped) {
+        if (action.function(this, map)) {
+          break;
+        }
+      }
     }
     Future.delayed(Duration(milliseconds: movementSpeedMs), () {
       doActions(map);
@@ -50,28 +55,28 @@ class PlayerModel extends ChangeNotifier {
   }
 
   void moveDown(MapModel map) {
-    _move(map, _x, y + 1);
+    move(map, _x, y + 1);
   }
 
   void moveUp(MapModel map) {
-    _move(map, _x, y - 1);
+    move(map, _x, y - 1);
   }
 
   void moveLeft(MapModel map) {
-    _move(map, _x - 1, y);
+    move(map, _x - 1, y);
   }
 
   void moveRight(MapModel map) {
-    _move(map, _x + 1, y);
+    move(map, _x + 1, y);
   }
 
-  void _move(MapModel map, int x, int y) {
-    if (!map.squares.containsKey(Point(x, y))) return;
-    var sq = map.squares[Point(x, y)]!;
-    if (sq.type.isMovable()) {
+  void move(MapModel map, int x, int y) {
+    Square? s = map.squares[Point(x, y)];
+    if (s == null) return;
+    if (s.type.isVisitable()) {
       _x = x;
       _y = y;
-      if (sq.items.isNotEmpty) _collectItems(sq);
+      if (s.items.isNotEmpty) _collectItems(s);
       map.updateSquareVisibility(this);
       notifyListeners();
     }
