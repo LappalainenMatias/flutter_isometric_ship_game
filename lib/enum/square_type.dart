@@ -37,7 +37,7 @@ extension SquareTypeExtension on SquareType {
     return true;
   }
 
-  bool isMovable() {
+  bool isVisitable() {
     if (this == SquareType.water) return false;
     return true;
   }
