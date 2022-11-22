@@ -29,4 +29,8 @@ class MapModel extends ChangeNotifier {
   }
 
   Map<Point, Square> get squares => _squares;
+
+  void update() {
+    notifyListeners();
+  }
 }

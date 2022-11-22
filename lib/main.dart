@@ -1,23 +1,35 @@
+import 'package:anki/character_manager.dart';
+import 'package:anki/enemy.dart';
 import 'package:anki/map_generator.dart';
+import 'package:anki/model/game_model.dart';
 import 'package:anki/model/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'enum/weapon.dart';
 import 'model/map.dart';
 import 'widget/board.dart';
-import 'enum/action.dart' as GameAction;
+import 'enum/task.dart';
 
 void main() {
   int mapWidth = 20;
   int mapHeight = 20;
+  PlayerModel player = PlayerModel(
+      5, (mapWidth / 2).round(), (mapHeight / 2).round());
+  MapModel map = MapGenerator().realisticRandomMap(mapWidth, mapHeight);
+  List<Enemy> enemies = [
+    Enemy(5, 5, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
+    Enemy(10, 5, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
+    Enemy(15, 3, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
+    Enemy(15, 4, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection])
+  ];
+  CharacterManager characterManager = CharacterManager(map, player, enemies, 500);
+  GameModel game = GameModel(map, player, enemies, characterManager);
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(
-            create: (context) => PlayerModel(
-                5, (mapWidth / 2).round(), (mapHeight / 2).round())),
-        ChangeNotifierProvider(
-            create: (context) =>
-                MapGenerator().realisticRandomMap(mapWidth, mapHeight)),
+        ChangeNotifierProvider(create: (context) => player),
+        ChangeNotifierProvider(create: (context) => map),
+        ChangeNotifierProvider(create: (context) => game),
       ],
       child: const MyApp(),
     ),
@@ -30,7 +42,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
-    player.actions = [GameAction.Action.moveTowardItem, GameAction.Action.moveRandomDirection];
+    player.actions = [
+      Task.moveTowardItem,
+      Task.moveRandomDirection
+    ];
     return MaterialApp(
       title: 'Survival game',
       theme: ThemeData(
@@ -53,14 +68,12 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    var player = Provider.of<PlayerModel>(context, listen: false);
-    var map = Provider.of<MapModel>(context, listen: false);
-    if (!player.startedDoActions) player.doActions(map);
+    var game = Provider.of<GameModel>(context, listen: false);
     return Scaffold(
       appBar: AppBar(
         title: Consumer<PlayerModel>(
           builder: (context, cart, child) {
-            return Text("hearts = ${player.hearts}");
+            return Text("hearts = ${game.player.hearts}");
           },
         ),
       ),
@@ -73,7 +86,7 @@ class _MyHomePageState extends State<MyHomePage> {
           _buildProgramSyntax(),
           Flexible(
             flex: 1,
-            child: _buildTestingButtons(player, map),
+            child: _buildTestingButtons(),
           ),
         ],
       ),
@@ -87,14 +100,16 @@ class _MyHomePageState extends State<MyHomePage> {
       children: [
         Text("player.maxHearts = ${player.maxHearts}"),
         Text("player.visibility = ${player.visibility}"),
-        Text("player.movementSpeedMS = ${player.movementSpeedMs}"),
         const Text("WHILE NOT gameOver"),
         ...player.actions.map((e) => Text(e.syntax)).toList(),
       ],
     );
   }
 
-  Widget _buildTestingButtons(PlayerModel player, MapModel map) {
+  Widget _buildTestingButtons() {
+    var game = Provider.of<GameModel>(context, listen: false);
+    var player = game.player;
+    var map = game.map;
     return Padding(
       padding: const EdgeInsets.only(top: 16.0),
       child: Row(
@@ -144,15 +159,15 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.only(left: 16.0),
               child: ElevatedButton(
                 onPressed: () {
-                  if (player.stopped) {
-                    player.startMovement();
+                  if (game.paused) {
+                    game.start();
                   } else {
-                    player.stopMovement();
+                    game.pause();
                   }
                 },
-                child: Consumer<PlayerModel>(
+                child: Consumer<GameModel>(
                   builder: (context, cart, child) {
-                    return Text(player.stopped ? "stopped" : "running");
+                    return Text(game.paused ? "paused" : "running");
                   },
                 ),
               ),

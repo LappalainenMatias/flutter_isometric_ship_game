@@ -1,21 +1,23 @@
+import 'package:anki/character.dart';
+
 import '../map_helper.dart';
 import '../model/map.dart';
 import '../model/player.dart';
 import 'dart:math';
 
 
-enum Action {
+enum Task {
   moveRandomDirection,
   moveTowardItem
 }
 
-extension ActionsExtensions on Action {
+extension TaskExtensions on Task {
   String get syntax {
     ///Todo support multiple languages
     switch (this) {
-      case Action.moveRandomDirection:
+      case Task.moveRandomDirection:
         return "  player.moveToRandomDirection()";
-      case Action.moveTowardItem:
+      case Task.moveTowardItem:
         return "  if player.seesItem()\n    player.moveTowardClosestItem()\n    continue";
       default:
         return "Not recognized action";
@@ -24,9 +26,9 @@ extension ActionsExtensions on Action {
 
   Function get function {
     switch (this) {
-      case Action.moveRandomDirection:
+      case Task.moveRandomDirection:
         return moveRandomDirection;
-      case Action.moveTowardItem:
+      case Task.moveTowardItem:
         return moveTowardClosestVisibleItem;
       default:
         throw Exception("Function was not found!");
@@ -35,20 +37,20 @@ extension ActionsExtensions on Action {
 }
 
 ///Returns true if next actions are skipped
-bool moveRandomDirection(PlayerModel player, MapModel map) {
+bool moveRandomDirection(Character character, MapModel map) {
   int num = Random().nextInt(4);
   switch (num) {
     case 0:
-      player.moveUp(map);
+      character.move(map, character.x + 1, character.y);
       break;
     case 1:
-      player.moveRight(map);
+      character.move(map, character.x - 1, character.y);
       break;
     case 2:
-      player.moveDown(map);
+      character.move(map, character.x, character.y + 1);
       break;
     case 3:
-      player.moveLeft(map);
+      character.move(map, character.x, character.y - 1);
   }
   return false;
 }
