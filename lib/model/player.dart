@@ -2,24 +2,24 @@ import 'package:anki/enum/item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:math';
+import '../character.dart';
 import '../enum/square_type.dart';
-import '../enum/action.dart' as player_action;
+import '../enum/task.dart' as player_action;
 import '../square.dart';
 import 'map.dart';
 
-class PlayerModel extends ChangeNotifier {
-  List<player_action.Action> actions = [];
+class PlayerModel extends ChangeNotifier implements Character {
+  List<player_action.Task> actions = [];
   var _visibility = 1;
   var _x = 0;
   var _y = 0;
-  var movementSpeedMs = 1000;
   var maxHearts = 3;
+  @override
   var hearts = 1;
-  var stopped = true;
-  var startedDoActions = false;
 
   PlayerModel(this._visibility, this._x, this._y);
 
+  @override
   void setHearts(int val) {
     if (val <= 0) {
       hearts = 0;
@@ -29,29 +29,6 @@ class PlayerModel extends ChangeNotifier {
       hearts = val;
     }
     notifyListeners();
-  }
-
-  void stopMovement() {
-    stopped = true;
-    notifyListeners();
-  }
-
-  void startMovement() {
-    stopped = false;
-    notifyListeners();
-  }
-
-  void doActions(MapModel map) {
-    for (var action in actions) {
-      if (!stopped) {
-        if (action.function(this, map)) {
-          break;
-        }
-      }
-    }
-    Future.delayed(Duration(milliseconds: movementSpeedMs), () {
-      doActions(map);
-    });
   }
 
   void moveDown(MapModel map) {
@@ -70,12 +47,13 @@ class PlayerModel extends ChangeNotifier {
     move(map, _x + 1, y);
   }
 
-  void move(MapModel map, int x, int y) {
-    Square? s = map.squares[Point(x, y)];
+  @override
+  void move(MapModel map, int newX, int newY) {
+    Square? s = map.squares[Point(newX, newY)];
     if (s == null) return;
     if (s.type.isVisitable()) {
-      _x = x;
-      _y = y;
+      _x = newX;
+      _y = newY;
       if (s.items.isNotEmpty) _collectItems(s);
       map.updateSquareVisibility(this);
       notifyListeners();
@@ -93,8 +71,10 @@ class PlayerModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
   get y => _y;
 
+  @override
   get x => _x;
 
   get visibility => _visibility;

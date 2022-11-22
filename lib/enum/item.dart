@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../character.dart';
 import '../model/player.dart';
 import '../square.dart';
 import 'square_type.dart';
@@ -24,9 +25,9 @@ extension ItemExtension on Item {
     return items;
   }
 
-  void collect(PlayerModel player, Square square) {
+  void collect(Character character, Square square) {
     if (this == Item.heart) {
-      player.setHearts(player.hearts + 1);
+      character.setHearts(character.hearts + 1);
       square.items.remove(Item.heart);
     }
   }
