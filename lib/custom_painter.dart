@@ -2,7 +2,9 @@ import 'package:anki/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'enemy.dart';
 import 'model/game_model.dart';
+import 'model/player.dart';
 
 class MapPainter extends CustomPainter {
   GameModel game;
@@ -25,7 +27,11 @@ class MapPainter extends CustomPainter {
       double bottomRightX = topLeftX + scale + 1;
       double bottomRightY = topLeftY + scale + 1;
       paint1.color = square.color;
-      canvas.drawRect(Rect.fromLTRB(topLeftX, topLeftY, bottomRightX, bottomRightY),
+      if (isPlayerInSquare(game.player, square)) {
+        paint1.color = Colors.red;
+      }
+      canvas.drawRect(
+          Rect.fromLTRB(topLeftX, topLeftY, bottomRightX, bottomRightY),
           paint1);
     }
     print("paint ${start.elapsedMilliseconds} ms");
@@ -35,11 +41,12 @@ class MapPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
   }
-}
 
-/// xxx
-/// xxx
-/// xxx
-///
-/// xx
-/// xx
+  bool isPlayerInSquare(PlayerModel player, Square square) {
+    return square.x == player.x && square.y == player.y;
+  }
+
+  bool isEnemyInSquare(Enemy enemy, Square square) {
+    return square.x == enemy.x && square.y == enemy.y;
+  }
+}

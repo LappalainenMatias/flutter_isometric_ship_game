@@ -21,7 +21,7 @@ class _BoardState extends State<Board> {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(32.0),
-        child: SizedBox(width: 200, child: _buildCustomPaint()));
+        child: SizedBox(width: 201, child: _buildCustomPaint()));
   }
 
   Widget _buildCustomPaint() {
@@ -31,26 +31,5 @@ class _BoardState extends State<Board> {
       size: const Size(201, 201),
       painter: MapPainter(game),
     );
-  }
-
-  String getSquareText(Square square, GameModel game) {
-    String text = "";
-    if (square.visibility != SquareVisibility.inView) return text;
-    if (isPlayerInSquare(game.player, square)) text += "P";
-    for (var enemy in game.enemies) {
-      if (isEnemyInSquare(enemy, square)) text += "E";
-    }
-    for (var item in square.items) {
-      text += item.character();
-    }
-    return text;
-  }
-
-  bool isPlayerInSquare(PlayerModel player, Square square) {
-    return square.x == player.x && square.y == player.y;
-  }
-
-  bool isEnemyInSquare(Enemy enemy, Square square) {
-    return square.x == enemy.x && square.y == enemy.y;
   }
 }

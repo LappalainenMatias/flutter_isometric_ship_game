@@ -35,7 +35,7 @@ class MapGenerator {
   List<List<double>> _getPerlinNoise(int w, int h) => noise2(w, h,
       noiseType: NoiseType.Perlin,
       octaves: 5,
-      frequency: 0.08,
+      frequency: 0.015,
       cellularDistanceFunction: CellularDistanceFunction.Euclidean,
       cellularReturnType: CellularReturnType.Distance2Add);
 }

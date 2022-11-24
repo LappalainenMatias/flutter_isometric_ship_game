@@ -57,7 +57,7 @@ class GameModel extends ChangeNotifier {
 
   Map<Point, Square> getSquaresInVision(Size maxResolution) {
     Stopwatch start = Stopwatch()..start();
-    int halfVision = (vision / 2).floor();
+    int halfVision = (vision / 2).ceil();
     Map<Point, Square> pixelSquare = getSquaresWithMaxResolution(
         Point(player.x - halfVision, player.y - halfVision),
         Point(player.x + halfVision, player.y + halfVision),
@@ -71,15 +71,15 @@ class GameModel extends ChangeNotifier {
       Point topLeft, Point bottomRight, Size size) {
     Map<Point, Square> squares = {};
     int width = size.width.toInt();
-    int height = size.width.toInt();
+    int height = size.height.toInt();
     double scale = (bottomRight.x - topLeft.x) / size.width;
     if (width > bottomRight.x - topLeft.x) {
       width = (bottomRight.x - topLeft.x).abs().toInt();
       height = (bottomRight.y - topLeft.y).abs().toInt();
       scale = 1;
     }
-    for (int i = 0; i < width; i++) {
-      for (int j = 0; j < height; j++) {
+    for (int i = 0; i <= width; i++) {
+      for (int j = 0; j <= height; j++) {
         int x = (topLeft.x.toInt() + i * scale).round();
         int y = (topLeft.y.toInt() + j * scale).round();
         if (map.squares.containsKey(Point(x, y))) {
