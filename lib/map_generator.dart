@@ -1,4 +1,5 @@
 import 'package:anki/square.dart';
+import 'package:fast_noise/fast_noise.dart';
 import 'enum/square_type.dart';
 import 'enum/square_visibility.dart';
 import 'model/map.dart';
@@ -18,32 +19,23 @@ class MapGenerator {
   }
 
   MapModel realisticRandomMap(int width, int height) {
-    var random = Random(4);
-    Map<Point, double> noise = {};
+    final noise = _getPerlinNoise(width, height);
     Map<Point, Square> squares = {};
     for (var y = 0; y < height; y++) {
       for (var x = 0; x < width; x++) {
-        noise[Point(x, y)] = random.nextDouble();
-      }
-    }
-    for (var y = 0; y < height; y++) {
-      for (var x = 0; x < width; x++) {
-        double center = noise[Point(x, y)] ?? 0;
-        double up = noise[Point(x, y - 1)] ?? 0;
-        double down = noise[Point(x, y + 1)] ?? 0;
-        double left = noise[Point(x - 1, y)] ?? 0;
-        double right = noise[Point(x + 1, y)] ?? 0;
-        noise[Point(x, y)] = (center + up + down + left + right) / 5;
-      }
-    }
-    for (var y = 0; y < height; y++) {
-      for (var x = 0; x < width; x++) {
         SquareType st =
-            SquareTypeExtension.getValueBasedOnHeight(noise[Point(x, y)]!);
+            SquareTypeExtension.getValueBasedOnHeight(noise[x][y]);
         squares[Point(x, y)] = Square(st, x, y, SquareVisibility.unseen,
             ItemExtension.getRandomItems(st));
       }
     }
     return MapModel(width, height, squares);
   }
+
+  List<List<double>> _getPerlinNoise(int w, int h) => noise2(w, h,
+      noiseType: NoiseType.Perlin,
+      octaves: 5,
+      frequency: 0.08,
+      cellularDistanceFunction: CellularDistanceFunction.Euclidean,
+      cellularReturnType: CellularReturnType.Distance2Add);
 }
