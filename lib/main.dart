@@ -11,18 +11,20 @@ import 'widget/board.dart';
 import 'enum/task.dart';
 
 void main() {
-  int mapWidth = 20;
-  int mapHeight = 20;
-  PlayerModel player = PlayerModel(
-      5, (mapWidth / 2).round(), (mapHeight / 2).round());
+  int mapWidth = 1000;
+  int mapHeight = 1000;
+  int simulationSpeedMs = 100;
+  PlayerModel player =
+      PlayerModel(10, (mapWidth / 2).round(), (mapHeight / 2).round());
   MapModel map = MapGenerator().realisticRandomMap(mapWidth, mapHeight);
   List<Enemy> enemies = [
     Enemy(5, 5, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
     Enemy(10, 5, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
-    Enemy(15, 3, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
-    Enemy(15, 4, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection])
+    Enemy(25, 25, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
+    Enemy(25, 24, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection])
   ];
-  CharacterManager characterManager = CharacterManager(map, player, enemies, 500);
+  CharacterManager characterManager =
+      CharacterManager(map, player, enemies, simulationSpeedMs);
   GameModel game = GameModel(map, player, enemies, characterManager);
   runApp(
     MultiProvider(
@@ -42,10 +44,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var player = Provider.of<PlayerModel>(context, listen: false);
-    player.actions = [
-      Task.moveTowardItem,
-      Task.moveRandomDirection
-    ];
+    player.actions = [Task.moveTowardItem, Task.moveRandomDirection];
     return MaterialApp(
       title: 'Survival game',
       theme: ThemeData(
@@ -70,13 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var game = Provider.of<GameModel>(context, listen: false);
     return Scaffold(
-      appBar: AppBar(
-        title: Consumer<PlayerModel>(
-          builder: (context, cart, child) {
-            return Text("hearts = ${game.player.hearts}");
-          },
-        ),
-      ),
+      appBar: buildAppBar(game),
       body: Column(
         children: [
           const Flexible(
@@ -89,6 +82,38 @@ class _MyHomePageState extends State<MyHomePage> {
             child: _buildTestingButtons(),
           ),
         ],
+      ),
+    );
+  }
+
+  AppBar buildAppBar(GameModel game) {
+    return AppBar(
+      actions: [
+        GestureDetector(
+          child: const Icon(
+            Icons.zoom_out,
+            color: Colors.white,
+            size: 24.0,
+          ),
+          onTap: () {
+            game.zoomOut();
+          },
+        ),
+        GestureDetector(
+          child: const Icon(
+            Icons.zoom_in,
+            color: Colors.white,
+            size: 24.0,
+          ),
+          onTap: () {
+            game.zoomIn();
+          },
+        ),
+      ],
+      title: Consumer<PlayerModel>(
+        builder: (context, cart, child) {
+          return Text("hearts = ${game.player.hearts}");
+        },
       ),
     );
   }
@@ -123,7 +148,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                       onPressed: () {
                         player.moveUp(map);
-                        map.updateSquareVisibility(player);
                       },
                       child: const Text("U"))
                 ],
@@ -134,19 +158,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   ElevatedButton(
                       onPressed: () {
                         player.moveLeft(map);
-                        map.updateSquareVisibility(player);
                       },
                       child: const Text("L")),
                   ElevatedButton(
                       onPressed: () {
                         player.moveDown(map);
-                        map.updateSquareVisibility(player);
                       },
                       child: const Text("D")),
                   ElevatedButton(
                       onPressed: () {
                         player.moveRight(map);
-                        map.updateSquareVisibility(player);
                       },
                       child: const Text("R")),
                 ],

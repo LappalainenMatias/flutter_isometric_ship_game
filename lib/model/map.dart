@@ -3,6 +3,7 @@ import 'package:anki/model/player.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
 import '../square.dart';
+import 'dart:math';
 
 class MapModel extends ChangeNotifier {
   var width = 0;
@@ -11,17 +12,23 @@ class MapModel extends ChangeNotifier {
 
   MapModel(this.width, this.height, this._squares);
 
-  updateSquareVisibility(PlayerModel player) {
-    int playerX = player.x;
-    int playerY = player.y;
-    int playerVisibility = player.visibility;
-    for (var key in _squares.keys) {
-      if ((playerX - key.x).abs() + (playerY - key.y).abs() <=
-          playerVisibility) {
-        _squares[Point(key.x, key.y)]!.visibility = SquareVisibility.inView;
+  updateSquareVisibility(PlayerModel p) {
+    /// We create keys for squares close to player so that we do not have to update
+    /// visibility for all of the squares.
+    Set<Point> keys = {};
+    for (var y = p.y - p.visibility - 3; y < p.y + p.visibility + 3; y++) {
+      for (var x = p.x - p.visibility - 3; x < p.x + p.visibility + 3; x++) {
+        keys.add(Point(x, y));
+      }
+    }
+    for (var key in keys) {
+      if (!_squares.containsKey(key)) continue;
+      var square = _squares[key]!;
+      if ((p.x - key.x).abs() + (p.y - key.y).abs() <= p.visibility) {
+        square.visibility = SquareVisibility.inView;
       } else {
-        if (_squares[Point(key.x, key.y)]!.visibility == SquareVisibility.inView){
-          _squares[Point(key.x, key.y)]!.visibility = SquareVisibility.seen;
+        if (square.visibility == SquareVisibility.inView) {
+          square.visibility = SquareVisibility.seen;
         }
       }
     }

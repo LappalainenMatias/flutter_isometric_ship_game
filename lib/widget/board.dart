@@ -1,3 +1,4 @@
+import 'package:anki/custom_painter.dart';
 import 'package:anki/enum/item.dart';
 import 'package:anki/enum/square_visibility.dart';
 import 'package:anki/model/player.dart';
@@ -5,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../enemy.dart';
 import '../model/game_model.dart';
-import '../model/map.dart';
+import 'dart:math';
 import '../square.dart';
 
 class Board extends StatefulWidget {
@@ -20,26 +21,15 @@ class _BoardState extends State<Board> {
   Widget build(BuildContext context) {
     return Padding(
         padding: const EdgeInsets.all(32.0),
-        child: Container(width: 300, child: _buildGridView()));
+        child: SizedBox(width: 200, child: _buildCustomPaint()));
   }
 
-  Widget _buildGridView() {
-    var player = Provider.of<PlayerModel>(context, listen: true);
+  Widget _buildCustomPaint() {
     var game = Provider.of<GameModel>(context, listen: false);
-    return GridView.count(
-      crossAxisCount: game.map.width,
-      children: game.map.squares.values
-          .map(
-            (s) => Container(
-              color: s.color,
-              child: Stack(
-                children: [
-                  Center(child: Text(getSquareText(s, game))),
-                ],
-              ),
-            ),
-          )
-          .toList(),
+    var player = Provider.of<PlayerModel>(context, listen: true);
+    return CustomPaint(
+      size: const Size(201, 201),
+      painter: MapPainter(game),
     );
   }
 
@@ -63,5 +53,4 @@ class _BoardState extends State<Board> {
   bool isEnemyInSquare(Enemy enemy, Square square) {
     return square.x == enemy.x && square.y == enemy.y;
   }
-
 }
