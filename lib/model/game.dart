@@ -55,61 +55,43 @@ class GameModel extends ChangeNotifier {
     _updateVision((_vision * zoomMultiplier).round());
   }
 
-  Map<Point, Square> getSquaresInVision(Size maxResolution) {
-    Stopwatch start = Stopwatch()..start();
+  /// Resolution is the widgets resolution.
+  /// We use resolution so that we do not return unnecessary large amount of squares.
+  List<List<Square>> getSquaresInVision(Size resolution) {
     int halfVision = (vision / 2).ceil();
-    Map<Point, Square> pixelSquare = getSquaresWithMaxResolution(
+    List<List<Square>> squares = _getSquaresWithMaxResolution(
         Point(player.x - halfVision, player.y - halfVision),
         Point(player.x + halfVision, player.y + halfVision),
-        maxResolution);
-    print("Get squares ${start.elapsedMilliseconds} ms");
-    return pixelSquare;
+        resolution);
+    return squares;
   }
 
   /// returns all the squares which are in the are defined by top left and bottom right corner
-  Map<Point, Square> getSquaresWithMaxResolution(
-      Point topLeft, Point bottomRight, Size size) {
-    Map<Point, Square> squares = {};
-    int width = size.width.toInt();
-    int height = size.height.toInt();
-    double scale = (bottomRight.x - topLeft.x) / size.width;
+  List<List<Square>> _getSquaresWithMaxResolution(
+      Point topLeft, Point bottomRight, Size resolution) {
+    List<List<Square>> squares = [];
+    int width = resolution.width.toInt();
+    int height = resolution.height.toInt();
+    double scale = (bottomRight.x - topLeft.x) / resolution.width;
     if (width > bottomRight.x - topLeft.x) {
       width = (bottomRight.x - topLeft.x).abs().toInt();
       height = (bottomRight.y - topLeft.y).abs().toInt();
       scale = 1;
     }
-    for (int i = 0; i <= width; i++) {
-      for (int j = 0; j <= height; j++) {
-        int x = (topLeft.x.toInt() + i * scale).round();
-        int y = (topLeft.y.toInt() + j * scale).round();
-        if (map.squares.containsKey(Point(x, y))) {
-          squares[Point(i, j)] = map.squares[Point(x, y)]!;
+    for (int i = 0; i <= height; i++) {
+      List<Square> row = [];
+      int y = (topLeft.y.toInt() + i * scale).round();
+      for (int j = 0; j <= width; j++) {
+        int x = (topLeft.x.toInt() + j * scale).round();
+        if (map.hasSquare(x, y)) {
+          row.add(map.getSquare(x, y));
         } else {
-          squares[Point(i, j)] = Square(SquareType.wall, x, y, SquareVisibility.seen, []);
+          row.add(Square(SquareType.wall, x, y, SquareVisibility.unseen, []));
         }
       }
+      squares.add(row);
     }
-    print("size ${squares.length}");
-    return squares;
-  }
-
-  /// returns all the squares which are in the are defined by top left and bottom right corner
-  List<Square> getSquares(Point topLeft, Point bottomRight) {
-    int x = topLeft.x.toInt();
-    int y = topLeft.y.toInt();
-    List<Square> squares = [];
-    while (y <= bottomRight.y.toInt()) {
-      while (x <= bottomRight.x.toInt()) {
-        if (map.squares.containsKey(Point(x, y))) {
-          squares.add(map.squares[Point(x, y)]!);
-        } else {
-          squares.add(Square(SquareType.wall, x, y, SquareVisibility.seen, []));
-        }
-        x++;
-      }
-      x = topLeft.x.toInt();
-      y++;
-    }
+    print("size ${squares.length * squares[0].length}");
     return squares;
   }
 
