@@ -1,5 +1,6 @@
 import 'package:anki/enum/square_type.dart';
 import 'package:anki/enum/square_visibility.dart';
+import 'package:anki/model/map.dart';
 import 'package:anki/square.dart';
 import 'dart:math';
 
@@ -9,7 +10,7 @@ int manhattanDistance(Square s1, Square s2) {
 
 class PathFinder {
   /// BFS algorithm
-  static List<Point> pathToClosestItem(int x, int y, var squares) {
+  static List<Point> pathToClosestItem(int x, int y, MapModel map) {
     var adjacency = <Point>{Point(x, y)};
     var queue = [Point(x, y)];
     var parents = {};
@@ -23,15 +24,15 @@ class PathFinder {
         Point(q.x, q.y + 1)
       ];
       for (Point<int> n in neighbors) {
-        Square? s = squares[Point(n.x, n.y)];
-        if (s == null) continue;
+        if (!map.hasSquare(n.x, n.y)) continue;
+        Square s = map.getSquare(n.x, n.y);
         if (s.visibility != SquareVisibility.inView) continue;
         if (!s.type.isVisitable()) continue;
         if (adjacency.contains(Point(n.x, n.y))) continue;
         parents[n] = q;
         adjacency.add(n);
         queue.add(n);
-        if (squares[Point(n.x, n.y)]!.items.isNotEmpty) {
+        if (s.items.isNotEmpty) {
           item = Point(n.x, n.y);
           break;
         }

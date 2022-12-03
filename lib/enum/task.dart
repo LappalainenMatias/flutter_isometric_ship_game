@@ -57,7 +57,7 @@ bool moveRandomDirection(Character character, MapModel map) {
 
 ///Returns true if next actions are skipped
 bool moveTowardClosestVisibleItem(PlayerModel player, MapModel map) {
-  List<Point> path = PathFinder.pathToClosestItem(player.x, player.y, map.squares);
+  List<Point> path = PathFinder.pathToClosestItem(player.x, player.y, map);
   if (path.isEmpty) return false;
   player.move(map, path[0].x.toInt(), path[0].y.toInt());
   return true;

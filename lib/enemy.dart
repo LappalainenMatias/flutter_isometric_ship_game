@@ -1,9 +1,7 @@
 import 'package:anki/character.dart';
-import 'package:anki/enum/item.dart';
 import 'package:anki/enum/square_type.dart';
 import 'package:anki/model/map.dart';
 import 'package:anki/square.dart';
-import 'dart:math';
 import 'enum/task.dart';
 import 'enum/weapon.dart';
 
@@ -24,8 +22,8 @@ class Enemy implements Character {
 
   @override
   void move(MapModel map, int newX, int newY) {
-    Square? s = map.squares[Point(newX, newY)];
-    if (s == null) return;
+    if (!map.hasSquare(newX, newY)) return;
+    Square s = map.getSquare(newX, newY);
     if (s.type.isVisitable()) {
       x = newX;
       y = newY;

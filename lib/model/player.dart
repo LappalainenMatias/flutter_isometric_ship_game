@@ -1,7 +1,6 @@
 import 'package:anki/enum/item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'dart:math';
 import '../character.dart';
 import '../enum/square_type.dart';
 import '../enum/task.dart' as player_action;
@@ -32,25 +31,25 @@ class PlayerModel extends ChangeNotifier implements Character {
   }
 
   void moveDown(MapModel map) {
-    move(map, _x, y + 1);
+    move(map, _x, _y + 1);
   }
 
   void moveUp(MapModel map) {
-    move(map, _x, y - 1);
+    move(map, _x, _y - 1);
   }
 
   void moveLeft(MapModel map) {
-    move(map, _x - 1, y);
+    move(map, _x - 1, _y);
   }
 
   void moveRight(MapModel map) {
-    move(map, _x + 1, y);
+    move(map, _x + 1, _y);
   }
 
   @override
   void move(MapModel map, int newX, int newY) {
-    Square? s = map.squares[Point(newX, newY)];
-    if (s == null) return;
+    if (!map.hasSquare(newX, newY)) return;
+    Square s = map.getSquare(newX, newY);
     if (s.type.isVisitable()) {
       _x = newX;
       _y = newY;
