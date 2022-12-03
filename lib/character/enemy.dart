@@ -26,7 +26,7 @@ class Enemy implements Character {
   void move(MapModel map, int newX, int newY) {
     if (!map.hasSquare(newX, newY)) return;
     Square s = map.getSquare(newX, newY);
-    if (s.type.isVisitable()) {
+    if (s.type.isVisitable) {
       x = newX;
       y = newY;
       map.update();

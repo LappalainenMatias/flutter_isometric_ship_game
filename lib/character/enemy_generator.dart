@@ -13,7 +13,7 @@ List<Enemy> getEnemies(MapModel map, double probability) {
   for (int y = 0; y < map.height; y++) {
     for (int x = 0; x < map.width; x++) {
       if (!map.hasSquare(x, y)) continue;
-      if (!map.getSquare(x, y).type.isVisitable()) continue;
+      if (!map.getSquare(x, y).type.isVisitable) continue;
       if (random.nextDouble() < probability) {
         enemies.add(Enemy(x, y, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]));
       }

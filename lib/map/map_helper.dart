@@ -27,7 +27,7 @@ class PathFinder {
         if (!map.hasSquare(n.x, n.y)) continue;
         Square s = map.getSquare(n.x, n.y);
         if (s.visibility != SquareVisibility.inView) continue;
-        if (!s.type.isVisitable()) continue;
+        if (!s.type.isVisitable) continue;
         if (adjacency.contains(Point(n.x, n.y))) continue;
         parents[n] = q;
         adjacency.add(n);

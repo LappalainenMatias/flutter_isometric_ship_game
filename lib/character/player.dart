@@ -14,6 +14,7 @@ class PlayerModel extends ChangeNotifier implements Character {
   var maxHearts = 3;
   @override
   var hearts = 1;
+  @override
   var color = Colors.red;
 
   PlayerModel(this._visibility, this._x, this._y);
@@ -50,7 +51,7 @@ class PlayerModel extends ChangeNotifier implements Character {
   void move(MapModel map, int newX, int newY) {
     if (!map.hasSquare(newX, newY)) return;
     Square s = map.getSquare(newX, newY);
-    if (s.type.isVisitable()) {
+    if (s.type.isVisitable) {
       _x = newX;
       _y = newY;
       if (s.items.isNotEmpty) _collectItems(s);
