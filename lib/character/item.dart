@@ -19,9 +19,8 @@ extension ItemExtension on Item {
   static List<Item> getRandomItems(SquareType type) {
     if (!type.supportsItems) return [];
     List<Item> items = [];
-    var random = Random();
-    var num = random.nextInt(100);
-    if (num < 2) items.add(Item.heart);
+    var num = Random().nextDouble();
+    if (num < 0.02) items.add(Item.heart);
     return items;
   }
 
