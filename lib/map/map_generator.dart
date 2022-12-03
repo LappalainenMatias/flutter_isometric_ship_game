@@ -7,24 +7,39 @@ import '../character/item.dart';
 
 class MapGenerator {
   MapModel realisticRandomMap(int width, int height) {
-    final noise = _getPerlinNoise(width, height);
+    final elevationNoise = _getPerlinNoise(width, height, 1, 0.04);
+    final elevationNoise2 = _getPerlinNoise(width, height, 2, 0.02);
+    final elevationNoise4 = _getPerlinNoise(width, height, 3, 0.01);
+    final moistureNoise = _getPerlinNoise(width, height, 4, 0.04);
+    final moistureNoise2 = _getPerlinNoise(width, height, 5, 0.02);
+    final moistureNoise4 = _getPerlinNoise(width, height, 6, 0.01);
     List<List<Square>> squares = [];
     for (var y = 0; y < height; y++) {
       List<Square> row = [];
       for (var x = 0; x < width; x++) {
-        SquareType st = SquareTypeExtension.getValueBasedOnHeight(noise[x][y]);
-        row.add(Square(st, x, y, SquareVisibility.unseen,
-            ItemExtension.getRandomItems(st)));
+        double elevation = 0.25 * elevationNoise[x][y] +
+            0.5 * elevationNoise2[x][y] +
+            1 * elevationNoise4[x][y];
+        double moisture = 0.25 * moistureNoise[x][y] +
+            0.5 * moistureNoise2[x][y] +
+            1 * moistureNoise4[x][y];
+        elevation = elevation / (1 + 0.5 + 0.25);
+        moisture = moisture / (1 + 0.5 + 0.25);
+        SquareType st = SquareTypeExtension.getType(elevation, moisture);
+        row.add(Square(
+            st, x, y, SquareVisibility.seen, ItemExtension.getRandomItems(st)));
       }
       squares.add(row);
     }
     return MapModel(width, height, squares);
   }
 
-  List<List<double>> _getPerlinNoise(int w, int h) => noise2(w, h,
+  /// Increasing frequency adds details
+  List<List<double>> _getPerlinNoise(int w, int h, int seed, frequency) => noise2(w, h,
+      seed: seed,
       noiseType: NoiseType.Perlin,
       octaves: 5,
-      frequency: 0.004,
+      frequency: frequency,
       cellularDistanceFunction: CellularDistanceFunction.Euclidean,
       cellularReturnType: CellularReturnType.Distance2Add);
 }

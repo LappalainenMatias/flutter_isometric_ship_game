@@ -2,32 +2,47 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 enum SquareType {
-  rockHigh,
-  rockMed,
-  rockLow,
-  trees,
+  shrubland,
+  temperateRainForest,
+  temperateDesert,
+  taiga,
+  desert,
   grass,
-  water,
+  snow,
   wall,
-  sand,
+  tundra,
+  bare,
+  ocean,
+  shallowWater,
+  beach
 }
 
 extension SquareTypeExtension on SquareType {
   Color get color {
     switch (this) {
+      case SquareType.shrubland:
+        return const Color.fromARGB(255, 143, 164, 119);
+      case SquareType.temperateRainForest:
+        return const Color.fromARGB(255, 119, 159, 123);
+      case SquareType.shallowWater:
+        return const Color.fromARGB(255, 72, 136, 218);
+      case SquareType.taiga:
+        return const Color.fromARGB(255, 105, 140, 111);
+      case SquareType.temperateDesert:
+        return const Color.fromARGB(255, 196, 151, 102);
+      case SquareType.desert:
+        return const Color.fromARGB(255, 227, 195, 158);
       case SquareType.grass:
-        return const Color.fromARGB(255, 8, 161, 12);
-      case SquareType.trees:
-        return const Color.fromARGB(255, 23, 129, 11);
-      case SquareType.rockHigh:
-        return const Color.fromARGB(255, 110, 110, 110);
-      case SquareType.rockMed:
-        return const Color.fromARGB(255, 130, 130, 130);
-      case SquareType.rockLow:
-        return const Color.fromARGB(255, 150, 150, 150);
-      case SquareType.water:
-        return Colors.blue;
-      case SquareType.sand:
+        return const Color.fromARGB(255, 108, 169, 103);
+      case SquareType.snow:
+        return const Color.fromARGB(255, 226, 229, 232);
+      case SquareType.bare:
+        return const Color.fromARGB(255, 180, 175, 162);
+      case SquareType.tundra:
+        return const Color.fromARGB(255, 150, 175, 149);
+      case SquareType.ocean:
+        return const Color.fromARGB(255, 8, 81, 173);
+      case SquareType.beach:
         return const Color.fromARGB(255, 194, 178, 128);
       case SquareType.wall:
         return Colors.black26;
@@ -43,22 +58,38 @@ extension SquareTypeExtension on SquareType {
   }
 
   bool get supportsItems {
-    if (this == SquareType.water) return false;
-    return true;
-  }
-
-  bool isVisitable() {
-    if (this == SquareType.water) return false;
+    if (this == SquareType.ocean) return false;
+    if (this == SquareType.shallowWater) return false;
     if (this == SquareType.wall) return false;
     return true;
   }
 
-  static SquareType getValueBasedOnHeight(double height) {
-    if (height > 0.50) return SquareType.rockHigh;
-    if (height > 0.40) return SquareType.rockMed;
-    if (height > 0.30) return SquareType.rockLow;
-    if (height > 0.02) return SquareType.grass;
-    if (height > 0.00) return SquareType.sand;
-    return SquareType.water;
+  bool get isVisitable {
+    if (this == SquareType.ocean) return false;
+    if (this == SquareType.shallowWater) return false;
+    if (this == SquareType.wall) return false;
+    return true;
+  }
+
+  static SquareType getType(double e, double m) {
+    if (e < 0.0) return SquareType.ocean;
+    if (e < 0.02) return SquareType.shallowWater;
+    if (e < 0.05) return SquareType.beach;
+    if (e < 0.20) {
+      if (m < -0.25) return SquareType.desert;
+      if (m < 0.25) return SquareType.temperateDesert;
+      return SquareType.temperateRainForest;
+    }
+    if (e < 0.4) {
+      if (m < -0.1) return SquareType.shrubland;
+      if (m < 0.2) return SquareType.grass;
+      return SquareType.taiga;
+    }
+    if (e < 1.0) {
+      if (m < -0.25) return SquareType.bare;
+      if (m < 0.25) return SquareType.tundra;
+      return SquareType.snow;
+    }
+    return throw Exception("Type not found");
   }
 }
