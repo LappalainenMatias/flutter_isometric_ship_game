@@ -1,38 +1,36 @@
+import 'package:anki/painter_optimizer.dart';
 import 'package:anki/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'enemy.dart';
-import 'model/game_model.dart';
-import 'model/player.dart';
+import 'model/game.dart';
+import 'dart:math';
 
 class MapPainter extends CustomPainter {
+  Size maxResolution = const Size(301, 301);
   GameModel game;
+  var rectPaint = Paint()
+    ..color = const Color(0xff995588)
+    ..style = PaintingStyle.fill;
 
   MapPainter(this.game);
 
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    var paint1 = Paint()
-      ..color = const Color(0xff995588)
-      ..style = PaintingStyle.fill;
-    Map<Point, Square> squares = game.getSquaresInVision(size);
-    double scale = size.width / game.vision;
+    List<List<Square>> table = game.getSquaresInVision(maxResolution);
+    print("Get squares ${start.elapsedMilliseconds} ms");
+    start = Stopwatch()..start();
+    double widthResolution = game.vision > maxResolution.width
+        ? maxResolution.width
+        : game.vision.toDouble();
+    double scale = size.width / widthResolution;
     if (scale < 1) scale = 1;
-    for (Point point in squares.keys) {
-      Square square = squares[point]!;
-      double topLeftX = point.x * scale - 1;
-      double topLeftY = point.y * scale - 1;
-      double bottomRightX = topLeftX + scale + 1;
-      double bottomRightY = topLeftY + scale + 1;
-      paint1.color = square.color;
-      if (isPlayerInSquare(game.player, square)) {
-        paint1.color = Colors.red;
-      }
-      canvas.drawRect(
-          Rect.fromLTRB(topLeftX, topLeftY, bottomRightX, bottomRightY),
-          paint1);
+    Map<Rect, Color> rects = createRects(table, scale, Point(game.player.x, game.player.y));
+    print("Reduced rects ${rects.length}");
+    for (Rect rect in rects.keys) {
+      rectPaint.color = rects[rect]!;
+      canvas.drawRect(rect, rectPaint);
     }
     print("paint ${start.elapsedMilliseconds} ms");
   }
@@ -40,10 +38,6 @@ class MapPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
-  }
-
-  bool isPlayerInSquare(PlayerModel player, Square square) {
-    return square.x == player.x && square.y == player.y;
   }
 
   bool isEnemyInSquare(Enemy enemy, Square square) {
