@@ -15,7 +15,7 @@ void main() {
   }
 
   Square getWaterSquare(int x, int y) {
-    return Square(SquareType.water, x, y, SquareVisibility.seen, []);
+    return Square(SquareType.ocean, x, y, SquareVisibility.seen, []);
   }
 
   test('rect drawing optimizer', () {

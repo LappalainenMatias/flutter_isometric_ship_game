@@ -29,7 +29,7 @@ void main() {
       [
         Square(SquareType.grass, 0, 0, SquareVisibility.inView, [Item.heart]),
         Square(SquareType.grass, 1, 0, SquareVisibility.inView, []),
-        Square(SquareType.water, 2, 0, SquareVisibility.inView, []),
+        Square(SquareType.ocean, 2, 0, SquareVisibility.inView, []),
       ],
       [
         Square(SquareType.grass, 0, 1, SquareVisibility.inView, []),
@@ -37,14 +37,14 @@ void main() {
         Square(SquareType.grass, 2, 1, SquareVisibility.inView, []),
       ],
       [
-        Square(SquareType.water, 0, 2, SquareVisibility.inView, []),
-        Square(SquareType.water, 1, 2, SquareVisibility.inView, []),
+        Square(SquareType.ocean, 0, 2, SquareVisibility.inView, []),
+        Square(SquareType.ocean, 1, 2, SquareVisibility.inView, []),
         Square(SquareType.grass, 2, 2, SquareVisibility.inView, []),
       ],
       [
         Square(SquareType.grass, 0, 3, SquareVisibility.inView, []),
         Square(SquareType.grass, 1, 3, SquareVisibility.inView, []),
-        Square(SquareType.water, 2, 3, SquareVisibility.inView, []),
+        Square(SquareType.ocean, 2, 3, SquareVisibility.inView, []),
       ]
     ];
 
