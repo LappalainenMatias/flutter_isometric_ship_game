@@ -10,16 +10,28 @@ class Square {
   SquareType type;
   SquareVisibility visibility;
 
-  Square(this.type, this.x, this.y, this.visibility, this.items);
+  /// Notice that we predefine colors so that get color function is fast.
+  /// Get color gets called 1000s of times every second.
+  late Color _colorInView;
+  late Color _colorUnseen;
+  late Color _colorSeen;
+
+  Square(this.type, this.x, this.y, this.visibility, this.items) {
+    _colorInView = type.color;
+    _colorUnseen = Colors.black;
+    _colorSeen =
+        Color.alphaBlend(type.color.withAlpha(100), Colors.black.withAlpha(155))
+            .withAlpha(255);
+  }
 
   Color get color {
     switch (visibility) {
       case SquareVisibility.unseen:
-        return Colors.black;
+        return _colorUnseen;
       case SquareVisibility.seen:
-        return Color.alphaBlend(type.color.withAlpha(100), Colors.black.withAlpha(155)).withAlpha(255);
-      default:
-        return type.color;
+        return _colorSeen;
+      case SquareVisibility.inView:
+        return _colorInView;
     }
   }
 }
