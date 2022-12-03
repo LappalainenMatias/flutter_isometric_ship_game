@@ -7,7 +7,7 @@ import '../character/item.dart';
 
 class MapGenerator {
   MapModel realisticRandomMap(int width, int height) {
-    final elevationNoise = _getPerlinNoise(width, height, 1, 0.04);
+    final elevationNoise = _getPerlinNoise(width, height, 10, 0.04);
     final elevationNoise2 = _getPerlinNoise(width, height, 2, 0.02);
     final elevationNoise4 = _getPerlinNoise(width, height, 3, 0.01);
     final moistureNoise = _getPerlinNoise(width, height, 4, 0.04);
@@ -27,7 +27,7 @@ class MapGenerator {
         moisture = moisture / (1 + 0.5 + 0.25);
         SquareType st = SquareTypeExtension.getType(elevation, moisture);
         row.add(Square(
-            st, x, y, SquareVisibility.seen, ItemExtension.getRandomItems(st)));
+            st, x, y, SquareVisibility.unseen, ItemExtension.getRandomItems(st)));
       }
       squares.add(row);
     }
