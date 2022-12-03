@@ -91,7 +91,7 @@ class GameModel extends ChangeNotifier {
       }
       squares.add(row);
     }
-    print("size ${squares.length * squares[0].length}");
+    print("Total rects ${squares.length * squares[0].length}");
     return squares;
   }
 
