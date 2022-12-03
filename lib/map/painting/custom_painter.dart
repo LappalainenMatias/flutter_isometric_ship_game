@@ -26,7 +26,7 @@ class MapPainter extends CustomPainter {
         : game.vision.toDouble();
     double scale = size.width / widthResolution;
     if (scale < 1) scale = 1;
-    Map<Rect, Color> rects = createRects(table, scale, Point(game.player.x, game.player.y));
+    Map<Rect, Color> rects = createRects(table, scale, game.player, game.enemies);
     print("Reduced rects ${rects.length}");
     for (Rect rect in rects.keys) {
       rectPaint.color = rects[rect]!;
@@ -38,9 +38,5 @@ class MapPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
     return true;
-  }
-
-  bool isEnemyInSquare(Enemy enemy, Square square) {
-    return square.x == enemy.x && square.y == enemy.y;
   }
 }

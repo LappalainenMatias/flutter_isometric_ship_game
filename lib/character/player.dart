@@ -1,6 +1,5 @@
 import 'package:anki/character/item.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'character.dart';
 import '../map/square_type.dart';
 import 'task.dart' as player_action;
@@ -15,6 +14,7 @@ class PlayerModel extends ChangeNotifier implements Character {
   var maxHearts = 3;
   @override
   var hearts = 1;
+  var color = Colors.red;
 
   PlayerModel(this._visibility, this._x, this._y);
 

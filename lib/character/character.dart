@@ -7,6 +7,8 @@ abstract class Character {
 
   get hearts => null;
 
+  get color => null;
+
   void move(MapModel map, int x, int y);
 
   void setHearts(int hearts);

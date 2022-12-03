@@ -1,9 +1,13 @@
 import 'dart:math';
+import 'package:anki/character/player.dart';
 import 'package:anki/map/square.dart';
+import 'package:anki/map/square_visibility.dart';
 import 'package:flutter/material.dart';
 
+import '../../character/enemy.dart';
+
 /// This is used for better performance
-Map<Rect, Color> createRects(List<List<Square>> table, double scale, Point playerCoordinate) {
+Map<Rect, Color> createRects(List<List<Square>> table, double scale, PlayerModel player, List<Enemy> enemies) {
   Map<Rect, Color> rects = {};
   int x = 0;
   int y = 0;
@@ -16,7 +20,7 @@ Map<Rect, Color> createRects(List<List<Square>> table, double scale, Point playe
     double bottomRightX = x * scale + scale + 1;
     double bottomRightY = y * scale + scale + 1;
     for (Square square in row) {
-      current = square.color;
+      current = getSquareColor(square, player, enemies);
       if (current == previous) {
         bottomRightX = x * scale + scale + 1;
         bottomRightY = y * scale + scale + 1;
@@ -39,4 +43,13 @@ Map<Rect, Color> createRects(List<List<Square>> table, double scale, Point playe
     x = 0;
   }
   return rects;
+}
+
+Color getSquareColor(Square square, PlayerModel player, List<Enemy> enemies) {
+  if (square.visibility != SquareVisibility.inView) return square.color;
+  if (square.x == player.x && square.y == player.y) return player.color;
+  for (Enemy enemy in enemies) {
+    if (square.x == enemy.x && square.y == enemy.y) return enemy.color;
+  }
+  return square.color;
 }

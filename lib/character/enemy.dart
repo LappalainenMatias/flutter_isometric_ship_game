@@ -4,6 +4,7 @@ import 'package:anki/map/map.dart';
 import 'package:anki/map/square.dart';
 import 'task.dart';
 import 'weapon.dart';
+import 'package:flutter/material.dart';
 
 class Enemy implements Character {
   @override
@@ -16,6 +17,7 @@ class Enemy implements Character {
   List<Task> actions;
   @override
   int hearts;
+  var color = Colors.amber;
 
   Enemy(this.x, this.y, this.visibility, this.maxHearts, this.hearts,
       this.weapon, this.actions);

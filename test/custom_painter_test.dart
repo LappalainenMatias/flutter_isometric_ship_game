@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:anki/character/player.dart';
 import 'package:anki/map/painting/painter_optimizer.dart';
 import 'package:anki/map/square_type.dart';
 import 'package:anki/map/square_visibility.dart';
@@ -45,9 +46,11 @@ void main() {
       [getGrassSquare(1,0), getGrassSquare(1, 1), getGrassSquare(1, 2), getGrassSquare(1, 3), getWaterSquare(1, 4)],
     ];
 
-    Map<Rect, Color> rects1 = createRects(squares1, 1, const Point(10, 10));
-    Map<Rect, Color> rects2 = createRects(squares2, 1, const Point(10, 10));
-    Map<Rect, Color> rects3 = createRects(squares3, 1, const Point(10, 10));
+    PlayerModel player = PlayerModel(25, 10, 10);
+
+    Map<Rect, Color> rects1 = createRects(squares1, 1, player, []);
+    Map<Rect, Color> rects2 = createRects(squares2, 1, player, []);
+    Map<Rect, Color> rects3 = createRects(squares3, 1, player, []);
 
     expect(rects1.length, 5);
     expect(rects2.length, 9);

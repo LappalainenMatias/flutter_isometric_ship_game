@@ -1,11 +1,11 @@
 import 'package:anki/character/character_manager.dart';
 import 'package:anki/character/enemy.dart';
+import 'package:anki/character/enemy_generator.dart';
 import 'package:anki/map/map_generator.dart';
 import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'character/weapon.dart';
 import 'map/map.dart';
 import 'widget/board.dart';
 import 'character/task.dart';
@@ -17,12 +17,7 @@ void main() {
   PlayerModel player =
       PlayerModel(10, (mapWidth / 2).round(), (mapHeight / 2).round());
   MapModel map = MapGenerator().realisticRandomMap(mapWidth, mapHeight);
-  List<Enemy> enemies = [
-    Enemy(5, 5, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
-    Enemy(10, 5, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
-    Enemy(25, 25, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection]),
-    Enemy(25, 24, 1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection])
-  ];
+  List<Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
   GameModel game = GameModel(map, player, enemies, characterManager);
