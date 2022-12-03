@@ -1,7 +1,7 @@
 import 'package:anki/character_manager.dart';
 import 'package:anki/enemy.dart';
 import 'package:anki/map_generator.dart';
-import 'package:anki/model/game_model.dart';
+import 'package:anki/model/game.dart';
 import 'package:anki/model/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +11,8 @@ import 'widget/board.dart';
 import 'enum/task.dart';
 
 void main() {
-  int mapWidth = 1000;
-  int mapHeight = 1000;
+  int mapWidth = 500;
+  int mapHeight = 500;
   int simulationSpeedMs = 100;
   PlayerModel player =
       PlayerModel(10, (mapWidth / 2).round(), (mapHeight / 2).round());
@@ -68,20 +68,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var game = Provider.of<GameModel>(context, listen: false);
+    double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: buildAppBar(game),
-      body: Column(
-        children: [
-          const Flexible(
-            flex: 3,
-            child: Board(),
-          ),
-          _buildProgramSyntax(),
-          Flexible(
-            flex: 1,
-            child: _buildTestingButtons(),
-          ),
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Board(width: width, height: width),
+            _buildProgramSyntax(),
+            _buildTestingButtons(),
+          ],
+        ),
       ),
     );
   }
@@ -120,14 +117,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildProgramSyntax() {
     var player = Provider.of<PlayerModel>(context, listen: false);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("player.maxHearts = ${player.maxHearts}"),
-        Text("player.visibility = ${player.visibility}"),
-        const Text("WHILE NOT gameOver"),
-        ...player.actions.map((e) => Text(e.syntax)).toList(),
-      ],
+    return Padding(
+      padding: const EdgeInsets.all(32.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("player.maxHearts = ${player.maxHearts}"),
+          Text("player.visibility = ${player.visibility}"),
+          const Text("WHILE NOT gameOver"),
+          ...player.actions.map((e) => Text(e.syntax)).toList(),
+        ],
+      ),
     );
   }
 
