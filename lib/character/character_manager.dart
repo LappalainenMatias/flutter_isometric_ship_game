@@ -43,6 +43,11 @@ class CharacterManager {
 
   void _runEnemyActions() {
     for (var enemy in enemies) {
+      /// We do not want to simulate actions if the enemy is far away
+      if ((enemy.x - player.x).abs() + (enemy.y - player.y).abs() >=
+          player.visibility * 4) {
+        continue;
+      }
       for (var action in enemy.actions) {
         if (action.function(enemy, map)) {
           break;
