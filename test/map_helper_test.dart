@@ -1,6 +1,7 @@
 import 'package:anki/enum/square_type.dart';
 import 'package:anki/enum/square_visibility.dart';
 import 'package:anki/map_helper.dart';
+import 'package:anki/model/map.dart';
 import 'package:anki/square.dart';
 import 'package:test/test.dart';
 import 'package:anki/enum/item.dart';
@@ -25,37 +26,35 @@ void main() {
     /// GGG
     /// WWG
     /// GGW
-    Map<Point, Square> squares = {
-      const Point(0, 0):
-          Square(SquareType.grass, 0, 0, SquareVisibility.inView, [Item.heart]),
-      const Point(1, 0):
-          Square(SquareType.grass, 1, 0, SquareVisibility.inView, []),
-      const Point(2, 0):
-          Square(SquareType.water, 2, 0, SquareVisibility.inView, []),
-      const Point(0, 1):
-          Square(SquareType.grass, 0, 1, SquareVisibility.inView, []),
-      const Point(1, 1):
-          Square(SquareType.grass, 1, 1, SquareVisibility.inView, []),
-      const Point(2, 1):
-          Square(SquareType.grass, 2, 1, SquareVisibility.inView, []),
-      const Point(0, 2):
-          Square(SquareType.water, 0, 2, SquareVisibility.inView, []),
-      const Point(1, 2):
-          Square(SquareType.water, 1, 2, SquareVisibility.inView, []),
-      const Point(2, 2):
-          Square(SquareType.grass, 2, 2, SquareVisibility.inView, []),
-      const Point(0, 3):
-          Square(SquareType.grass, 0, 2, SquareVisibility.inView, []),
-      const Point(1, 3):
-          Square(SquareType.grass, 1, 2, SquareVisibility.inView, []),
-      const Point(2, 3):
-          Square(SquareType.water, 2, 2, SquareVisibility.inView, []),
-    };
-    List path1 = PathFinder.pathToClosestItem(1, 0, squares);
-    List path2 = PathFinder.pathToClosestItem(1, 1, squares);
-    List path3 = PathFinder.pathToClosestItem(2, 2, squares);
-    List path4 = PathFinder.pathToClosestItem(0, 3, squares);
-    List path5 = PathFinder.pathToClosestItem(0, 0, squares);
+    List<List<Square>> squares = [
+      [
+        Square(SquareType.grass, 0, 0, SquareVisibility.inView, [Item.heart]),
+        Square(SquareType.grass, 1, 0, SquareVisibility.inView, []),
+        Square(SquareType.water, 2, 0, SquareVisibility.inView, []),
+      ],
+      [
+        Square(SquareType.grass, 0, 1, SquareVisibility.inView, []),
+        Square(SquareType.grass, 1, 1, SquareVisibility.inView, []),
+        Square(SquareType.grass, 2, 1, SquareVisibility.inView, []),
+      ],
+      [
+        Square(SquareType.water, 0, 2, SquareVisibility.inView, []),
+        Square(SquareType.water, 1, 2, SquareVisibility.inView, []),
+        Square(SquareType.grass, 2, 2, SquareVisibility.inView, []),
+      ],
+      [
+        Square(SquareType.grass, 0, 3, SquareVisibility.inView, []),
+        Square(SquareType.grass, 1, 3, SquareVisibility.inView, []),
+        Square(SquareType.water, 2, 3, SquareVisibility.inView, []),
+      ]
+    ];
+
+    MapModel map = MapModel(3, 4, squares);
+    List path1 = PathFinder.pathToClosestItem(1, 0, map);
+    List path2 = PathFinder.pathToClosestItem(1, 1, map);
+    List path3 = PathFinder.pathToClosestItem(2, 2, map);
+    List path4 = PathFinder.pathToClosestItem(0, 3, map);
+    List path5 = PathFinder.pathToClosestItem(0, 0, map);
     expect(path1.length, 1);
     expect(path2.length, 2);
     expect(path3.length, 4);
