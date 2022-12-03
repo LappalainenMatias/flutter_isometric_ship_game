@@ -57,8 +57,8 @@ extension SquareTypeExtension on SquareType {
     if (height > 0.50) return SquareType.rockHigh;
     if (height > 0.40) return SquareType.rockMed;
     if (height > 0.30) return SquareType.rockLow;
-    if (height > -0.10) return SquareType.grass;
-    if (height > -0.15) return SquareType.sand;
+    if (height > 0.02) return SquareType.grass;
+    if (height > 0.00) return SquareType.sand;
     return SquareType.water;
   }
 }
