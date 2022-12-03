@@ -1,11 +1,11 @@
-import 'package:anki/enum/item.dart';
+import 'package:anki/character/item.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import '../character.dart';
-import '../enum/square_type.dart';
-import '../enum/task.dart' as player_action;
-import '../square.dart';
-import 'map.dart';
+import 'character.dart';
+import '../map/square_type.dart';
+import 'task.dart' as player_action;
+import '../map/square.dart';
+import '../map/map.dart';
 
 class PlayerModel extends ChangeNotifier implements Character {
   List<player_action.Task> actions = [];

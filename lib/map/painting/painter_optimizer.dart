@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:anki/square.dart';
+import 'package:anki/map/square.dart';
 import 'package:flutter/material.dart';
 
 /// This is used for better performance

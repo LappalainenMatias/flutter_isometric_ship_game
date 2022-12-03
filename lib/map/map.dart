@@ -1,7 +1,7 @@
-import 'package:anki/enum/square_visibility.dart';
-import 'package:anki/model/player.dart';
+import 'package:anki/map/square_visibility.dart';
+import 'package:anki/character/player.dart';
 import 'package:flutter/cupertino.dart';
-import '../square.dart';
+import 'square.dart';
 
 class MapModel extends ChangeNotifier {
   var width = 0;

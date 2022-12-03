@@ -1,9 +1,9 @@
-import 'package:anki/painter_optimizer.dart';
-import 'package:anki/square.dart';
+import 'package:anki/map/painting/painter_optimizer.dart';
+import 'package:anki/map/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'enemy.dart';
-import 'model/game.dart';
+import '../../character/enemy.dart';
+import '../../game.dart';
 import 'dart:math';
 
 class MapPainter extends CustomPainter {

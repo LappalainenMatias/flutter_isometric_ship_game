@@ -1,14 +1,14 @@
-import 'package:anki/character_manager.dart';
-import 'package:anki/enemy.dart';
-import 'package:anki/map_generator.dart';
-import 'package:anki/model/game.dart';
-import 'package:anki/model/player.dart';
+import 'package:anki/character/character_manager.dart';
+import 'package:anki/character/enemy.dart';
+import 'package:anki/map/map_generator.dart';
+import 'package:anki/game.dart';
+import 'package:anki/character/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'enum/weapon.dart';
-import 'model/map.dart';
+import 'character/weapon.dart';
+import 'map/map.dart';
 import 'widget/board.dart';
-import 'enum/task.dart';
+import 'character/task.dart';
 
 void main() {
   int mapWidth = 500;

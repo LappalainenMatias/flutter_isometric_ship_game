@@ -1,8 +1,8 @@
-import 'package:anki/character.dart';
+import 'package:anki/character/character.dart';
 
-import '../map_helper.dart';
-import '../model/map.dart';
-import '../model/player.dart';
+import '../map/map_helper.dart';
+import '../map/map.dart';
+import 'player.dart';
 import 'dart:math';
 
 

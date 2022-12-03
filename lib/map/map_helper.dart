@@ -1,7 +1,7 @@
-import 'package:anki/enum/square_type.dart';
-import 'package:anki/enum/square_visibility.dart';
-import 'package:anki/model/map.dart';
-import 'package:anki/square.dart';
+import 'package:anki/map/square_type.dart';
+import 'package:anki/map/square_visibility.dart';
+import 'package:anki/map/map.dart';
+import 'package:anki/map/square.dart';
 import 'dart:math';
 
 int manhattanDistance(Square s1, Square s2) {

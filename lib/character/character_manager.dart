@@ -1,8 +1,8 @@
-import 'package:anki/enum/task.dart';
-import 'package:anki/model/player.dart';
+import 'package:anki/character/player.dart';
+import 'package:anki/character/task.dart';
 
 import 'enemy.dart';
-import 'model/map.dart';
+import '../map/map.dart';
 
 class CharacterManager {
   MapModel map;

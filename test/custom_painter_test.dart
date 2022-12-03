@@ -1,9 +1,9 @@
 import 'dart:ui';
 
-import 'package:anki/enum/square_type.dart';
-import 'package:anki/enum/square_visibility.dart';
-import 'package:anki/painter_optimizer.dart';
-import 'package:anki/square.dart';
+import 'package:anki/map/painting/painter_optimizer.dart';
+import 'package:anki/map/square_type.dart';
+import 'package:anki/map/square_visibility.dart';
+import 'package:anki/map/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:test/test.dart';
 import 'dart:math';

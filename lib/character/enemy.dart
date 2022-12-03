@@ -1,9 +1,9 @@
-import 'package:anki/character.dart';
-import 'package:anki/enum/square_type.dart';
-import 'package:anki/model/map.dart';
-import 'package:anki/square.dart';
-import 'enum/task.dart';
-import 'enum/weapon.dart';
+import 'package:anki/character/character.dart';
+import 'package:anki/map/square_type.dart';
+import 'package:anki/map/map.dart';
+import 'package:anki/map/square.dart';
+import 'task.dart';
+import 'weapon.dart';
 
 class Enemy implements Character {
   @override

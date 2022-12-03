@@ -1,11 +1,10 @@
-import 'package:anki/enum/square_type.dart';
-import 'package:anki/enum/square_visibility.dart';
-import 'package:anki/map_helper.dart';
-import 'package:anki/model/map.dart';
-import 'package:anki/square.dart';
+import 'package:anki/map/square_type.dart';
+import 'package:anki/map/square_visibility.dart';
+import 'package:anki/map/map_helper.dart';
+import 'package:anki/map/map.dart';
+import 'package:anki/map/square.dart';
 import 'package:test/test.dart';
-import 'package:anki/enum/item.dart';
-import 'dart:math';
+import 'package:anki/character/item.dart';
 
 void main() {
   test('Calculate manhattan distance', () {

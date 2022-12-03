@@ -1,8 +1,8 @@
-import 'package:anki/custom_painter.dart';
-import 'package:anki/model/player.dart';
+import 'package:anki/map/painting/custom_painter.dart';
+import 'package:anki/character/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../model/game.dart';
+import '../game.dart';
 
 class Board extends StatefulWidget {
   final double width;

@@ -1,8 +1,8 @@
 import 'dart:math';
-import '../character.dart';
-import '../model/player.dart';
-import '../square.dart';
-import 'square_type.dart';
+import 'character.dart';
+import 'player.dart';
+import '../map/square.dart';
+import '../map/square_type.dart';
 
 enum Item {
   heart,

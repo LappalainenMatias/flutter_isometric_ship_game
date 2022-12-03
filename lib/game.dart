@@ -1,13 +1,13 @@
-import 'package:anki/character_manager.dart';
-import 'package:anki/enum/square_visibility.dart';
-import 'package:anki/model/map.dart';
-import 'package:anki/model/player.dart';
+import 'package:anki/character/character_manager.dart';
+import 'package:anki/map/square_visibility.dart';
+import 'package:anki/map/map.dart';
+import 'package:anki/character/player.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
 
-import '../enemy.dart';
-import '../enum/square_type.dart';
-import '../square.dart';
+import 'character/enemy.dart';
+import 'map/square_type.dart';
+import 'map/square.dart';
 
 class GameModel extends ChangeNotifier {
   MapModel map;

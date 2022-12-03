@@ -1,7 +1,7 @@
-import 'enum/square_visibility.dart';
-import 'enum/square_type.dart';
+import 'square_visibility.dart';
+import 'square_type.dart';
 import 'package:flutter/material.dart';
-import 'enum/item.dart';
+import '../character/item.dart';
 
 class Square {
   final int x;

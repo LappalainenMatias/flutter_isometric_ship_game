@@ -1,4 +1,4 @@
-import 'model/map.dart';
+import '../map/map.dart';
 
 abstract class Character {
   get x => null;
