@@ -16,13 +16,10 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    List<List<Square>> table = game.getSquaresInVision(maxResolution);
-    double widthResolution = game.vision > maxResolution.width
-        ? maxResolution.width
-        : game.vision.toDouble();
-    double scale = size.width / widthResolution;
-    if (scale < 1) scale = 1;
-    Map<Rect, Color> rects = createRects(table, scale, game.player, game.enemies);
+    List<List<Square>> squares = game.getSquaresInVision(maxResolution);
+    /// Scale works only if width and height are equal
+    double scale = size.width / squares.length;
+    Map<Rect, Color> rects = createRects(squares, scale, game.player, game.enemies);
     for (Rect rect in rects.keys) {
       rectPaint.color = rects[rect]!;
       canvas.drawRect(rect, rectPaint);
