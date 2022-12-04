@@ -1,5 +1,6 @@
 import 'package:anki/map/square.dart';
 import 'package:fast_noise/fast_noise.dart';
+import 'naturalitem/natural_item.dart';
 import 'square_type.dart';
 import 'square_visibility.dart';
 import 'map.dart';
@@ -25,9 +26,10 @@ class MapGenerator {
             1 * moistureNoise4[x][y];
         elevation = elevation / (1 + 0.5 + 0.25);
         moisture = moisture / (1 + 0.5 + 0.25);
-        SquareType st = SquareTypeExtension.getType(elevation, moisture);
-        row.add(Square(
-            st, x, y, SquareVisibility.unseen, ItemExtension.getRandomItems(st)));
+        SquareType type = SquareTypeExtension.getType(elevation, moisture);
+        NaturalItem? naturalItem = NaturalItemExtension.getNaturalItem(type);
+        row.add(Square(type, x, y, SquareVisibility.seen,
+            ItemExtension.getRandomItems(type), naturalItem));
       }
       squares.add(row);
     }
@@ -35,11 +37,12 @@ class MapGenerator {
   }
 
   /// Increasing frequency adds details
-  List<List<double>> _getPerlinNoise(int w, int h, int seed, frequency) => noise2(w, h,
-      seed: seed,
-      noiseType: NoiseType.Perlin,
-      octaves: 5,
-      frequency: frequency,
-      cellularDistanceFunction: CellularDistanceFunction.Euclidean,
-      cellularReturnType: CellularReturnType.Distance2Add);
+  List<List<double>> _getPerlinNoise(int w, int h, int seed, frequency) =>
+      noise2(w, h,
+          seed: seed,
+          noiseType: NoiseType.Perlin,
+          octaves: 5,
+          frequency: frequency,
+          cellularDistanceFunction: CellularDistanceFunction.Euclidean,
+          cellularReturnType: CellularReturnType.Distance2Add);
 }

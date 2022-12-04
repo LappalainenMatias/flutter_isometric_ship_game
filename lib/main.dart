@@ -19,7 +19,7 @@ void main() {
   MapModel map = MapGenerator().realisticRandomMap(mapWidth, mapHeight);
   Point start = findStartingPoint(map);
   PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
-  player.actions = [Task.moveTowardItem, Task.moveRandomDirection];
+  player.actions = [];
   List<Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);

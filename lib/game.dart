@@ -70,6 +70,7 @@ class GameModel extends ChangeNotifier {
   /// returns all the squares which are in the are defined by top left and bottom right corner
   List<List<Square>> _getSquaresWithMaxResolution(
       Point topLeft, Point bottomRight, Size resolution) {
+    /// Todo maybe we could just return list of points. This could be faster
     List<List<Square>> squares = [];
     int width = resolution.width.toInt();
     int height = resolution.height.toInt();
@@ -87,7 +88,7 @@ class GameModel extends ChangeNotifier {
         if (map.hasSquare(x, y)) {
           row.add(map.getSquare(x, y));
         } else {
-          row.add(Square(SquareType.wall, x, y, SquareVisibility.unseen, []));
+          row.add(Square(SquareType.wall, x, y, SquareVisibility.unseen, [], null));
         }
       }
       squares.add(row);

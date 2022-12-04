@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:anki/character/item.dart';
 import 'package:anki/character/player.dart';
+import 'package:anki/map/naturalitem/natural_item.dart';
 import 'package:anki/map/square.dart';
 import 'package:anki/map/square_visibility.dart';
 import 'package:flutter/material.dart';
@@ -53,5 +54,6 @@ Color getSquareColor(Square square, PlayerModel player, List<Enemy> enemies) {
     if (square.x == enemy.x && square.y == enemy.y) return enemy.color;
   }
   if (square.items.isNotEmpty) return square.items[0].color;
+  if (square.naturalItem != null) return square.naturalItem!.color;
   return square.color;
 }

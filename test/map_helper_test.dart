@@ -22,24 +22,24 @@ void main() {
     /// GGW
     List<List<Square>> squares = [
       [
-        Square(SquareType.grass, 0, 0, SquareVisibility.inView, [Item.heart]),
-        Square(SquareType.grass, 1, 0, SquareVisibility.inView, []),
-        Square(SquareType.ocean, 2, 0, SquareVisibility.inView, []),
+        Square(SquareType.grass, 0, 0, SquareVisibility.inView, [Item.heart], null),
+        Square(SquareType.grass, 1, 0, SquareVisibility.inView, [], null),
+        Square(SquareType.ocean, 2, 0, SquareVisibility.inView, [], null),
       ],
       [
-        Square(SquareType.grass, 0, 1, SquareVisibility.inView, []),
-        Square(SquareType.grass, 1, 1, SquareVisibility.inView, []),
-        Square(SquareType.grass, 2, 1, SquareVisibility.inView, []),
+        Square(SquareType.grass, 0, 1, SquareVisibility.inView, [], null),
+        Square(SquareType.grass, 1, 1, SquareVisibility.inView, [], null),
+        Square(SquareType.grass, 2, 1, SquareVisibility.inView, [], null),
       ],
       [
-        Square(SquareType.ocean, 0, 2, SquareVisibility.inView, []),
-        Square(SquareType.ocean, 1, 2, SquareVisibility.inView, []),
-        Square(SquareType.grass, 2, 2, SquareVisibility.inView, []),
+        Square(SquareType.ocean, 0, 2, SquareVisibility.inView, [], null),
+        Square(SquareType.ocean, 1, 2, SquareVisibility.inView, [], null),
+        Square(SquareType.grass, 2, 2, SquareVisibility.inView, [], null),
       ],
       [
-        Square(SquareType.grass, 0, 3, SquareVisibility.inView, []),
-        Square(SquareType.grass, 1, 3, SquareVisibility.inView, []),
-        Square(SquareType.ocean, 2, 3, SquareVisibility.inView, []),
+        Square(SquareType.grass, 0, 3, SquareVisibility.inView, [], null),
+        Square(SquareType.grass, 1, 3, SquareVisibility.inView, [], null),
+        Square(SquareType.ocean, 2, 3, SquareVisibility.inView, [], null),
       ]
     ];
 

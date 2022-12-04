@@ -1,5 +1,5 @@
+import 'package:anki/map/naturalitem/natural_item.dart';
 import 'package:flutter/material.dart';
-import 'dart:math';
 
 enum SquareType {
   shrubland,
@@ -51,10 +51,37 @@ extension SquareTypeExtension on SquareType {
     }
   }
 
-  static SquareType get getRandomType {
-    List<SquareType> values = SquareType.values;
-    values.remove(SquareType.wall);
-    return values[Random().nextInt(values.length)];
+  List<NaturalItem> get supportedNaturalItems {
+    switch (this) {
+      case SquareType.shrubland:
+        return [NaturalItem.bush];
+      case SquareType.temperateRainForest:
+        return [NaturalItem.tree, NaturalItem.bush];
+      case SquareType.shallowWater:
+        return [];
+      case SquareType.taiga:
+        return [NaturalItem.tree, NaturalItem.bush];
+      case SquareType.temperateDesert:
+        return [];
+      case SquareType.desert:
+        return [];
+      case SquareType.grass:
+        return [];
+      case SquareType.snow:
+        return [];
+      case SquareType.bare:
+        return [];
+      case SquareType.tundra:
+        return [NaturalItem.bush];
+      case SquareType.ocean:
+        return [];
+      case SquareType.beach:
+        return [];
+      case SquareType.wall:
+        return [];
+      default:
+        return [];
+    }
   }
 
   bool get supportsItems {
@@ -90,6 +117,6 @@ extension SquareTypeExtension on SquareType {
       if (m < 0.25) return SquareType.tundra;
       return SquareType.snow;
     }
-    return throw Exception("Type not found");
+    throw Exception("Type not found");
   }
 }

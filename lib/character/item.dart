@@ -20,7 +20,7 @@ extension ItemExtension on Item {
     if (!type.supportsItems) return [];
     List<Item> items = [];
     var num = Random().nextDouble();
-    if (num < 0.02) items.add(Item.heart);
+    if (num < 0.001) items.add(Item.heart);
     return items;
   }
 
