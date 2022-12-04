@@ -1,6 +1,6 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'character.dart';
-import 'player.dart';
 import '../map/square.dart';
 import '../map/square_type.dart';
 
@@ -22,6 +22,14 @@ extension ItemExtension on Item {
     var num = Random().nextDouble();
     if (num < 0.02) items.add(Item.heart);
     return items;
+  }
+
+  Color get color {
+    switch (this) {
+      case Item.heart:
+        return Colors.deepPurpleAccent;
+      default: return Colors.teal;
+    }
   }
 
   void collect(Character character, Square square) {

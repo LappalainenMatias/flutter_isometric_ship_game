@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:anki/character/item.dart';
 import 'package:anki/character/player.dart';
 import 'package:anki/map/square.dart';
 import 'package:anki/map/square_visibility.dart';
@@ -12,7 +13,7 @@ Map<Rect, Color> createRects(List<List<Square>> table, double scale, PlayerModel
   int x = 0;
   int y = 0;
   for (List<Square> row in table) {
-    /// Without the -1 and +1 there is visible grid lines between squares
+    /// Without the -1 and +1 there is visible grid lines between the squares
     Color previous = row[0].color;
     Color current = row[0].color;
     double topLeftX = x * scale - 1;
@@ -51,5 +52,6 @@ Color getSquareColor(Square square, PlayerModel player, List<Enemy> enemies) {
   for (Enemy enemy in enemies) {
     if (square.x == enemy.x && square.y == enemy.y) return enemy.color;
   }
+  if (square.items.isNotEmpty) return square.items[0].color;
   return square.color;
 }

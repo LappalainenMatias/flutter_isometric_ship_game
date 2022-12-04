@@ -2,9 +2,7 @@ import 'package:anki/map/painting/painter_optimizer.dart';
 import 'package:anki/map/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../character/enemy.dart';
 import '../../game.dart';
-import 'dart:math';
 
 class MapPainter extends CustomPainter {
   Size maxResolution = const Size(301, 301);
