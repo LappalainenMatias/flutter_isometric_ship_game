@@ -40,8 +40,4 @@ class MapModel extends ChangeNotifier {
     if (y < 0 || y >= height) return false;
     return true;
   }
-
-  void update() {
-    notifyListeners();
-  }
 }

@@ -17,6 +17,7 @@ class Enemy implements Character {
   List<Task> actions;
   @override
   int hearts;
+  @override
   var color = Colors.amber;
 
   Enemy(this.x, this.y, this.visibility, this.maxHearts, this.hearts,
@@ -29,7 +30,7 @@ class Enemy implements Character {
     if (s.type.isVisitable) {
       x = newX;
       y = newY;
-      map.update();
+      map.notifyListeners();
     }
   }
 

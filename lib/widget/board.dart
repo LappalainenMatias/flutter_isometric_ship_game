@@ -1,3 +1,4 @@
+import 'package:anki/map/map.dart';
 import 'package:anki/map/painting/custom_painter.dart';
 import 'package:anki/character/player.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _BoardState extends State<Board> {
 
   Widget _buildCustomPaint() {
     Provider.of<PlayerModel>(context, listen: true);
+    Provider.of<MapModel>(context, listen: true);
     return CustomPaint(
       size: Size(widget.width, widget.height),
       painter: MapPainter(Provider.of<GameModel>(context, listen: false)),

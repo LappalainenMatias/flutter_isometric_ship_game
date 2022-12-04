@@ -19,6 +19,7 @@ void main() {
   MapModel map = MapGenerator().realisticRandomMap(mapWidth, mapHeight);
   Point start = findStartingPoint(map);
   PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
+  player.actions = [Task.moveTowardItem, Task.moveRandomDirection];
   List<Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
@@ -40,8 +41,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var player = Provider.of<PlayerModel>(context, listen: false);
-    player.actions = [Task.moveTowardItem, Task.moveRandomDirection];
     return MaterialApp(
       title: 'Survival game',
       theme: ThemeData(
@@ -72,7 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Board(width: width, height: width),
-            _buildProgramSyntax(),
+            //_buildProgramSyntax(),
             _buildTestingButtons(),
           ],
         ),

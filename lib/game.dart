@@ -17,7 +17,7 @@ class GameModel extends ChangeNotifier {
 
   /// Notice that vision must be odd so that player can be at the center of vision
   int _vision = 25;
-  double zoomMultiplier = 1.5;
+  final double _zoomMultiplier = 1.5;
   final CharacterManager _characterManager;
 
   GameModel(this.map, this.player, this.enemies, this._characterManager);
@@ -43,16 +43,17 @@ class GameModel extends ChangeNotifier {
         newVision += 1;
       }
       _vision = newVision;
+      map.notifyListeners();
       notifyListeners();
     }
   }
 
   void zoomIn() {
-    _updateVision((_vision / zoomMultiplier).round());
+    _updateVision((_vision / _zoomMultiplier).round());
   }
 
   void zoomOut() {
-    _updateVision((_vision * zoomMultiplier).round());
+    _updateVision((_vision * _zoomMultiplier).round());
   }
 
   /// Resolution is the widgets resolution.

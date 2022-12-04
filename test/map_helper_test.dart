@@ -8,15 +8,10 @@ import 'package:anki/character/item.dart';
 
 void main() {
   test('Calculate manhattan distance', () {
-    Square s1 = Square(SquareType.grass, 0, 0, SquareVisibility.inView, []);
-    Square s2 = Square(SquareType.grass, 1, 2, SquareVisibility.inView, []);
-    Square s3 = Square(SquareType.grass, 5, 4, SquareVisibility.inView, []);
-    Square s4 =
-        Square(SquareType.grass, 10000, 10000, SquareVisibility.inView, []);
-    expect(manhattanDistance(s1, s2), 3);
-    expect(manhattanDistance(s2, s3), 6);
-    expect(manhattanDistance(s3, s1), 9);
-    expect(manhattanDistance(s4, s1), 20000);
+    expect(manhattanDistance(0, 0, 1, 2), 3);
+    expect(manhattanDistance(1, 2, 5, 4), 6);
+    expect(manhattanDistance(5, 4, 0, 0), 9);
+    expect(manhattanDistance(10000, 10000, 0, 0), 20000);
   });
 
   test('Find path to item', () {

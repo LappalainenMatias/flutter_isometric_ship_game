@@ -1,13 +1,13 @@
 import 'package:anki/character/item.dart';
+import 'package:anki/character/task.dart';
 import 'package:flutter/material.dart';
 import 'character.dart';
 import '../map/square_type.dart';
-import 'task.dart' as player_action;
 import '../map/square.dart';
 import '../map/map.dart';
 
 class PlayerModel extends ChangeNotifier implements Character {
-  List<player_action.Task> actions = [];
+  List<Task> actions = [];
   var _visibility = 1;
   var _x = 0;
   var _y = 0;

@@ -1,6 +1,7 @@
 import 'package:anki/character/player.dart';
 import 'package:anki/character/task.dart';
 
+import '../map/map_helper.dart';
 import 'enemy.dart';
 import '../map/map.dart';
 
@@ -12,7 +13,7 @@ class CharacterManager {
   bool paused = true;
 
   CharacterManager(this.map, this.player, this.enemies, this.speedMs) {
-    run();
+    _run();
   }
 
   void pause() {
@@ -23,13 +24,13 @@ class CharacterManager {
     paused = false;
   }
 
-  void run() {
+  void _run() {
     if (!paused) {
       _runPlayerActions();
       _runEnemyActions();
     }
     Future.delayed(Duration(milliseconds: speedMs), () {
-      run();
+      _run();
     });
   }
 
@@ -44,7 +45,7 @@ class CharacterManager {
   void _runEnemyActions() {
     for (var enemy in enemies) {
       /// We do not want to simulate actions if the enemy is far away
-      if ((enemy.x - player.x).abs() + (enemy.y - player.y).abs() >=
+      if (manhattanDistance(enemy.x, enemy.y, player.x, player.y) >=
           player.visibility * 4) {
         continue;
       }

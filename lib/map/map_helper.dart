@@ -1,11 +1,12 @@
+import 'package:anki/character/player.dart';
 import 'package:anki/map/square_type.dart';
 import 'package:anki/map/square_visibility.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/square.dart';
 import 'dart:math';
 
-int manhattanDistance(Square s1, Square s2) {
-  return (s1.x - s2.x).abs() + (s1.y - s2.y).abs();
+int manhattanDistance(int x1, int y1, int x2, int y2) {
+  return (x1 - x2).abs() + (y1 - y2).abs();
 }
 
 Point findStartingPoint(MapModel map) {
