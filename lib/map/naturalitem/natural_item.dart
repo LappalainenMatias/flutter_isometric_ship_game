@@ -12,9 +12,9 @@ extension NaturalItemExtension on NaturalItem {
   Color get color {
     switch(this) {
       case NaturalItem.tree:
-        return const Color.fromARGB(255, 105, 159, 44);
+        return const Color.fromARGB(255, 65, 141, 39);
       case NaturalItem.bush:
-        return const Color.fromARGB(255, 134, 173, 91);
+        return const Color.fromARGB(255, 80, 166, 60);
       default: throw Exception("NaturalItem color not found!");
     }
   }

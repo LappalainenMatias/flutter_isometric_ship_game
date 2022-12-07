@@ -20,7 +20,7 @@ void main() {
   Point start = findStartingPoint(map);
   PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
   player.actions = [];
-  List<Enemy> enemies = getEnemies(map, 0.002);
+  Map<Point, Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
   GameModel game = GameModel(map, player, enemies, characterManager);
@@ -61,6 +61,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  bool isTap = false;
+
   @override
   Widget build(BuildContext context) {
     var game = Provider.of<GameModel>(context, listen: false);
@@ -103,9 +105,10 @@ class _MyHomePageState extends State<MyHomePage> {
           },
         ),
       ],
-      title: Consumer<PlayerModel>(
-        builder: (context, cart, child) {
-          return Text("hearts = ${game.player.hearts}");
+      title: Selector<PlayerModel, int>(
+        selector: (_, player) => player.hearts,
+        builder: (context, hearts, child) {
+          return Text("hearts = $hearts");
         },
       ),
     );
@@ -141,31 +144,15 @@ class _MyHomePageState extends State<MyHomePage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        player.moveUp(map);
-                      },
-                      child: const Text("U"))
+                  _moveButton(player, map, player.moveUp, "U"),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        player.moveLeft(map);
-                      },
-                      child: const Text("L")),
-                  ElevatedButton(
-                      onPressed: () {
-                        player.moveDown(map);
-                      },
-                      child: const Text("D")),
-                  ElevatedButton(
-                      onPressed: () {
-                        player.moveRight(map);
-                      },
-                      child: const Text("R")),
+                  _moveButton(player, map, player.moveLeft, "L"),
+                  _moveButton(player, map, player.moveDown, "D"),
+                  _moveButton(player, map, player.moveRight, "R"),
                 ],
               ),
             ],
@@ -191,6 +178,24 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _moveButton(
+      PlayerModel player, MapModel map, Function function, String text) {
+    return GestureDetector(
+      onTapDown: (_) async {
+        isTap = true;
+        do {
+          await Future.delayed(const Duration(milliseconds: 200));
+          function.call(map);
+        } while (isTap);
+      },
+      onTapUp: (_) => setState(() => isTap = false),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Text(text),
       ),
     );
   }
