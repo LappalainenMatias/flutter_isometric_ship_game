@@ -12,7 +12,7 @@ import 'map/square.dart';
 class GameModel extends ChangeNotifier {
   MapModel map;
   PlayerModel player;
-  List<Enemy> enemies;
+  Map<Point, Enemy> enemies;
   bool paused = true;
 
   /// Notice that vision must be odd so that player can be at the center of vision

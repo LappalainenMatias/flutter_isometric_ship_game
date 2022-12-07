@@ -47,9 +47,9 @@ void main() {
 
     PlayerModel player = PlayerModel(25, 10, 10);
 
-    Map<Rect, Color> rects1 = createRects(squares1, 1, player, []);
-    Map<Rect, Color> rects2 = createRects(squares2, 1, player, []);
-    Map<Rect, Color> rects3 = createRects(squares3, 1, player, []);
+    Map<Rect, Color> rects1 = createRects(squares1, 1, player, {});
+    Map<Rect, Color> rects2 = createRects(squares2, 1, player, {});
+    Map<Rect, Color> rects3 = createRects(squares3, 1, player, {});
 
     expect(rects1.length, 5);
     expect(rects2.length, 9);
