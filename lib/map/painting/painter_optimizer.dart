@@ -3,20 +3,22 @@ import 'package:anki/character/item.dart';
 import 'package:anki/character/player.dart';
 import 'package:anki/map/naturalitem/natural_item.dart';
 import 'package:anki/map/square.dart';
+import 'package:anki/map/square_type.dart';
 import 'package:anki/map/square_visibility.dart';
 import 'package:flutter/material.dart';
 
 import '../../character/enemy.dart';
 
 /// This is used for better performance
-Map<Rect, Color> createRects(List<List<Square>> table, double scale, PlayerModel player, List<Enemy> enemies) {
+Map<Rect, Color> createRects(List<List<Square>> table, double scale,
+    PlayerModel player, Map<Point, Enemy> enemies) {
   Map<Rect, Color> rects = {};
   int x = 0;
   int y = 0;
   for (List<Square> row in table) {
     /// Without the -1 and +1 there is visible grid lines between the squares
-    Color previous = row[0].color;
-    Color current = row[0].color;
+    Color previous = row[0].colorInView;
+    Color current = row[0].colorInView;
     double topLeftX = x * scale - 1;
     double topLeftY = y * scale - 1;
     double bottomRightX = x * scale + scale + 1;
@@ -47,13 +49,12 @@ Map<Rect, Color> createRects(List<List<Square>> table, double scale, PlayerModel
   return rects;
 }
 
-Color getSquareColor(Square square, PlayerModel player, List<Enemy> enemies) {
-  if (square.visibility != SquareVisibility.inView) return square.color;
+Color getSquareColor(Square square, PlayerModel player, Map<Point, Enemy> enemies) {
+  if (square.visibility == SquareVisibility.unseen) return Colors.black;
   if (square.x == player.x && square.y == player.y) return player.color;
-  for (Enemy enemy in enemies) {
-    if (square.x == enemy.x && square.y == enemy.y) return enemy.color;
+  if (square.visibility == SquareVisibility.seen) return square.colorSeen;
+  if (enemies.containsKey(Point(square.x, square.y))) {
+    return enemies[Point(square.x, square.y)]!.color;
   }
-  if (square.items.isNotEmpty) return square.items[0].color;
-  if (square.naturalItem != null) return square.naturalItem!.color;
-  return square.color;
+  return square.colorInView;
 }
