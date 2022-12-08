@@ -6,13 +6,19 @@ import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
 import 'package:anki/map/map_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:provider/provider.dart';
 import 'map/map.dart';
 import 'widget/board.dart';
 import 'character/task.dart';
 import 'dart:math';
+import 'package:flutter/services.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  );
   int mapWidth = 500;
   int mapHeight = 500;
   int simulationSpeedMs = 100;
@@ -61,7 +67,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  bool isTap = false;
+  Duration _period = Duration(milliseconds: 20);
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +79,46 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           children: [
             Board(width: width, height: width),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: _buildJoyStick(game),
+            ),
             //_buildProgramSyntax(),
-            _buildTestingButtons(),
+            //_buildTestingButtons(),
           ],
         ),
+      ),
+    );
+  }
+
+  SizedBox _buildJoyStick(GameModel game) {
+    return SizedBox(
+      width: 100,
+      height: 100,
+      child: Joystick(
+        base: Container(
+          decoration: BoxDecoration(
+              color: Colors.black.withAlpha(60),
+              borderRadius: BorderRadius.all(Radius.circular(50))),
+        ),
+        stick: Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.all(Radius.circular(25))),
+        ),
+        period: _period,
+        onStickDragStart: () {
+          game.start();
+        },
+        onStickDragEnd: () {
+          game.pause();
+        },
+        mode: JoystickMode.all,
+        listener: (details) {
+          game.player.moveXY(details.x, -1 * details.y, game.map);
+        },
       ),
     );
   }
@@ -84,6 +126,14 @@ class _MyHomePageState extends State<MyHomePage> {
   AppBar buildAppBar(GameModel game) {
     return AppBar(
       actions: [
+        Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Consumer<GameModel>(
+            builder: (context, cart, child) {
+              return Text(game.paused ? "paused" : "running");
+            },
+          ),
+        ),
         GestureDetector(
           child: const Icon(
             Icons.zoom_out,
@@ -126,76 +176,6 @@ class _MyHomePageState extends State<MyHomePage> {
           const Text("WHILE NOT gameOver"),
           ...player.actions.map((e) => Text(e.syntax)).toList(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTestingButtons() {
-    var game = Provider.of<GameModel>(context, listen: false);
-    var player = game.player;
-    var map = game.map;
-    return Padding(
-      padding: const EdgeInsets.only(top: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _moveButton(player, map, player.moveUp, "U"),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _moveButton(player, map, player.moveLeft, "L"),
-                  _moveButton(player, map, player.moveDown, "D"),
-                  _moveButton(player, map, player.moveRight, "R"),
-                ],
-              ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.topCenter,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  if (game.paused) {
-                    game.start();
-                  } else {
-                    game.pause();
-                  }
-                },
-                child: Consumer<GameModel>(
-                  builder: (context, cart, child) {
-                    return Text(game.paused ? "paused" : "running");
-                  },
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _moveButton(
-      PlayerModel player, MapModel map, Function function, String text) {
-    return GestureDetector(
-      onTapDown: (_) async {
-        isTap = true;
-        do {
-          await Future.delayed(const Duration(milliseconds: 200));
-          function.call(map);
-        } while (isTap);
-      },
-      onTapUp: (_) => setState(() => isTap = false),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(text),
       ),
     );
   }

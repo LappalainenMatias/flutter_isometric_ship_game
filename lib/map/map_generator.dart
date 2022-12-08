@@ -28,7 +28,7 @@ class MapGenerator {
         moisture = moisture / (1 + 0.5 + 0.25);
         SquareType type = SquareTypeExtension.getType(elevation, moisture);
         NaturalItem? naturalItem = NaturalItemExtension.getNaturalItem(type);
-        row.add(Square(type, x, y, SquareVisibility.seen,
+        row.add(Square(type, x, y, SquareVisibility.unseen,
             ItemExtension.getRandomItems(type), naturalItem));
       }
       squares.add(row);

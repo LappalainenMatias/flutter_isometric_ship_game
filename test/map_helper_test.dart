@@ -14,6 +14,13 @@ void main() {
     expect(manhattanDistance(10000, 10000, 0, 0), 20000);
   });
 
+  test('Calculate euclidean distance', () {
+    expect(euclideanDistance(-10, 0, 10, 0), 20);
+    expect(euclideanDistance(0, -10, 0, 10), 20);
+    expect(euclideanDistance(0, 0, 1, 1).toString().substring(0, 4), "1.41");
+    expect(euclideanDistance(-1, -2, 4, 5).toString().substring(0, 4), "8.60");
+  });
+
   test('Find path to item', () {
     /// Item is in the top left corner, G = Grass, W = Water
     /// GGW
