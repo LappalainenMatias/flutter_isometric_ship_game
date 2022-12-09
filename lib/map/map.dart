@@ -35,6 +35,19 @@ class MapModel extends ChangeNotifier {
     return _squares[y][x];
   }
 
+  List<Square> getNeighbours(int x, int y) {
+    List<Square> neighbours = [];
+    if (hasSquare(x - 1, y)) neighbours.add(getSquare(x - 1, y));
+    if (hasSquare(x, y + 1)) neighbours.add(getSquare(x, y + 1));
+    if (hasSquare(x + 1, y)) neighbours.add(getSquare(x + 1, y));
+    if (hasSquare(x, y - 1)) neighbours.add(getSquare(x, y - 1));
+    if (hasSquare(x + 1, y + 1)) neighbours.add(getSquare(x + 1, y + 1));
+    if (hasSquare(x + 1, y - 1)) neighbours.add(getSquare(x + 1, y - 1));
+    if (hasSquare(x - 1, y - 1)) neighbours.add(getSquare(x - 1, y - 1));
+    if (hasSquare(x - 1, y + 1)) neighbours.add(getSquare(x - 1, y + 1));
+    return neighbours;
+  }
+
   bool hasSquare(int x, int y) {
     if (x < 0 || x >= width) return false;
     if (y < 0 || y >= height) return false;
