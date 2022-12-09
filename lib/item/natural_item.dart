@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import '../square_type.dart';
+import '../map/square_type.dart';
+import 'item.dart';
 
 /// Contains items like trees and rocks
-enum NaturalItem {
-  tree,
-  bush
+enum NaturalItem implements Item {
+  tree(Color.fromARGB(255, 25, 121, 29), "tree"),
+  bush(Color.fromARGB(255, 80, 166, 60), "bush");
+
+  const NaturalItem(this.color, this.name);
+  @override
+  final String name;
+  @override
+  final Color color;
 }
 
 extension NaturalItemExtension on NaturalItem {
-  Color get color {
-    switch(this) {
-      case NaturalItem.tree:
-        return const Color.fromARGB(255, 65, 141, 39);
-      case NaturalItem.bush:
-        return const Color.fromARGB(255, 80, 166, 60);
-      default: throw Exception("NaturalItem color not found!");
-    }
-  }
-
   static NaturalItem? getNaturalItem(SquareType type) {
     List<NaturalItem> supported = type.supportedNaturalItems;
     if (supported.isEmpty) return null;
@@ -28,4 +25,3 @@ extension NaturalItemExtension on NaturalItem {
     return supported.elementAt(random.nextInt(supported.length));
   }
 }
-

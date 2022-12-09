@@ -1,10 +1,10 @@
 import 'package:anki/map/square.dart';
 import 'package:fast_noise/fast_noise.dart';
-import 'naturalitem/natural_item.dart';
+import '../item/natural_item.dart';
 import 'square_type.dart';
 import 'square_visibility.dart';
 import 'map.dart';
-import '../character/item.dart';
+import '../item/special_item.dart';
 
 class MapGenerator {
   MapModel realisticRandomMap(int width, int height) {

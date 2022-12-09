@@ -1,5 +1,5 @@
 import 'package:anki/character/player.dart';
-import 'package:anki/character/task.dart';
+import 'package:anki/action/task.dart';
 
 import '../map/map_helper.dart';
 import 'enemy.dart';
@@ -37,7 +37,7 @@ class CharacterManager {
 
   void _runPlayerActions() {
     for (var action in player.actions) {
-      if (action.function(player, map)) {
+      if (action.f(player, map)) {
         break;
       }
     }
@@ -51,7 +51,7 @@ class CharacterManager {
         continue;
       }
       for (var action in enemy.actions) {
-        if (action.function(enemy, map)) {
+        if (action.f(enemy, map)) {
           break;
         }
       }

@@ -1,4 +1,4 @@
-import 'package:anki/map/naturalitem/natural_item.dart';
+import 'package:anki/item/natural_item.dart';
 import 'package:flutter/material.dart';
 
 enum SquareType {

@@ -4,7 +4,7 @@ import 'package:anki/map/map_helper.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/square.dart';
 import 'package:test/test.dart';
-import 'package:anki/character/item.dart';
+import 'package:anki/item/special_item.dart';
 
 void main() {
   test('Calculate manhattan distance', () {
@@ -29,7 +29,7 @@ void main() {
     /// GGW
     List<List<Square>> squares = [
       [
-        Square(SquareType.grass, 0, 0, SquareVisibility.inView, [Item.heart], null),
+        Square(SquareType.grass, 0, 0, SquareVisibility.inView, [SpecialItem.heart], null),
         Square(SquareType.grass, 1, 0, SquareVisibility.inView, [], null),
         Square(SquareType.ocean, 2, 0, SquareVisibility.inView, [], null),
       ],

@@ -1,6 +1,7 @@
-import 'package:anki/character/task.dart';
-import 'package:anki/character/weapon.dart';
+import 'package:anki/action/task.dart';
+import 'package:anki/item/weapon.dart';
 import 'package:anki/map/square_type.dart';
+import '../item/inventory/inventory.dart';
 import '../map/map.dart';
 import 'enemy.dart';
 import 'dart:math';

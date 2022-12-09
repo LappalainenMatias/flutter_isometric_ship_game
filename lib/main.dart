@@ -1,3 +1,4 @@
+import 'package:anki/action/task.dart';
 import 'package:anki/character/character_manager.dart';
 import 'package:anki/character/enemy.dart';
 import 'package:anki/character/enemy_generator.dart';
@@ -5,12 +6,12 @@ import 'package:anki/map/map_generator.dart';
 import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
 import 'package:anki/map/map_helper.dart';
+import 'package:anki/widget/inventory_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:provider/provider.dart';
 import 'map/map.dart';
 import 'widget/board.dart';
-import 'character/task.dart';
 import 'dart:math';
 import 'package:flutter/services.dart';
 
@@ -19,13 +20,11 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  int mapWidth = 500;
-  int mapHeight = 500;
   int simulationSpeedMs = 100;
-  MapModel map = MapGenerator().realisticRandomMap(mapWidth, mapHeight);
+  MapModel map = MapGenerator().realisticRandomMap(500, 500);
   Point start = findStartingPoint(map);
   PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
-  player.actions = [];
+  player.actions = [Task.cutTrees];
   Map<Point, Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
@@ -67,7 +66,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  Duration _period = Duration(milliseconds: 20);
 
   @override
   Widget build(BuildContext context) {
@@ -75,18 +73,15 @@ class _MyHomePageState extends State<MyHomePage> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: buildAppBar(game),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Board(width: width, height: width),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: _buildJoyStick(game),
-            ),
-            //_buildProgramSyntax(),
-            //_buildTestingButtons(),
-          ],
-        ),
+      body: Column(
+        children: [
+          Board(width: width, height: width),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildJoyStick(game),
+          ),
+          InventoryWidget(player: game.player),
+        ],
       ),
     );
   }
@@ -99,16 +94,16 @@ class _MyHomePageState extends State<MyHomePage> {
         base: Container(
           decoration: BoxDecoration(
               color: Colors.black.withAlpha(60),
-              borderRadius: BorderRadius.all(Radius.circular(50))),
+              borderRadius: const BorderRadius.all(Radius.circular(50))),
         ),
         stick: Container(
           width: 50,
           height: 50,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: Colors.blue,
               borderRadius: BorderRadius.all(Radius.circular(25))),
         ),
-        period: _period,
+        period: const Duration(milliseconds: 20),
         onStickDragStart: () {
           game.start();
         },
@@ -117,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
         },
         mode: JoystickMode.all,
         listener: (details) {
-          game.player.moveXY(details.x, -1 * details.y, game.map);
+          game.player.moveJoyStick(details.x, -1 * details.y, game.map);
         },
       ),
     );
@@ -160,22 +155,6 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context, hearts, child) {
           return Text("hearts = $hearts");
         },
-      ),
-    );
-  }
-
-  Widget _buildProgramSyntax() {
-    var player = Provider.of<PlayerModel>(context, listen: false);
-    return Padding(
-      padding: const EdgeInsets.all(32.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("player.maxHearts = ${player.maxHearts}"),
-          Text("player.visibility = ${player.visibility}"),
-          const Text("WHILE NOT gameOver"),
-          ...player.actions.map((e) => Text(e.syntax)).toList(),
-        ],
       ),
     );
   }

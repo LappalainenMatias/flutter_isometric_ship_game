@@ -1,4 +1,3 @@
-import 'package:anki/map/painting/painter_optimizer.dart';
 import 'package:anki/map/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
