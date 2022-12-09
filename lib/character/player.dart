@@ -1,7 +1,9 @@
-import 'package:anki/character/item.dart';
-import 'package:anki/character/task.dart';
+import 'package:anki/item/special_item.dart';
+import 'package:anki/action/task.dart';
 import 'package:anki/map/map_helper.dart';
 import 'package:flutter/material.dart';
+import '../item/inventory/inventory.dart';
+import '../item/item.dart';
 import 'character.dart';
 import '../map/square_type.dart';
 import '../map/square.dart';
@@ -20,6 +22,8 @@ class PlayerModel extends ChangeNotifier implements Character {
   var color = Colors.red;
   double movementSpeedMS = 1000;
   DateTime lastMovement = DateTime.now();
+  @override
+  final Inventory _inventory = Inventory();
 
   PlayerModel(this._visibility, this._x, this._y);
 
@@ -36,8 +40,10 @@ class PlayerModel extends ChangeNotifier implements Character {
   }
 
   /// Moves the player in the direction indicated by the origin (0, 0) and (x, y)
-  void moveXY(double x, double y, MapModel map) {
+  /// (0, 1) = up, (-1, 0) = left
+  void moveJoyStick(double x, double y, MapModel map) {
     double distance = euclideanDistance(0, 0, x, y);
+    if (distance > 1.1) throw Exception("Too large distance: $distance");
     movementSpeedMS = 500 - (400 * distance).abs();
     if (movementSpeedMS >
         DateTime.now().difference(lastMovement).inMilliseconds) {
@@ -78,9 +84,9 @@ class PlayerModel extends ChangeNotifier implements Character {
     }
   }
 
-  void _collectItems(Square sq) {
-    for (var item in sq.items) {
-      item.collect(this, sq);
+  void _collectItems(Square s) {
+    for (var item in s.items) {
+      item.collect(this, s);
     }
   }
 
@@ -96,4 +102,22 @@ class PlayerModel extends ChangeNotifier implements Character {
   get x => _x;
 
   get visibility => _visibility;
+
+  int inventoryCount(Item item) {
+    return _inventory.count(item);
+  }
+
+  void inventoryAdd(Item item) {
+    _inventory.add(item);
+    notifyListeners();
+  }
+
+  void inventoryUse(Item item) {
+    _inventory.use(item);
+    notifyListeners();
+  }
+
+  List<Item> inventoryGetAllTypes() {
+    return _inventory.getAllTypes();
+  }
 }

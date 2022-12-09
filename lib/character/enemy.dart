@@ -2,8 +2,9 @@ import 'package:anki/character/character.dart';
 import 'package:anki/map/square_type.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/square.dart';
-import 'task.dart';
-import 'weapon.dart';
+import '../action/task.dart';
+import '../item/inventory/inventory.dart';
+import '../item/weapon.dart';
 import 'package:flutter/material.dart';
 
 class Enemy implements Character {
@@ -14,6 +15,8 @@ class Enemy implements Character {
   int visibility;
   int maxHearts;
   Weapon weapon;
+  @override
+  Inventory inventory = Inventory();
   List<Task> actions;
   @override
   int hearts;
