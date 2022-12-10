@@ -23,10 +23,10 @@ void collectHeart(Character character, Square square) {
 
 extension ItemExtension on SpecialItem {
   static List<SpecialItem> getRandomItems(SquareType type) {
-    if (!type.supportsItems) return [];
+    if (!type.supportsSpecialItems) return [];
     List<SpecialItem> items = [];
     var num = Random().nextDouble();
-    if (num < 0.001) items.add(SpecialItem.heart);
+    if (num < 0.002) items.add(SpecialItem.heart);
     return items;
   }
 }

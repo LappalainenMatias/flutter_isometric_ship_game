@@ -22,7 +22,6 @@ class PlayerModel extends ChangeNotifier implements Character {
   var color = Colors.red;
   double movementSpeedMS = 1000;
   DateTime lastMovement = DateTime.now();
-  @override
   final Inventory _inventory = Inventory();
 
   PlayerModel(this._visibility, this._x, this._y);
