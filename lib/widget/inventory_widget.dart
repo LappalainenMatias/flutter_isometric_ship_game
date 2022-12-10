@@ -2,7 +2,6 @@ import 'package:anki/character/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../item/inventory/inventory.dart';
-import '../item/item.dart';
 
 class InventoryWidget extends StatefulWidget {
   final PlayerModel player;
@@ -18,36 +17,39 @@ class _InventoryWidgetState extends State<InventoryWidget> {
   Widget build(BuildContext context) {
     return Consumer<PlayerModel>(
       builder: (context, player, child) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            for (Item item in player.inventoryGetItemTypes()) inventoryItem(item)
-          ],
-        );
+        return _buildResources();
       },
     );
   }
 
-  Widget inventoryItem(Item item) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Container(
-        decoration: BoxDecoration(
-            color: item.color,
-            borderRadius: const BorderRadius.all(Radius.circular(10))),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(item.name.toString()),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(widget.player.inventoryItemCount(item).toString()),
-            ),
-          ],
+  Widget _buildResources() {
+    return Row(
+      children: [
+        Container(
+          width: 50,
+          height: 25,
+          color: Resource.food.color,
+          child: Text(widget.player.getFood().toString()),
         ),
-      ),
+        Container(
+          width: 50,
+          height: 25,
+          color: Resource.wood.color,
+          child: Text(widget.player.getWood().toString()),
+        ),
+        Container(
+          width: 50,
+          height: 25,
+          color: Resource.gold.color,
+          child: Text(widget.player.getGold().toString()),
+        ),
+        Container(
+          width: 50,
+          height: 25,
+          color: Resource.stone.color,
+          child: Text(widget.player.getStone().toString()),
+        ),
+      ],
     );
   }
 }
