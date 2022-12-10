@@ -106,22 +106,52 @@ class PlayerModel extends ChangeNotifier implements Character {
 
   get visibility => _visibility;
 
-  int inventoryItemCount(Item item) {
-    return _inventory.countItem(item);
+  void addFood(int amount) {
+    _inventory.addResource(Resource.food, amount);
   }
 
-  void inventoryItemAdd(Item item) {
-    _inventory.addItem(item);
-    notifyListeners();
+  void addWood(int amount) {
+    _inventory.addResource(Resource.wood, amount);
   }
 
-  void inventoryItemUse(Item item) {
-    _inventory.useItem(item);
-    notifyListeners();
+  void addStone(int amount) {
+    _inventory.addResource(Resource.stone, amount);
   }
 
-  List<Item> inventoryGetItemTypes() {
-    return _inventory.getItemTypes();
+  void addGold(int amount) {
+    _inventory.addResource(Resource.gold, amount);
+  }
+
+  void reduceStone(int amount) {
+    _inventory.reduceResource(Resource.stone, amount);
+  }
+
+  void reduceGold(int amount) {
+    _inventory.reduceResource(Resource.gold, amount);
+  }
+
+  void reduceFood(int amount) {
+    _inventory.reduceResource(Resource.food, amount);
+  }
+
+  void reduceWood(int amount) {
+    _inventory.reduceResource(Resource.wood, amount);
+  }
+
+  int getStone() {
+    return _inventory.getResource(Resource.stone);
+  }
+
+  int getGold() {
+    return _inventory.getResource(Resource.gold);
+  }
+
+  int getFood() {
+    return _inventory.getResource(Resource.food);
+  }
+
+  int getWood() {
+    return _inventory.getResource(Resource.wood);
   }
 
   void inventoryAddTool(Tool tool) {

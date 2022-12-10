@@ -1,17 +1,15 @@
-import '../item.dart';
+import 'package:flutter/material.dart';
 import '../tool.dart';
 
 class Inventory {
   /// Value is the amount of the items
-  final Map<Item, int> _items = {};
+  final Map<Resource, int> _resources = {
+    Resource.food: 0,
+    Resource.wood: 0,
+    Resource.stone: 0,
+    Resource.gold: 0,
+  };
   final Set<Tool> _tools = {};
-
-  int countItem(Item item) {
-    if (_items.containsKey(item)) {
-      return _items[item]!;
-    }
-    return 0;
-  }
 
   Set<Tool> getTools() {
     return _tools;
@@ -25,25 +23,32 @@ class Inventory {
     _tools.remove(tool);
   }
 
-  void addItem(Item item) {
-    if (_items.containsKey(item)) {
-      _items[item] = _items[item]! + 1;
+  void addResource(Resource resource, int amount) {
+    if (_resources[resource]! + amount > 99999) {
+      _resources[resource] = 99999;
     } else {
-      _items[item] = 1;
+      _resources[resource] = _resources[resource]! + amount;
     }
   }
 
-  void useItem(Item item) {
-    if (countItem(item) > 0) {
-      _items[item] = _items[item]! - 1;
+  void reduceResource(Resource resource, int amount) {
+    if (_resources[resource]! - amount < 0) {
+      _resources[resource] = 0;
+    } else {
+      _resources[resource] = _resources[resource]! - amount;
     }
   }
 
-  List<Item> getItemTypes() {
-    List<Item> types = [];
-    for (var item in _items.keys) {
-      if (_items[item]! > 0) types.add(item);
-    }
-    return types;
+  int getResource(Resource resource) {
+    return _resources[resource]!;
   }
+}
+
+enum Resource {
+  wood(Colors.brown),
+  food(Colors.redAccent),
+  stone(Colors.grey),
+  gold(Colors.yellow);
+  const Resource(this.color);
+  final Color color;
 }
