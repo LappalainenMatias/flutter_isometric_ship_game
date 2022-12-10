@@ -10,6 +10,7 @@ import 'package:anki/widget/inventory_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:provider/provider.dart';
+import 'item/tool.dart';
 import 'map/map.dart';
 import 'widget/board.dart';
 import 'dart:math';
@@ -25,6 +26,7 @@ void main() async {
   Point start = findStartingPoint(map);
   PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
   player.actions = [Task.cutTrees, Task.cutBushes];
+  player.inventoryAddTool(Tool.axe);
   Map<Point, Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
