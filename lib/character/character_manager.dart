@@ -1,15 +1,12 @@
 import 'package:anki/character/player.dart';
-import 'package:anki/action/task.dart';
-
 import '../map/map_helper.dart';
 import 'enemy.dart';
 import '../map/map.dart';
-import 'dart:math';
 
 class CharacterManager {
   MapModel map;
   PlayerModel player;
-  Map<Point, Enemy> enemies;
+  List<Enemy> enemies;
   int speedMs;
   bool paused = true;
 
@@ -44,7 +41,7 @@ class CharacterManager {
   }
 
   void _runEnemyActions() {
-    for (var enemy in enemies.values) {
+    for (var enemy in enemies) {
       /// We do not want to simulate actions if the enemy is far away
       if (manhattanDistance(enemy.x, enemy.y, player.x, player.y) >=
           player.visibility * 4) {
