@@ -74,12 +74,14 @@ class MapPainter extends CustomPainter {
   }
 
   Color getSquareColor(
-      Square square, PlayerModel player, Map<Point, Enemy> enemies) {
+      Square square, PlayerModel player, List<Enemy> enemies) {
     if (square.visibility == SquareVisibility.unseen) return Colors.black;
     if (square.x == player.x && square.y == player.y) return player.color;
     if (square.visibility == SquareVisibility.seen) return square.colorSeen;
-    if (enemies.containsKey(Point(square.x, square.y))) {
-      return enemies[Point(square.x, square.y)]!.color;
+    for (Enemy enemy in enemies) {
+      if (enemy.x == square.x && enemy.y == square.y) {
+        return enemy.color;
+      }
     }
     return square.colorInView;
   }
