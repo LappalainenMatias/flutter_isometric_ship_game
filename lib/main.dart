@@ -6,10 +6,9 @@ import 'package:anki/map/map_generator.dart';
 import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
 import 'package:anki/map/map_helper.dart';
-import 'package:anki/widget/inventory_widget.dart';
+import 'package:anki/widget/resourse_widget.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:provider/provider.dart';
 import 'item/tool.dart';
 import 'map/map.dart';
@@ -25,10 +24,10 @@ void main() async {
   int simulationSpeedMs = 100;
   MapModel map = MapGenerator().realisticRandomMap(500, 500);
   Point start = findStartingPoint(map);
-  PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
+  PlayerModel player = PlayerModel(20, start.x.toInt(), start.y.toInt());
   player.actions = [Task.cutTrees, Task.cutBushes];
   player.inventoryAddTool(Tool.axe);
-  Map<Point, Enemy> enemies = getEnemies(map, 0.002);
+  List<Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
   GameModel game = GameModel(map, player, enemies, characterManager);
@@ -82,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Board(width: width, height: width)),
           Align(
             alignment: Alignment.topCenter,
-            child: InventoryWidget(player: game.player),
+            child: ResourceWidget(player: game.player),
           ),
           Align(
             alignment: Alignment.bottomRight,
@@ -109,33 +108,33 @@ class _MyHomePageState extends State<MyHomePage> {
             },
           ),
         ),
-        GestureDetector(
-          child: const Icon(
-            Icons.zoom_out,
-            color: Colors.white,
-            size: 24.0,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            child: const Icon(
+              Icons.zoom_out,
+              color: Colors.white,
+              size: 24.0,
+            ),
+            onTap: () {
+              game.zoomOut();
+            },
           ),
-          onTap: () {
-            game.zoomOut();
-          },
         ),
-        GestureDetector(
-          child: const Icon(
-            Icons.zoom_in,
-            color: Colors.white,
-            size: 24.0,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            child: const Icon(
+              Icons.zoom_in,
+              color: Colors.white,
+              size: 24.0,
+            ),
+            onTap: () {
+              game.zoomIn();
+            },
           ),
-          onTap: () {
-            game.zoomIn();
-          },
         ),
       ],
-      title: Selector<PlayerModel, int>(
-        selector: (_, player) => player.hearts,
-        builder: (context, hearts, child) {
-          return Text("hearts = $hearts");
-        },
-      ),
     );
   }
 }
