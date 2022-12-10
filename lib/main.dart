@@ -24,8 +24,8 @@ void main() async {
   int simulationSpeedMs = 100;
   MapModel map = MapGenerator().realisticRandomMap(500, 500);
   Point start = findStartingPoint(map);
-  PlayerModel player = PlayerModel(20, start.x.toInt(), start.y.toInt());
-  player.actions = [Task.cutTrees, Task.cutBushes];
+  PlayerModel player = PlayerModel(15, start.x.toInt(), start.y.toInt());
+  player.actions = [Task.cutPlant];
   player.inventoryAddTool(Tool.axe);
   List<Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =

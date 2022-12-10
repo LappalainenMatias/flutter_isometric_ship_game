@@ -20,7 +20,7 @@ class PlayerModel extends ChangeNotifier implements Character {
   @override
   var hearts = 1;
   @override
-  var color = Color.fromARGB(255, 13, 229, 197);
+  var color = const Color.fromARGB(255, 13, 229, 197);
   double movementSpeedMS = 1000;
   DateTime lastMovement = DateTime.now();
   final Inventory _inventory = Inventory();
