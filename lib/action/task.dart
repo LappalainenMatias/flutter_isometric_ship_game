@@ -11,6 +11,7 @@ import '../map/square.dart';
 enum Task {
   moveRandomDirection(_moveRandomDirection, "player.moveToRandomDirection()\ncontinue"),
   moveTowardItem(_moveTowardClosestVisibleItem, "if player.seesItem()\n  player.moveTowardClosestItem()\n  continue"),
+  cutBushes(_cutBushes, "if player.isNextToTree()\n  player.cutBushes()"),
   cutTrees(_cutTrees, "if player.isNextToTree()\n  player.cutTree()");
 
   const Task(this.f, this.syntax);
@@ -51,6 +52,18 @@ bool _cutTrees(PlayerModel player, MapModel map) {
   for (var n in neighbours) {
     if (n.naturalItem == NaturalItem.tree) {
       player.inventoryAdd(NaturalItem.tree);
+      n.removeNaturalItem();
+    }
+  }
+  return false;
+}
+
+///Returns true if next tasks are skipped
+bool _cutBushes(PlayerModel player, MapModel map) {
+  List<Square> neighbours = map.getNeighbours(player.x, player.y);
+  for (var n in neighbours) {
+    if (n.naturalItem == NaturalItem.bush) {
+      player.inventoryAdd(NaturalItem.bush);
       n.removeNaturalItem();
     }
   }

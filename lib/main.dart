@@ -24,7 +24,7 @@ void main() async {
   MapModel map = MapGenerator().realisticRandomMap(500, 500);
   Point start = findStartingPoint(map);
   PlayerModel player = PlayerModel(10, start.x.toInt(), start.y.toInt());
-  player.actions = [Task.cutTrees];
+  player.actions = [Task.cutTrees, Task.cutBushes];
   Map<Point, Enemy> enemies = getEnemies(map, 0.002);
   CharacterManager characterManager =
       CharacterManager(map, player, enemies, simulationSpeedMs);
