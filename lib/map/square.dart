@@ -7,14 +7,14 @@ import '../item/special_item.dart';
 class Square {
   final int x;
   final int y;
-  List<SpecialItem> items = [];
+  List<SpecialItem> specialItems = [];
   NaturalItem? naturalItem;
   SquareType type;
   SquareVisibility visibility;
   late Color colorInView;
   late Color colorSeen;
 
-  Square(this.type, this.x, this.y, this.visibility, this.items,
+  Square(this.type, this.x, this.y, this.visibility, this.specialItems,
       this.naturalItem) {
     colorInView = naturalItem != null ? naturalItem!.color : type.color;
     colorSeen = Color.alphaBlend(

@@ -21,7 +21,7 @@ class _InventoryWidgetState extends State<InventoryWidget> {
         return Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            for (Item item in player.inventoryGetAllTypes()) inventoryItem(item)
+            for (Item item in player.inventoryGetItemTypes()) inventoryItem(item)
           ],
         );
       },
@@ -43,7 +43,7 @@ class _InventoryWidgetState extends State<InventoryWidget> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(widget.player.inventoryCount(item).toString()),
+              child: Text(widget.player.inventoryItemCount(item).toString()),
             ),
           ],
         ),

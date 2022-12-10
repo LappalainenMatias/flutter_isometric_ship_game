@@ -18,7 +18,7 @@ enum SpecialItem implements Item{
 
 void collectHeart(Character character, Square square) {
   character.setHearts(character.hearts + 1);
-  square.items.remove(SpecialItem.heart);
+  square.specialItems.remove(SpecialItem.heart);
 }
 
 extension ItemExtension on SpecialItem {

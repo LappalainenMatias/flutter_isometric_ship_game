@@ -52,7 +52,7 @@ class PathFinder {
         parents[n] = q;
         adjacency.add(n);
         queue.add(n);
-        if (s.items.isNotEmpty) {
+        if (s.specialItems.isNotEmpty) {
           item = Point(n.x, n.y);
           break;
         }
