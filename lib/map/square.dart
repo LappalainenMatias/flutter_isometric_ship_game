@@ -16,7 +16,15 @@ class Square {
 
   Square(this.type, this.x, this.y, this.visibility, this.specialItems,
       this.naturalItem) {
-    colorInView = naturalItem != null ? naturalItem!.color : type.color;
+    defineColors();
+  }
+
+  void defineColors() {
+    colorInView = specialItems.isNotEmpty
+        ? specialItems.first.color
+        : naturalItem != null
+        ? naturalItem!.color
+        : type.color;
     colorSeen = Color.alphaBlend(
         colorInView.withAlpha(100), Colors.black.withAlpha(155))
         .withAlpha(255);
@@ -24,9 +32,11 @@ class Square {
 
   void removeNaturalItem() {
     naturalItem = null;
-    colorInView = type.color;
-    colorSeen = Color.alphaBlend(
-        colorInView.withAlpha(100), Colors.black.withAlpha(155))
-        .withAlpha(255);
+    defineColors();
+  }
+
+  void removeSpecialItem(SpecialItem item) {
+    specialItems.remove(item);
+    defineColors();
   }
 }
