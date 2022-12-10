@@ -16,7 +16,7 @@ class GameModel extends ChangeNotifier {
   bool paused = true;
 
   /// Notice that vision must be odd so that player can be at the center of vision
-  int _vision = 25;
+  int _vision = 40;
   final double _zoomMultiplier = 1.5;
   final CharacterManager _characterManager;
 

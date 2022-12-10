@@ -1,5 +1,4 @@
 import 'package:anki/character/character.dart';
-import 'package:anki/map/square_type.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/square.dart';
 import '../action/task.dart';
@@ -20,7 +19,7 @@ class Enemy implements Character {
   @override
   int hearts;
   @override
-  var color = Colors.amber;
+  var color = Colors.red;
 
   Enemy(this.x, this.y, this.visibility, this.maxHearts, this.hearts,
       this.weapon, this.actions);
