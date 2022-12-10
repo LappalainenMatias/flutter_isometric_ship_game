@@ -4,6 +4,7 @@ import 'package:anki/map/map_helper.dart';
 import 'package:flutter/material.dart';
 import '../item/inventory/inventory.dart';
 import '../item/item.dart';
+import '../item/tool.dart';
 import 'character.dart';
 import '../map/square_type.dart';
 import '../map/square.dart';
@@ -73,19 +74,22 @@ class PlayerModel extends ChangeNotifier implements Character {
   @override
   void move(MapModel map, int newX, int newY) {
     if (!map.hasSquare(newX, newY)) return;
-    Square s = map.getSquare(newX, newY);
-    if (s.type.isVisitable) {
+    Square square = map.getSquare(newX, newY);
+    if (square.type.isVisitable) {
       _x = newX;
       _y = newY;
-      if (s.items.isNotEmpty) _collectItems(s);
+      for (Square neighbour in map.getNeighbours(_x, _y)) {
+        if (neighbour.specialItems.isNotEmpty) collectItems(neighbour);
+      }
       map.updateSquareVisibility(this);
       notifyListeners();
     }
   }
 
-  void _collectItems(Square s) {
-    for (var item in s.items) {
-      item.collect(this, s);
+  void collectItems(Square square) {
+    for (var i = 0; i < square.specialItems.length; i++) {
+      square.specialItems[i].collect(this, square);
+      i--;
     }
   }
 
@@ -102,21 +106,35 @@ class PlayerModel extends ChangeNotifier implements Character {
 
   get visibility => _visibility;
 
-  int inventoryCount(Item item) {
-    return _inventory.count(item);
+  int inventoryItemCount(Item item) {
+    return _inventory.countItem(item);
   }
 
-  void inventoryAdd(Item item) {
-    _inventory.add(item);
+  void inventoryItemAdd(Item item) {
+    _inventory.addItem(item);
     notifyListeners();
   }
 
-  void inventoryUse(Item item) {
-    _inventory.use(item);
+  void inventoryItemUse(Item item) {
+    _inventory.useItem(item);
     notifyListeners();
   }
 
-  List<Item> inventoryGetAllTypes() {
-    return _inventory.getAllTypes();
+  List<Item> inventoryGetItemTypes() {
+    return _inventory.getItemTypes();
+  }
+
+  void inventoryAddTool(Tool tool) {
+    _inventory.addTool(tool);
+    notifyListeners();
+  }
+
+  void inventoryRemoveTool(Tool tool) {
+    _inventory.removeTool(tool);
+    notifyListeners();
+  }
+
+  Set<Tool> inventoryGetTools() {
+    return _inventory.getTools();
   }
 }
