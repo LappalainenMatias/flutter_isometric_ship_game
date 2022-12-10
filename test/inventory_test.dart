@@ -5,32 +5,6 @@ import 'package:anki/item/tool.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test('add/use/count/getTypes items in inventory', () {
-    Inventory inventory = Inventory();
-    expect(inventory.getItemTypes().length, 0);
-    expect(inventory.countItem(NaturalItem.tree), 0);
-    inventory.addItem(NaturalItem.tree);
-    expect(inventory.getItemTypes().length, 1);
-    expect(inventory.countItem(NaturalItem.tree), 1);
-    inventory.addItem(NaturalItem.tree);
-    expect(inventory.countItem(NaturalItem.tree), 2);
-    inventory.addItem(NaturalItem.bush);
-    expect(inventory.countItem(NaturalItem.tree), 2);
-    expect(inventory.countItem(NaturalItem.bush), 1);
-    expect(inventory.countItem(SpecialItem.heart), 0);
-    inventory.addItem(SpecialItem.heart);
-    expect(inventory.countItem(SpecialItem.heart), 1);
-    expect(inventory.countItem(NaturalItem.tree), 2);
-    expect(inventory.countItem(NaturalItem.bush), 1);
-    inventory.useItem(NaturalItem.tree);
-    expect(inventory.countItem(NaturalItem.tree), 1);
-    inventory.useItem(NaturalItem.tree);
-    expect(inventory.countItem(NaturalItem.tree), 0);
-    inventory.useItem(NaturalItem.tree);
-    expect(inventory.countItem(NaturalItem.tree), 0);
-    expect(inventory.getItemTypes().length, 2);
-  });
-
   test('add/remove/get tools in inventory', () {
     Inventory inventory = Inventory();
     expect(inventory.getTools().length, 0);
@@ -40,5 +14,18 @@ void main() {
     expect(inventory.getTools().length, 1);
     inventory.removeTool(Tool.axe);
     expect(inventory.getTools().length, 0);
+  });
+
+  test('add/remove/get resource in inventory', () {
+    Inventory inventory = Inventory();
+    expect(inventory.getResource(Resource.food), 0);
+    inventory.addResource(Resource.food, 10);
+    expect(inventory.getResource(Resource.food), 10);
+    inventory.addResource(Resource.wood, 20);
+    expect(inventory.getResource(Resource.wood), 20);
+    inventory.reduceResource(Resource.wood, 15);
+    expect(inventory.getResource(Resource.wood), 5);
+    inventory.reduceResource(Resource.wood, 10);
+    expect(inventory.getResource(Resource.wood), 0);
   });
 }
