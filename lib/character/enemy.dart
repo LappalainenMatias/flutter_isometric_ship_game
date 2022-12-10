@@ -15,7 +15,6 @@ class Enemy implements Character {
   int visibility;
   int maxHearts;
   Weapon weapon;
-  @override
   Inventory inventory = Inventory();
   List<Task> actions;
   @override
@@ -29,22 +28,21 @@ class Enemy implements Character {
   @override
   void move(MapModel map, int newX, int newY) {
     if (!map.hasSquare(newX, newY)) return;
-    Square s = map.getSquare(newX, newY);
-    if (s.type.isVisitable) {
+    Square square = map.getSquare(newX, newY);
+    if (square.type.isVisitable) {
       x = newX;
       y = newY;
-      map.notifyListeners();
     }
   }
 
   @override
   void setHearts(int hearts) {
     if (hearts <= 0) {
-      hearts = 0;
+      this.hearts = 0;
     } else if (hearts > maxHearts) {
-      hearts = maxHearts;
+      this.hearts = maxHearts;
     } else {
-      hearts = hearts;
+      this.hearts = hearts;
     }
   }
 }

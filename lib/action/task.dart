@@ -13,7 +13,7 @@ enum Task {
       _moveRandomDirection, "player.moveToRandomDirection()\ncontinue"),
   moveTowardItem(_moveTowardClosestVisibleItem,
       "if player.seesItem()\n  player.moveTowardClosestItem()\n  continue"),
-  cutBushes(_cutBushes, "if player.isNextToTree()\n  player.cutBushes()"),
+  cutBushes(_cutBushes, "if player.isNextToBush()\n  player.cutBushes()"),
   cutTrees(_cutTrees, "if player.isNextToTree()\n  player.cutTree()");
 
   const Task(this.f, this.syntax);
@@ -51,10 +51,10 @@ bool _moveTowardClosestVisibleItem(PlayerModel player, MapModel map) {
 bool _cutTrees(PlayerModel player, MapModel map) {
   if (!_supportsCutting(player.inventoryGetTools())) return false;
   List<Square> neighbours = map.getNeighbours(player.x, player.y);
-  for (var n in neighbours) {
-    if (n.naturalItem == NaturalItem.tree) {
-      player.inventoryItemAdd(NaturalItem.tree);
-      n.removeNaturalItem();
+  for (var neighbour in neighbours) {
+    if (neighbour.naturalItem == NaturalItem.tree) {
+      player.addWood(5);
+      neighbour.removeNaturalItem();
     }
   }
   return false;
@@ -64,10 +64,10 @@ bool _cutTrees(PlayerModel player, MapModel map) {
 bool _cutBushes(PlayerModel player, MapModel map) {
   if (!_supportsCutting(player.inventoryGetTools())) return false;
   List<Square> neighbours = map.getNeighbours(player.x, player.y);
-  for (var n in neighbours) {
-    if (n.naturalItem == NaturalItem.bush) {
-      player.inventoryItemAdd(NaturalItem.bush);
-      n.removeNaturalItem();
+  for (var neighbour in neighbours) {
+    if (neighbour.naturalItem == NaturalItem.bush) {
+      player.addWood(1);
+      neighbour.removeNaturalItem();
     }
   }
   return false;
