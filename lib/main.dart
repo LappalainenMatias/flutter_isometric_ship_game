@@ -75,19 +75,23 @@ class _MyHomePageState extends State<MyHomePage> {
     double width = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: buildAppBar(game),
-      body: Column(
+      body: Stack(
         children: [
-          Board(width: width, height: width),
-          Row(
-            children: [
-              InventoryWidget(player: game.player),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: JoyStick(
-                  game: game,
-                ),
+          Align(
+              alignment: Alignment.topCenter,
+              child: Board(width: width, height: width)),
+          Align(
+            alignment: Alignment.topCenter,
+            child: InventoryWidget(player: game.player),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(32.0),
+              child: JoyStick(
+                game: game,
               ),
-            ],
+            ),
           ),
         ],
       ),

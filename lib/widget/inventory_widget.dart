@@ -17,39 +17,34 @@ class _InventoryWidgetState extends State<InventoryWidget> {
   Widget build(BuildContext context) {
     return Consumer<PlayerModel>(
       builder: (context, player, child) {
-        return _buildResources();
+        return Container(
+          color: const Color.fromARGB(64, 148, 148, 148),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _buildResourceWidget(widget.player.getFood(), Resource.food.color),
+              _buildResourceWidget(widget.player.getGold(), Resource.gold.color),
+              _buildResourceWidget(widget.player.getWood(), Resource.wood.color),
+              _buildResourceWidget(widget.player.getStone(), Resource.stone.color)
+            ],
+          ),
+        );
       },
     );
   }
 
-  Widget _buildResources() {
-    return Row(
-      children: [
-        Container(
-          width: 50,
-          height: 25,
-          color: Resource.food.color,
-          child: Text(widget.player.getFood().toString()),
+  Widget _buildResourceWidget(int amount, Color color) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+          color: color
         ),
-        Container(
-          width: 50,
-          height: 25,
-          color: Resource.wood.color,
-          child: Text(widget.player.getWood().toString()),
-        ),
-        Container(
-          width: 50,
-          height: 25,
-          color: Resource.gold.color,
-          child: Text(widget.player.getGold().toString()),
-        ),
-        Container(
-          width: 50,
-          height: 25,
-          color: Resource.stone.color,
-          child: Text(widget.player.getStone().toString()),
-        ),
-      ],
+        width: 75,
+        height: 40,
+        child: Center(child: Text(amount.toString())),
+      ),
     );
   }
 }
