@@ -34,7 +34,7 @@ class MapPainter extends CustomPainter {
     double y = 0;
     double scale = size.width / maxRows;
     double skip = game.vision > maxRows ? game.vision / maxRows : 1;
-    int startRow = game.player.y - (game.vision / 2).ceil();
+    int startRow = game.map.playerCoordinate.y - (game.vision / 2).ceil();
     while (y < maxRows) {
       int row = (startRow + y * skip).floor();
       List<Square> squares = getSquares(row);
@@ -73,16 +73,11 @@ class MapPainter extends CustomPainter {
     }
   }
 
-  Color getSquareColor(
-      Square square, PlayerModel player, List<Enemy> enemies) {
+  Color getSquareColor(Square square, PlayerModel player, List<Enemy> enemies) {
     if (square.visibility == SquareVisibility.unseen) return Colors.black;
-    if (square.x == player.x && square.y == player.y) return player.color;
+    Point playerCoordinate = game.map.playerCoordinate;
+    ///todo
     if (square.visibility == SquareVisibility.seen) return square.colorSeen;
-    for (Enemy enemy in enemies) {
-      if (enemy.x == square.x && enemy.y == square.y) {
-        return enemy.color;
-      }
-    }
     return square.colorInView;
   }
 
@@ -90,9 +85,10 @@ class MapPainter extends CustomPainter {
   /// We use resolution so that we do not return unnecessary large amount of squares.
   List<Square> getSquares(int column) {
     int halfVision = (game.vision / 2).ceil();
+    Point playerCoordinate = game.map.playerCoordinate;
     List<Square> squares = _getSquaresWithMaxResolutionRow(
-      Point(game.player.x - halfVision, column),
-      Point(game.player.x + halfVision, column),
+      Point(playerCoordinate.x - halfVision, column),
+      Point(playerCoordinate.x + halfVision, column),
     );
     return squares;
   }
@@ -110,12 +106,7 @@ class MapPainter extends CustomPainter {
     List<Square> row = [];
     for (int j = 0; j <= width; j++) {
       int x = (topLeft.x.toInt() + j * scale).round();
-      if (game.map.hasSquare(x, y)) {
-        row.add(game.map.getSquare(x, y));
-      } else {
-        row.add(
-            Square(SquareType.wall, x, y, SquareVisibility.unseen, [], null));
-      }
+      row.add(game.map.getSquare(x, y));
     }
     return row;
   }

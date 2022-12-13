@@ -24,6 +24,7 @@ enum Task {
 
 ///Returns true if next tasks are skipped
 bool _moveRandomDirection(Character character, MapModel map) {
+  /*
   int num = Random().nextInt(8);
   List<Point> moves = [
     Point(character.x + 1, character.y),
@@ -36,21 +37,24 @@ bool _moveRandomDirection(Character character, MapModel map) {
     Point(character.x - 1, character.y + 1)
   ];
   character.move(map, moves[num].x.toInt(), moves[num].y.toInt());
+  todo
+   */
   return false;
 }
 
 ///Returns true if next tasks are skipped
 bool _moveTowardClosestVisibleItem(PlayerModel player, MapModel map) {
-  List<Point> path = PathFinder.pathToClosestItem(player.x, player.y, map);
-  if (path.isEmpty) return false;
-  player.move(map, path[0].x.toInt(), path[0].y.toInt());
+  //List<Point> path = PathFinder.pathToClosestItem(player.x, player.y, map);
+  //if (path.isEmpty) return false;
+  ///todo player.move(map, path[0].x.toInt(), path[0].y.toInt());
   return true;
 }
 
 ///Returns true if next tasks are skipped
 bool _cutTreesAndBushes(PlayerModel player, MapModel map) {
   if (!_supportsCutting(player.inventoryGetTools())) return false;
-  List<Square> neighbours = map.getNeighbours(player.x, player.y);
+  Point<int> playerCoordinate = map.playerCoordinate;
+  List<Square> neighbours = map.getNeighbours(playerCoordinate.x, playerCoordinate.y);
   for (var neighbour in neighbours) {
     if (neighbour.naturalItem == NaturalItem.tree ||
         neighbour.naturalItem == NaturalItem.bush) {

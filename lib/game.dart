@@ -61,8 +61,10 @@ class GameModel extends ChangeNotifier {
   List<List<Square>> getSquaresInVision(Size resolution) {
     int halfVision = (vision / 2).ceil();
     List<List<Square>> squares = _getSquaresWithMaxResolution(
-        Point(player.x - halfVision, player.y - halfVision),
-        Point(player.x + halfVision, player.y + halfVision),
+        Point(map.playerCoordinate.x - halfVision,
+            map.playerCoordinate.y - halfVision),
+        Point(map.playerCoordinate.x + halfVision,
+            map.playerCoordinate.y + halfVision),
         resolution);
     return squares;
   }
@@ -85,11 +87,7 @@ class GameModel extends ChangeNotifier {
       int y = (topLeft.y.toInt() + i * scale).round();
       for (int j = 0; j <= width; j++) {
         int x = (topLeft.x.toInt() + j * scale).round();
-        if (map.hasSquare(x, y)) {
-          row.add(map.getSquare(x, y));
-        } else {
-          row.add(Square(SquareType.wall, x, y, SquareVisibility.unseen, [], null));
-        }
+        row.add(map.getSquare(x, y));
       }
       squares.add(row);
     }

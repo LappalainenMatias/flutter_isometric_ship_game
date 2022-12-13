@@ -12,22 +12,6 @@ int manhattanDistance(int x1, int y1, int x2, int y2) {
   return (x1 - x2).abs() + (y1 - y2).abs();
 }
 
-Point findStartingPoint(MapModel map) {
-  int x = (map.width / 2).round();
-  for (int y = (map.height / 2).round(); y < map.height; y++) {
-    if (map.getSquare(x, y).type.isVisitable) {
-      return Point(x, y);
-    }
-  }
-  int y = (map.height / 2).round();
-  for (int x = (map.width / 2).round(); x < map.width; x++) {
-    if (map.getSquare(x, y).type.isVisitable) {
-      return Point(x, y);
-    }
-  }
-  throw Exception("No starting point found");
-}
-
 class PathFinder {
   /// BFS algorithm
   static List<Point> pathToClosestItem(int x, int y, MapModel map) {
@@ -44,7 +28,6 @@ class PathFinder {
         Point(q.x, q.y + 1)
       ];
       for (Point<int> n in neighbors) {
-        if (!map.hasSquare(n.x, n.y)) continue;
         Square s = map.getSquare(n.x, n.y);
         if (s.visibility != SquareVisibility.inView) continue;
         if (!s.type.isVisitable) continue;

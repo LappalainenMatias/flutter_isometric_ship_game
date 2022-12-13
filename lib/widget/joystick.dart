@@ -40,7 +40,7 @@ class _JoyStickState extends State<JoyStick> {
         },
         mode: JoystickMode.all,
         listener: (details) {
-          game.player.moveJoyStick(details.x, -1 * details.y, game.map);
+          game.map.moveJoyStick(details.x, -1 * details.y, game.map);
         },
       ),
     );

@@ -21,16 +21,13 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  int simulationSpeedMs = 100;
-  MapModel map = MapGenerator().realisticRandomMap(500, 500);
-  Point start = findStartingPoint(map);
-  PlayerModel player = PlayerModel(15, start.x.toInt(), start.y.toInt());
+  PlayerModel player = PlayerModel(15);
   player.actions = [Task.cutPlant];
   player.inventoryAddTool(Tool.axe);
-  List<Enemy> enemies = getEnemies(map, 0.002);
-  CharacterManager characterManager =
-      CharacterManager(map, player, enemies, simulationSpeedMs);
-  GameModel game = GameModel(map, player, enemies, characterManager);
+  //List<Enemy> enemies = getEnemies(map, 0.002);
+  MapModel map = MapModel(player, const Point(10, 10));
+  CharacterManager characterManager = CharacterManager(map, player, [], 100);
+  GameModel game = GameModel(map, player, [], characterManager);
   runApp(
     MultiProvider(
       providers: [
