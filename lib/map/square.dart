@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import '../item/special_item.dart';
 
 class Square {
-  final int x;
-  final int y;
   List<SpecialItem> specialItems = [];
   NaturalItem? naturalItem;
   SquareType type;
@@ -14,7 +12,7 @@ class Square {
   late Color colorInView;
   late Color colorSeen;
 
-  Square(this.type, this.x, this.y, this.visibility, this.specialItems,
+  Square(this.type, this.visibility, this.specialItems,
       this.naturalItem) {
     defineColors();
   }
