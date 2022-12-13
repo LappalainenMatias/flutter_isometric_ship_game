@@ -7,13 +7,13 @@ import 'package:test/test.dart';
 
 void main() {
   test('Collect hearts', () {
-    PlayerModel player = PlayerModel(5, 3, 3);
+    PlayerModel player = PlayerModel(5);
     player.maxHearts = 10;
-    Square square = Square(SquareType.grass, 3, 3, SquareVisibility.inView,
+    Square square = Square(SquareType.grass, SquareVisibility.inView,
         [SpecialItem.heart], null);
     Square square2 =
-        Square(SquareType.grass, 3, 4, SquareVisibility.inView, [], null);
-    Square square3 = Square(SquareType.grass, 3, 4, SquareVisibility.inView,
+        Square(SquareType.grass, SquareVisibility.inView, [], null);
+    Square square3 = Square(SquareType.grass, SquareVisibility.inView,
         [SpecialItem.heart, SpecialItem.heart], null);
     int startingHearts = player.hearts;
     player.collectItems(square);
@@ -27,7 +27,7 @@ void main() {
   });
 
   test('Add food/stone/gold/wood', () {
-    PlayerModel player = PlayerModel(5, 3, 3);
+    PlayerModel player = PlayerModel(5);
     expect(player.getWood(), 0);
     expect(player.getFood(), 0);
     expect(player.getStone(), 0);
