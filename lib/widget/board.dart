@@ -1,9 +1,7 @@
 import 'package:anki/map/map.dart';
 import 'package:anki/map/painting/custom_painter.dart';
-import 'package:anki/character/player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../game.dart';
 
 class Board extends StatefulWidget {
   final double width;
@@ -23,11 +21,14 @@ class _BoardState extends State<Board> {
   }
 
   Widget _buildCustomPaint() {
-    Provider.of<PlayerModel>(context, listen: true);
-    Provider.of<MapModel>(context, listen: true);
-    return CustomPaint(
-      size: Size(widget.width, widget.height),
-      painter: MapPainter(Provider.of<GameModel>(context, listen: false)),
+    return Selector<MapModel, bool>(
+      selector: (_, map) => map.mapWasUpdated,
+      builder: (context, wasUpdated, child) {
+        return CustomPaint(
+          size: Size(widget.width, widget.height),
+          painter: MapPainter(Provider.of<MapModel>(context, listen: false)),
+        );
+      },
     );
   }
 }
