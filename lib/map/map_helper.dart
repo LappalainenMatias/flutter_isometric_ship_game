@@ -1,4 +1,3 @@
-import 'package:anki/map/square_type.dart';
 import 'package:anki/map/square_visibility.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/square.dart';
@@ -27,16 +26,16 @@ class PathFinder {
         Point(q.x, q.y - 1),
         Point(q.x, q.y + 1)
       ];
-      for (Point<int> n in neighbors) {
-        Square s = map.getSquare(n.x, n.y);
-        if (s.visibility != SquareVisibility.inView) continue;
-        if (!s.type.isVisitable) continue;
-        if (adjacency.contains(Point(n.x, n.y))) continue;
-        parents[n] = q;
-        adjacency.add(n);
-        queue.add(n);
-        if (s.specialItems.isNotEmpty) {
-          item = Point(n.x, n.y);
+      for (Point<int> neighbour in neighbors) {
+        Square square = map.getSquare(neighbour.x, neighbour.y);
+        if (square.visibility != SquareVisibility.inView) continue;
+        if (!square.type.isVisitable) continue;
+        if (adjacency.contains(Point(neighbour.x, neighbour.y))) continue;
+        parents[neighbour] = q;
+        adjacency.add(neighbour);
+        queue.add(neighbour);
+        if (square.specialItems.isNotEmpty) {
+          item = Point(neighbour.x, neighbour.y);
           break;
         }
       }
