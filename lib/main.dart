@@ -1,11 +1,7 @@
 import 'package:anki/action/task.dart';
 import 'package:anki/character/character_manager.dart';
-import 'package:anki/character/enemy.dart';
-import 'package:anki/character/enemy_generator.dart';
-import 'package:anki/map/map_generator.dart';
 import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
-import 'package:anki/map/map_helper.dart';
 import 'package:anki/widget/resourse_widget.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:flutter/material.dart';
@@ -27,7 +23,7 @@ void main() async {
   //List<Enemy> enemies = getEnemies(map, 0.002);
   MapModel map = MapModel(player, const Point(10, 10));
   CharacterManager characterManager = CharacterManager(map, player, [], 100);
-  GameModel game = GameModel(map, player, [], characterManager);
+  GameModel game = GameModel(map, characterManager);
   runApp(
     MultiProvider(
       providers: [
@@ -78,7 +74,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: Board(width: width, height: width)),
           Align(
             alignment: Alignment.topCenter,
-            child: ResourceWidget(player: game.player),
+            child: ResourceWidget(player: game.map.player),
           ),
           Align(
             alignment: Alignment.bottomRight,
@@ -114,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
               size: 24.0,
             ),
             onTap: () {
-              game.zoomOut();
+              game.map.zoomOut();
             },
           ),
         ),
@@ -127,7 +123,7 @@ class _MyHomePageState extends State<MyHomePage> {
               size: 24.0,
             ),
             onTap: () {
-              game.zoomIn();
+              game.map.zoomIn();
             },
           ),
         ),
