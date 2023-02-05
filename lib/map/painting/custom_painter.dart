@@ -1,12 +1,10 @@
+import 'dart:ui';
+
 import 'package:anki/map/square.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../character/enemy.dart';
-import '../../character/player.dart';
 import '../../game.dart';
 import 'dart:math';
-
-import '../square_type.dart';
 import '../square_visibility.dart';
 
 class MapPainter extends CustomPainter {
@@ -27,45 +25,38 @@ class MapPainter extends CustomPainter {
 
   /// This is used for better performance
   paintSquares(Canvas canvas, GameModel game, Size size) {
-    int maxRows = game.vision > maxResolution.height
+    int maxRows = game.map.vision > maxResolution.height
         ? maxResolution.height.toInt()
-        : game.vision;
+        : game.map.vision;
     int x = 0;
     double y = 0;
     double scale = size.width / maxRows;
-    double skip = game.vision > maxRows ? game.vision / maxRows : 1;
-    int startRow = game.map.playerCoordinate.y - (game.vision / 2).ceil();
+    double skip = game.map.vision > maxRows ? game.map.vision / maxRows : 1;
+    int startRow = game.map.playerCoordinate.y - (game.map.vision / 2).ceil();
     while (y < maxRows) {
       int row = (startRow + y * skip).floor();
-      List<Square> squares = getSquares(row);
-      Color previous = squares[0].colorInView;
-      Color current = squares[0].colorInView;
       double topLeftX = x * scale - 1; // -1 and +1 removes grid lines
       double topLeftY = y * scale - 1;
       double bottomRightX = x * scale + scale + 1;
       double bottomRightY = y * scale + scale + 1;
-      for (Square square in squares) {
-        current = getSquareColor(square, game.player, game.enemies);
-        if (current == previous) {
-          bottomRightX = x * scale + scale + 1;
-          bottomRightY = y * scale + scale + 1;
-        } else {
-          rectPaint.color = previous;
-          canvas.drawRect(
-              Rect.fromLTRB(topLeftX, topLeftY, bottomRightX, bottomRightY),
-              rectPaint);
-          topLeftX = x * scale - 1;
-          topLeftY = y * scale - 1;
-          bottomRightX = x * scale + scale + 1;
-          bottomRightY = y * scale + scale + 1;
-        }
-        if (x + 1 == squares.length) {
-          rectPaint.color = current;
-          canvas.drawRect(
-              Rect.fromLTRB(topLeftX, topLeftY, bottomRightX, bottomRightY),
-              rectPaint);
-        }
-        previous = current;
+      for (Square square in getSquares(row)) {
+        topLeftX = x * scale - 1; // -1 and +1 removes grid lines
+        topLeftY = y * scale - 1;
+        bottomRightX = x * scale + scale + 1;
+        bottomRightY = y * scale + scale + 1;
+        rectPaint.color = getSquareColor(square);
+        final vertices = Vertices(
+          VertexMode.triangles,
+          [
+            Offset(topLeftX, topLeftY),
+            Offset(bottomRightX, topLeftY),
+            Offset(bottomRightX, bottomRightY),
+            Offset(topLeftX, topLeftY),
+            Offset(bottomRightX, bottomRightY),
+            Offset(topLeftX, bottomRightY),
+          ]
+        );
+        canvas.drawVertices(vertices, BlendMode.src, rectPaint);
         x++;
       }
       y++;
@@ -73,10 +64,8 @@ class MapPainter extends CustomPainter {
     }
   }
 
-  Color getSquareColor(Square square, PlayerModel player, List<Enemy> enemies) {
+  Color getSquareColor(Square square) {
     if (square.visibility == SquareVisibility.unseen) return Colors.black;
-    Point playerCoordinate = game.map.playerCoordinate;
-    ///todo
     if (square.visibility == SquareVisibility.seen) return square.colorSeen;
     return square.colorInView;
   }
@@ -84,7 +73,7 @@ class MapPainter extends CustomPainter {
   /// Resolution is the widgets resolution.
   /// We use resolution so that we do not return unnecessary large amount of squares.
   List<Square> getSquares(int column) {
-    int halfVision = (game.vision / 2).ceil();
+    int halfVision = (game.map.vision / 2).ceil();
     Point playerCoordinate = game.map.playerCoordinate;
     List<Square> squares = _getSquaresWithMaxResolutionRow(
       Point(playerCoordinate.x - halfVision, column),
