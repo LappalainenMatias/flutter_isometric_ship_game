@@ -1,16 +1,18 @@
 import 'package:fast_noise/fast_noise.dart';
 import 'package:test/test.dart';
+import 'dart:math';
 
 void main() {
   test('Define perlin noise map size', () {
-    var map1 = noise2(100, 100, 0, 0,
+    var map1 = noise2(100, 100,
         seed: 1,
         noiseType: NoiseType.Perlin,
         octaves: 5,
         frequency: 0.1,
         cellularDistanceFunction: CellularDistanceFunction.Euclidean,
         cellularReturnType: CellularReturnType.Distance2Add);
-    var map2 = noise2(50, 50, 50, 50,
+    var map2 = noise2(50, 50,
+        offset: const Point(50, 50),
         seed: 1,
         noiseType: NoiseType.Perlin,
         octaves: 5,
@@ -22,14 +24,16 @@ void main() {
   });
 
   test('Get same values', () {
-    var map1 = noise2(3, 3, 0, 0,
+    var map1 = noise2(3, 3,
+        offset: const Point(0, 0),
         seed: 2,
         noiseType: NoiseType.Perlin,
         octaves: 5,
         frequency: 0.1,
         cellularDistanceFunction: CellularDistanceFunction.Euclidean,
         cellularReturnType: CellularReturnType.Distance2Add);
-    var map2 = noise2(3, 3, 1, 1,
+    var map2 = noise2(3, 3,
+        offset: const Point(1, 1),
         seed: 2,
         noiseType: NoiseType.Perlin,
         octaves: 5,

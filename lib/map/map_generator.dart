@@ -5,6 +5,7 @@ import '../item/natural_item.dart';
 import 'square_type.dart';
 import 'square_visibility.dart';
 import '../item/special_item.dart';
+import 'dart:math';
 
 Region generateRegion(int width, int height, int startX, int startY) {
   int seed = 100;
@@ -45,7 +46,7 @@ Region generateRegion(int width, int height, int startX, int startY) {
 /// Increasing frequency adds details
 List<List<double>> _getPerlinNoise(
         int w, int h, int startX, int startY, int seed, frequency) =>
-    noise2(w, h, startX, startY,
+    noise2(w, h, offset: Point(startX, startY),
         seed: seed,
         noiseType: NoiseType.Perlin,
         octaves: 5,
