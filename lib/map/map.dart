@@ -135,4 +135,25 @@ class MapModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  void _updateVision(int newVision) {
+    if (newVision < 3) {
+      vision = 3;
+      _updateMapImage();
+    } else {
+      if (newVision.isEven) {
+        newVision += 1;
+      }
+      vision = newVision;
+      _updateMapImage();
+    }
+  }
+
+  void zoomIn() {
+    _updateVision((vision / _zoomMultiplier).round());
+  }
+
+  void zoomOut() {
+    _updateVision((vision * _zoomMultiplier).round());
+  }
 }
