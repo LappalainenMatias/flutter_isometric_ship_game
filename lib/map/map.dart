@@ -20,6 +20,8 @@ class MapModel extends ChangeNotifier {
   Point<int> playerCoordinate;
   double movementSpeedMS = 1000;
   DateTime lastMovement = DateTime.now();
+  final double _zoomMultiplier = 1.5;
+  int vision = 51;
 
   MapModel(this.player, this.playerCoordinate) {
     List<List<Square>> squares = [];
@@ -92,7 +94,7 @@ class MapModel extends ChangeNotifier {
 
   /// Moves the player in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left
-  void moveJoyStick(double x, double y, MapModel map) {
+  void moveJoyStick(double x, double y) {
     double distance = euclideanDistance(0, 0, x, y);
     if (distance > 1.1) throw Exception("Too large distance: $distance");
     movementSpeedMS = 500 - (400 * distance).abs();
@@ -106,32 +108,32 @@ class MapModel extends ChangeNotifier {
     int playerX = playerCoordinate.x;
     int playerY = playerCoordinate.y;
     if (angle > 337.5 || angle < 22.5) {
-      move(map, playerX, playerY - 1); // Up
+      move(playerX, playerY - 1); // Up
     } else if (angle > 22.5 && angle < 67.5) {
-      move(map, playerX + 1, playerY - 1); // Up right
+      move(playerX + 1, playerY - 1); // Up right
     } else if (angle > 67.5 && angle < 112.5) {
-      move(map, playerX + 1, playerY); // Right
+      move(playerX + 1, playerY); // Right
     } else if (angle > 112.5 && angle < 157.5) {
-      move(map, playerX + 1, playerY + 1); // Down right
+      move(playerX + 1, playerY + 1); // Down right
     } else if (angle > 157.5 && angle < 202.5) {
-      move(map, playerX, playerY + 1); // Down
+      move(playerX, playerY + 1); // Down
     } else if (angle > 202.5 && angle < 247.5) {
-      move(map, playerX - 1, playerY + 1); // Down left
+      move(playerX - 1, playerY + 1); // Down left
     } else if (angle > 247.5 && angle < 292.5) {
-      move(map, playerX - 1, playerY); // Left
+      move(playerX - 1, playerY); // Left
     } else if (angle > 292.5 && angle < 337.5) {
-      move(map, playerX - 1, playerY - 1); // Up left
+      move(playerX - 1, playerY - 1); // Up left
     }
   }
 
-  void move(MapModel map, int newX, int newY) {
-    Square square = map.getSquare(newX, newY);
+  void move(int newX, int newY) {
+    Square square = getSquare(newX, newY);
     if (square.type.isVisitable) {
       playerCoordinate = Point(newX, newY);
-      for (Square neighbour in map.getNeighbours(newX, newY)) {
+      for (Square neighbour in getNeighbours(newX, newY)) {
         if (neighbour.specialItems.isNotEmpty) player.collectItems(neighbour);
       }
-      map.updateSquareVisibility();
+      updateSquareVisibility();
       notifyListeners();
     }
   }
@@ -139,13 +141,13 @@ class MapModel extends ChangeNotifier {
   void _updateVision(int newVision) {
     if (newVision < 3) {
       vision = 3;
-      _updateMapImage();
+      notifyListeners();
     } else {
       if (newVision.isEven) {
         newVision += 1;
       }
       vision = newVision;
-      _updateMapImage();
+      notifyListeners();
     }
   }
 
