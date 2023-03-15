@@ -19,8 +19,39 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    paintSquares(canvas, game, size);
+    List<List<Color>> table = game.map.getMapSquares();
+    _paintSquares(canvas, table, size);
     print("Painting took ${start.elapsedMilliseconds} ms");
+  }
+
+  _paintSquares(Canvas canvas, List<List<Color>> table, size) {
+    int maxRows = game.map.vision > maxResolution.height
+        ? maxResolution.height.toInt()
+        : game.map.vision;
+    int x = 0;
+    int y = 0;
+    double scale = size.width / maxRows;
+    for (List<Color> row in table) {
+      for (Color color in row) {
+        double topLeftX = x * scale - 1; // -1 and +1 removes grid lines
+        double topLeftY = y * scale - 1;
+        double bottomRightX = x * scale + scale + 1;
+        double bottomRightY = y * scale + scale + 1;
+        rectPaint.color = color;
+        final vertices = Vertices(VertexMode.triangles, [
+          Offset(topLeftX, topLeftY),
+          Offset(bottomRightX, topLeftY),
+          Offset(bottomRightX, bottomRightY),
+          Offset(topLeftX, topLeftY),
+          Offset(bottomRightX, bottomRightY),
+          Offset(topLeftX, bottomRightY),
+        ]);
+        canvas.drawVertices(vertices, BlendMode.src, rectPaint);
+        x++;
+      }
+      y++;
+      x = 0;
+    }
   }
 
   /// This is used for better performance
@@ -45,17 +76,14 @@ class MapPainter extends CustomPainter {
         bottomRightX = x * scale + scale + 1;
         bottomRightY = y * scale + scale + 1;
         rectPaint.color = getSquareColor(square);
-        final vertices = Vertices(
-          VertexMode.triangles,
-          [
-            Offset(topLeftX, topLeftY),
-            Offset(bottomRightX, topLeftY),
-            Offset(bottomRightX, bottomRightY),
-            Offset(topLeftX, topLeftY),
-            Offset(bottomRightX, bottomRightY),
-            Offset(topLeftX, bottomRightY),
-          ]
-        );
+        final vertices = Vertices(VertexMode.triangles, [
+          Offset(topLeftX, topLeftY),
+          Offset(bottomRightX, topLeftY),
+          Offset(bottomRightX, bottomRightY),
+          Offset(topLeftX, topLeftY),
+          Offset(bottomRightX, bottomRightY),
+          Offset(topLeftX, bottomRightY),
+        ]);
         canvas.drawVertices(vertices, BlendMode.src, rectPaint);
         x++;
       }
