@@ -1,4 +1,4 @@
-# anki
+# Flutter game
 
 A new Flutter project.
 
