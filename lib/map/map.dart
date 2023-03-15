@@ -9,12 +9,8 @@ import 'square.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
-  int regionSideWidth = 16;
+  final int _regionSideWidth = 16;
   late final Region _emptyRegion;
-
-  /// Notice that squares[0][0] would return the top left square in the screen
-  /// [[(0,0), (1,0)],
-  ///  [(0,1), (1,1)]]
   final Map<Point, Region> _regions = {};
   final PlayerModel player;
   Point<int> playerCoordinate;
@@ -25,14 +21,46 @@ class MapModel extends ChangeNotifier {
 
   MapModel(this.player, this.playerCoordinate) {
     List<List<Square>> squares = [];
-    for (int x = 0; x < regionSideWidth; x++) {
+    for (int x = 0; x < _regionSideWidth; x++) {
       List<Square> row = [];
-      for (int y = 0; y < regionSideWidth; y++) {
+      for (int y = 0; y < _regionSideWidth; y++) {
         row.add(Square(SquareType.wall, SquareVisibility.unseen, [], null));
       }
       squares.add(row);
     }
     _emptyRegion = Region(squares);
+  }
+
+  List<List<Color>> getMapSquares() {
+    List<List<Color>> table = [];
+    Point topLeft = getVisionTopLeftPoint();
+    Point bottomRight = getVisionBottomRightPoint();
+    int y = bottomRight.y.toInt();
+    int x = topLeft.x.toInt();
+    while (y <= topLeft.y) {
+      List<Color> row = [];
+      while (x <= bottomRight.x) {
+        Square square = getSquare(x, y);
+        if (square.visibility == SquareVisibility.inView) {
+          row.add(getSquare(x, y).colorInView);
+        } else {
+          row.add(getSquare(x, y).colorSeen);
+        }
+        x++;
+      }
+      table.add(row);
+      x = topLeft.x.toInt();
+      y++;
+    }
+    return table;
+  }
+
+  Point<int> getVisionTopLeftPoint() {
+    return Point(playerCoordinate.x - (vision / 2).floor(), playerCoordinate.y + (vision / 2).floor());
+  }
+
+  Point<int> getVisionBottomRightPoint() {
+    return Point(playerCoordinate.x + (vision / 2).floor(), playerCoordinate.y - (vision / 2).floor());
   }
 
   updateSquareVisibility() {
@@ -57,30 +85,30 @@ class MapModel extends ChangeNotifier {
   }
 
   Square getSquare(int x, int y) {
-    int squareX = x % regionSideWidth;
-    int squareY = y % regionSideWidth;
+    int squareX = x % _regionSideWidth;
+    int squareY = y % _regionSideWidth;
     Region region = _getRegion(x, y);
     return region.getSquare(squareX, squareY);
   }
 
   Region _getRegion(int x, int y) {
-    int regionX = (x / regionSideWidth).floor();
-    int regionY = (y / regionSideWidth).floor();
+    int regionX = (x / _regionSideWidth).floor();
+    int regionY = (y / _regionSideWidth).floor();
     if (_hasRegion(regionX, regionY)) {
       return _regions[Point(regionX, regionY)]!;
     } else {
-      if (manhattanDistance(x, y, playerCoordinate.x, playerCoordinate.y) > regionSideWidth * 8) {
+      if (manhattanDistance(x, y, playerCoordinate.x, playerCoordinate.y) > _regionSideWidth * 8) {
         return _emptyRegion;
       }
       _regions[Point(regionX, regionY)] =
-          _createRegion(regionX * regionSideWidth, regionY * regionSideWidth);
+          _createRegion(regionX * _regionSideWidth, regionY * _regionSideWidth);
       return _regions[Point(regionX, regionY)]!;
     }
   }
 
   ///x and y are the regions topLeft coordinate
   Region _createRegion(int x, int y) {
-    return generateRegion(regionSideWidth, regionSideWidth, x, y);
+    return generateRegion(_regionSideWidth, _regionSideWidth, x, y);
   }
 
   List<Square> getNeighbours(int x, int y) {
