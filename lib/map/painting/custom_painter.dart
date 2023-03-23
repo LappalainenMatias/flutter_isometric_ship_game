@@ -63,7 +63,7 @@ class MapPainter extends CustomPainter {
     double y = 0;
     double scale = size.width / maxRows;
     double skip = game.map.vision > maxRows ? game.map.vision / maxRows : 1;
-    int startRow = game.map.playerCoordinate.y - (game.map.vision / 2).ceil();
+    int startRow = game.map.player.getCoordinate().y - (game.map.vision / 2).ceil();
     while (y < maxRows) {
       int row = (startRow + y * skip).floor();
       double topLeftX = x * scale - 1; // -1 and +1 removes grid lines
@@ -102,7 +102,7 @@ class MapPainter extends CustomPainter {
   /// We use resolution so that we do not return unnecessary large amount of squares.
   List<Square> getSquares(int column) {
     int halfVision = (game.map.vision / 2).ceil();
-    Point playerCoordinate = game.map.playerCoordinate;
+    Point playerCoordinate = game.map.player.getCoordinate();
     List<Square> squares = _getSquaresWithMaxResolutionRow(
       Point(playerCoordinate.x - halfVision, column),
       Point(playerCoordinate.x + halfVision, column),

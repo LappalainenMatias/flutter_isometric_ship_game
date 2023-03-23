@@ -4,6 +4,7 @@ import '../action/task.dart';
 import '../item/inventory/inventory.dart';
 import '../item/weapon.dart';
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class Enemy implements Character {
   int visibility;
@@ -15,9 +16,10 @@ class Enemy implements Character {
   int hearts;
   @override
   var color = Colors.red;
+  Point<int> _coordinate;
 
   Enemy(this.visibility, this.maxHearts, this.hearts,
-      this.weapon, this.actions);
+      this.weapon, this.actions, this._coordinate);
 
   @override
   void setHearts(int hearts) {
@@ -28,5 +30,15 @@ class Enemy implements Character {
     } else {
       this.hearts = hearts;
     }
+  }
+
+  @override
+  void setCoordinate(Point<int> coordinate) {
+    _coordinate = coordinate;
+  }
+
+  @override
+  Point<int> getCoordinate() {
+    return _coordinate;
   }
 }

@@ -9,6 +9,9 @@ import 'dart:math';
 /// probability is a value between 0 - 1. 1 means that there is a
 /// 100 % change that square has an enemy if the square can contain the enemy.
 List<Enemy> getEnemies(MapModel map, double probability) {
-  List<Enemy> enemies = [Enemy(1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection])];
+  List<Enemy> enemies = [
+    Enemy(1, 3, 3, Weapon.basicSword, [Task.moveRandomDirection], const Point(1, 1))
+  ];
+  ///Todo add better coordinates to enemies
   return enemies;
 }

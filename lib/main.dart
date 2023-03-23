@@ -17,11 +17,11 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  PlayerModel player = PlayerModel(15);
+  PlayerModel player = PlayerModel(15, const Point(10, 10));
   player.actions = [Task.cutPlant];
   player.inventoryAddTool(Tool.axe);
   //List<Enemy> enemies = getEnemies(map, 0.002);
-  MapModel map = MapModel(player, const Point(10, 10));
+  MapModel map = MapModel(player);
   CharacterManager characterManager = CharacterManager(map, player, [], 100);
   GameModel game = GameModel(map, characterManager);
   runApp(

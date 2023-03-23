@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:anki/character/player.dart';
 import '../map/map_helper.dart';
 import 'enemy.dart';
@@ -42,9 +43,10 @@ class CharacterManager {
 
   void _runEnemyActions() {
     for (var enemy in enemies) {
+      Point<int> enemyCoordinate = enemy.getCoordinate();
+
       /// We do not want to simulate actions if the enemy is far away
-      if (manhattanDistance(
-              0, 0, map.playerCoordinate.x, map.playerCoordinate.y) >=
+      if (manhattanDistance(0, 0, enemyCoordinate.x, enemyCoordinate.y) >=
           player.visibility * 4) {
         continue;
       }

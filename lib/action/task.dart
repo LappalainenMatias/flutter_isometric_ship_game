@@ -53,7 +53,7 @@ bool _moveTowardClosestVisibleItem(PlayerModel player, MapModel map) {
 ///Returns true if next tasks are skipped
 bool _cutTreesAndBushes(PlayerModel player, MapModel map) {
   if (!_supportsCutting(player.inventoryGetTools())) return false;
-  Point<int> playerCoordinate = map.playerCoordinate;
+  Point<int> playerCoordinate = map.player.getCoordinate();
   List<Square> neighbours = map.getNeighbours(playerCoordinate.x, playerCoordinate.y);
   for (var neighbour in neighbours) {
     if (neighbour.naturalItem == NaturalItem.tree ||
