@@ -4,10 +4,11 @@ import 'package:anki/map/square.dart';
 import 'package:anki/map/square_type.dart';
 import 'package:anki/map/square_visibility.dart';
 import 'package:test/test.dart';
+import 'dart:math';
 
 void main() {
   test('Collect hearts', () {
-    PlayerModel player = PlayerModel(5);
+    PlayerModel player = PlayerModel(5, const Point(0, 0));
     player.maxHearts = 10;
     Square square = Square(SquareType.grass, SquareVisibility.inView,
         [SpecialItem.heart], null);
@@ -27,7 +28,7 @@ void main() {
   });
 
   test('Add food/stone/gold/wood', () {
-    PlayerModel player = PlayerModel(5);
+    PlayerModel player = PlayerModel(5, const Point(0, 0));
     expect(player.getWood(), 0);
     expect(player.getFood(), 0);
     expect(player.getStone(), 0);
