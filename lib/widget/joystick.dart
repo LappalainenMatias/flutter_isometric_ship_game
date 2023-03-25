@@ -27,8 +27,8 @@ class _JoyStickState extends State<JoyStick> {
         stick: Container(
           width: 50,
           height: 50,
-          decoration: const BoxDecoration(
-              color: Colors.blue,
+          decoration: BoxDecoration(
+              color: Colors.red.withAlpha(80),
               borderRadius: BorderRadius.all(Radius.circular(25))),
         ),
         period: const Duration(milliseconds: 20),
