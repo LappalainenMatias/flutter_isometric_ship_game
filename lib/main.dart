@@ -17,10 +17,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  PlayerModel player = PlayerModel(15, const Point(10, 10));
-  player.actions = [Task.cutPlant];
-  player.inventoryAddTool(Tool.axe);
-  //List<Enemy> enemies = getEnemies(map, 0.002);
+  PlayerModel player = PlayerModel(15, const Point(50, -50));
   MapModel map = MapModel(player);
   CharacterManager characterManager = CharacterManager(map, player, [], 100);
   GameModel game = GameModel(map, characterManager);
@@ -72,10 +69,6 @@ class _MyHomePageState extends State<MyHomePage> {
           Align(
               alignment: Alignment.topCenter,
               child: Board(width: width, height: width)),
-          Align(
-            alignment: Alignment.topCenter,
-            child: ResourceWidget(player: game.map.player),
-          ),
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
