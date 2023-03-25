@@ -17,13 +17,16 @@ class Board extends StatefulWidget {
 class _BoardState extends State<Board> {
   @override
   Widget build(BuildContext context) {
-    Provider.of<MapModel>(context, listen: true);
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: CustomPaint(
-        size: Size(widget.width, widget.height),
-        painter: MapPainter(Provider.of<GameModel>(context, listen: false)),
+    return RepaintBoundary(
+      child: Consumer<MapModel>(
+        builder: (context, map, child) => SizedBox(
+          width: widget.width,
+          height: widget.height,
+          child: CustomPaint(
+            size: Size(widget.width, widget.height),
+            painter: MapPainter(map),
+          ),
+        ),
       ),
     );
   }
