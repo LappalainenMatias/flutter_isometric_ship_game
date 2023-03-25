@@ -1,6 +1,3 @@
-import 'dart:typed_data';
-import 'dart:ui';
-
 import 'package:anki/map/abstract_map.dart';
 import 'package:matrix2d/matrix2d.dart';
 import 'dart:math';
@@ -9,55 +6,71 @@ import 'dart:math';
 /// It is a 2D array of pixels.
 /// This is used for better performance
 class GroundPixels {
-  Point<int> topLeft;
-  Point<int> bottomRight;
+  Point<int> groundTopLeft;
+  Point<int> groundBottomRight;
   final AbstractMap _map;
   final Matrix2d _m2d = const Matrix2d();
   var matrix = [];
 
-  GroundPixels(this._map, this.topLeft, this.bottomRight) {
-    _fillColors(topLeft, bottomRight);
+  GroundPixels(this._map, this.groundTopLeft, this.groundBottomRight) {
+    _fillColors(groundTopLeft, groundBottomRight);
   }
 
   void _fillColors(Point<int> topLeft, Point<int> bottomRight) {
     for (int y = topLeft.y; y >= bottomRight.y; y--) {
       List row = [];
       for (int x = topLeft.x; x <= bottomRight.x; x++) {
-        Color color = _map.getSquare(x, y).colorInView;
-        List pixel = colorToPixel(color);
-        row.add(pixel);
+        row.add(_map.getSquare(x, y).colorInView.value);
       }
       matrix.add(row);
     }
   }
 
-  List colorToPixel(Color color) {
-    return [color.red, color.green, color.blue, color.alpha];
-  }
-
   /// todo does not work with zoom out and zoom in yet
-  void shift(Point<int> vector) {
+  void shiftToArea(Point<int> topLeft, Point<int> bottomRight) {
     Stopwatch start = Stopwatch()..start();
-    while (vector != const Point(0, 0)) {
-      if (vector.x > 0) {
-        vector -= const Point(1, 0);
-        _addColumnToRight();
-        _removeColumnFromLeft();
-      } else if (vector.x < 0) {
-        vector += const Point(1, 0);
-        _addColumnToLeft();
-        _removeColumnFromRight();
-      }
-      if (vector.y > 0) {
-        vector -= const Point(0, 1);
-        _addRowToTop();
-        _removeRowFromBottom();
-      } else if (vector.y < 0) {
-        vector += const Point(0, 1);
-        _addRowToBottom();
+    int up = groundTopLeft.y - topLeft.y;
+    int down = bottomRight.y - groundBottomRight.y;
+    int left = groundTopLeft.x - topLeft.x;
+    int right = bottomRight.x - groundBottomRight.x;
+    while (up != 0) {
+      if (up > 0) {
         _removeRowFromTop();
+        up--;
+      } else {
+        _addRowToTop();
+        up++;
       }
     }
+    while (down != 0) {
+      if (down > 0) {
+        _removeRowFromBottom();
+        down--;
+      } else {
+        _addRowToBottom();
+        down++;
+      }
+    }
+    while (left != 0) {
+      if (left > 0) {
+        _addColumnToLeft();
+        left--;
+      } else {
+        _removeColumnFromLeft();
+        left++;
+      }
+    }
+    while (right != 0) {
+      if (right > 0) {
+        _addColumnToRight();
+        right--;
+      } else {
+        _removeColumnFromRight();
+        right++;
+      }
+    }
+    groundTopLeft = topLeft;
+    groundBottomRight = bottomRight;
     print("Ground update: ${start.elapsedMilliseconds} ms");
   }
 
@@ -65,9 +78,7 @@ class GroundPixels {
       Point<int> topLeft, Point<int> bottomRight) {
     List<List<dynamic>> table = [];
     for (var y = topLeft.y; y >= bottomRight.y; y--) {
-      Color color = _map.getSquare(topLeft.x, y).colorInView;
-      List pixel = colorToPixel(color);
-      table.add([pixel]);
+      table.add([_map.getSquare(topLeft.x, y).colorInView.value]);
     }
     return table;
   }
@@ -76,63 +87,61 @@ class GroundPixels {
     List table = [];
     List row = [];
     for (var x = topLeft.x; x <= bottomRight.x; x++) {
-      Color color = _map.getSquare(x, topLeft.y).colorInView;
-      List pixel = colorToPixel(color);
-      row.add(pixel);
+      row.add(_map.getSquare(x, topLeft.y).colorInView.value);
     }
     table.add(row);
     return table;
   }
 
   void _addColumnToRight() {
-    bottomRight += const Point(1, 0);
-    var topRight = Point(bottomRight.x, topLeft.y);
-    List table = _createColumn(topRight, bottomRight);
+    groundBottomRight += const Point(1, 0);
+    var topRight = Point(groundBottomRight.x, groundTopLeft.y);
+    List table = _createColumn(topRight, groundBottomRight);
     matrix = _m2d.concatenate(matrix, table, axis: 1);
   }
 
   void _addColumnToLeft() {
-    topLeft += const Point(-1, 0);
-    var bottomLeft = Point(topLeft.x, bottomRight.y);
-    List table = _createColumn(topLeft, bottomLeft);
+    groundTopLeft += const Point(-1, 0);
+    var bottomLeft = Point(groundTopLeft.x, groundBottomRight.y);
+    List table = _createColumn(groundTopLeft, bottomLeft);
     matrix = _m2d.concatenate(table, matrix, axis: 1);
   }
 
   void _addRowToBottom() {
-    bottomRight += const Point(0, -1);
-    var bottomLeft = Point(topLeft.x, bottomRight.y);
-    List table = _createRow(bottomLeft, bottomRight);
+    groundBottomRight += const Point(0, -1);
+    var bottomLeft = Point(groundTopLeft.x, groundBottomRight.y);
+    List table = _createRow(bottomLeft, groundBottomRight);
     matrix = _m2d.concatenate(matrix, table);
   }
 
   void _addRowToTop() {
-    topLeft += const Point(0, 1);
-    var topRight = Point(bottomRight.x, topLeft.y);
-    var table = _createRow(topLeft, topRight);
+    groundTopLeft += const Point(0, 1);
+    var topRight = Point(groundBottomRight.x, groundTopLeft.y);
+    var table = _createRow(groundTopLeft, topRight);
     matrix = _m2d.concatenate(table, matrix);
   }
 
   void _removeColumnFromRight() {
     var shape = matrix.shape;
-    bottomRight += const Point(-1, 0);
+    groundBottomRight += const Point(-1, 0);
     matrix = _m2d.slice(matrix, [0, shape[0]], [0, shape[1] - 1]);
   }
 
   void _removeColumnFromLeft() {
     var shape = matrix.shape;
-    topLeft += const Point(1, 0);
+    groundTopLeft += const Point(1, 0);
     matrix = _m2d.slice(matrix, [0, shape[0]], [1, shape[1]]);
   }
 
   void _removeRowFromBottom() {
     var shape = matrix.shape;
-    bottomRight += const Point(0, 1);
+    groundBottomRight += const Point(0, 1);
     matrix = _m2d.slice(matrix, [0, shape[0] - 1], [0, shape[1]]);
   }
 
   void _removeRowFromTop() {
     var shape = matrix.shape;
-    topLeft += const Point(0, -1);
+    groundTopLeft += const Point(0, -1);
     matrix = _m2d.slice(matrix, [1, shape[0]], [0, shape[1]]);
   }
 }

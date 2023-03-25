@@ -5,36 +5,20 @@ import 'package:test/test.dart';
 import 'dart:math';
 
 void main() {
-  test('move ground to right', () {
+  test('Increase ground area', () {
     GroundPixels groundPixels =
-        GroundPixels(MockMap(), const Point(-1, 1), const Point(1, -1));
-    groundPixels.shift(const Point(1, 0));
-    expect(groundPixels.topLeft, const Point(0, 1));
-    expect(groundPixels.bottomRight, const Point(2, -1));
+        GroundPixels(MockMap(), const Point(0, 0), const Point(1, -1));
+    groundPixels.shiftToArea(const Point(0, 0), const Point(2, -2));
+    expect(groundPixels.matrix.length, 3);
+    expect(groundPixels.matrix.first.length, 3);
   });
 
-  test('move ground to left', () {
+  test('Decrease ground area', () {
     GroundPixels groundPixels =
         GroundPixels(MockMap(), const Point(-1, 1), const Point(1, -1));
-    groundPixels.shift(const Point(-1, 0));
-    expect(groundPixels.topLeft, const Point(-2, 1));
-    expect(groundPixels.bottomRight, const Point(0, -1));
-  });
-
-  test('move ground to up', () {
-    GroundPixels groundPixels =
-        GroundPixels(MockMap(), const Point(-1, 1), const Point(1, -1));
-    groundPixels.shift(const Point(0, 1));
-    expect(groundPixels.topLeft, const Point(-1, 2));
-    expect(groundPixels.bottomRight, const Point(1, 0));
-  });
-
-  test('move ground to down', () {
-    GroundPixels groundPixels =
-        GroundPixels(MockMap(), const Point(-1, 1), const Point(1, -1));
-    groundPixels.shift(const Point(0, -1));
-    expect(groundPixels.topLeft, const Point(-1, 0));
-    expect(groundPixels.bottomRight, const Point(1, -2));
+    groundPixels.shiftToArea(const Point(-1, 1), const Point(0, 0));
+    expect(groundPixels.matrix.length, 2);
+    expect(groundPixels.matrix.first.length, 2);
   });
 }
 
