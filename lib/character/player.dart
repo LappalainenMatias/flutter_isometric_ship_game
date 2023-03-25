@@ -121,6 +121,10 @@ class PlayerModel extends ChangeNotifier implements Character {
 
   @override
   void setCoordinate(Point<int> coordinate) {
+    if (coordinate.x == this.coordinate.value.x &&
+        coordinate.y == this.coordinate.value.y) {
+      return;
+    }
     this.coordinate.value = coordinate;
   }
 }
