@@ -1,6 +1,5 @@
-import 'package:anki/game.dart';
 import 'package:anki/map/map.dart';
-import 'package:anki/map/painting/custom_painter.dart';
+import 'package:anki/map/painting/map_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
