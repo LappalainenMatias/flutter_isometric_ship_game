@@ -7,24 +7,30 @@ import 'package:test/test.dart';
 import 'dart:math';
 
 void main() {
-  test('Collect hearts', () {
+  test('Do not increase hearts if square does not have them', () {
     PlayerModel player = PlayerModel(5, const Point(0, 0));
     player.maxHearts = 10;
-    Square square = Square(SquareType.grass, SquareVisibility.inView,
-        [SpecialItem.heart], null);
+    player.hearts = 1;
+    Square square = Square(
+        SquareType.grass, SquareVisibility.inView, [SpecialItem.heart], null);
     Square square2 =
         Square(SquareType.grass, SquareVisibility.inView, [], null);
-    Square square3 = Square(SquareType.grass, SquareVisibility.inView,
-        [SpecialItem.heart, SpecialItem.heart], null);
-    int startingHearts = player.hearts;
     player.collectItems(square);
-    expect(player.hearts, startingHearts + 1);
-    player.collectItems(square);
-    expect(player.hearts, startingHearts + 1);
+    expect(player.hearts, 2);
     player.collectItems(square2);
-    expect(player.hearts, startingHearts + 1);
-    player.collectItems(square3);
-    expect(player.hearts, startingHearts + 3);
+    expect(player.hearts, 2);
+  });
+
+  test('Collect hearts from square only ones', () {
+    PlayerModel player = PlayerModel(5, const Point(0, 0));
+    player.maxHearts = 10;
+    player.hearts = 1;
+    Square square = Square(
+        SquareType.grass, SquareVisibility.inView, [SpecialItem.heart], null);
+    player.collectItems(square);
+    expect(player.hearts, 2);
+    player.collectItems(square);
+    expect(player.hearts, 2);
   });
 
   test('Add food/stone/gold/wood', () {
