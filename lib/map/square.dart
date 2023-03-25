@@ -12,19 +12,22 @@ class Square {
   late Color colorInView;
   late Color colorSeen;
 
-  Square(this.type, this.visibility, this.specialItems,
-      this.naturalItem) {
+  Square(this.type, this.visibility, [specialItems = const [], naturalItem]) {
     defineColors();
+  }
+
+  factory Square.empty() {
+    return Square(SquareType.wall, SquareVisibility.unseen);
   }
 
   void defineColors() {
     colorInView = specialItems.isNotEmpty
         ? specialItems.first.color
         : naturalItem != null
-        ? naturalItem!.color
-        : type.color;
+            ? naturalItem!.color
+            : type.color;
     colorSeen = Color.alphaBlend(
-        colorInView.withAlpha(100), Colors.black.withAlpha(155))
+            colorInView.withAlpha(100), Colors.black.withAlpha(155))
         .withAlpha(255);
   }
 
