@@ -1,6 +1,4 @@
-import 'dart:collection';
 import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,27 +16,50 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    _paintPoints(canvas, map.getGroundMatrix(), size);
-    print("Total paint: ${start.elapsedMilliseconds} ms");
+    _paintPointsAlternative(canvas, map.getGroundMatrix(), size);
+    print("Paint: ${start.elapsedMilliseconds} ms");
+  }
+
+  void _paintPointsAlternative(Canvas canvas, List matrix, Size size) {
+    final width = size.width / matrix.first.length;
+    final height = size.height / matrix.length;
+    print("paint objects: ${matrix.first.length * matrix.length}");
+    Map pointColors = {};
+    for (var i = 0; i < matrix.length; i++) {
+      final y = i * height;
+      final row = matrix[i];
+      double x = 0;
+      for (var j = 0; j < matrix.first.length; j++) {
+        x += width;
+        final offset = Offset(x, y);
+        pointColors.putIfAbsent(row[j], () => [offset]).add(offset);
+      }
+    }
+    for (final color in pointColors.keys) {
+      canvas.drawPoints(
+        PointMode.points,
+        pointColors[color]!,
+        rectPaint
+          ..blendMode = BlendMode.srcOver
+          ..strokeWidth = width + 1
+          ..color = Color(color),
+      );
+    }
   }
 
   void _paintPoints(Canvas canvas, List matrix, Size size) {
-    Stopwatch start = Stopwatch()..start();
-    final width = size.width / matrix.length;
-    final height = size.height / matrix.first.length;
+    final width = size.width / matrix.first.length;
+    final height = size.height / matrix.length;
     Map pointColors = {};
-
     for (var i = 0; i < matrix.length; i++) {
-      for (var j = 0; j < matrix[i].length; j++) {
-        final y = i * width;
-        final x = j * height;
-        Color color = Color.fromARGB(
-            matrix[i][j][3], matrix[i][j][0], matrix[i][j][1], matrix[i][j][2]);
-        pointColors.putIfAbsent(color, () => [x,y]).addAll([x,y]);
+      final y = i * height;
+      final row = matrix[i];
+      double x = 0;
+      for (var j = 0; j < matrix.first.length; j++) {
+        x += width;
+        pointColors.putIfAbsent(row[j], () => [x, y]).addAll([x, y]);
       }
     }
-    print("create: ${start.elapsedMilliseconds} ms");
-    start = Stopwatch()..start();
     for (final color in pointColors.keys) {
       canvas.drawRawPoints(
         PointMode.points,
@@ -46,10 +67,9 @@ class MapPainter extends CustomPainter {
         rectPaint
           ..blendMode = BlendMode.srcOver
           ..strokeWidth = width + 1
-          ..color = color,
+          ..color = Color(color),
       );
     }
-    print("paint: ${start.elapsedMilliseconds} ms");
   }
 
   void _paintGroundTesting(Canvas canvas, List matrix, Size size) {
