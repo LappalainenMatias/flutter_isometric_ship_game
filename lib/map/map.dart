@@ -2,6 +2,7 @@ import 'package:anki/map/region.dart';
 import 'package:anki/map/square_visibility.dart';
 import 'package:anki/character/player.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import '../movement/player_mover.dart';
 import 'camera.dart';
 import 'map_generator.dart';
@@ -19,10 +20,10 @@ class MapModel extends ChangeNotifier implements AbstractMap {
   final PlayerModel player;
   late final Camera camera;
 
-  MapModel(this.player,
-      [cameraTopLeft = const Point(0, 0),
-      cameraBottomRight = const Point(200, -200)]) {
-    camera = Camera(topLeft: cameraTopLeft, bottomRight: cameraBottomRight);
+  MapModel(this.player) {
+    camera = Camera(
+        topLeft: player.coordinate.value + const Point(-50, 75),
+        bottomRight: player.coordinate.value + const Point(50, -75));
     _groundPixels = GroundPixels(this, camera.topLeft, camera.bottomRight);
     _playerMover = PlayerMover(this);
     player.coordinate.addListener(() {
@@ -42,7 +43,7 @@ class MapModel extends ChangeNotifier implements AbstractMap {
 
   void _followPlayer() {
     camera.centralize(player.getCoordinate());
-    _groundPixels.shift(camera.topLeft - _groundPixels.topLeft);
+    _groundPixels.shiftToArea(camera.topLeft, camera.bottomRight);
     notifyListeners();
   }
 
@@ -120,10 +121,10 @@ class MapModel extends ChangeNotifier implements AbstractMap {
   }
 
   void zoomIn() {
-    camera.zoomIn(2.0);
+    camera.zoomIn();
   }
 
   void zoomOut() {
-    camera.zoomOut(2.0);
+    camera.zoomOut();
   }
 }

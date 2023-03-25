@@ -27,13 +27,13 @@ class Camera {
 
   int get height => (topLeft.y - bottomRight.y).abs().toInt();
 
-  void zoomOut([double scale = 2.0]) {
+  void zoomOut([double scale = 1.5]) {
     double centerX = (topLeft.x + bottomRight.x) / 2.0;
     double centerY = (topLeft.y + bottomRight.y) / 2.0;
     double newWidth = width * scale;
     double newHeight = height * scale;
 
-    if (newHeight > 200 || newWidth > 200) {
+    if (newHeight > 500 || newWidth > 500) {
       return;
     }
 
@@ -43,7 +43,7 @@ class Camera {
         (centerY + newHeight / 2.0).toInt());
   }
 
-  void zoomIn([double scale = 2.0]) {
+  void zoomIn([double scale = 1.5]) {
     double centerX = (topLeft.x + bottomRight.x) / 2.0;
     double centerY = (topLeft.y + bottomRight.y) / 2.0;
     double newWidth = width / scale;
