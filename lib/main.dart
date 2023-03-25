@@ -61,14 +61,14 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     var game = Provider.of<GameModel>(context, listen: false);
-    double width = MediaQuery.of(context).size.width;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: buildAppBar(game),
       body: Stack(
         children: [
           Align(
-              alignment: Alignment.topCenter,
-              child: Board(width: width, height: width)),
+              alignment: Alignment.center,
+              child: Board(width: size.width, height: size.height)),
           Align(
             alignment: Alignment.bottomRight,
             child: Padding(
