@@ -19,12 +19,15 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    canvas.translate(0, map.camera.topLeft.y.toDouble());
     double scale = size.width / map.camera.width;
-    canvas.scale(scale, scale * -1);
+    canvas.scale(scale, -scale);
+    canvas.translate(
+      -map.camera.topLeft.x.toDouble(),
+      -map.camera.topLeft.y.toDouble(),
+    );
     _paintGroundTest(canvas, map.getGround(), size);
     print("Paint: ${start.elapsedMilliseconds} ms, area: "
-        "${(map.camera.width * map.camera.height)}");
+        "${(map.camera.topLeft)}");
   }
 
   void _paintGroundVertices(Canvas canvas, List<Region> regions, Size size) {
@@ -43,17 +46,8 @@ class MapPainter extends CustomPainter {
     for (GroundArea area in areas) {
       groundPaint.color = area.type.color;
       canvas.drawRect(
-        Rect.fromPoints(
-          ///todo move from points to offset
-          Offset(
-            area.topLeft.x.toDouble(),
-            area.topLeft.y.toDouble(),
-          ),
-          Offset(
-            area.bottomRight.x.toDouble(),
-            area.bottomRight.y.toDouble(),
-          ),
-        ),
+        Rect.fromLTRB(area.topLeft.x.toDouble(), area.topLeft.y.toDouble(),
+            area.bottomRight.x.toDouble(), area.bottomRight.y.toDouble()),
         groundPaint,
       );
     }
@@ -78,7 +72,7 @@ class MapPainter extends CustomPainter {
         ),
         groundPaint..color = Colors.red);
     areaTopLeftInScreen = Point(0, -5);
-    areaBottomRightInScreen = Point(5, -10);
+    areaBottomRightInScreen = Point(10, -10);
     testTopLeft = Offset(
       areaTopLeftInScreen.x.toDouble(),
       areaTopLeftInScreen.y.toDouble(),
@@ -119,22 +113,6 @@ class MapPainter extends CustomPainter {
         groundPaint,
       );
     }
-    Point<int> areaTopLeftInScreen = Point(0, 0) - cameraTopLeft;
-    Point<int> areaBottomRightInScreen = Point(5, -5) - cameraTopLeft;
-    Offset testTopLeft = Offset(
-      areaTopLeftInScreen.x.toDouble(),
-      areaTopLeftInScreen.y.toDouble() * -1,
-    );
-    Offset testBottomRight = Offset(
-      areaBottomRightInScreen.x.toDouble(),
-      areaBottomRightInScreen.y.toDouble() * -1,
-    );
-    canvas.drawRect(
-        Rect.fromPoints(
-          testTopLeft * scale,
-          testBottomRight * scale,
-        ),
-        groundPaint..color = Colors.red);
   }
 
   @override

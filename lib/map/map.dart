@@ -11,7 +11,7 @@ import 'map_helper.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
-  final int _regionSideWidth = 50;
+  final int _regionSideWidth = 10;
   final Map<Point, Region> _regions = {};
   late final PlayerMover _playerMover;
   final PlayerModel player;
