@@ -33,10 +33,6 @@ class Camera {
     double newWidth = width * scale;
     double newHeight = height * scale;
 
-    if (newHeight > 500 || newWidth > 500) {
-      return;
-    }
-
     topLeft = Point((centerX - newWidth / 2.0).toInt(),
         (centerY - newHeight / 2.0).toInt());
     bottomRight = Point((centerX + newWidth / 2.0).toInt(),

@@ -6,7 +6,7 @@ import '../map/map.dart';
 import '../character/player.dart';
 import 'dart:math';
 
-import '../map/square.dart';
+import '../map/creation/square.dart';
 
 enum Task {
   moveRandomDirection(
@@ -52,6 +52,8 @@ bool _moveTowardClosestVisibleItem(PlayerModel player, MapModel map) {
 
 ///Returns true if next tasks are skipped
 bool _cutTreesAndBushes(PlayerModel player, MapModel map) {
+  /// todo
+  /*
   if (!_supportsCutting(player.inventoryGetTools())) return false;
   Point<int> playerCoordinate = map.player.getCoordinate();
   List<Square> neighbours = map.getNeighbours(playerCoordinate.x, playerCoordinate.y);
@@ -62,6 +64,7 @@ bool _cutTreesAndBushes(PlayerModel player, MapModel map) {
       neighbour.removeNaturalItem();
     }
   }
+   */
   return false;
 }
 

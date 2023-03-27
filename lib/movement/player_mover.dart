@@ -2,34 +2,25 @@ import 'dart:math';
 import 'package:anki/map/map.dart';
 import '../character/character.dart';
 import '../map/map_helper.dart';
-import '../map/square.dart';
 
 class PlayerMover {
-  double movementSpeedMS = 1000;
   DateTime lastMovement = DateTime.now();
   MapModel map;
 
   PlayerMover(this.map);
 
   void _move(int newX, int newY, Character character) {
-    Square square = map.getSquare(newX, newY);
-    if (square.type.isVisitable) {
-      character.setCoordinate(Point(newX, newY));
-    }
+    /// TODO check if the new position is valid
+    /// for example you cannot walk on water
+    character.setCoordinate(Point(newX, newY));
   }
 
   /// Moves the character in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left
-  void joyStickMovement(
-      double joyStickX, double joyStickY, Character character) {
-    double distance = euclideanDistance(0, 0, joyStickX, joyStickY);
-    if (distance > 1.1) throw Exception("Too large distance: $distance");
-    movementSpeedMS = 500 - (400 * distance).abs();
-    if (movementSpeedMS >
-        DateTime.now().difference(lastMovement).inMilliseconds) {
+  void joyStickMovement(double joyStickX, double joyStickY, Character character) {
+    if (25 > DateTime.now().difference(lastMovement).inMilliseconds) {
       return;
     }
-    if (movementSpeedMS < 100) movementSpeedMS = 100;
     lastMovement = DateTime.now();
     double angle = (atan2(joyStickX, joyStickY) * (180 / pi) + 360) % 360;
     int x = character.getCoordinate().x;

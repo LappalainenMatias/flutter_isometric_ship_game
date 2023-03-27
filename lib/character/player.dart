@@ -1,14 +1,9 @@
-import 'package:anki/item/special_item.dart';
 import 'package:anki/action/task.dart';
-import 'package:anki/map/map_helper.dart';
 import 'package:flutter/material.dart';
 import '../item/inventory/inventory.dart';
-import '../item/item.dart';
 import '../item/tool.dart';
+import '../map/creation/square.dart';
 import 'character.dart';
-import '../map/square_type.dart';
-import '../map/square.dart';
-import '../map/map.dart';
 import 'dart:math';
 
 class PlayerModel extends ChangeNotifier implements Character {
@@ -38,12 +33,7 @@ class PlayerModel extends ChangeNotifier implements Character {
     notifyListeners();
   }
 
-  void collectItems(Square square) {
-    for (var i = 0; i < square.specialItems.length; i++) {
-      square.specialItems[i].collect(this, square);
-      i--;
-    }
-  }
+  void collectItems(Square square) {}
 
   set visibility(value) {
     _visibility = value;

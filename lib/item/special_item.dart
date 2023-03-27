@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import '../character/character.dart';
-import '../map/square.dart';
-import '../map/square_type.dart';
+import '../map/creation/square.dart';
+import '../map/creation/type.dart';
 import 'item.dart';
 
 enum SpecialItem implements Item{
@@ -17,12 +17,15 @@ enum SpecialItem implements Item{
 }
 
 void collectHeart(Character character, Square square) {
+  /*
   character.setHearts(character.hearts + 1);
   square.removeSpecialItem(SpecialItem.heart);
+  ///TODO
+   */
 }
 
 extension ItemExtension on SpecialItem {
-  static List<SpecialItem> getRandomItems(SquareType type) {
+  static List<SpecialItem> getRandomItems(Type type) {
     if (!type.supportsSpecialItems) return [];
     List<SpecialItem> items = [];
     var num = Random().nextDouble();

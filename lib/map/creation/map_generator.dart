@@ -1,10 +1,10 @@
-import 'package:anki/map/region.dart';
-import 'package:anki/map/square.dart';
+import 'dart:math';
+import 'package:anki/map/area/area_creator.dart';
+import 'package:anki/map/area/ground_area.dart';
+import 'package:anki/map/area/region.dart';
+import 'package:anki/map/creation/square.dart';
 import 'package:fast_noise/fast_noise.dart';
-import '../item/natural_item.dart';
-import 'square_type.dart';
-import 'square_visibility.dart';
-import '../item/special_item.dart';
+import 'type.dart';
 
 Region generateRegion(int width, int height, int startX, int startY) {
   int seed = 100;
@@ -32,14 +32,12 @@ Region generateRegion(int width, int height, int startX, int startY) {
           1 * moistureNoise4[x][y];
       elevation = elevation / (1 + 0.5 + 0.25);
       moisture = moisture / (1 + 0.5 + 0.25);
-      SquareType type = SquareTypeExtension.getType(elevation, moisture);
-      NaturalItem? naturalItem = NaturalItemExtension.getNaturalItem(type);
-      row.add(Square(type, SquareVisibility.seen,
-          ItemExtension.getRandomItems(type), naturalItem));
+      Type type = SquareTypeExtension.getType(elevation, moisture);
+      row.add(Square(type));
     }
     squares.add(row);
   }
-  return Region(squares);
+  return Region(AreaCreator.groundAreas(Point(startX, startY), squares));
 }
 
 /// Increasing frequency adds details

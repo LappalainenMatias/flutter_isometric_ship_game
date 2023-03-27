@@ -1,7 +1,7 @@
 import 'package:anki/item/natural_item.dart';
 import 'package:flutter/material.dart';
 
-enum SquareType {
+enum Type {
   taiga(Color.fromARGB(255, 83, 173, 93), [NaturalItem.tree], true, true),
   grass(Color.fromARGB(255, 132, 197, 126), [NaturalItem.bush], true, true),
   wall(Colors.black, [], false, false),
@@ -12,7 +12,7 @@ enum SquareType {
   shallowWater(Color.fromARGB(255, 72, 136, 218), [], false, false),
   beach(Color.fromARGB(255, 194, 178, 128), [], true, true);
 
-  const SquareType(this.color, this.supportedNaturalItems,
+  const Type(this.color, this.supportedNaturalItems,
       this.supportsSpecialItems, this.isVisitable);
 
   final Color color;
@@ -21,24 +21,24 @@ enum SquareType {
   final bool isVisitable;
 }
 
-extension SquareTypeExtension on SquareType {
-  static SquareType getType(double elevation, double moisture) {
-    if (elevation < -0.25) return SquareType.deepOcean;
-    if (elevation < 0.0) return SquareType.ocean;
-    if (elevation < 0.02) return SquareType.shallowWater;
+extension SquareTypeExtension on Type {
+  static Type getType(double elevation, double moisture) {
+    if (elevation < -0.25) return Type.deepOcean;
+    if (elevation < 0.0) return Type.ocean;
+    if (elevation < 0.02) return Type.shallowWater;
     if (elevation < 0.05) {
-      if (moisture < -0.15) return SquareType.bare;
-      return SquareType.beach;
+      if (moisture < -0.15) return Type.bare;
+      return Type.beach;
     }
     if (elevation < 0.20) {
-      if (moisture < 0.00) return SquareType.grass;
-      return SquareType.taiga;
+      if (moisture < 0.00) return Type.grass;
+      return Type.taiga;
     }
     if (elevation < 0.4) {
-      if (moisture < -0.2) return SquareType.bare;
-      if (moisture < 0.2) return SquareType.tundra;
-      return SquareType.taiga;
+      if (moisture < -0.2) return Type.bare;
+      if (moisture < 0.2) return Type.tundra;
+      return Type.taiga;
     }
-    return SquareType.bare;
+    return Type.bare;
   }
 }

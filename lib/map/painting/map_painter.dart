@@ -1,13 +1,16 @@
-import 'dart:typed_data';
+import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:anki/map/map.dart';
 
+import '../area/ground_area.dart';
+import '../area/region.dart';
+
 class MapPainter extends CustomPainter {
   Size maxResolution = const Size(301, 301);
   final MapModel map;
-  var rectPaint = Paint()
+  var groundPaint = Paint()
     ..color = const Color(0xff995588)
     ..style = PaintingStyle.fill;
 
@@ -16,128 +19,122 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    _paintPointsAlternative(canvas, map.getGroundMatrix(), size);
-    print("Paint: ${start.elapsedMilliseconds} ms");
+    canvas.translate(0, map.camera.topLeft.y.toDouble());
+    double scale = size.width / map.camera.width;
+    canvas.scale(scale, scale * -1);
+    _paintGroundTest(canvas, map.getGround(), size);
+    print("Paint: ${start.elapsedMilliseconds} ms, area: "
+        "${(map.camera.width * map.camera.height)}");
   }
 
-  void _paintPointsAlternative(Canvas canvas, List matrix, Size size) {
-    final width = size.width / matrix.first.length;
-    final height = size.height / matrix.length;
-    print("paint objects: ${matrix.first.length * matrix.length}");
-    Map pointColors = {};
-    for (var i = 0; i < matrix.length; i++) {
-      final y = i * height;
-      final row = matrix[i];
-      double x = 0;
-      for (var j = 0; j < matrix.first.length; j++) {
-        x += width;
-        final offset = Offset(x, y);
-        pointColors.putIfAbsent(row[j], () => [offset]).add(offset);
+  void _paintGroundVertices(Canvas canvas, List<Region> regions, Size size) {
+    Point<int> cameraTopLeft = map.camera.topLeft;
+    Point<int> cameraBottomRight = map.camera.bottomRight;
+    double scale = size.width / (cameraBottomRight.x - cameraTopLeft.x);
+    print("Regions: ${regions.length}");
+    for (var region in regions) {
+      if (region.verticesRaw != null) {
+        canvas.drawVertices(region.verticesRaw!, BlendMode.dst, groundPaint);
       }
     }
-    for (final color in pointColors.keys) {
-      canvas.drawPoints(
-        PointMode.points,
-        pointColors[color]!,
-        rectPaint
-          ..blendMode = BlendMode.srcOver
-          ..strokeWidth = width + 1
-          ..color = Color(color),
+  }
+
+  void _paintGroundTest(Canvas canvas, List<GroundArea> areas, Size size) {
+    for (GroundArea area in areas) {
+      groundPaint.color = area.type.color;
+      canvas.drawRect(
+        Rect.fromPoints(
+          ///todo move from points to offset
+          Offset(
+            area.topLeft.x.toDouble(),
+            area.topLeft.y.toDouble(),
+          ),
+          Offset(
+            area.bottomRight.x.toDouble(),
+            area.bottomRight.y.toDouble(),
+          ),
+        ),
+        groundPaint,
       );
     }
+    _paintCompassToOrigin(canvas, size);
   }
 
-  void _paintPoints(Canvas canvas, List matrix, Size size) {
-    final width = size.width / matrix.first.length;
-    final height = size.height / matrix.length;
-    Map pointColors = {};
-    for (var i = 0; i < matrix.length; i++) {
-      final y = i * height;
-      final row = matrix[i];
-      double x = 0;
-      for (var j = 0; j < matrix.first.length; j++) {
-        x += width;
-        pointColors.putIfAbsent(row[j], () => [x, y]).addAll([x, y]);
-      }
-    }
-    for (final color in pointColors.keys) {
-      canvas.drawRawPoints(
-        PointMode.points,
-        Float32List.fromList(pointColors[color]!),
-        rectPaint
-          ..blendMode = BlendMode.srcOver
-          ..strokeWidth = width + 1
-          ..color = Color(color),
+  void _paintCompassToOrigin(Canvas canvas, Size size) {
+    Point<int> areaTopLeftInScreen = Point(0, 0);
+    Point<int> areaBottomRightInScreen = Point(5, -5);
+    Offset testTopLeft = Offset(
+      areaTopLeftInScreen.x.toDouble(),
+      areaTopLeftInScreen.y.toDouble(),
+    );
+    Offset testBottomRight = Offset(
+      areaBottomRightInScreen.x.toDouble(),
+      areaBottomRightInScreen.y.toDouble(),
+    );
+    canvas.drawRect(
+        Rect.fromPoints(
+          testTopLeft,
+          testBottomRight,
+        ),
+        groundPaint..color = Colors.red);
+    areaTopLeftInScreen = Point(0, -5);
+    areaBottomRightInScreen = Point(5, -10);
+    testTopLeft = Offset(
+      areaTopLeftInScreen.x.toDouble(),
+      areaTopLeftInScreen.y.toDouble(),
+    );
+    testBottomRight = Offset(
+      areaBottomRightInScreen.x.toDouble(),
+      areaBottomRightInScreen.y.toDouble(),
+    );
+    canvas.drawRect(
+        Rect.fromPoints(
+          testTopLeft,
+          testBottomRight,
+        ),
+        groundPaint..color = Colors.black);
+  }
+
+  void _paintGround(Canvas canvas, List<GroundArea> areas, Size size) {
+    Point<int> cameraTopLeft = map.camera.topLeft;
+    Point<int> cameraBottomRight = map.camera.bottomRight;
+    double scale = size.width / (cameraBottomRight.x - cameraTopLeft.x);
+    for (GroundArea area in areas) {
+      groundPaint.color = area.type.color;
+      Point<int> areaTopLeftInScreen = area.topLeft - cameraTopLeft;
+      Point<int> areaBottomRightInScreen = area.bottomRight - cameraTopLeft;
+      Offset topLeft = Offset(
+        areaTopLeftInScreen.x.toDouble(),
+        areaTopLeftInScreen.y.toDouble() * -1,
+      );
+      Offset bottomRight = Offset(
+        areaBottomRightInScreen.x.toDouble(),
+        areaBottomRightInScreen.y.toDouble() * -1,
+      );
+      canvas.drawRect(
+        Rect.fromPoints(
+          topLeft * scale,
+          bottomRight * scale,
+        ),
+        groundPaint,
       );
     }
-  }
-
-  void _paintGroundTesting(Canvas canvas, List matrix, Size size) {
-    int maxRows = map.camera.height > maxResolution.height
-        ? maxResolution.height.toInt()
-        : map.camera.height;
-    int x = 0;
-    int y = 0;
-    double scale = size.width / maxRows;
-
-    final vertices = <Offset>[];
-    final colors = <Color>[];
-
-    for (final row in matrix) {
-      for (final color in row) {
-        final topLeftX = x * scale;
-        final topLeftY = y * scale;
-        final bottomRightX = x * scale + scale;
-        final bottomRightY = y * scale + scale;
-        vertices.addAll([
-          Offset(topLeftX, topLeftY),
-          Offset(topLeftX, bottomRightY),
-          Offset(bottomRightX, bottomRightY),
-          Offset(bottomRightX, topLeftY),
-        ]);
-        colors.addAll([
-          Color.fromARGB(color[3], color[0], color[1], color[2]),
-          Color.fromARGB(color[3], color[0], color[1], color[2]),
-          Color.fromARGB(color[3], color[0], color[1], color[2]),
-          Color.fromARGB(color[3], color[0], color[1], color[2]),
-        ]);
-        x++;
-      }
-      y++;
-      x = 0;
-    }
-
-    const vertexMode = VertexMode.triangles;
-    final indices = List.generate(vertices.length, (i) => i);
-    final verticesObject =
-        Vertices(vertexMode, vertices, colors: colors, indices: indices);
-    canvas.drawVertices(verticesObject, BlendMode.srcOver,
-        rectPaint..blendMode = BlendMode.srcOver);
-  }
-
-  _paintGroundRect(canvas, matrix, size) {
-    int maxRows = map.camera.height > maxResolution.height
-        ? maxResolution.height.toInt()
-        : map.camera.height;
-    int x = 0;
-    int y = 0;
-    double scale = size.width / maxRows;
-    for (List row in matrix) {
-      for (var colors in row) {
-        double topLeftX = x * scale - 1; // -1 and +1 removes grid lines
-        double topLeftY = y * scale - 1;
-        double bottomRightX = x * scale + scale + 1;
-        double bottomRightY = y * scale + scale + 1;
-        rectPaint.color =
-            Color.fromARGB(colors[3], colors[0], colors[1], colors[2]);
-        canvas.drawRect(
-            Rect.fromLTRB(topLeftX, topLeftY, bottomRightX, bottomRightY),
-            rectPaint);
-        x++;
-      }
-      y++;
-      x = 0;
-    }
+    Point<int> areaTopLeftInScreen = Point(0, 0) - cameraTopLeft;
+    Point<int> areaBottomRightInScreen = Point(5, -5) - cameraTopLeft;
+    Offset testTopLeft = Offset(
+      areaTopLeftInScreen.x.toDouble(),
+      areaTopLeftInScreen.y.toDouble() * -1,
+    );
+    Offset testBottomRight = Offset(
+      areaBottomRightInScreen.x.toDouble(),
+      areaBottomRightInScreen.y.toDouble() * -1,
+    );
+    canvas.drawRect(
+        Rect.fromPoints(
+          testTopLeft * scale,
+          testBottomRight * scale,
+        ),
+        groundPaint..color = Colors.red);
   }
 
   @override

@@ -1,8 +1,6 @@
 import 'package:anki/character/player.dart';
-import 'package:anki/item/special_item.dart';
-import 'package:anki/map/square.dart';
-import 'package:anki/map/square_type.dart';
-import 'package:anki/map/square_visibility.dart';
+import 'package:anki/map/creation/square.dart';
+import 'package:anki/map/creation/type.dart';
 import 'package:test/test.dart';
 import 'dart:math';
 
@@ -11,10 +9,8 @@ void main() {
     PlayerModel player = PlayerModel(5, const Point(0, 0));
     player.maxHearts = 10;
     player.hearts = 1;
-    Square square = Square(
-        SquareType.grass, SquareVisibility.inView, [SpecialItem.heart], null);
-    Square square2 =
-        Square(SquareType.grass, SquareVisibility.inView, [], null);
+    Square square = Square(Type.grass);
+    Square square2 = Square(Type.grass);
     player.collectItems(square);
     expect(player.hearts, 2);
     player.collectItems(square2);
@@ -25,8 +21,7 @@ void main() {
     PlayerModel player = PlayerModel(5, const Point(0, 0));
     player.maxHearts = 10;
     player.hearts = 1;
-    Square square = Square(
-        SquareType.grass, SquareVisibility.inView, [SpecialItem.heart], null);
+    Square square = Square(Type.grass);
     player.collectItems(square);
     expect(player.hearts, 2);
     player.collectItems(square);
