@@ -45,8 +45,6 @@ enum Type {
       Color.fromARGB(255, 19, 93, 185)),
   ocean(Color.fromARGB(255, 21, 99, 197), Color.fromARGB(255, 21, 99, 197),
       Color.fromARGB(255, 21, 99, 197)),
-  shallowWater(Color.fromARGB(255, 72, 136, 218),
-      Color.fromARGB(255, 72, 136, 218), Color.fromARGB(255, 72, 136, 218)),
   beach(Color.fromARGB(255, 194, 178, 128), Color.fromARGB(255, 161, 146, 100),
       Color.fromARGB(255, 138, 124, 82));
 
@@ -61,27 +59,21 @@ extension TileExtension on Tile {
   static Tile getTile(
       double elevation, double moisture, Point<int> coordinate) {
     int height = (elevation * 10).round();
-    if (elevation < -0.00) return Tile(Type.ocean, coordinate, -1);
-    if (elevation < 0.05) return Tile(Type.beach, coordinate, height);
-    return Tile(Type.grass, coordinate, height);
-    /*
-    if (elevation < -0.25) return Type.deepOcean;
-    if (elevation < 0.0) return Type.ocean;
-    if (elevation < 0.02) return Type.shallowWater;
+    if (elevation < -0.25) return Tile(Type.deepOcean, coordinate, -1);
+    if (elevation < 0.0) return Tile(Type.ocean, coordinate, -1);
     if (elevation < 0.05) {
-      if (moisture < -0.15) return Type.bare;
-      return Type.beach;
+      if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
+      return Tile(Type.beach, coordinate, height);
     }
     if (elevation < 0.20) {
-      if (moisture < 0.00) return Type.grass;
-      return Type.taiga;
+      if (moisture < 0.00) return Tile(Type.grass, coordinate, height);
+      return Tile(Type.taiga, coordinate, height);
     }
     if (elevation < 0.4) {
-      if (moisture < -0.2) return Type.bare;
-      if (moisture < 0.2) return Type.tundra;
-      return Type.taiga;
+      if (moisture < -0.2) return Tile(Type.bare, coordinate, height);
+      if (moisture < 0.2) return Tile(Type.tundra, coordinate, height);
+      return Tile(Type.taiga, coordinate, height);
     }
-    return Type.bare;
-     */
+    return Tile(Type.bare, coordinate, height);
   }
 }
