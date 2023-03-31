@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:anki/map/area/area_creator.dart';
 import 'package:anki/map/area/ground_area.dart';
 import 'package:anki/map/creation/square.dart';
-import 'package:anki/map/creation/type.dart';
+import 'package:anki/map/creation/tile.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -22,7 +22,7 @@ void main() {
     expect(areas.length, 1);
     expect(areas.first.topLeft, Point(0, 0));
     expect(areas.first.bottomRight, Point(2, -2));
-    expect(areas.first.type, Type.grass);
+    expect(areas.first.type, Tile.grass);
   });
 
   test("Create ground area from squares", () {
@@ -79,10 +79,10 @@ class MockSquare extends Square {
   MockSquare(type, this.topLeft) : super(type);
 
   static MockSquare grass(topLeft) {
-    return MockSquare(Type.grass, topLeft);
+    return MockSquare(Tile.grass, topLeft);
   }
 
   static MockSquare ocean(topLeft) {
-    return MockSquare(Type.ocean, topLeft);
+    return MockSquare(Tile.ocean, topLeft);
   }
 }

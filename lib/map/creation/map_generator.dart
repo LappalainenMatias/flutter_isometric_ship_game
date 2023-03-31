@@ -1,13 +1,9 @@
 import 'dart:math';
-import 'package:anki/map/area/area_creator.dart';
-import 'package:anki/map/area/ground_area.dart';
 import 'package:anki/map/area/region.dart';
-import 'package:anki/map/creation/square.dart';
 import 'package:fast_noise/fast_noise.dart';
-import 'type.dart';
+import 'tile.dart';
 
-Region generateRegion(int width, int height, int startX, int startY) {
-  int seed = 100;
+Region generateRegion(int width, int height, int startX, int startY, [int seed = 100]) {
   final elevationNoise =
       _getPerlinNoise(width, height, startX, startY, seed, 0.04);
   final elevationNoise2 =
@@ -20,9 +16,8 @@ Region generateRegion(int width, int height, int startX, int startY) {
       _getPerlinNoise(width, height, startX, startY, seed + 4, 0.02);
   final moistureNoise4 =
       _getPerlinNoise(width, height, startX, startY, seed + 5, 0.01);
-  List<List<Square>> squares = [];
+  List<Tile> tiles = [];
   for (var y = 0; y < height; y++) {
-    List<Square> row = [];
     for (var x = 0; x < width; x++) {
       double elevation = 0.25 * elevationNoise[x][y] +
           0.5 * elevationNoise2[x][y] +
@@ -32,12 +27,11 @@ Region generateRegion(int width, int height, int startX, int startY) {
           1 * moistureNoise4[x][y];
       elevation = elevation / (1 + 0.5 + 0.25);
       moisture = moisture / (1 + 0.5 + 0.25);
-      Type type = SquareTypeExtension.getType(elevation, moisture);
-      row.add(Square(type));
+      Tile tile = TileExtension.getTile(elevation, moisture, Point(x, y));
+      tiles.add(tile);
     }
-    squares.add(row);
   }
-  return Region(AreaCreator.groundAreas(Point(startX, startY), squares));
+  return Region(tiles.reversed.toList());
 }
 
 /// Increasing frequency adds details

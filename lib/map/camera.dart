@@ -18,9 +18,13 @@ class Camera {
     bottomRight = bottomRight + vector;
   }
 
-  Point<int> center() {
+  Point<int> get center {
     return Point((topLeft.x + bottomRight.x) ~/ 2,
         (topLeft.y + bottomRight.y) ~/ 2);
+  }
+
+  int get shorterSide {
+    return min(width, height);
   }
 
   int get width => (topLeft.x - bottomRight.x).abs().toInt();

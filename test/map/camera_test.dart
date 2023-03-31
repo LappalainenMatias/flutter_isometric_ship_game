@@ -21,10 +21,10 @@ void main() {
   test('get camera center', () {
     Camera camera =
         Camera(topLeft: const Point(-1, 1), bottomRight: const Point(1, -1));
-    expect(camera.center(), const Point(0, 0));
+    expect(camera.center, const Point(0, 0));
     camera =
         Camera(topLeft: const Point(0, 0), bottomRight: const Point(2, -2));
-    expect(camera.center(), const Point(1, -1));
+    expect(camera.center, const Point(1, -1));
   });
 
   test('camera zoom out', () {

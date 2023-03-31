@@ -1,10 +1,9 @@
 import 'dart:math';
-import '../creation/square.dart';
-import '../creation/type.dart';
-import 'ground_area.dart';
+import '../creation/tile.dart';
 
+/*
 class AreaCreator {
-  static List<GroundArea> groundAreas(Point<int> realTopLeft, List<List<Square>> matrix) {
+  static List<GroundArea> groundAreas(Point<int> realTopLeft, List<List<Tile>> matrix) {
     Set<Point> visited = {};
     List<GroundArea> areas = [];
     for (int j = 0; j < matrix.length; j++) {
@@ -12,7 +11,7 @@ class AreaCreator {
         Point<int> topLeft = Point(i, j);
         Point<int> bottomRight = Point(i + 1, j + 1);
         if (visited.contains(topLeft)) continue;
-        Type type = matrix[j][i].type;
+        Tile type = matrix[j][i];
         while (true) {
           bool moveToRight = canMoveToRight(type, matrix, topLeft, bottomRight);
           if (moveToRight) {
@@ -28,7 +27,7 @@ class AreaCreator {
         areas.add(GroundArea(
             Point(topLeft.x, topLeft.y) + realTopLeft,
             Point(bottomRight.x, bottomRight.y) + realTopLeft,
-            matrix[j][i].type));
+            matrix[j][i]));
       }
     }
     return areas;
@@ -52,7 +51,7 @@ class AreaCreator {
       if (newTopLeft.x >= matrix.first.length || y >= matrix.length) {
         return false;
       }
-      if (matrix[y][newTopLeft.x].type != type) return false;
+      if (matrix[y][newTopLeft.x] != type) return false;
     }
     return true;
   }
@@ -65,8 +64,10 @@ class AreaCreator {
       if (x >= matrix.first.length || newTopLeft.y >= matrix.length) {
         return false;
       }
-      if (matrix[newTopLeft.y][x].type != type) return false;
+      if (matrix[newTopLeft.y][x] != type) return false;
     }
     return true;
   }
 }
+
+ */

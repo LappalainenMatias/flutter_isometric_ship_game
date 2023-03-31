@@ -2,7 +2,7 @@ import 'package:anki/action/task.dart';
 import 'package:flutter/material.dart';
 import '../item/inventory/inventory.dart';
 import '../item/tool.dart';
-import '../map/creation/square.dart';
+import '../map/creation/tile.dart';
 import 'character.dart';
 import 'dart:math';
 
@@ -33,7 +33,7 @@ class PlayerModel extends ChangeNotifier implements Character {
     notifyListeners();
   }
 
-  void collectItems(Square square) {}
+  void collectItems(Tile tile) {}
 
   set visibility(value) {
     _visibility = value;

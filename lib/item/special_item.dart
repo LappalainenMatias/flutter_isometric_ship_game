@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import '../character/character.dart';
 import '../map/creation/square.dart';
-import '../map/creation/type.dart';
+import '../map/creation/tile.dart';
 import 'item.dart';
 
 enum SpecialItem implements Item{
@@ -25,7 +25,7 @@ void collectHeart(Character character, Square square) {
 }
 
 extension ItemExtension on SpecialItem {
-  static List<SpecialItem> getRandomItems(Type type) {
+  static List<SpecialItem> getRandomItems(Tile type) {
     if (!type.supportsSpecialItems) return [];
     List<SpecialItem> items = [];
     var num = Random().nextDouble();

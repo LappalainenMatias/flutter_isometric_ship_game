@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import '../map/creation/type.dart';
+import '../map/creation/tile.dart';
 import 'item.dart';
 
 /// Contains items like trees and rocks
@@ -17,7 +17,7 @@ enum NaturalItem implements Item {
 }
 
 extension NaturalItemExtension on NaturalItem {
-  static NaturalItem? getNaturalItem(Type type) {
+  static NaturalItem? getNaturalItem(Tile type) {
     List<NaturalItem> supported = type.supportedNaturalItems;
     if (supported.isEmpty) return null;
     Random random = Random();

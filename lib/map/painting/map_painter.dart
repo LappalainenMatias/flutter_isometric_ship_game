@@ -1,14 +1,9 @@
 import 'dart:math';
 import 'dart:ui';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:anki/map/map.dart';
 
-import '../area/ground_area.dart';
-import '../area/region.dart';
-
 class MapPainter extends CustomPainter {
-  Size maxResolution = const Size(301, 301);
   final MapModel map;
   var groundPaint = Paint()
     ..color = const Color(0xff995588)
@@ -19,44 +14,64 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    double scale = size.width / map.camera.width;
-    canvas.scale(scale, -scale);
+    double scaleW = size.width / map.camera.width;
+    canvas.scale(scaleW, -scaleW);
     canvas.translate(
       -map.camera.topLeft.x.toDouble(),
       -map.camera.topLeft.y.toDouble(),
     );
-    _paintGroundTest(canvas, map.getGround(), size);
+    _paintGroundVertices(canvas, map.getVerticesInCamera());
+    _paintCompassToOrigin(canvas);
+    _paintPlayer(canvas);
+    _paintLineToOrigin(canvas);
+    //_paintRectToCameraBorders(canvas);
     print("Paint: ${start.elapsedMilliseconds} ms, area: "
         "${(map.camera.topLeft)}");
   }
 
-  void _paintGroundVertices(Canvas canvas, List<Region> regions, Size size) {
-    Point<int> cameraTopLeft = map.camera.topLeft;
-    Point<int> cameraBottomRight = map.camera.bottomRight;
-    double scale = size.width / (cameraBottomRight.x - cameraTopLeft.x);
-    print("Regions: ${regions.length}");
-    for (var region in regions) {
-      if (region.verticesRaw != null) {
-        canvas.drawVertices(region.verticesRaw!, BlendMode.dst, groundPaint);
-      }
+  void _paintGroundVertices(Canvas canvas, List<Vertices> vertices) {
+    print("vertices: ${vertices.length}");
+    for (var vertice in vertices) {
+      canvas.drawVertices(vertice, BlendMode.dst, groundPaint);
     }
   }
 
-  void _paintGroundTest(Canvas canvas, List<GroundArea> areas, Size size) {
-    for (GroundArea area in areas) {
-      groundPaint.color = area.type.color;
-      canvas.drawRect(
-        Rect.fromLTRB(area.topLeft.x.toDouble(), area.topLeft.y.toDouble(),
-            area.bottomRight.x.toDouble(), area.bottomRight.y.toDouble()),
-        groundPaint,
-      );
-    }
-    _paintCompassToOrigin(canvas, size);
+  void _paintLineToOrigin(Canvas canvas) {
+    Offset playerOffset = Offset(
+      map.player.coordinate.value.x.toDouble(),
+      map.player.coordinate.value.y.toDouble(),
+    );
+    canvas.drawLine(Offset.zero, playerOffset, groundPaint..color = Colors.red);
   }
 
-  void _paintCompassToOrigin(Canvas canvas, Size size) {
-    Point<int> areaTopLeftInScreen = Point(0, 0);
-    Point<int> areaBottomRightInScreen = Point(5, -5);
+  void _paintPlayer(Canvas canvas) {
+    Offset playerOffset = Offset(
+      map.player.coordinate.value.x.toDouble(),
+      map.player.coordinate.value.y.toDouble(),
+    );
+    canvas.drawCircle(playerOffset, 3, groundPaint..color = Colors.orange);
+  }
+
+  void _paintRectToCameraBorders(Canvas canvas) {
+    Offset topLeft = Offset(
+      map.camera.topLeft.x.toDouble(),
+      map.camera.topLeft.y.toDouble(),
+    );
+    Offset bottomRight = Offset(
+      map.camera.bottomRight.x.toDouble(),
+      map.camera.bottomRight.y.toDouble(),
+    );
+    canvas.drawRect(
+        Rect.fromPoints(
+          topLeft,
+          bottomRight,
+        ),
+        groundPaint..color = Colors.red.withAlpha(125));
+  }
+
+  void _paintCompassToOrigin(Canvas canvas) {
+    Point<int> areaTopLeftInScreen = const Point(0, 0);
+    Point<int> areaBottomRightInScreen = const Point(5, -5);
     Offset testTopLeft = Offset(
       areaTopLeftInScreen.x.toDouble(),
       areaTopLeftInScreen.y.toDouble(),
@@ -87,32 +102,6 @@ class MapPainter extends CustomPainter {
           testBottomRight,
         ),
         groundPaint..color = Colors.black);
-  }
-
-  void _paintGround(Canvas canvas, List<GroundArea> areas, Size size) {
-    Point<int> cameraTopLeft = map.camera.topLeft;
-    Point<int> cameraBottomRight = map.camera.bottomRight;
-    double scale = size.width / (cameraBottomRight.x - cameraTopLeft.x);
-    for (GroundArea area in areas) {
-      groundPaint.color = area.type.color;
-      Point<int> areaTopLeftInScreen = area.topLeft - cameraTopLeft;
-      Point<int> areaBottomRightInScreen = area.bottomRight - cameraTopLeft;
-      Offset topLeft = Offset(
-        areaTopLeftInScreen.x.toDouble(),
-        areaTopLeftInScreen.y.toDouble() * -1,
-      );
-      Offset bottomRight = Offset(
-        areaBottomRightInScreen.x.toDouble(),
-        areaBottomRightInScreen.y.toDouble() * -1,
-      );
-      canvas.drawRect(
-        Rect.fromPoints(
-          topLeft * scale,
-          bottomRight * scale,
-        ),
-        groundPaint,
-      );
-    }
   }
 
   @override

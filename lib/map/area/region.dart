@@ -1,38 +1,30 @@
 import 'dart:typed_data';
 import 'dart:ui';
-
-import 'package:anki/map/area/ground_area.dart';
-
+import '../creation/tile.dart';
+import '../creation/tile_helper.dart';
 class Region {
-  final List<GroundArea> areas;
+  List<Tile> tiles;
+  Float32List? positions;
+  Int32List? colors;
   Vertices? verticesRaw;
 
-  Region(this.areas) {
-    List<double> vertices = [];
-    List<int> colors = [];
-    for (var area in areas) {
-      vertices.addAll([
-        area.topLeft.x.toDouble(),
-        area.topLeft.y.toDouble(),
-        area.bottomRight.x.toDouble(),
-        area.topLeft.y.toDouble(),
-        area.bottomRight.x.toDouble(),
-        area.bottomRight.y.toDouble(),
-        area.topLeft.x.toDouble(),
-        area.bottomRight.y.toDouble(),
-      ]);
-      int color = area.type.color.value;
-      colors.addAll([
-        color,
-        color,
-        color,
-        color,
-      ]);
+  Region(this.tiles) {
+    tiles.sort((a, b) => a.compareTo(b));
+    List<double> v = [];
+    List<int> c = [];
+    for (var tile in tiles) {
+      List<dynamic> verticeData = getVertices(tile.coordinate, tile);
+      v.addAll(verticeData[0]);
+      c.addAll(verticeData[1]);
     }
+    positions = Float32List.fromList(v);
+    colors = Int32List.fromList(c);
     verticesRaw = Vertices.raw(
-        VertexMode.triangles, Float32List.fromList(vertices),
-        colors: Int32List.fromList(colors));
+      VertexMode.triangles,
+      positions!,
+      colors: colors,
+    );
   }
 
-  Region.empty() : areas = [];
+  Region.empty() : tiles = [];
 }

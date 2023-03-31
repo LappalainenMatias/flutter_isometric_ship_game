@@ -1,4 +1,4 @@
-import 'package:anki/map/area/ground_area.dart';
+import 'dart:ui';
 import 'package:anki/map/area/region.dart';
 import 'package:anki/character/player.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,55 +11,53 @@ import 'map_helper.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
-  final int _regionSideWidth = 10;
+  final int _regionSideWidth = 64;
+  final int _maxRegionAmount = 128;
   final Map<Point, Region> _regions = {};
   late final PlayerMover _playerMover;
   final PlayerModel player;
   late final Camera camera;
 
   MapModel(this.player) {
-    int size = 50;
     camera = Camera(
-        topLeft: player.coordinate.value + Point(-size, size * 2),
-        bottomRight: player.coordinate.value + Point(size, -size * 2));
+        topLeft: player.coordinate.value +
+            Point(-_regionSideWidth, _regionSideWidth),
+        bottomRight: player.coordinate.value +
+            Point(_regionSideWidth, -_regionSideWidth));
     _playerMover = PlayerMover(this);
     player.coordinate.addListener(() {
       _cameraFollowPlayer();
     });
   }
 
-  List<GroundArea> getGround() {
-    Set<Region> regions = _getRegionsInCamera();
-    List<GroundArea> areas = [];
+  List<Vertices> getVerticesInCamera() {
+    List<Region> regions = getRegionsInCamera();
+    List<Vertices> vertices = [];
     for (Region region in regions) {
-      areas.addAll(region.areas);
+      if (region.verticesRaw != null) vertices.add(region.verticesRaw!);
     }
-    return areas;
+    return vertices;
   }
 
-  List<Region> getRegions() {
-    Set<Region> regions = _getRegionsInCamera();
-    return regions.toList();
-  }
-
-  Set<Region> _getRegionsInCamera() {
+  List<Region> getRegionsInCamera() {
     Set<Region> regions = {};
     Point<int> topLeft = camera.topLeft;
     Point<int> bottomRight = camera.bottomRight;
-    for (int y = topLeft.y;
-        y > bottomRight.y - _regionSideWidth;
-        y -= _regionSideWidth) {
-      for (int x = topLeft.x;
-          x < bottomRight.x + _regionSideWidth;
-          x += _regionSideWidth) {
-        regions.add(_getRegion(Point(x, y)));
+    for (int y = topLeft.y; y >= bottomRight.y; y -= _regionSideWidth) {
+      for (int x = topLeft.x; x <= bottomRight.x; x += _regionSideWidth) {
+        Region? region = _getRegion(Point(x, y));
+        if (region != null) {
+          regions.add(region);
+        }
       }
     }
-    return regions;
+    return regions.toList();
   }
 
   void _cameraFollowPlayer() {
     camera.centralize(player.getCoordinate());
+    print("player ${player.getCoordinate()}");
+    print("camera ${camera.topLeft} to ${camera.bottomRight}");
     notifyListeners();
   }
 
@@ -69,18 +67,21 @@ class MapModel extends ChangeNotifier {
     _playerMover.joyStickMovement(x, y, player);
   }
 
-  Region _getRegion(Point<int> point) {
+  Region? _getRegion(Point<int> point) {
     int regionX = (point.x / _regionSideWidth).floor();
     int regionY = (point.y / _regionSideWidth).floor();
     if (_regions.containsKey(Point(regionX, regionY))) {
       return _regions[Point(regionX, regionY)]!;
     } else {
+      if (_regions.length > _maxRegionAmount) return null;
       if (!_isFarawayFromPlayer(point.x, point.y)) {
         _regions[Point(regionX, regionY)] = generateRegion(
-            _regionSideWidth,
-            _regionSideWidth,
-            regionX * _regionSideWidth,
-            regionY * _regionSideWidth);
+          _regionSideWidth,
+          _regionSideWidth,
+          regionX * _regionSideWidth,
+          regionY * _regionSideWidth,
+        );
+        return _regions[Point(regionX, regionY)]!;
       }
       return Region.empty();
     }

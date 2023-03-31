@@ -1,12 +1,9 @@
-import 'package:anki/action/task.dart';
 import 'package:anki/character/character_manager.dart';
 import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
-import 'package:anki/widget/resourse_widget.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'item/tool.dart';
 import 'map/map.dart';
 import 'widget/board.dart';
 import 'dart:math';
@@ -17,7 +14,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  PlayerModel player = PlayerModel(15, const Point(50, -50));
+  PlayerModel player = PlayerModel(15, const Point(50, 50));
   MapModel map = MapModel(player);
   CharacterManager characterManager = CharacterManager(map, player, [], 100);
   GameModel game = GameModel(map, characterManager);
@@ -67,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Stack(
         children: [
           Align(
-              alignment: Alignment.center,
+              alignment: Alignment.bottomLeft,
               child: Board(width: size.width, height: size.height)),
           Align(
             alignment: Alignment.bottomRight,

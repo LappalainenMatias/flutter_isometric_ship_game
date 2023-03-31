@@ -1,12 +1,7 @@
 import 'package:anki/character/character.dart';
-import 'package:anki/item/natural_item.dart';
 import '../item/tool.dart';
-import '../map/map_helper.dart';
 import '../map/map.dart';
 import '../character/player.dart';
-import 'dart:math';
-
-import '../map/creation/square.dart';
 
 enum Task {
   moveRandomDirection(
