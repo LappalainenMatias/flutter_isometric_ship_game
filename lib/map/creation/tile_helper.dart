@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:anki/map/creation/tile.dart';
 
 List<dynamic> getVertices(Point<int> coordinate, Tile tile) {

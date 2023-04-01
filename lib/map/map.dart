@@ -43,8 +43,12 @@ class MapModel extends ChangeNotifier {
     Set<Region> regions = {};
     Point<int> topLeft = camera.topLeft;
     Point<int> bottomRight = camera.bottomRight;
-    for (int y = topLeft.y; y >= bottomRight.y; y -= _regionSideWidth) {
-      for (int x = topLeft.x; x <= bottomRight.x; x += _regionSideWidth) {
+    for (int y = topLeft.y + _regionSideWidth;
+        y >= bottomRight.y - _regionSideWidth;
+        y -= _regionSideWidth) {
+      for (int x = topLeft.x - _regionSideWidth;
+          x <= bottomRight.x + _regionSideWidth;
+          x += _regionSideWidth) {
         Region? region = _getRegion(Point(x, y));
         if (region != null) {
           regions.add(region);
@@ -63,8 +67,8 @@ class MapModel extends ChangeNotifier {
 
   /// Moves the player in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left
-  void movePlayer(double x, double y) {
-    _playerMover.joyStickMovement(x, y, player);
+  void movePlayer(double joyStickX, double joyStickY) {
+    _playerMover.joyStickIsometricMovement(joyStickX, joyStickY, player);
   }
 
   Region? _getRegion(Point<int> point) {

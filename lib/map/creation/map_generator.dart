@@ -3,7 +3,8 @@ import 'package:anki/map/area/region.dart';
 import 'package:fast_noise/fast_noise.dart';
 import 'tile.dart';
 
-Region generateRegion(int width, int height, int startX, int startY, [int seed = 100]) {
+Region generateRegion(int width, int height, int startX, int startY,
+    [int seed = 100]) {
   final elevationNoise =
       _getPerlinNoise(width, height, startX, startY, seed, 0.04);
   final elevationNoise2 =
@@ -27,7 +28,8 @@ Region generateRegion(int width, int height, int startX, int startY, [int seed =
           1 * moistureNoise4[x][y];
       elevation = elevation / (1 + 0.5 + 0.25);
       moisture = moisture / (1 + 0.5 + 0.25);
-      Tile tile = TileExtension.getTile(elevation, moisture, Point(x, y));
+      Tile tile = TileExtension.getTile(
+          elevation, moisture, Point(startX + x, startY + y));
       tiles.add(tile);
     }
   }

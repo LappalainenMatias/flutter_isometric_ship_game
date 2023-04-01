@@ -4,6 +4,7 @@ import '../character/character.dart';
 
 class PlayerMover {
   DateTime lastMovement = DateTime.now();
+  int movementSpeedMs = 20;
   MapModel map;
 
   PlayerMover(this.map);
@@ -17,7 +18,7 @@ class PlayerMover {
   /// Moves the character in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left
   void joyStickMovement(double joyStickX, double joyStickY, Character character) {
-    if (15 > DateTime.now().difference(lastMovement).inMilliseconds) {
+    if (movementSpeedMs > DateTime.now().difference(lastMovement).inMilliseconds) {
       return;
     }
     lastMovement = DateTime.now();
@@ -47,7 +48,7 @@ class PlayerMover {
   /// (0, 1) = up, (-1, 0) = left. Notice that the map is isometric which means that
   /// moving up in the map increases both the x and y coordinate
   void joyStickIsometricMovement(double joyStickX, double joyStickY, Character character) {
-    if (15 > DateTime.now().difference(lastMovement).inMilliseconds) {
+    if (movementSpeedMs > DateTime.now().difference(lastMovement).inMilliseconds) {
       return;
     }
     lastMovement = DateTime.now();

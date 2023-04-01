@@ -109,6 +109,11 @@ class PlayerModel extends ChangeNotifier implements Character {
     return coordinate.value;
   }
 
+  Point getIsometricCoordinate() {
+    return Point(coordinate.value.x * 2 - coordinate.value.y * 2,
+        coordinate.value.y + coordinate.value.x);
+  }
+
   @override
   void setCoordinate(Point<int> coordinate) {
     if (coordinate.x == this.coordinate.value.x &&

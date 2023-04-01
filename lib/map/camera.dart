@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:anki/map/coordinate_helper.dart';
+
 class Camera {
   Point<int> topLeft;
   Point<int> bottomRight;
@@ -13,14 +15,38 @@ class Camera {
     bottomRight = Point(coordinate.x + width ~/ 2, coordinate.y - height ~/ 2);
   }
 
+  Point<int> getTopRight() {
+    return Point(bottomRight.x, topLeft.y);
+  }
+
+  Point<int> getIsometricTopLeft() {
+    return toIsoMetricPoint(topLeft);
+  }
+
+  Point<int> getIsometricBottomRight() {
+    return toIsoMetricPoint(bottomRight);
+  }
+
+  Point<int> getIsometricTopRight() {
+    return toIsoMetricPoint(getTopRight());
+  }
+
+  Point<int> getIsometricBottomLeft() {
+    return toIsoMetricPoint(getBottomLeft());
+  }
+
+  Point<int> getBottomLeft() {
+    return Point(topLeft.x, bottomRight.y);
+  }
+
   void shift(Point<int> vector) {
     topLeft = topLeft + vector;
     bottomRight = bottomRight + vector;
   }
 
   Point<int> get center {
-    return Point((topLeft.x + bottomRight.x) ~/ 2,
-        (topLeft.y + bottomRight.y) ~/ 2);
+    return Point(
+        (topLeft.x + bottomRight.x) ~/ 2, (topLeft.y + bottomRight.y) ~/ 2);
   }
 
   int get shorterSide {
@@ -28,6 +54,12 @@ class Camera {
   }
 
   int get width => (topLeft.x - bottomRight.x).abs().toInt();
+
+  int get isoMetricWidth =>
+      (getIsometricTopLeft().x - getIsometricBottomRight().x).abs().toInt();
+
+  int get isoMetricHeight =>
+      (getIsometricTopRight().y - getIsometricBottomLeft().y).abs().toInt();
 
   int get height => (topLeft.y - bottomRight.y).abs().toInt();
 

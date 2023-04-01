@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
+import 'package:anki/map/coordinate_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:anki/map/map.dart';
 
@@ -14,18 +15,19 @@ class MapPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Stopwatch start = Stopwatch()..start();
-    double scaleW = size.width / map.camera.width;
-    canvas.scale(scaleW, -scaleW);
+    double scale = min(size.width / map.camera.isoMetricWidth,
+        size.height / map.camera.isoMetricHeight);
+    canvas.scale(scale, -scale);
     canvas.translate(
-      -map.camera.topLeft.x.toDouble(),
-      -map.camera.topLeft.y.toDouble(),
+      -map.player.getIsometricCoordinate().x.toDouble() + size.width / scale / 2,
+      -map.player.getIsometricCoordinate().y.toDouble() - size.height / scale / 2,
     );
     _paintGroundVertices(canvas, map.getVerticesInCamera());
     _paintCompassToOrigin(canvas);
     _paintPlayer(canvas);
     _paintLineToOrigin(canvas);
-    //_paintRectToCameraBorders(canvas);
-    print("Paint: ${start.elapsedMilliseconds} ms, area: "
+    _paintRectToCameraBorders(canvas);
+    print("Paint: ${start.elapsedMilliseconds} ms, topLeft: "
         "${(map.camera.topLeft)}");
   }
 
@@ -38,35 +40,35 @@ class MapPainter extends CustomPainter {
 
   void _paintLineToOrigin(Canvas canvas) {
     Offset playerOffset = Offset(
-      map.player.coordinate.value.x.toDouble(),
-      map.player.coordinate.value.y.toDouble(),
+      map.player.getIsometricCoordinate().x.toDouble(),
+      map.player.getIsometricCoordinate().y.toDouble(),
     );
     canvas.drawLine(Offset.zero, playerOffset, groundPaint..color = Colors.red);
   }
 
   void _paintPlayer(Canvas canvas) {
     Offset playerOffset = Offset(
-      map.player.coordinate.value.x.toDouble(),
-      map.player.coordinate.value.y.toDouble(),
+      map.player.getIsometricCoordinate().x.toDouble(),
+      map.player.getIsometricCoordinate().y.toDouble(),
     );
     canvas.drawCircle(playerOffset, 3, groundPaint..color = Colors.orange);
   }
 
   void _paintRectToCameraBorders(Canvas canvas) {
     Offset topLeft = Offset(
-      map.camera.topLeft.x.toDouble(),
-      map.camera.topLeft.y.toDouble(),
+      map.camera.getIsometricTopLeft().x.toDouble(),
+      map.camera.getIsometricTopLeft().y.toDouble(),
     );
     Offset bottomRight = Offset(
-      map.camera.bottomRight.x.toDouble(),
-      map.camera.bottomRight.y.toDouble(),
+      map.camera.getIsometricBottomRight().x.toDouble(),
+      map.camera.getIsometricBottomRight().y.toDouble(),
     );
     canvas.drawRect(
         Rect.fromPoints(
           topLeft,
           bottomRight,
         ),
-        groundPaint..color = Colors.red.withAlpha(125));
+        groundPaint..color = Colors.red.withAlpha(100));
   }
 
   void _paintCompassToOrigin(Canvas canvas) {
