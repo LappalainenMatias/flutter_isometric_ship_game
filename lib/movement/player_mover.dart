@@ -4,7 +4,7 @@ import '../character/character.dart';
 
 class PlayerMover {
   DateTime lastMovement = DateTime.now();
-  int movementSpeedMs = 20;
+  int movementSpeedMs = 50;
   MapModel map;
 
   PlayerMover(this.map);

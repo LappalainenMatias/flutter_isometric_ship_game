@@ -23,18 +23,13 @@ class MapPainter extends CustomPainter {
       -map.player.getIsometricCoordinate().y.toDouble() - size.height / scale / 2,
     );
     _paintGroundVertices(canvas, map.getVerticesInCamera());
-    _paintCompassToOrigin(canvas);
     _paintPlayer(canvas);
-    _paintLineToOrigin(canvas);
-    _paintRectToCameraBorders(canvas);
-    print("Paint: ${start.elapsedMilliseconds} ms, topLeft: "
-        "${(map.camera.topLeft)}");
+    print("Paint: ${start.elapsedMilliseconds} ms");
   }
 
   void _paintGroundVertices(Canvas canvas, List<Vertices> vertices) {
-    print("vertices: ${vertices.length}");
     for (var vertice in vertices) {
-      canvas.drawVertices(vertice, BlendMode.dst, groundPaint);
+      canvas.drawVertices(vertice, BlendMode.src, groundPaint);
     }
   }
 

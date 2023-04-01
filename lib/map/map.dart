@@ -31,7 +31,8 @@ class MapModel extends ChangeNotifier {
   }
 
   List<Vertices> getVerticesInCamera() {
-    List<Region> regions = getRegionsInCamera();
+    List<Region> regions = _getRegionsInCamera();
+    regions.sort((a, b) => a.compareTo(b));
     List<Vertices> vertices = [];
     for (Region region in regions) {
       if (region.verticesRaw != null) vertices.add(region.verticesRaw!);
@@ -39,7 +40,7 @@ class MapModel extends ChangeNotifier {
     return vertices;
   }
 
-  List<Region> getRegionsInCamera() {
+  List<Region> _getRegionsInCamera() {
     Set<Region> regions = {};
     Point<int> topLeft = camera.topLeft;
     Point<int> bottomRight = camera.bottomRight;
@@ -60,8 +61,6 @@ class MapModel extends ChangeNotifier {
 
   void _cameraFollowPlayer() {
     camera.centralize(player.getCoordinate());
-    print("player ${player.getCoordinate()}");
-    print("camera ${camera.topLeft} to ${camera.bottomRight}");
     notifyListeners();
   }
 
@@ -80,6 +79,7 @@ class MapModel extends ChangeNotifier {
       if (_regions.length > _maxRegionAmount) return null;
       if (!_isFarawayFromPlayer(point.x, point.y)) {
         _regions[Point(regionX, regionY)] = generateRegion(
+          Point(regionX, regionY),
           _regionSideWidth,
           _regionSideWidth,
           regionX * _regionSideWidth,

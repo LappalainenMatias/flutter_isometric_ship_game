@@ -1,17 +1,17 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:flutter/material.dart';
 import '../creation/tile.dart';
 import '../creation/tile_helper.dart';
 
-class Region {
+class Region extends Comparable<Region> {
+  Point<int> regionCoordinate;
   List<Tile> tiles;
   Float32List? positions;
   Int32List? colors;
   Vertices? verticesRaw;
 
-  Region(this.tiles) {
+  Region(this.tiles, this.regionCoordinate) {
     tiles.sort((a, b) => a.compareTo(b));
     List<double> v = [];
     List<int> c = [];
@@ -29,5 +29,19 @@ class Region {
     );
   }
 
-  Region.empty() : tiles = [];
+  Region.empty()
+      : tiles = [],
+        regionCoordinate = const Point(0, 0);
+
+  int nearness() {
+    return regionCoordinate.x + regionCoordinate.y;
+  }
+
+  @override
+  int compareTo(Region other) {
+    if (nearness() > other.nearness()) {
+      return -1;
+    }
+    return 1;
+  }
 }

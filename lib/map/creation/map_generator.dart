@@ -3,7 +3,8 @@ import 'package:anki/map/area/region.dart';
 import 'package:fast_noise/fast_noise.dart';
 import 'tile.dart';
 
-Region generateRegion(int width, int height, int startX, int startY,
+Region generateRegion(
+    Point<int> regionCoordinate, int width, int height, int startX, int startY,
     [int seed = 100]) {
   final elevationNoise =
       _getPerlinNoise(width, height, startX, startY, seed, 0.04);
@@ -33,7 +34,7 @@ Region generateRegion(int width, int height, int startX, int startY,
       tiles.add(tile);
     }
   }
-  return Region(tiles.reversed.toList());
+  return Region(tiles.reversed.toList(), regionCoordinate);
 }
 
 /// Increasing frequency adds details
