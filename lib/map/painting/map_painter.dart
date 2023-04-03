@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:ui';
-import 'package:anki/map/coordinate_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:anki/map/map.dart';
 
@@ -8,6 +7,10 @@ class MapPainter extends CustomPainter {
   final MapModel map;
   var groundPaint = Paint()
     ..color = const Color(0xff995588)
+    ..style = PaintingStyle.fill;
+
+  var waterPaint = Paint()
+    ..color = const Color(0xb31980c0)
     ..style = PaintingStyle.fill;
 
   MapPainter(this.map);
@@ -19,15 +22,26 @@ class MapPainter extends CustomPainter {
         size.height / map.camera.isoMetricHeight);
     canvas.scale(scale, -scale);
     canvas.translate(
-      -map.player.getIsometricCoordinate().x.toDouble() + size.width / scale / 2,
-      -map.player.getIsometricCoordinate().y.toDouble() - size.height / scale / 2,
+      -map.player.getIsometricCoordinate().x.toDouble() +
+          size.width / scale / 2,
+      -map.player.getIsometricCoordinate().y.toDouble() -
+          size.height / scale / 2,
     );
-    _paintGroundVertices(canvas, map.getVerticesInCamera());
+    Map<String, List<Vertices>> vertices = map.getVerticesInCamera();
+    _paintGround(canvas, vertices["deepWater"]!);
+    _paintWater(canvas);
+    _paintGround(canvas, vertices["shallowWater"]!);
+    _paintWater(canvas);
+    _paintGround(canvas, vertices["ground"]!);
     _paintPlayer(canvas);
     print("Paint: ${start.elapsedMilliseconds} ms");
   }
 
-  void _paintGroundVertices(Canvas canvas, List<Vertices> vertices) {
+  void _paintWater(Canvas canvas) {
+    canvas.drawRect(canvas.getDestinationClipBounds(), waterPaint);
+  }
+
+  void _paintGround(Canvas canvas, List<Vertices> vertices) {
     for (var vertice in vertices) {
       canvas.drawVertices(vertice, BlendMode.src, groundPaint);
     }

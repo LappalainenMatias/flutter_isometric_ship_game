@@ -56,11 +56,13 @@ enum Type {
 }
 
 extension TileExtension on Tile {
-  static Tile getTile(
+  static Tile? getTile(
       double elevation, double moisture, Point<int> coordinate) {
-    int height = (elevation * 20).round();
-    if (elevation < -0.25) return Tile(Type.deepOcean, coordinate, -1);
-    if (elevation < 0.0) return Tile(Type.ocean, coordinate, -1);
+    int height = (elevation * 30).round();
+    if (elevation < 0.0 && moisture < -0.25) {
+      return Tile(Type.bare, coordinate, height);
+    }
+    if (elevation < 0.0) return Tile(Type.beach, coordinate, height);
     if (elevation < 0.05) {
       if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
       return Tile(Type.beach, coordinate, height);

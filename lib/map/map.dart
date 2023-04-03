@@ -30,14 +30,28 @@ class MapModel extends ChangeNotifier {
     });
   }
 
-  List<Vertices> getVerticesInCamera() {
+  Map<String, List<Vertices>> getVerticesInCamera() {
     List<Region> regions = _getRegionsInCamera();
     regions.sort((a, b) => a.compareTo(b));
-    List<Vertices> vertices = [];
+    List<Vertices> deepWater = [];
+    List<Vertices> shallowWater = [];
+    List<Vertices> ground = [];
     for (Region region in regions) {
-      if (region.verticesRaw != null) vertices.add(region.verticesRaw!);
+      if (region.verticesDeepWater != null) {
+        deepWater.add(region.verticesDeepWater!);
+      }
+      if (region.verticesShallowWater != null) {
+        shallowWater.add(region.verticesShallowWater!);
+      }
+      if (region.verticesGround != null) {
+        ground.add(region.verticesGround!);
+      }
     }
-    return vertices;
+    return {
+      "deepWater": deepWater,
+      "shallowWater": shallowWater,
+      "ground": ground
+    };
   }
 
   List<Region> _getRegionsInCamera() {

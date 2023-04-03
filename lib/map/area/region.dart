@@ -7,25 +7,46 @@ import '../creation/tile_helper.dart';
 class Region extends Comparable<Region> {
   Point<int> regionCoordinate;
   List<Tile> tiles;
-  Float32List? positions;
-  Int32List? colors;
-  Vertices? verticesRaw;
+  Vertices? verticesGround;
+  List<Vertices> verticesUnderWater = [];
+  Vertices? verticesShallowWater;
+  Vertices? verticesDeepWater;
 
   Region(this.tiles, this.regionCoordinate) {
     tiles.sort((a, b) => a.compareTo(b));
-    List<double> v = [];
-    List<int> c = [];
+    List<double> vGround = [];
+    List<int> cGround = [];
+    List<double> vShallowWater = [];
+    List<int> cShallowWater = [];
+    List<double> vDeepWater = [];
+    List<int> cDeepWater = [];
     for (var tile in tiles) {
-      List<dynamic> verticeData = getVertices(tile.coordinate, tile);
-      v.addAll(verticeData[0]);
-      c.addAll(verticeData[1]);
+      List<dynamic> vs = getVertices(tile.coordinate, tile);
+      if (tile.height >= 0) {
+        vGround.addAll(vs[0]);
+        cGround.addAll(vs[1]);
+      } else if (tile.height > -3) {
+        vShallowWater.addAll(vs[0]);
+        cShallowWater.addAll(vs[1]);
+      } else {
+        vDeepWater.addAll(vs[0]);
+        cDeepWater.addAll(vs[1]);
+      }
     }
-    positions = Float32List.fromList(v);
-    colors = Int32List.fromList(c);
-    verticesRaw = Vertices.raw(
+    verticesGround = Vertices.raw(
       VertexMode.triangles,
-      positions!,
-      colors: colors,
+      Float32List.fromList(vGround),
+      colors: Int32List.fromList(cGround),
+    );
+    verticesShallowWater = Vertices.raw(
+      VertexMode.triangles,
+      Float32List.fromList(vShallowWater),
+      colors: Int32List.fromList(cShallowWater),
+    );
+    verticesDeepWater = Vertices.raw(
+      VertexMode.triangles,
+      Float32List.fromList(vDeepWater),
+      colors: Int32List.fromList(cDeepWater),
     );
   }
 
