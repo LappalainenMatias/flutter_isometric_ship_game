@@ -1,52 +1,52 @@
 import 'dart:math';
 
-import 'package:anki/map/coordinate_helper.dart';
+import 'map_helper.dart';
 
 class Camera {
-  Point<int> topLeft;
-  Point<int> bottomRight;
+  Point<double> topLeft;
+  Point<double> bottomRight;
 
   Camera({required this.topLeft, required this.bottomRight});
 
-  void centralize(Point<int> coordinate) {
-    int width = (topLeft.x - bottomRight.x).abs().toInt();
-    int height = (topLeft.y - bottomRight.y).abs().toInt();
-    topLeft = Point(coordinate.x - width ~/ 2, coordinate.y + height ~/ 2);
-    bottomRight = Point(coordinate.x + width ~/ 2, coordinate.y - height ~/ 2);
+  void centralize(Point<dynamic> coordinate) {
+    double width = (topLeft.x - bottomRight.x).abs();
+    double height = (topLeft.y - bottomRight.y).abs();
+    topLeft = Point(coordinate.x - width / 2, coordinate.y + height / 2);
+    bottomRight = Point(coordinate.x + width / 2, coordinate.y - height / 2);
   }
 
-  Point<int> getTopRight() {
+  Point getTopRight() {
     return Point(bottomRight.x, topLeft.y);
   }
 
-  Point<int> getIsometricTopLeft() {
+  Point getIsometricTopLeft() {
     return toIsoMetricPoint(topLeft);
   }
 
-  Point<int> getIsometricBottomRight() {
+  Point getIsometricBottomRight() {
     return toIsoMetricPoint(bottomRight);
   }
 
-  Point<int> getIsometricTopRight() {
+  Point getIsometricTopRight() {
     return toIsoMetricPoint(getTopRight());
   }
 
-  Point<int> getIsometricBottomLeft() {
+  Point getIsometricBottomLeft() {
     return toIsoMetricPoint(getBottomLeft());
   }
 
-  Point<int> getBottomLeft() {
+  Point<double> getBottomLeft() {
     return Point(topLeft.x, bottomRight.y);
   }
 
-  void shift(Point<int> vector) {
+  void shift(Point<double> vector) {
     topLeft = topLeft + vector;
     bottomRight = bottomRight + vector;
   }
 
-  Point<int> get center {
+  Point<double> get center {
     return Point(
-        (topLeft.x + bottomRight.x) ~/ 2, (topLeft.y + bottomRight.y) ~/ 2);
+        (topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2);
   }
 
   int get shorterSide {
@@ -69,10 +69,10 @@ class Camera {
     double newWidth = width * scale;
     double newHeight = height * scale;
 
-    topLeft = Point((centerX - newWidth / 2.0).toInt(),
-        (centerY - newHeight / 2.0).toInt());
-    bottomRight = Point((centerX + newWidth / 2.0).toInt(),
-        (centerY + newHeight / 2.0).toInt());
+    topLeft = Point((centerX - newWidth / 2.0),
+        (centerY - newHeight / 2.0));
+    bottomRight = Point((centerX + newWidth / 2.0),
+        (centerY + newHeight / 2.0));
   }
 
   void zoomIn([double scale = 1.5]) {
@@ -85,9 +85,9 @@ class Camera {
       return;
     }
 
-    topLeft = Point((centerX - newWidth / 2.0).toInt(),
-        (centerY - newHeight / 2.0).toInt());
-    bottomRight = Point((centerX + newWidth / 2.0).toInt(),
-        (centerY + newHeight / 2.0).toInt());
+    topLeft = Point((centerX - newWidth / 2.0),
+        (centerY - newHeight / 2.0));
+    bottomRight = Point((centerX + newWidth / 2.0),
+        (centerY + newHeight / 2.0));
   }
 }

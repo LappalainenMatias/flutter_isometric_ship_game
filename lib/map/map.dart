@@ -21,9 +21,9 @@ class MapModel extends ChangeNotifier {
   MapModel(this.player) {
     camera = Camera(
         topLeft: player.coordinate.value +
-            Point(-_regionSideWidth, _regionSideWidth),
+            Point(-_regionSideWidth.toDouble(), _regionSideWidth.toDouble()),
         bottomRight: player.coordinate.value +
-            Point(_regionSideWidth, -_regionSideWidth));
+            Point(_regionSideWidth.toDouble(), -_regionSideWidth.toDouble()));
     _playerMover = PlayerMover(this);
     player.coordinate.addListener(() {
       _cameraFollowPlayer();
@@ -60,12 +60,12 @@ class MapModel extends ChangeNotifier {
 
   List<Region> _getRegionsInCamera() {
     Set<Region> regions = {};
-    Point<int> topLeft = camera.topLeft;
-    Point<int> bottomRight = camera.bottomRight;
-    for (int y = topLeft.y + _regionSideWidth;
+    Point<double> topLeft = camera.topLeft;
+    Point<double> bottomRight = camera.bottomRight;
+    for (int y = topLeft.y.ceil() + _regionSideWidth;
         y >= bottomRight.y - _regionSideWidth;
         y -= _regionSideWidth) {
-      for (int x = topLeft.x - _regionSideWidth;
+      for (int x = topLeft.x.ceil() - _regionSideWidth;
           x <= bottomRight.x + _regionSideWidth;
           x += _regionSideWidth) {
         Region? region = _getRegion(Point(x, y));

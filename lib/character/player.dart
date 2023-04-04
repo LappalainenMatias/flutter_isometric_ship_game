@@ -13,9 +13,9 @@ class PlayerModel extends ChangeNotifier implements Character {
   @override
   var color = const Color.fromARGB(255, 13, 229, 197);
   final Inventory _inventory = Inventory();
-  late ValueNotifier<Point<int>> coordinate;
+  late ValueNotifier<Point<double>> coordinate;
 
-  PlayerModel(this._visibility, Point<int> coordinate) {
+  PlayerModel(this._visibility, Point<double> coordinate) {
     this.coordinate = ValueNotifier(coordinate);
   }
 
@@ -103,7 +103,7 @@ class PlayerModel extends ChangeNotifier implements Character {
   }
 
   @override
-  Point<int> getCoordinate() {
+  Point<double> getCoordinate() {
     return coordinate.value;
   }
 
@@ -113,7 +113,7 @@ class PlayerModel extends ChangeNotifier implements Character {
   }
 
   @override
-  void setCoordinate(Point<int> coordinate) {
+  void setCoordinate(Point<double> coordinate) {
     if (coordinate.x == this.coordinate.value.x &&
         coordinate.y == this.coordinate.value.y) {
       return;

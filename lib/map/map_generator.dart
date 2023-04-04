@@ -5,6 +5,7 @@ import 'tile.dart';
 
 Region generateRegion(Point<int> regionCoordinate, int width, int height, int startX, int startY,
     [int seed = 100]) {
+  Stopwatch start = Stopwatch()..start();
   final elevationNoise =
       _getPerlinNoise(width, height, startX, startY, seed, 0.04);
   final elevationNoise2 =
@@ -33,6 +34,7 @@ Region generateRegion(Point<int> regionCoordinate, int width, int height, int st
       if (tile != null) tiles.add(tile);
     }
   }
+  print("region: ${start.elapsedMilliseconds} ms");
   return Region(tiles.reversed.toList(), regionCoordinate);
 }
 

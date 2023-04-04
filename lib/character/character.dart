@@ -5,9 +5,9 @@ abstract class Character {
 
   get color => null;
 
-  Point<int> getCoordinate();
+  Point<double> getCoordinate();
 
-  void setCoordinate(Point<int> coordinate);
+  void setCoordinate(Point<double> coordinate);
 
   void setHearts(int hearts);
 }
