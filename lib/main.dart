@@ -1,4 +1,3 @@
-import 'package:anki/character/character_manager.dart';
 import 'package:anki/game.dart';
 import 'package:anki/character/player.dart';
 import 'package:anki/widget/joystick.dart';
@@ -16,8 +15,7 @@ void main() async {
   );
   PlayerModel player = PlayerModel(15, const Point(50, 50));
   MapModel map = MapModel(player);
-  CharacterManager characterManager = CharacterManager(map, player, [], 100);
-  GameModel game = GameModel(map, characterManager);
+  GameModel game = GameModel(map);
   runApp(
     MultiProvider(
       providers: [
@@ -36,25 +34,25 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Survival game',
+      title: 'Fishing game',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Survival'),
+      home: const MainScreen(title: 'Fishing game'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     var game = Provider.of<GameModel>(context, listen: false);
@@ -83,14 +81,6 @@ class _MyHomePageState extends State<MyHomePage> {
   AppBar buildAppBar(GameModel game) {
     return AppBar(
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0),
-          child: Consumer<GameModel>(
-            builder: (context, cart, child) {
-              return Text(game.paused ? "paused" : "running");
-            },
-          ),
-        ),
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: GestureDetector(

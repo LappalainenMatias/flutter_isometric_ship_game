@@ -1,13 +1,11 @@
-import 'package:anki/action/task.dart';
 import 'package:flutter/material.dart';
-import '../item/inventory/inventory.dart';
+import '../item/inventory.dart';
 import '../item/tool.dart';
-import '../map/creation/tile.dart';
+import '../map/tile.dart';
 import 'character.dart';
 import 'dart:math';
 
 class PlayerModel extends ChangeNotifier implements Character {
-  List<Task> actions = [];
   var _visibility = 3;
   var maxHearts = 3;
   @override

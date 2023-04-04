@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/map/map.dart';
-import '../character/character.dart';
+import 'character.dart';
 
 class PlayerMover {
   DateTime lastMovement = DateTime.now();

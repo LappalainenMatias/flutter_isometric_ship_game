@@ -1,7 +1,3 @@
-import 'package:anki/item/inventory/inventory.dart';
-import 'package:anki/item/natural_item.dart';
-import 'package:anki/item/special_item.dart';
-import 'package:anki/item/tool.dart';
 import 'package:matrix2d/matrix2d.dart';
 import 'package:test/test.dart';
 

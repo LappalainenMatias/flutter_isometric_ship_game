@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../tool.dart';
+import 'tool.dart';
 
 class Inventory {
   /// Value is the amount of the items

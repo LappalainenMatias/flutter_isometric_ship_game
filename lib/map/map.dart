@@ -1,18 +1,18 @@
 import 'dart:ui';
-import 'package:anki/map/area/region.dart';
+import 'package:anki/map/region.dart';
 import 'package:anki/character/player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../movement/player_mover.dart';
+import '../character/player_mover.dart';
 import 'camera.dart';
-import 'creation/map_generator.dart';
+import 'map_generator.dart';
 import 'map_helper.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
   final int _regionSideWidth = 64;
-  final int _maxRegionAmount = 128;
+  final int _maxRegionAmount = 512;
   final Map<Point, Region> _regions = {};
   late final PlayerMover _playerMover;
   final PlayerModel player;
@@ -30,28 +30,32 @@ class MapModel extends ChangeNotifier {
     });
   }
 
-  Map<String, List<Vertices>> getVerticesInCamera() {
+  Map<int, List<List<Vertices>>> getUnderWaterVerticesInCamera() {
     List<Region> regions = _getRegionsInCamera();
     regions.sort((a, b) => a.compareTo(b));
-    List<Vertices> deepWater = [];
-    List<Vertices> shallowWater = [];
-    List<Vertices> ground = [];
+    Map<int, List<List<Vertices>>> underWater = {};
     for (Region region in regions) {
-      if (region.verticesDeepWater != null) {
-        deepWater.add(region.verticesDeepWater!);
-      }
-      if (region.verticesShallowWater != null) {
-        shallowWater.add(region.verticesShallowWater!);
-      }
-      if (region.verticesGround != null) {
-        ground.add(region.verticesGround!);
+      for (int key in region.underWaterByHeight.keys) {
+        if (underWater.containsKey(key)) {
+          underWater[key]!.add(region.underWaterByHeight[key]!);
+        } else {
+          underWater[key] = [region.underWaterByHeight[key]!];
+        }
       }
     }
-    return {
-      "deepWater": deepWater,
-      "shallowWater": shallowWater,
-      "ground": ground
-    };
+    return underWater;
+  }
+
+  List<Vertices> getGroundVerticesInCamera() {
+    List<Region> regions = _getRegionsInCamera();
+    regions.sort((a, b) => a.compareTo(b));
+    List<Vertices> ground = [];
+    for (Region region in regions) {
+      if (region.ground != null) {
+        ground.add(region.ground!);
+      }
+    }
+    return ground;
   }
 
   List<Region> _getRegionsInCamera() {

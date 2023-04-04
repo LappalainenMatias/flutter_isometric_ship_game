@@ -1,5 +1,6 @@
 import 'dart:math';
-import 'package:anki/map/creation/tile.dart';
+
+import 'package:anki/map/tile.dart';
 
 List<dynamic> getVertices(Point<int> coordinate, Tile tile) {
   var type = tile.type;
@@ -21,6 +22,7 @@ List<dynamic> getVertices(Point<int> coordinate, Tile tile) {
   Point<double> r_t =
       _convertToIsometric(Point(x.toDouble() + 2, y.toDouble() + 1));
   //c = center, l = left, r = right, t = top, b = bottom
+  //The least amount of data to create isometric cube
   List<double> vertices = [
     c_b.x,
     c_b.y,

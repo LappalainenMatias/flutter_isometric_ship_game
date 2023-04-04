@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:anki/map/area/region.dart';
+import 'package:anki/map/region.dart';
 import 'package:fast_noise/fast_noise.dart';
 import 'tile.dart';
 
@@ -8,15 +8,15 @@ Region generateRegion(Point<int> regionCoordinate, int width, int height, int st
   final elevationNoise =
       _getPerlinNoise(width, height, startX, startY, seed, 0.04);
   final elevationNoise2 =
-      _getPerlinNoise(width, height, startX, startY, seed + 1, 0.02);
+      _getPerlinNoise(width, height, startX, startY, seed + 1, 0.01);
   final elevationNoise4 =
-      _getPerlinNoise(width, height, startX, startY, seed + 2, 0.01);
+      _getPerlinNoise(width, height, startX, startY, seed + 2, 0.005);
   final moistureNoise =
       _getPerlinNoise(width, height, startX, startY, seed + 4, 0.04);
   final moistureNoise2 =
-      _getPerlinNoise(width, height, startX, startY, seed + 4, 0.02);
+      _getPerlinNoise(width, height, startX, startY, seed + 4, 0.01);
   final moistureNoise4 =
-      _getPerlinNoise(width, height, startX, startY, seed + 5, 0.01);
+      _getPerlinNoise(width, height, startX, startY, seed + 5, 0.005);
   List<Tile> tiles = [];
   for (var y = 0; y < height; y++) {
     for (var x = 0; x < width; x++) {
@@ -26,7 +26,7 @@ Region generateRegion(Point<int> regionCoordinate, int width, int height, int st
       double moisture = 0.25 * moistureNoise[x][y] +
           0.5 * moistureNoise2[x][y] +
           1 * moistureNoise4[x][y];
-      elevation = elevation / (1 + 0.5 + 0.25);
+      elevation = elevation / (1 + 0.5 + 0.25) - 0.2;
       moisture = moisture / (1 + 0.5 + 0.25);
       Tile? tile = TileExtension.getTile(
           elevation, moisture, Point(startX + x, startY + y));

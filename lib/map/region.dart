@@ -1,53 +1,59 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
-import '../creation/tile.dart';
-import '../creation/tile_helper.dart';
+import 'tile.dart';
+import 'tile_helper.dart';
 
 class Region extends Comparable<Region> {
   Point<int> regionCoordinate;
   List<Tile> tiles;
-  Vertices? verticesGround;
-  List<Vertices> verticesUnderWater = [];
-  Vertices? verticesShallowWater;
-  Vertices? verticesDeepWater;
+  Vertices? ground;
+  Map<int, List<Vertices>> underWaterByHeight = {};
 
   Region(this.tiles, this.regionCoordinate) {
     tiles.sort((a, b) => a.compareTo(b));
     List<double> vGround = [];
     List<int> cGround = [];
-    List<double> vShallowWater = [];
-    List<int> cShallowWater = [];
-    List<double> vDeepWater = [];
-    List<int> cDeepWater = [];
+    Map<int, List<double>> vWater = {};
+    Map<int, List<int>> cWater = {};
     for (var tile in tiles) {
       List<dynamic> vs = getVertices(tile.coordinate, tile);
       if (tile.height >= 0) {
         vGround.addAll(vs[0]);
         cGround.addAll(vs[1]);
-      } else if (tile.height > -3) {
-        vShallowWater.addAll(vs[0]);
-        cShallowWater.addAll(vs[1]);
       } else {
-        vDeepWater.addAll(vs[0]);
-        cDeepWater.addAll(vs[1]);
+        if (vWater.containsKey(tile.height)) {
+          vWater[tile.height]!.addAll(vs[0]);
+          cWater[tile.height]!.addAll(vs[1]);
+        } else {
+          vWater[tile.height] = vs[0];
+          cWater[tile.height] = vs[1];
+        }
       }
     }
-    verticesGround = Vertices.raw(
+    ground = Vertices.raw(
       VertexMode.triangles,
       Float32List.fromList(vGround),
       colors: Int32List.fromList(cGround),
     );
-    verticesShallowWater = Vertices.raw(
-      VertexMode.triangles,
-      Float32List.fromList(vShallowWater),
-      colors: Int32List.fromList(cShallowWater),
-    );
-    verticesDeepWater = Vertices.raw(
-      VertexMode.triangles,
-      Float32List.fromList(vDeepWater),
-      colors: Int32List.fromList(cDeepWater),
-    );
+    List keys = vWater.keys.toList();
+    for (var key in keys) {
+      if (underWaterByHeight.containsKey(key)) {
+        underWaterByHeight[key]!.add(Vertices.raw(
+          VertexMode.triangles,
+          Float32List.fromList(vWater[key]!),
+          colors: Int32List.fromList(cWater[key]!),
+        ));
+      } else {
+        underWaterByHeight[key] = [
+          Vertices.raw(
+            VertexMode.triangles,
+            Float32List.fromList(vWater[key]!),
+            colors: Int32List.fromList(cWater[key]!),
+          )
+        ];
+      }
+    }
   }
 
   Region.empty()

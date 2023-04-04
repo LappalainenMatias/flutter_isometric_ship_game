@@ -10,7 +10,11 @@ class MapPainter extends CustomPainter {
     ..style = PaintingStyle.fill;
 
   var waterPaint = Paint()
-    ..color = const Color(0xb31980c0)
+    ..color = const Color(0x33096ca9)
+    ..style = PaintingStyle.fill;
+
+  var topWaterLayerPaint = Paint()
+    ..color = const Color(0xb3096ca9)
     ..style = PaintingStyle.fill;
 
   MapPainter(this.map);
@@ -27,32 +31,34 @@ class MapPainter extends CustomPainter {
       -map.player.getIsometricCoordinate().y.toDouble() -
           size.height / scale / 2,
     );
-    Map<String, List<Vertices>> vertices = map.getVerticesInCamera();
-    _paintGround(canvas, vertices["deepWater"]!);
-    _paintWater(canvas);
-    _paintGround(canvas, vertices["shallowWater"]!);
-    _paintWater(canvas);
-    _paintGround(canvas, vertices["ground"]!);
+    Map<int, List<List<Vertices>>> vertices = map.getUnderWaterVerticesInCamera();
+    _paintUnderWater(canvas, vertices);
+    _paintGround(canvas, map.getGroundVerticesInCamera());
     _paintPlayer(canvas);
     print("Paint: ${start.elapsedMilliseconds} ms");
   }
 
-  void _paintWater(Canvas canvas) {
-    canvas.drawRect(canvas.getDestinationClipBounds(), waterPaint);
-  }
-
-  void _paintGround(Canvas canvas, List<Vertices> vertices) {
-    for (var vertice in vertices) {
-      canvas.drawVertices(vertice, BlendMode.src, groundPaint);
+  void _paintUnderWater(Canvas canvas, Map<int, List<List<Vertices>>> vertices) {
+    List<int> keys = vertices.keys.toList();
+    keys.sort((a, b) => a.compareTo(b));
+    for (var key in keys) {
+      for (var vs in vertices[key]!) {
+        for (var v in vs) {
+          canvas.drawVertices(v, BlendMode.dst, groundPaint);
+        }
+      }
+      if (key == keys.last) {
+        canvas.drawRect(canvas.getDestinationClipBounds(), topWaterLayerPaint);
+      } else {
+        canvas.drawRect(canvas.getDestinationClipBounds(), waterPaint);
+      }
     }
   }
 
-  void _paintLineToOrigin(Canvas canvas) {
-    Offset playerOffset = Offset(
-      map.player.getIsometricCoordinate().x.toDouble(),
-      map.player.getIsometricCoordinate().y.toDouble(),
-    );
-    canvas.drawLine(Offset.zero, playerOffset, groundPaint..color = Colors.red);
+  void _paintGround(Canvas canvas, List<Vertices> vertices) {
+    for (var vs in vertices) {
+      canvas.drawVertices(vs, BlendMode.dst, groundPaint);
+    }
   }
 
   void _paintPlayer(Canvas canvas) {
@@ -61,58 +67,6 @@ class MapPainter extends CustomPainter {
       map.player.getIsometricCoordinate().y.toDouble(),
     );
     canvas.drawCircle(playerOffset, 3, groundPaint..color = Colors.orange);
-  }
-
-  void _paintRectToCameraBorders(Canvas canvas) {
-    Offset topLeft = Offset(
-      map.camera.getIsometricTopLeft().x.toDouble(),
-      map.camera.getIsometricTopLeft().y.toDouble(),
-    );
-    Offset bottomRight = Offset(
-      map.camera.getIsometricBottomRight().x.toDouble(),
-      map.camera.getIsometricBottomRight().y.toDouble(),
-    );
-    canvas.drawRect(
-        Rect.fromPoints(
-          topLeft,
-          bottomRight,
-        ),
-        groundPaint..color = Colors.red.withAlpha(100));
-  }
-
-  void _paintCompassToOrigin(Canvas canvas) {
-    Point<int> areaTopLeftInScreen = const Point(0, 0);
-    Point<int> areaBottomRightInScreen = const Point(5, -5);
-    Offset testTopLeft = Offset(
-      areaTopLeftInScreen.x.toDouble(),
-      areaTopLeftInScreen.y.toDouble(),
-    );
-    Offset testBottomRight = Offset(
-      areaBottomRightInScreen.x.toDouble(),
-      areaBottomRightInScreen.y.toDouble(),
-    );
-    canvas.drawRect(
-        Rect.fromPoints(
-          testTopLeft,
-          testBottomRight,
-        ),
-        groundPaint..color = Colors.red);
-    areaTopLeftInScreen = Point(0, -5);
-    areaBottomRightInScreen = Point(10, -10);
-    testTopLeft = Offset(
-      areaTopLeftInScreen.x.toDouble(),
-      areaTopLeftInScreen.y.toDouble(),
-    );
-    testBottomRight = Offset(
-      areaBottomRightInScreen.x.toDouble(),
-      areaBottomRightInScreen.y.toDouble(),
-    );
-    canvas.drawRect(
-        Rect.fromPoints(
-          testTopLeft,
-          testBottomRight,
-        ),
-        groundPaint..color = Colors.black);
   }
 
   @override
