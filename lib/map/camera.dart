@@ -1,81 +1,64 @@
-import 'dart:math';
-
-import 'map_helper.dart';
+import 'package:anki/map/iso_coordinate.dart';
 
 class Camera {
-  Point<double> topLeft;
-  Point<double> bottomRight;
+  IsoCoordinate topLeft;
+  IsoCoordinate bottomRight;
 
   Camera({required this.topLeft, required this.bottomRight});
 
-  void centralize(Point<dynamic> coordinate) {
+  Camera.fromCoordinate(IsoCoordinate coordinate)
+      : topLeft = IsoCoordinate(coordinate.x - 64, coordinate.y + 64),
+        bottomRight = IsoCoordinate(coordinate.x + 64, coordinate.y - 64);
+
+  void centralize(IsoCoordinate coordinate) {
     double width = (topLeft.x - bottomRight.x).abs();
     double height = (topLeft.y - bottomRight.y).abs();
-    topLeft = Point(coordinate.x - width / 2, coordinate.y + height / 2);
-    bottomRight = Point(coordinate.x + width / 2, coordinate.y - height / 2);
+    topLeft =
+        IsoCoordinate(coordinate.x - width / 2, coordinate.y + height / 2);
+    bottomRight =
+        IsoCoordinate(coordinate.x + width / 2, coordinate.y - height / 2);
   }
 
-  Point getTopRight() {
-    return Point(bottomRight.x, topLeft.y);
+  IsoCoordinate getTopRight() {
+    return IsoCoordinate(bottomRight.x, topLeft.y);
   }
 
-  Point getIsometricTopLeft() {
-    return toIsoMetricPoint(topLeft);
+  IsoCoordinate getTopLeft() {
+    return topLeft;
   }
 
-  Point getIsometricBottomRight() {
-    return toIsoMetricPoint(bottomRight);
+  IsoCoordinate getIsometricBottomRight() {
+    return bottomRight;
   }
 
-  Point getIsometricTopRight() {
-    return toIsoMetricPoint(getTopRight());
+  IsoCoordinate getIsometricTopRight() {
+    return IsoCoordinate(bottomRight.x, topLeft.y);
   }
 
-  Point getIsometricBottomLeft() {
-    return toIsoMetricPoint(getBottomLeft());
-  }
+  double get width => (topLeft.x - bottomRight.x).abs();
 
-  Point<double> getBottomLeft() {
-    return Point(topLeft.x, bottomRight.y);
-  }
+  double get isoMetricWidth => (topLeft.isoX - bottomRight.isoX).abs();
 
-  void shift(Point<double> vector) {
-    topLeft = topLeft + vector;
-    bottomRight = bottomRight + vector;
-  }
+  double get isoMetricHeight =>
+      (getIsometricTopRight().isoY - getIsometricBottomRight().isoY).abs();
 
-  Point<double> get center {
-    return Point(
-        (topLeft.x + bottomRight.x) / 2, (topLeft.y + bottomRight.y) / 2);
-  }
+  double get height => (topLeft.y - bottomRight.y).abs();
 
-  int get shorterSide {
-    return min(width, height);
-  }
-
-  int get width => (topLeft.x - bottomRight.x).abs().toInt();
-
-  int get isoMetricWidth =>
-      (getIsometricTopLeft().x - getIsometricBottomRight().x).abs().toInt();
-
-  int get isoMetricHeight =>
-      (getIsometricTopRight().y - getIsometricBottomLeft().y).abs().toInt();
-
-  int get height => (topLeft.y - bottomRight.y).abs().toInt();
-
-  void zoomOut([double scale = 1.5]) {
+  void zoomOut([double scale = 2.0]) {
+    print("zoom out");
     double centerX = (topLeft.x + bottomRight.x) / 2.0;
     double centerY = (topLeft.y + bottomRight.y) / 2.0;
     double newWidth = width * scale;
     double newHeight = height * scale;
 
-    topLeft = Point((centerX - newWidth / 2.0),
-        (centerY - newHeight / 2.0));
-    bottomRight = Point((centerX + newWidth / 2.0),
-        (centerY + newHeight / 2.0));
+    topLeft =
+        IsoCoordinate((centerX - newWidth / 2.0), (centerY - newHeight / 2.0));
+    bottomRight =
+        IsoCoordinate((centerX + newWidth / 2.0), (centerY + newHeight / 2.0));
   }
 
-  void zoomIn([double scale = 1.5]) {
+  void zoomIn([double scale = 2.0]) {
+    print("zoom in");
     double centerX = (topLeft.x + bottomRight.x) / 2.0;
     double centerY = (topLeft.y + bottomRight.y) / 2.0;
     double newWidth = width / scale;
@@ -85,9 +68,9 @@ class Camera {
       return;
     }
 
-    topLeft = Point((centerX - newWidth / 2.0),
-        (centerY - newHeight / 2.0));
-    bottomRight = Point((centerX + newWidth / 2.0),
-        (centerY + newHeight / 2.0));
+    topLeft =
+        IsoCoordinate((centerX - newWidth / 2.0), (centerY - newHeight / 2.0));
+    bottomRight =
+        IsoCoordinate((centerX + newWidth / 2.0), (centerY + newHeight / 2.0));
   }
 }

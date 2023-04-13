@@ -1,7 +1,8 @@
 import 'dart:math';
+import 'package:anki/map/iso_coordinate.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/map_helper.dart';
-import 'character.dart';
+import 'package:anki/player/player.dart';
 
 class PlayerMover {
   DateTime lastMovement = DateTime.now();
@@ -11,48 +12,45 @@ class PlayerMover {
 
   PlayerMover(this.map);
 
-  void _move(double newX, double newY, Character character) {
-    /// TODO check if the new position is valid
-    /// for example you cannot walk on water
-    character.setCoordinate(Point(newX, newY));
+  void _move(double newX, double newY, Player player) {
+    player.setCoordinate(IsoCoordinate(newX, newY));
   }
 
   /// Moves the character in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left
-  void joyStickMovement(
-      double joyStickX, double joyStickY, Character character) {
+  void joyStickMovement(double joyStickX, double joyStickY, Player player) {
     if (movementSpeedMs >
         DateTime.now().difference(lastMovement).inMilliseconds) {
       return;
     }
     lastMovement = DateTime.now();
     double angle = (atan2(joyStickX, joyStickY) * (180 / pi) + 360) % 360;
-    double x = character.getCoordinate().x;
-    double y = character.getCoordinate().y;
+    double x = player.getCoordinate().x;
+    double y = player.getCoordinate().y;
     if (angle > 337.5 || angle < 22.5) {
       // Up
-      _move(x, y + movementDistance, character);
+      _move(x, y + movementDistance, player);
     } else if (angle > 22.5 && angle < 67.5) {
       // Up right
-      _move(x + movementDistance, y + movementDistance, character);
+      _move(x + movementDistance, y + movementDistance, player);
     } else if (angle > 67.5 && angle < 112.5) {
       // Right
-      _move(x + movementDistance, y, character);
+      _move(x + movementDistance, y, player);
     } else if (angle > 112.5 && angle < 157.5) {
       // Down right
-      _move(x + movementDistance, y - movementDistance, character);
+      _move(x + movementDistance, y - movementDistance, player);
     } else if (angle > 157.5 && angle < 202.5) {
       // Down
-      _move(x, y - movementDistance, character);
+      _move(x, y - movementDistance, player);
     } else if (angle > 202.5 && angle < 247.5) {
       // Down left
-      _move(x - movementDistance, y - movementDistance, character);
+      _move(x - movementDistance, y - movementDistance, player);
     } else if (angle > 247.5 && angle < 292.5) {
       // Left
-      _move(x - movementDistance, y, character);
+      _move(x - movementDistance, y, player);
     } else if (angle > 292.5 && angle < 337.5) {
       // Up left
-      _move(x - movementDistance, y + movementDistance, character);
+      _move(x - movementDistance, y + movementDistance, player);
     }
   }
 
@@ -60,43 +58,43 @@ class PlayerMover {
   /// (0, 1) = up, (-1, 0) = left. Notice that the map is isometric which means that
   /// moving up in the map increases both the x and y coordinate
   void joyStickIsometricMovement(
-      double joyStickX, double joyStickY, Character character) {
+      double joyStickX, double joyStickY, Player player) {
     if (movementSpeedMs >
         DateTime.now().difference(lastMovement).inMilliseconds) {
       return;
     }
     lastMovement = DateTime.now();
     double angle = (atan2(joyStickX, joyStickY) * (180 / pi) + 360) % 360;
-    double x = character.getCoordinate().x;
-    double y = character.getCoordinate().y;
+    double x = player.getCoordinate().x;
+    double y = player.getCoordinate().y;
     double md = movementDistance;
     if (euclideanDistance(0, 0, joyStickX, joyStickY) > 0.5) {
       md = movementDistance * 2;
     }
     if (angle > 337.5 || angle < 22.5) {
       // Up
-      _move(x + md, y + md, character);
+      _move(x + md, y + md, player);
     } else if (angle > 22.5 && angle < 67.5) {
       // Up right
-      _move(x + md, y, character);
+      _move(x + md, y, player);
     } else if (angle > 67.5 && angle < 112.5) {
       // Right
-      _move(x + md, y - md, character);
+      _move(x + md, y - md, player);
     } else if (angle > 112.5 && angle < 157.5) {
       // Down right
-      _move(x, y - md, character);
+      _move(x, y - md, player);
     } else if (angle > 157.5 && angle < 202.5) {
       // Down
-      _move(x - md, y - md, character);
+      _move(x - md, y - md, player);
     } else if (angle > 202.5 && angle < 247.5) {
       // Down left
-      _move(x - md, y, character);
+      _move(x - md, y, player);
     } else if (angle > 247.5 && angle < 292.5) {
       // Left
-      _move(x - md, y + md, character);
+      _move(x - md, y + md, player);
     } else if (angle > 292.5 && angle < 337.5) {
       // Up left
-      _move(x, y + md, character);
+      _move(x, y + md, player);
     }
   }
 }

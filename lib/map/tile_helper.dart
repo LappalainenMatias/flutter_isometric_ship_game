@@ -1,26 +1,30 @@
 import 'dart:math';
-
 import 'package:anki/map/tile.dart';
+import 'package:flutter/material.dart';
 
 List<dynamic> getVertices(Point<int> coordinate, Tile tile) {
   var type = tile.type;
-  int x = coordinate.x;
-  int y = coordinate.y;
+  double x = coordinate.x.toDouble() + tile.height;
+  double y = coordinate.y.toDouble() + tile.height;
 
   /// Here we convert the coordinates to isometric coordinates
-  Point<double> c_b = _convertToIsometric(Point(x.toDouble(), y.toDouble()));
+  Point<double> c_b = _convertToIsometric(
+    Point(x, y),
+  );
   Point<double> c_c =
-      _convertToIsometric(Point(x.toDouble() + 1, y.toDouble() + 1));
+      _convertToIsometric(Point(x + 1, y + 1));
   Point<double> c_t =
-      _convertToIsometric(Point(x.toDouble() + 2, y.toDouble() + 2));
+      _convertToIsometric(Point(x + 2, y + 2));
   Point<double> l_b =
-      _convertToIsometric(Point(x.toDouble(), y.toDouble() + 1));
+      _convertToIsometric(Point(x, y + 1));
   Point<double> l_t =
-      _convertToIsometric(Point(x.toDouble() + 1, y.toDouble() + 2));
+      _convertToIsometric(Point(x + 1, y + 2));
   Point<double> r_b =
-      _convertToIsometric(Point(x.toDouble() + 1, y.toDouble()));
+      _convertToIsometric(Point(x + 1, y));
   Point<double> r_t =
-      _convertToIsometric(Point(x.toDouble() + 2, y.toDouble() + 1));
+      _convertToIsometric(Point(x + 2, y + 1));
+  Point<double> c_high =
+      _convertToIsometric(Point(x + 4, y + 4));
   //c = center, l = left, r = right, t = top, b = bottom
   //The least amount of data to create isometric cube
   List<double> vertices = [
@@ -74,6 +78,21 @@ List<dynamic> getVertices(Point<int> coordinate, Tile tile) {
   colors[15] = type.darkShadowColor.value;
   colors[16] = type.darkShadowColor.value;
   colors[17] = type.darkShadowColor.value;
+  if (tile.containsTree && tile.height > 0) {
+    vertices.addAll([
+      l_t.x,
+      l_t.y,
+      c_high.x,
+      c_high.y,
+      r_t.x,
+      r_t.y,
+    ]);
+    colors.addAll([
+      Colors.red.value,
+      Colors.red.value,
+      Colors.red.value,
+    ]);
+  }
   return [vertices, colors];
 }
 

@@ -1,7 +1,9 @@
+import 'dart:ui';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/map_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_shaders/flutter_shaders.dart';
 
 class Board extends StatefulWidget {
   final double width;
@@ -14,16 +16,28 @@ class Board extends StatefulWidget {
 }
 
 class _BoardState extends State<Board> {
+  var time = Stopwatch()..start();
+
   @override
   Widget build(BuildContext context) {
-    return RepaintBoundary(
-      child: Consumer<MapModel>(
-        builder: (context, map, child) => SizedBox(
-          width: widget.width,
-          height: widget.height,
-          child: CustomPaint(
-            size: Size(widget.width, widget.height),
-            painter: MapPainter(map),
+    return SizedBox(
+      width: widget.width,
+      height: widget.height,
+      child: RepaintBoundary(
+        child: ShaderBuilder(
+          assetKey: 'shaders/water.frag',
+          (context, shader, child) => Consumer<MapModel>(
+            builder: (context, map, child) => CustomPaint(
+              size: MediaQuery.of(context).size,
+              painter: MapPainter(
+                map,
+                shader,
+                time.elapsedMilliseconds.toDouble() / 1000,
+              ),
+            ),
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
           ),
         ),
       ),

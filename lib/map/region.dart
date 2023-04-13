@@ -7,53 +7,35 @@ import 'tile_helper.dart';
 class Region extends Comparable<Region> {
   Point<int> regionCoordinate;
   List<Tile> tiles;
-  Vertices? ground;
-  Map<int, List<Vertices>> underWaterByHeight = {};
+  Vertices? groundVertices;
+  Vertices? underWaterVertices;
 
   Region(this.tiles, this.regionCoordinate) {
     tiles.sort((a, b) => a.compareTo(b));
-    List<double> vGround = [];
-    List<int> cGround = [];
-    Map<int, List<double>> vWater = {};
-    Map<int, List<int>> cWater = {};
+    List<double> groundPositions = [];
+    List<int> groundColors = [];
+    List<double> underWaterPositions = [];
+    List<int> underWaterColors = [];
     for (var tile in tiles) {
-      List<dynamic> vs = getVertices(tile.coordinate, tile);
-      if (tile.height >= 0) {
-        vGround.addAll(vs[0]);
-        cGround.addAll(vs[1]);
+      List<dynamic> pc = getVertices(tile.coordinate, tile);
+      if (tile.height < 0) {
+        underWaterPositions.addAll(pc[0]);
+        underWaterColors.addAll(pc[1]);
       } else {
-        if (vWater.containsKey(tile.height)) {
-          vWater[tile.height]!.addAll(vs[0]);
-          cWater[tile.height]!.addAll(vs[1]);
-        } else {
-          vWater[tile.height] = vs[0];
-          cWater[tile.height] = vs[1];
-        }
+        groundPositions.addAll(pc[0]);
+        groundColors.addAll(pc[1]);
       }
     }
-    ground = Vertices.raw(
+    groundVertices = Vertices.raw(
       VertexMode.triangles,
-      Float32List.fromList(vGround),
-      colors: Int32List.fromList(cGround),
+      Float32List.fromList(groundPositions),
+      colors: Int32List.fromList(groundColors),
     );
-    List keys = vWater.keys.toList();
-    for (var key in keys) {
-      if (underWaterByHeight.containsKey(key)) {
-        underWaterByHeight[key]!.add(Vertices.raw(
-          VertexMode.triangles,
-          Float32List.fromList(vWater[key]!),
-          colors: Int32List.fromList(cWater[key]!),
-        ));
-      } else {
-        underWaterByHeight[key] = [
-          Vertices.raw(
-            VertexMode.triangles,
-            Float32List.fromList(vWater[key]!),
-            colors: Int32List.fromList(cWater[key]!),
-          )
-        ];
-      }
-    }
+    underWaterVertices = Vertices.raw(
+      VertexMode.triangles,
+      Float32List.fromList(underWaterPositions),
+      colors: Int32List.fromList(underWaterColors),
+    );
   }
 
   Region.empty()

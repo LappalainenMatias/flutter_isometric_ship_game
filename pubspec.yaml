@@ -9,6 +9,7 @@ environment:
   sdk: '>=2.18.4 <3.0.0'
 
 dependencies:
+  flutter_shaders: ^0.1.0
   flutter_joystick: ^0.0.2
   fast_noise: ^1.0.1
   flutter:
@@ -25,3 +26,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  shaders:
+    - shaders/example.frag
+    - shaders/water.frag

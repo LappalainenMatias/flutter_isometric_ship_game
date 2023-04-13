@@ -1,67 +1,54 @@
 import 'dart:ui';
 import 'package:anki/map/region.dart';
-import 'package:anki/character/player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import '../character/player_mover.dart';
+import '../player/player.dart';
+import '../player/player_mover.dart';
 import 'camera.dart';
-import 'map_generator.dart';
+import 'map_creator.dart';
 import 'map_helper.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
+  final MapCreator _mapCreator = MapCreator();
   final int _regionSideWidth = 64;
   final int _maxRegionAmount = 512;
   final Map<Point, Region> _regions = {};
   late final PlayerMover _playerMover;
-  final PlayerModel player;
+  final Player player;
   late final Camera camera;
+  FragmentShader? fragmentShader;
 
   MapModel(this.player) {
-    camera = Camera(
-        topLeft: player.coordinate.value +
-            Point(-_regionSideWidth.toDouble(), _regionSideWidth.toDouble()),
-        bottomRight: player.coordinate.value +
-            Point(_regionSideWidth.toDouble(), -_regionSideWidth.toDouble()));
+    camera = Camera.fromCoordinate(player.coordinate.value);
     _playerMover = PlayerMover(this);
     player.coordinate.addListener(() {
       _cameraFollowPlayer();
     });
+    loadShader();
   }
 
-  Map<int, List<List<Vertices>>> getUnderWaterVerticesInCamera() {
+  Map<String, List<Vertices>> getVerticesInCamera() {
     List<Region> regions = _getRegionsInCamera();
     regions.sort((a, b) => a.compareTo(b));
-    Map<int, List<List<Vertices>>> underWater = {};
+    List<Vertices> groundVertices = [];
+    List<Vertices> underWaterVertices = [];
     for (Region region in regions) {
-      for (int key in region.underWaterByHeight.keys) {
-        if (underWater.containsKey(key)) {
-          underWater[key]!.add(region.underWaterByHeight[key]!);
-        } else {
-          underWater[key] = [region.underWaterByHeight[key]!];
-        }
+      if (region.groundVertices != null) {
+        groundVertices.add(region.groundVertices!);
+      }
+      if (region.underWaterVertices != null) {
+        underWaterVertices.add(region.underWaterVertices!);
       }
     }
-    return underWater;
-  }
-
-  List<Vertices> getGroundVerticesInCamera() {
-    List<Region> regions = _getRegionsInCamera();
-    regions.sort((a, b) => a.compareTo(b));
-    List<Vertices> ground = [];
-    for (Region region in regions) {
-      if (region.ground != null) {
-        ground.add(region.ground!);
-      }
-    }
-    return ground;
+    return {"ground": groundVertices, "underWater": underWaterVertices};
   }
 
   List<Region> _getRegionsInCamera() {
     Set<Region> regions = {};
-    Point<double> topLeft = camera.topLeft;
-    Point<double> bottomRight = camera.bottomRight;
+    var topLeft = camera.topLeft;
+    var bottomRight = camera.bottomRight;
     for (int y = topLeft.y.ceil() + _regionSideWidth;
         y >= bottomRight.y - _regionSideWidth;
         y -= _regionSideWidth) {
@@ -96,13 +83,15 @@ class MapModel extends ChangeNotifier {
     } else {
       if (_regions.length > _maxRegionAmount) return null;
       if (!_isFarawayFromPlayer(point.x, point.y)) {
-        _regions[Point(regionX, regionY)] = generateRegion(
+        Region? region = _mapCreator.create(
           Point(regionX, regionY),
           _regionSideWidth,
           _regionSideWidth,
           regionX * _regionSideWidth,
           regionY * _regionSideWidth,
         );
+        if (region == null) return null;
+        _regions[Point(regionX, regionY)] = region;
         return _regions[Point(regionX, regionY)]!;
       }
       return Region.empty();
@@ -123,5 +112,10 @@ class MapModel extends ChangeNotifier {
   void zoomOut() {
     camera.zoomOut();
     _cameraFollowPlayer();
+  }
+
+  void loadShader() async {
+    var program = await FragmentProgram.fromAsset('shaders/example.frag');
+    fragmentShader = program.fragmentShader();
   }
 }
