@@ -2,7 +2,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
 import 'tile.dart';
-import 'tile_helper.dart';
 
 class Region extends Comparable<Region> {
   Point<int> regionCoordinate;
@@ -17,7 +16,7 @@ class Region extends Comparable<Region> {
     List<double> underWaterPositions = [];
     List<int> underWaterColors = [];
     for (var tile in tiles) {
-      List<dynamic> pc = getVertices(tile.coordinate, tile);
+      List<dynamic> pc = tile.getPositionsAndColors();
       if (tile.height < 0) {
         underWaterPositions.addAll(pc[0]);
         underWaterColors.addAll(pc[1]);

@@ -25,13 +25,13 @@ class _BoardState extends State<Board> {
       height: widget.height,
       child: RepaintBoundary(
         child: ShaderBuilder(
-          assetKey: 'shaders/water.frag',
-          (context, shader, child) => Consumer<MapModel>(
+          assetKey: 'shaders/simplewater.frag',
+          (context, waterShader, child) => Consumer<MapModel>(
             builder: (context, map, child) => CustomPaint(
               size: MediaQuery.of(context).size,
               painter: MapPainter(
                 map,
-                shader,
+                waterShader,
                 time.elapsedMilliseconds.toDouble() / 1000,
               ),
             ),

@@ -52,5 +52,5 @@ void main()
     vec2 uv = FlutterFragCoord().xy / iResolution.xy;
     vec4 a = vec4(0.043, 0.318, 0.871, 0.7);
     vec4 b = vec4(0.365,0.725,1.0, 0.7);
-    fragColor = vec4(mix(a, b, smoothstep(0.0, 0.5, ov(uv*5.0))));
+    fragColor = vec4(mix(a, b, smoothstep(0.0, 0.5, ov(uv*50.0))));
 }

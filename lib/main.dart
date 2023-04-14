@@ -12,7 +12,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  Player player = Player(0, 0);
+  Player player = Player(60, 0);
   MapModel map = MapModel(player);
   GameModel game = GameModel(map);
   runApp(

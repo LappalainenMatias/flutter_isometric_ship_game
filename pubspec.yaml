@@ -29,3 +29,6 @@ flutter:
   shaders:
     - shaders/example.frag
     - shaders/water.frag
+    - shaders/windwaker.frag
+    - shaders/simplewater.frag
+    - shaders/cube.frag

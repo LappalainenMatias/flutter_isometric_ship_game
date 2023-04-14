@@ -36,10 +36,7 @@ class MapCreator {
         elevation = elevation / (1 + 0.5 + 0.25) - 0.2;
         moisture = moisture / (1 + 0.5 + 0.25);
         Tile? tile = TileExtension.getTile(
-            elevation, moisture, Point(startX + x, startY + y));
-        if (Random().nextInt(100) < 2) {
-          tile!.containsTree = true;
-        }
+            elevation, moisture, Point((startX + x).toDouble(), (startY + y).toDouble()));
         if (tile != null) tiles.add(tile);
       }
     }

@@ -1,19 +1,29 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 
+import 'cube.dart';
+import 'natural_items/tree.dart';
+
 class Tile extends Comparable<Tile> {
   final Type type;
-  final Point<int> coordinate;
+  final Point<double> coordinate;
   bool containsTree;
-  int height;
+  double height;
 
-  Tile(this.type, this.coordinate, this.height, [this.containsTree = false]);
+  Tile(this.type, this.coordinate, this.height, [this.containsTree = false]) {
+    if (type == Type.grass && Random().nextInt(100) < 2) {
+      containsTree = true;
+    }
+    if (type == Type.taiga && Random().nextInt(100) < 10) {
+      containsTree = true;
+    }
+  }
 
-  int distance() {
+  double distance() {
     return coordinate.x + coordinate.y;
   }
 
-  int nearness() {
+  double nearness() {
     return coordinate.x + coordinate.y;
   }
 
@@ -23,6 +33,23 @@ class Tile extends Comparable<Tile> {
       return -1;
     }
     return 1;
+  }
+
+  List getPositionsAndColors() {
+    List positionsAndColors = createCube(
+      coordinate,
+      height,
+      1.0,
+      type.top,
+      type.left,
+      type.right,
+    );
+    if (containsTree) {
+      List tree = createBasicTree(this);
+      positionsAndColors[0].addAll(tree[0]);
+      positionsAndColors[1].addAll(tree[1]);
+    }
+    return positionsAndColors;
   }
 }
 
@@ -37,11 +64,6 @@ enum Type {
     Color.fromARGB(255, 110, 164, 106),
     Color.fromARGB(255, 93, 143, 89),
   ),
-  wall(
-    Colors.black,
-    Colors.black,
-    Colors.black,
-  ),
   tundra(
     Color.fromARGB(255, 146, 183, 144),
     Color.fromARGB(255, 116, 150, 114),
@@ -52,10 +74,10 @@ enum Type {
     Color.fromARGB(255, 122, 133, 120),
     Color.fromARGB(255, 100, 112, 98),
   ),
-  deepOcean(
-    Color.fromARGB(255, 19, 93, 185),
-    Color.fromARGB(255, 19, 93, 185),
-    Color.fromARGB(255, 19, 93, 185),
+  lakeFloorPlants(
+    Color.fromARGB(255, 85, 107, 47),
+    Color.fromARGB(255, 67, 86, 35),
+    Color.fromARGB(255, 56, 72, 29),
   ),
   ocean(
     Color.fromARGB(255, 21, 99, 197),
@@ -68,19 +90,23 @@ enum Type {
     Color.fromARGB(255, 138, 124, 82),
   );
 
-  const Type(this.color, this.lightShadowColor, this.darkShadowColor);
+  const Type(this.top, this.left, this.right);
 
-  final Color color;
-  final Color lightShadowColor;
-  final Color darkShadowColor;
+  // These are the cube's side colors. Top is often brighter because it is in the light.
+  final Color top;
+  final Color left;
+  final Color right;
 }
 
 extension TileExtension on Tile {
-  static Tile? getTile(double elevation, double moisture,
-      Point<int> coordinate) {
-    int height = (elevation * 30).round();
+  static Tile? getTile(
+      double elevation, double moisture, Point<double> coordinate) {
+    double height = (elevation * 30).round().toDouble();
     if (elevation < 0.0 && moisture < -0.25) {
       return Tile(Type.bare, coordinate, height);
+    }
+    if (elevation < -0.1 && moisture < 0.0) {
+      return Tile(Type.lakeFloorPlants, coordinate, height);
     }
     if (elevation < 0.0) return Tile(Type.beach, coordinate, height);
     if (elevation < 0.05) {
