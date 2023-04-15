@@ -1,16 +1,11 @@
 import 'dart:math';
 import 'package:anki/map/iso_coordinate.dart';
-import 'package:anki/map/map.dart';
 import 'package:anki/map/map_helper.dart';
 import 'package:anki/player/player.dart';
 
 class PlayerMover {
-  DateTime lastMovement = DateTime.now();
-  double movementDistance = 0.2;
+  double movementDistance = 0.05;
   int movementSpeedMs = 15;
-  MapModel map;
-
-  PlayerMover(this.map);
 
   void _move(double newX, double newY, Player player) {
     player.setCoordinate(IsoCoordinate(newX, newY));
@@ -18,12 +13,11 @@ class PlayerMover {
 
   /// Moves the character in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left
-  void joyStickMovement(double joyStickX, double joyStickY, Player player) {
-    if (movementSpeedMs >
-        DateTime.now().difference(lastMovement).inMilliseconds) {
-      return;
-    }
-    lastMovement = DateTime.now();
+  void joyStickMovement(
+    double joyStickX,
+    double joyStickY,
+    Player player,
+  ) {
     double angle = (atan2(joyStickX, joyStickY) * (180 / pi) + 360) % 360;
     double x = player.getCoordinate().x;
     double y = player.getCoordinate().y;
@@ -58,12 +52,10 @@ class PlayerMover {
   /// (0, 1) = up, (-1, 0) = left. Notice that the map is isometric which means that
   /// moving up in the map increases both the x and y coordinate
   void joyStickIsometricMovement(
-      double joyStickX, double joyStickY, Player player) {
-    if (movementSpeedMs >
-        DateTime.now().difference(lastMovement).inMilliseconds) {
-      return;
-    }
-    lastMovement = DateTime.now();
+    double joyStickX,
+    double joyStickY,
+    Player player,
+  ) {
     double angle = (atan2(joyStickX, joyStickY) * (180 / pi) + 360) % 360;
     double x = player.getCoordinate().x;
     double y = player.getCoordinate().y;

@@ -2,21 +2,18 @@ import 'package:anki/map/iso_coordinate.dart';
 import 'package:flutter/material.dart';
 
 class Player {
-  late ValueNotifier<IsoCoordinate> coordinate;
+  final ValueNotifier<IsoCoordinate> _coord;
 
-  Player(double x, double y) {
-    coordinate = ValueNotifier(IsoCoordinate(x, y));
-  }
+  Player(this._coord);
 
   IsoCoordinate getCoordinate() {
-    return coordinate.value;
+    return _coord.value;
   }
 
-  void setCoordinate(IsoCoordinate coordinate) {
-    if (coordinate.x == this.coordinate.value.x &&
-        coordinate.y == this.coordinate.value.y) {
+  void setCoordinate(IsoCoordinate coord) {
+    if (coord.x == _coord.value.x && coord.y == _coord.value.y) {
       return;
     }
-    this.coordinate.value = coordinate;
+    _coord.value = coord;
   }
 }

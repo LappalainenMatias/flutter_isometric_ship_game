@@ -6,13 +6,13 @@ import 'tile.dart';
 class Region extends Comparable<Region> {
   Point<int> regionCoordinate;
   List<Tile> tiles;
-  Vertices? groundVertices;
-  Vertices? underWaterVertices;
+  Vertices? aboveWater;
+  Vertices? underWater;
 
   Region(this.tiles, this.regionCoordinate) {
     tiles.sort((a, b) => a.compareTo(b));
-    List<double> groundPositions = [];
-    List<int> groundColors = [];
+    List<double> aboveWaterPositions = [];
+    List<int> aboveWaterColors = [];
     List<double> underWaterPositions = [];
     List<int> underWaterColors = [];
     for (var tile in tiles) {
@@ -21,16 +21,16 @@ class Region extends Comparable<Region> {
         underWaterPositions.addAll(pc[0]);
         underWaterColors.addAll(pc[1]);
       } else {
-        groundPositions.addAll(pc[0]);
-        groundColors.addAll(pc[1]);
+        aboveWaterPositions.addAll(pc[0]);
+        aboveWaterColors.addAll(pc[1]);
       }
     }
-    groundVertices = Vertices.raw(
+    aboveWater = Vertices.raw(
       VertexMode.triangles,
-      Float32List.fromList(groundPositions),
-      colors: Int32List.fromList(groundColors),
+      Float32List.fromList(aboveWaterPositions),
+      colors: Int32List.fromList(aboveWaterColors),
     );
-    underWaterVertices = Vertices.raw(
+    underWater = Vertices.raw(
       VertexMode.triangles,
       Float32List.fromList(underWaterPositions),
       colors: Int32List.fromList(underWaterColors),
@@ -41,13 +41,13 @@ class Region extends Comparable<Region> {
       : tiles = [],
         regionCoordinate = const Point(0, 0);
 
-  int nearness() {
+  int _nearness() {
     return regionCoordinate.x + regionCoordinate.y;
   }
 
   @override
   int compareTo(Region other) {
-    if (nearness() > other.nearness()) {
+    if (_nearness() > other._nearness()) {
       return -1;
     }
     return 1;

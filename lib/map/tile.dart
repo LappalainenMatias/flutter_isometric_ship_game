@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'cube.dart';
-import 'natural_items/tree.dart';
+import 'iso_coordinate.dart';
+import 'natural_items/spruce.dart';
 
 class Tile extends Comparable<Tile> {
   final Type type;
-  final Point<double> coordinate;
+  final IsoCoordinate coordinate;
   bool containsTree;
   double height;
 
   Tile(this.type, this.coordinate, this.height, [this.containsTree = false]) {
-    if (type == Type.grass && Random().nextInt(100) < 2) {
+    int val = Random().nextInt(100);
+    if (type == Type.grass && val < 2) {
       containsTree = true;
     }
-    if (type == Type.taiga && Random().nextInt(100) < 10) {
+    if (type == Type.taiga && val < 10) {
+      containsTree = true;
+    }
+    if (type == Type.tundra && val < 1) {
       containsTree = true;
     }
   }
@@ -39,13 +44,12 @@ class Tile extends Comparable<Tile> {
     List positionsAndColors = createCube(
       coordinate,
       height,
-      1.0,
-      type.top,
-      type.left,
-      type.right,
+      type.top.value,
+      type.left.value,
+      type.right.value,
     );
     if (containsTree) {
-      List tree = createBasicTree(this);
+      List tree = spruce(this);
       positionsAndColors[0].addAll(tree[0]);
       positionsAndColors[1].addAll(tree[1]);
     }
@@ -100,7 +104,7 @@ enum Type {
 
 extension TileExtension on Tile {
   static Tile? getTile(
-      double elevation, double moisture, Point<double> coordinate) {
+      double elevation, double moisture, IsoCoordinate coordinate) {
     double height = (elevation * 30).round().toDouble();
     if (elevation < 0.0 && moisture < -0.25) {
       return Tile(Type.bare, coordinate, height);
@@ -109,11 +113,12 @@ extension TileExtension on Tile {
       return Tile(Type.lakeFloorPlants, coordinate, height);
     }
     if (elevation < 0.0) return Tile(Type.beach, coordinate, height);
-    if (elevation < 0.05) {
+    if (elevation < 0.02) {
       if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
       return Tile(Type.beach, coordinate, height);
     }
     if (elevation < 0.20) {
+      if (moisture < -0.20) return Tile(Type.bare, coordinate, height);
       if (moisture < 0.00) return Tile(Type.grass, coordinate, height);
       return Tile(Type.taiga, coordinate, height);
     }

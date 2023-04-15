@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:anki/map/map.dart';
 
@@ -14,33 +15,41 @@ class MapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    var time = Stopwatch()..start();
+    var vertices = map.getVerticesInCamera();
+    _addShaders(size);
+    _isometricTransformation(canvas, size);
+    _paintVertices(vertices["underWater"]!, canvas, waterPaint);
+    _paintVertices(vertices["aboveWater"]!, canvas, defaultPaint);
+    _paintPlayer(canvas);
+  }
+
+  void _addShaders(Size size) {
     waterShader.setFloat(0, size.width);
     waterShader.setFloat(1, size.height);
     waterShader.setFloat(2, dt);
     waterPaint.shader = waterShader;
-    double scale =
-        min(size.width / map.camera.width, size.height / map.camera.height);
+  }
+
+  void _isometricTransformation(Canvas canvas, Size size) {
+    double scale = min(size.width / map.width(), size.height / map.width());
+    var coord = map.playerCoordinate();
     canvas.scale(scale, -scale);
     canvas.translate(
-      -map.player.coordinate.value.isoX.toDouble() + size.width / scale / 2,
-      -map.player.coordinate.value.isoY.toDouble() - size.height / scale / 2,
+      -coord.isoX.toDouble() + size.width / scale / 2,
+      -coord.isoY.toDouble() - size.height / scale / 2,
     );
-    var vertices = map.getVerticesInCamera();
-    for (var vs in vertices["underWater"]!) {
-      canvas.drawVertices(vs, BlendMode.srcOver, waterPaint);
+  }
+
+  void _paintVertices(List<Vertices> vertices, Canvas canvas, Paint paint) {
+    for (var vs in vertices) {
+      canvas.drawVertices(vs, BlendMode.srcOver, paint);
     }
-    for (var vs in vertices["ground"]!) {
-      canvas.drawVertices(vs, BlendMode.dst, defaultPaint);
-    }
-    _paintPlayer(canvas);
-    print('paint time: ${time.elapsedMilliseconds}ms');
   }
 
   void _paintPlayer(Canvas canvas) {
     Offset playerOffset = Offset(
-      map.player.coordinate.value.isoX.toDouble(),
-      map.player.coordinate.value.isoY.toDouble(),
+      map.playerCoordinate().isoX.toDouble(),
+      map.playerCoordinate().isoY.toDouble(),
     );
     canvas.drawCircle(playerOffset, 2, defaultPaint..color = Colors.orange);
   }

@@ -1,5 +1,3 @@
-import 'package:anki/game.dart';
-import 'package:anki/player/player.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,14 +10,11 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  Player player = Player(60, 0);
-  MapModel map = MapModel(player);
-  GameModel game = GameModel(map);
+  MapModel map = MapModel();
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => map),
-        ChangeNotifierProvider(create: (context) => game),
       ],
       child: const MyApp(),
     ),
@@ -53,7 +48,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    var game = Provider.of<GameModel>(context, listen: false);
+    var map = Provider.of<MapModel>(context, listen: false);
     Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
@@ -74,7 +69,7 @@ class _MainScreenState extends State<MainScreen> {
                     size: 36.0,
                   ),
                   onTap: () {
-                    game.map.zoomIn();
+                    map.zoomIn();
                   },
                 ),
                 GestureDetector(
@@ -84,53 +79,18 @@ class _MainScreenState extends State<MainScreen> {
                     size: 36.0,
                   ),
                   onTap: () {
-                    game.map.zoomOut();
+                    map.zoomOut();
                   },
                 ),
               ],
             ),
           ),
         ),
-        Align(
+        const Align(
           alignment: Alignment.bottomRight,
           child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: JoyStick(
-              game: game,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  AppBar buildAppBar(GameModel game) {
-    return AppBar(
-      actions: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            child: const Icon(
-              Icons.zoom_out,
-              color: Colors.white,
-              size: 24.0,
-            ),
-            onTap: () {
-              game.map.zoomOut();
-            },
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: GestureDetector(
-            child: const Icon(
-              Icons.zoom_in,
-              color: Colors.white,
-              size: 24.0,
-            ),
-            onTap: () {
-              game.map.zoomIn();
-            },
+            padding: EdgeInsets.all(32.0),
+            child: JoyStick(),
           ),
         ),
       ],

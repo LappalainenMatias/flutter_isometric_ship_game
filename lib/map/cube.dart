@@ -1,72 +1,68 @@
+import 'package:anki/map/iso_coordinate.dart';
 
-import 'dart:math';
-import 'dart:ui';
-
+/// Isometric cube has 7 corners and 3 visible sides.
+/// From the 7 corners we can create 6 triangles that make up the cube.
+/// The scale makes the cubes thinner/wider/shorter/taller
 List createCube(
-    Point<double> coordinate,
-    double tileHeight,
-    double scale,
-    Color top,
-    Color left,
-    Color right,
-    ) {
+  IsoCoordinate coordinate,
+  double tileHeight,
+  int colorTop,
+  int colorLeft,
+  int colorRight, {
+  double heightScale = 1,
+  double widthScale = 1,
+  IsoCoordinate offset = const IsoCoordinate(0, 0),
+}) {
   double x = coordinate.x.toDouble() + tileHeight;
   double y = coordinate.y.toDouble() + tileHeight;
-
-  // c = center, l = left, r = right, t = top, b = bottom
-  // We create the cube from 6 triangles. Two for each visible side
-  Point<double> c_b = _convertToIsometric(Point(x, y));
-  Point<double> c_c = _convertToIsometric(Point(x + scale, y + scale));
-  Point<double> c_t = _convertToIsometric(Point(x + 2 * scale, y + 2 * scale));
-  Point<double> l_b = _convertToIsometric(Point(x, y + scale));
-  Point<double> l_t = _convertToIsometric(Point(x + scale, y + 2 * scale));
-  Point<double> r_b = _convertToIsometric(Point(x + scale, y));
-  Point<double> r_t = _convertToIsometric(Point(x + 2 * scale, y + scale));
+  final cenBot = IsoCoordinate(x, y) + offset;
+  final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
+  final lefBot = cenBot + IsoCoordinate(0, widthScale);
+  final lefTop = cenCen + IsoCoordinate(0, widthScale);
+  final rigBot = cenBot + IsoCoordinate(widthScale, 0);
+  final rigTop = cenCen + IsoCoordinate(widthScale, 0);
+  final cenTop = lefTop + IsoCoordinate(widthScale, 0);
   List<double> positions = [
-    c_b.x,
-    c_b.y,
-    c_c.x,
-    c_c.y,
-    l_b.x,
-    l_b.y,
-    c_c.x,
-    c_c.y,
-    l_b.x,
-    l_b.y,
-    l_t.x,
-    l_t.y,
-    c_c.x,
-    c_c.y,
-    l_t.x,
-    l_t.y,
-    c_t.x,
-    c_t.y,
-    c_c.x,
-    c_c.y,
-    c_t.x,
-    c_t.y,
-    r_t.x,
-    r_t.y,
-    c_c.x,
-    c_c.y,
-    r_t.x,
-    r_t.y,
-    r_b.x,
-    r_b.y,
-    c_c.x,
-    c_c.y,
-    r_b.x,
-    r_b.y,
-    c_b.x,
-    c_b.y,
+    cenBot.isoX,
+    cenBot.isoY,
+    cenCen.isoX,
+    cenCen.isoY,
+    lefBot.isoX,
+    lefBot.isoY,
+    cenCen.isoX,
+    cenCen.isoY,
+    lefBot.isoX,
+    lefBot.isoY,
+    lefTop.isoX,
+    lefTop.isoY,
+    cenCen.isoX,
+    cenCen.isoY,
+    lefTop.isoX,
+    lefTop.isoY,
+    cenTop.isoX,
+    cenTop.isoY,
+    cenCen.isoX,
+    cenCen.isoY,
+    cenTop.isoX,
+    cenTop.isoY,
+    rigTop.isoX,
+    rigTop.isoY,
+    cenCen.isoX,
+    cenCen.isoY,
+    rigTop.isoX,
+    rigTop.isoY,
+    rigBot.isoX,
+    rigBot.isoY,
+    cenCen.isoX,
+    cenCen.isoY,
+    rigBot.isoX,
+    rigBot.isoY,
+    cenBot.isoX,
+    cenBot.isoY,
   ];
   List<int> colors = [];
-  colors.addAll(List.generate(6, (index) => left.value));
-  colors.addAll(List.generate(6, (index) => top.value));
-  colors.addAll(List.generate(6, (index) => right.value));
+  colors.addAll(List.generate(6, (index) => colorLeft));
+  colors.addAll(List.generate(6, (index) => colorTop));
+  colors.addAll(List.generate(6, (index) => colorRight));
   return [positions, colors];
-}
-
-Point<double> _convertToIsometric(Point<double> point) {
-  return Point(2 * point.x - 2 * point.y, point.x + point.y);
 }
