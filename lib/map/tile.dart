@@ -4,6 +4,7 @@ import 'dart:math';
 import 'cube.dart';
 import 'iso_coordinate.dart';
 import 'natural_items/birch.dart';
+import 'natural_items/flower.dart';
 import 'natural_items/spruce.dart';
 import 'natural_items/rock.dart';
 
@@ -54,6 +55,11 @@ class Tile extends Comparable<Tile> {
         break;
       case NaturalItem.birch:
         List r = birch(this);
+        positionsAndColors[0].addAll(r[0]);
+        positionsAndColors[1].addAll(r[1]);
+        break;
+      case NaturalItem.flower:
+        List r = flower(this);
         positionsAndColors[0].addAll(r[0]);
         positionsAndColors[1].addAll(r[1]);
         break;
@@ -142,14 +148,17 @@ extension TileExtension on Tile {
       if (val < 2) return NaturalItem.rock;
       if (val < 8) return NaturalItem.spruce;
       if (val < 9) return NaturalItem.birch;
+      if (val < 10) return NaturalItem.flower;
     } else if (type == Type.grass) {
       if (val < 1) return NaturalItem.rock;
       if (val < 2) return NaturalItem.spruce;
       if (val < 4) return NaturalItem.birch;
+      if (val < 5) return NaturalItem.flower;
     } else if (type == Type.bare) {
       if (val < 5) return NaturalItem.rock;
       if (val < 6) return NaturalItem.spruce;
       if (val < 7) return NaturalItem.birch;
+      if (val < 8) return NaturalItem.flower;
     } else if (type == Type.beach) {
       if (val < 5) return NaturalItem.rock;
     } else if (type == Type.sand) {
@@ -159,4 +168,4 @@ extension TileExtension on Tile {
   }
 }
 
-enum NaturalItem { empty, spruce, rock, birch }
+enum NaturalItem { empty, spruce, rock, birch, flower }
