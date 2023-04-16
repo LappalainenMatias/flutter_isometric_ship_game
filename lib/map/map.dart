@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../player/player.dart';
 import '../player/player_mover.dart';
 import 'camera.dart';
-import 'map_helper.dart';
+import 'distance.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
@@ -75,7 +75,7 @@ class MapModel extends ChangeNotifier {
       return _regions[Point(regionX, regionY)]!;
     } else {
       if (_regions.length > _maxRegionAmount) return null;
-      if (!_isFarawayFromPlayer(point.x, point.y)) {
+      if (!_isFarawayFromPlayer(point.x.toDouble(), point.y.toDouble())) {
         Region? region = _mapCreator.create(
           Point(regionX, regionY),
           _regionSideWidth,
@@ -91,10 +91,14 @@ class MapModel extends ChangeNotifier {
     }
   }
 
-  bool _isFarawayFromPlayer(int x, int y) {
-    return manhattanDistance(
-            x, y, _player.getCoordinate().x, _player.getCoordinate().y) >
-        _regionSideWidth * 8;
+  bool _isFarawayFromPlayer(double x, double y) {
+    double distance = euclideanDistance(
+      x,
+      y,
+      _player.getCoordinate().x,
+      _player.getCoordinate().y,
+    );
+    return distance > _regionSideWidth * 4;
   }
 
   double width() {

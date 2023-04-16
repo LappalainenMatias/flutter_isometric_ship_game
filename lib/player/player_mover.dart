@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/map/iso_coordinate.dart';
-import 'package:anki/map/map_helper.dart';
+import 'package:anki/map/distance.dart';
 import 'package:anki/player/player.dart';
 
 class PlayerMover {
