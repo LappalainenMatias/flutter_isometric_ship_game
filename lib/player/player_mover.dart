@@ -4,7 +4,7 @@ import 'package:anki/map/distance.dart';
 import 'package:anki/player/player.dart';
 
 class PlayerMover {
-  double movementDistance = 0.05;
+  double movementDistance = 0.2;
   int movementSpeedMs = 15;
 
   void _move(double newX, double newY, Player player) {

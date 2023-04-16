@@ -19,9 +19,6 @@ class Tile extends Comparable<Tile> {
     if (type == Type.taiga && val < 10) {
       containsTree = true;
     }
-    if (type == Type.tundra && val < 1) {
-      containsTree = true;
-    }
   }
 
   double distance() {
@@ -59,24 +56,19 @@ class Tile extends Comparable<Tile> {
 
 enum Type {
   taiga(
-    Color.fromARGB(255, 83, 173, 93),
-    Color.fromARGB(255, 67, 140, 75),
-    Color.fromARGB(255, 53, 119, 60),
+    Color.fromARGB(255, 100, 164, 93),
+    Color.fromARGB(255, 75, 140, 76),
+    Color.fromARGB(255, 59, 117, 60),
   ),
   grass(
-    Color.fromARGB(255, 132, 197, 126),
-    Color.fromARGB(255, 110, 164, 106),
-    Color.fromARGB(255, 93, 143, 89),
-  ),
-  tundra(
-    Color.fromARGB(255, 146, 183, 144),
-    Color.fromARGB(255, 116, 150, 114),
-    Color.fromARGB(255, 96, 129, 94),
+    Color.fromARGB(255, 109, 150, 86),
+    Color.fromARGB(255, 92, 129, 72),
+    Color.fromARGB(255, 79, 112, 60),
   ),
   bare(
-    Color.fromARGB(255, 153, 162, 151),
-    Color.fromARGB(255, 122, 133, 120),
-    Color.fromARGB(255, 100, 112, 98),
+    Color.fromARGB(255, 139, 162, 127),
+    Color.fromARGB(255, 125, 148, 113),
+    Color.fromARGB(255, 109, 129, 98),
   ),
   lakeFloorPlants(
     Color.fromARGB(255, 85, 107, 47),
@@ -89,6 +81,11 @@ enum Type {
     Color.fromARGB(255, 21, 99, 197),
   ),
   beach(
+    Color.fromARGB(255, 79, 155, 66),
+    Color.fromARGB(255, 68, 140, 56),
+    Color.fromARGB(255, 59, 121, 48),
+  ),
+  sand(
     Color.fromARGB(255, 194, 178, 128),
     Color.fromARGB(255, 161, 146, 100),
     Color.fromARGB(255, 138, 124, 82),
@@ -112,7 +109,12 @@ extension TileExtension on Tile {
     if (elevation < -0.1 && moisture < 0.0) {
       return Tile(Type.lakeFloorPlants, coordinate, height);
     }
-    if (elevation < 0.0) return Tile(Type.beach, coordinate, height);
+    if (elevation < -0.01) return Tile(Type.sand, coordinate, height);
+    if (elevation < 0.01) {
+      if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
+      if (moisture < -0.0) return Tile(Type.sand, coordinate, height);
+      return Tile(Type.beach, coordinate, height);
+    }
     if (elevation < 0.02) {
       if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
       return Tile(Type.beach, coordinate, height);
@@ -124,7 +126,6 @@ extension TileExtension on Tile {
     }
     if (elevation < 0.4) {
       if (moisture < -0.2) return Tile(Type.bare, coordinate, height);
-      if (moisture < 0.2) return Tile(Type.tundra, coordinate, height);
       return Tile(Type.taiga, coordinate, height);
     }
     return Tile(Type.bare, coordinate, height);

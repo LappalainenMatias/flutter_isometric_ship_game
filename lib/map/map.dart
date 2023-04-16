@@ -13,7 +13,7 @@ import 'distance.dart';
 import 'dart:math';
 
 class MapModel extends ChangeNotifier {
-  final MapCreator _mapCreator = MapCreator();
+  final RegionCreator _mapCreator = RegionCreator();
   final int _regionSideWidth = 64;
   final int _maxRegionAmount = 512;
   final Map<Point, Region> _regions = {};
@@ -124,7 +124,7 @@ class MapModel extends ChangeNotifier {
   }
 }
 
-class MapCreator {
+class RegionCreator {
   Region? create(
     Point<int> regionCoordinate,
     int width,
