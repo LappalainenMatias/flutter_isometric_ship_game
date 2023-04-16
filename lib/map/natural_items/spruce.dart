@@ -11,7 +11,9 @@ const Color trunkRight = Color.fromARGB(255, 101, 46, 4);
 const Color foliageTop = Color.fromARGB(255, 14, 145, 45);
 const Color foliageLeft = Color.fromARGB(255, 9, 122, 36);
 const Color foliageRight = Color.fromARGB(255, 6, 101, 28);
-IsoCoordinate offset = IsoCoordinate(0, 0);
+
+/// Used for reducing symmetry
+IsoCoordinate offset = const IsoCoordinate(0, 0);
 
 /// Creates tree from cubes
 ///     __

@@ -8,6 +8,8 @@ import '../tile.dart';
 const Color rockTop = Color.fromARGB(255, 107, 129, 124);
 const Color rockLeft = Color.fromARGB(255, 91, 112, 107);
 const Color rockRight = Color.fromARGB(255, 83, 105, 100);
+
+/// Used for reducing symmetry
 IsoCoordinate offset = const IsoCoordinate(0, 0);
 
 /// Creates rock from cubes

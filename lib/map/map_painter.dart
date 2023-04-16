@@ -18,8 +18,12 @@ class MapPainter extends CustomPainter {
     var vertices = map.getVerticesInCamera();
     _addShaders(size);
     _isometricTransformation(canvas, size);
-    _paintVertices(vertices["underWater"]!, canvas, waterPaint);
-    _paintVertices(vertices["aboveWater"]!, canvas, defaultPaint);
+    for (var vs in vertices["underWater"]!) {
+      canvas.drawVertices(vs, BlendMode.srcOver, waterPaint);
+    }
+    for (var vs in vertices["aboveWater"]!) {
+      canvas.drawVertices(vs, BlendMode.dst, defaultPaint);
+    }
     _paintPlayer(canvas);
   }
 
@@ -38,12 +42,6 @@ class MapPainter extends CustomPainter {
       -coord.isoX.toDouble() + size.width / scale / 2,
       -coord.isoY.toDouble() - size.height / scale / 2,
     );
-  }
-
-  void _paintVertices(List<Vertices> vertices, Canvas canvas, Paint paint) {
-    for (var vs in vertices) {
-      canvas.drawVertices(vs, BlendMode.srcOver, paint);
-    }
   }
 
   void _paintPlayer(Canvas canvas) {
