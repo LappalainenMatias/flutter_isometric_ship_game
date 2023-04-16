@@ -4,21 +4,16 @@ import 'dart:math';
 import 'cube.dart';
 import 'iso_coordinate.dart';
 import 'natural_items/spruce.dart';
+import 'natural_items/rock.dart';
 
 class Tile extends Comparable<Tile> {
   final Type type;
   final IsoCoordinate coordinate;
-  bool containsTree;
+  late NaturalItem naturalItem;
   double height;
 
-  Tile(this.type, this.coordinate, this.height, [this.containsTree = false]) {
-    int val = Random().nextInt(100);
-    if (type == Type.grass && val < 2) {
-      containsTree = true;
-    }
-    if (type == Type.taiga && val < 10) {
-      containsTree = true;
-    }
+  Tile(this.type, this.coordinate, this.height) {
+    naturalItem = TileExtension.getNaturalItem(type);
   }
 
   double distance() {
@@ -45,13 +40,24 @@ class Tile extends Comparable<Tile> {
       type.left.value,
       type.right.value,
     );
-    if (containsTree) {
-      List tree = spruce(this);
-      positionsAndColors[0].addAll(tree[0]);
-      positionsAndColors[1].addAll(tree[1]);
+    switch (naturalItem) {
+      case NaturalItem.spruce:
+        List t = spruce(this);
+        positionsAndColors[0].addAll(t[0]);
+        positionsAndColors[1].addAll(t[1]);
+        break;
+      case NaturalItem.rock:
+        List r = rock(this);
+        positionsAndColors[0].addAll(r[0]);
+        positionsAndColors[1].addAll(r[1]);
+        break;
+      case NaturalItem.empty:
+        break;
     }
     return positionsAndColors;
   }
+
+  void _addNaturalItem() {}
 }
 
 enum Type {
@@ -74,11 +80,6 @@ enum Type {
     Color.fromARGB(255, 85, 107, 47),
     Color.fromARGB(255, 67, 86, 35),
     Color.fromARGB(255, 56, 72, 29),
-  ),
-  ocean(
-    Color.fromARGB(255, 21, 99, 197),
-    Color.fromARGB(255, 21, 99, 197),
-    Color.fromARGB(255, 21, 99, 197),
   ),
   beach(
     Color.fromARGB(255, 79, 155, 66),
@@ -130,4 +131,25 @@ extension TileExtension on Tile {
     }
     return Tile(Type.bare, coordinate, height);
   }
+
+  static NaturalItem getNaturalItem(Type type) {
+    int val = Random().nextInt(100);
+    if (type == Type.taiga) {
+      if (val < 2) return NaturalItem.rock;
+      if (val < 10) return NaturalItem.spruce;
+    } else if (type == Type.grass) {
+      if (val < 1) return NaturalItem.rock;
+      if (val < 2) return NaturalItem.spruce;
+    } else if (type == Type.bare) {
+      if (val < 5) return NaturalItem.rock;
+      if (val < 6) return NaturalItem.spruce;
+    } else if (type == Type.beach) {
+      if (val < 5) return NaturalItem.rock;
+    } else if (type == Type.sand) {
+      if (val < 5) return NaturalItem.rock;
+    }
+    return NaturalItem.empty;
+  }
 }
+
+enum NaturalItem { empty, spruce, rock }
