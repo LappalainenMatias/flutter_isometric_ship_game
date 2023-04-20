@@ -23,7 +23,7 @@ void main()
     float val2 = length(0.5-fract(k.xyw*=mat3(vec3(-2.0, -1.0, 0.0), vec3(3.0, -1.0, 1.0), vec3(1.0, -1.0, -1.0))*0.2));
     float val3 = length(0.5-fract(k.xyw*=mat3(vec3(-2.0, -1.0, 0.0), vec3(3.0, -1.0, 1.0), vec3(1.0, -1.0, -1.0))*0.5));
 
-    float alpha = 0.95; // Set your desired alpha value between 0.0 and 1.0
+    float alpha = 0.90; // Set your desired alpha value between 0.0 and 1.0
     vec3 rgbColor = (pow(min(min(val1, val2), val3), 7.0) * 1.0) + texture_color.rgb;
     fragColor = vec4(rgbColor, alpha);
 }
