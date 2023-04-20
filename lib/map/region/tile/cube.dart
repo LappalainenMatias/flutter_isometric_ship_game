@@ -1,8 +1,10 @@
 import 'package:anki/map/iso_coordinate.dart';
 
+/// Creates a list of positions and colors
 /// Isometric cube has 7 corners and 3 visible sides.
 /// From the 7 corners we can create 6 triangles that make up the cube.
 /// The scale makes the cubes thinner/wider/shorter/taller
+/// offset can be used to reduce symmetry by moving the cube slightly
 List createCube(
   IsoCoordinate coordinate,
   double tileHeight,

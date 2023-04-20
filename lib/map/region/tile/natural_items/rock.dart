@@ -19,8 +19,8 @@ IsoCoordinate offset = const IsoCoordinate(0, 0);
 /// |________|
 List rock(Tile tile) {
   offset = IsoCoordinate(
-    Random().nextDouble() / 2,
-    Random().nextDouble() / 2,
+    Random().nextDouble() / 10,
+    Random().nextDouble() / 10,
   );
   int random = Random().nextInt(100);
   if (random < 70) {
