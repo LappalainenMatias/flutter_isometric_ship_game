@@ -16,4 +16,14 @@ class IsoCoordinate {
   IsoCoordinate operator +(IsoCoordinate other) {
     return IsoCoordinate(x + other.x, y + other.y);
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is IsoCoordinate && other.x == x && other.y == y;
+  }
+
+  @override
+  int get hashCode => x.hashCode ^ y.hashCode;
 }
