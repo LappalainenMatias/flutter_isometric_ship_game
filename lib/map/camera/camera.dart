@@ -1,25 +1,24 @@
 import 'package:anki/map/iso_coordinate.dart';
-import 'package:flutter/cupertino.dart';
+import 'camera_mover.dart';
 
 class Camera {
   late IsoCoordinate topLeft;
   late IsoCoordinate bottomRight;
+  final CameraMover cameraMover = CameraMover();
 
-  /// This is a value the camera will follow
-  final ValueNotifier<IsoCoordinate> target;
-
-  Camera(this.target) {
+  Camera({IsoCoordinate center = const IsoCoordinate(0, 0)}) {
     topLeft = IsoCoordinate(
-      target.value.x - 64,
-      target.value.y + 64,
+      center.x - 128,
+      center.y + 128,
     );
     bottomRight = IsoCoordinate(
-      target.value.x + 64,
-      target.value.y - 64,
+      center.x + 128,
+      center.y - 128,
     );
-    target.addListener(() {
-      centralize(target.value);
-    });
+  }
+
+  void move(double joyStickX, double joyStickY) {
+    cameraMover.joyStickIsometricMovement(joyStickX, joyStickY, this);
   }
 
   void centralize(IsoCoordinate coordinate) {
@@ -34,6 +33,13 @@ class Camera {
   double get width => (topLeft.x - bottomRight.x).abs();
 
   double get height => (topLeft.y - bottomRight.y).abs();
+
+  IsoCoordinate get center {
+    return IsoCoordinate(
+      (topLeft.x + bottomRight.x) / 2.0,
+      (topLeft.y + bottomRight.y) / 2.0,
+    );
+  }
 
   void zoomOut([double scale = 2.0]) {
     double centerX = (topLeft.x + bottomRight.x) / 2.0;
