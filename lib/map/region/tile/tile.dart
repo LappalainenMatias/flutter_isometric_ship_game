@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 
 import 'cube.dart';
-import 'iso_coordinate.dart';
+import '../../iso_coordinate.dart';
 import 'natural_items/birch.dart';
 import 'natural_items/flower.dart';
 import 'natural_items/spruce.dart';
@@ -44,9 +44,9 @@ class Tile extends Comparable<Tile> {
     );
     switch (naturalItem) {
       case NaturalItem.spruce:
-        List t = spruce(this);
-        positionsAndColors[0].addAll(t[0]);
-        positionsAndColors[1].addAll(t[1]);
+        List s = spruce(this);
+        positionsAndColors[0].addAll(s[0]);
+        positionsAndColors[1].addAll(s[1]);
         break;
       case NaturalItem.rock:
         List r = rock(this);
@@ -54,14 +54,14 @@ class Tile extends Comparable<Tile> {
         positionsAndColors[1].addAll(r[1]);
         break;
       case NaturalItem.birch:
-        List r = birch(this);
-        positionsAndColors[0].addAll(r[0]);
-        positionsAndColors[1].addAll(r[1]);
+        List b = birch(this);
+        positionsAndColors[0].addAll(b[0]);
+        positionsAndColors[1].addAll(b[1]);
         break;
       case NaturalItem.flower:
-        List r = flower(this);
-        positionsAndColors[0].addAll(r[0]);
-        positionsAndColors[1].addAll(r[1]);
+        List f = flower(this);
+        positionsAndColors[0].addAll(f[0]);
+        positionsAndColors[1].addAll(f[1]);
         break;
       case NaturalItem.empty:
         break;
@@ -86,49 +86,51 @@ enum Type {
     Color.fromARGB(255, 125, 148, 113),
     Color.fromARGB(255, 109, 129, 98),
   ),
-  lakeFloorPlants(
-    Color.fromARGB(255, 85, 107, 47),
-    Color.fromARGB(255, 67, 86, 35),
-    Color.fromARGB(255, 56, 72, 29),
-  ),
-  beach(
-    Color.fromARGB(255, 79, 155, 66),
-    Color.fromARGB(255, 68, 140, 56),
-    Color.fromARGB(255, 59, 121, 48),
-  ),
   sand(
     Color.fromARGB(255, 194, 178, 128),
     Color.fromARGB(255, 161, 146, 100),
     Color.fromARGB(255, 138, 124, 82),
+  ),
+  lakeFloorVegetation(
+    Color.fromARGB(255, 150, 157, 102),
+    Color.fromARGB(255, 138, 145, 92),
+    Color.fromARGB(255, 121, 128, 80),
+  ),
+  lakeFloorBare(
+    Color.fromARGB(255, 173, 162, 115),
+    Color.fromARGB(255, 159, 148, 103),
+    Color.fromARGB(255, 148, 138, 95),
   );
 
   const Type(this.top, this.left, this.right);
 
-  // These are the cube's side colors. Top is often brighter because it is in the light.
+  // These are the cube's side colors. Isometric cube has 3 visible sides.
+  // Top is brighter because it is in the light.
   final Color top;
   final Color left;
   final Color right;
 }
 
 extension TileExtension on Tile {
-  static Tile? getTile(
+  static Tile getTile(
       double elevation, double moisture, IsoCoordinate coordinate) {
     double height = (elevation * 30).round().toDouble();
     if (elevation < 0.0 && moisture < -0.25) {
-      return Tile(Type.bare, coordinate, height);
+      return Tile(Type.lakeFloorBare, coordinate, height);
     }
     if (elevation < -0.1 && moisture < 0.0) {
-      return Tile(Type.lakeFloorPlants, coordinate, height);
+      return Tile(Type.lakeFloorVegetation, coordinate, height);
     }
-    if (elevation < -0.01) return Tile(Type.sand, coordinate, height);
-    if (elevation < 0.01) {
+    if (elevation < -0.05) return Tile(Type.lakeFloorBare, coordinate, height);
+    if (elevation < 0.0) return Tile(Type.sand, coordinate, height);
+    if (elevation < 0.02) {
       if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
       if (moisture < -0.0) return Tile(Type.sand, coordinate, height);
-      return Tile(Type.beach, coordinate, height);
+      return Tile(Type.grass, coordinate, height);
     }
     if (elevation < 0.02) {
       if (moisture < -0.15) return Tile(Type.bare, coordinate, height);
-      return Tile(Type.beach, coordinate, height);
+      return Tile(Type.grass, coordinate, height);
     }
     if (elevation < 0.20) {
       if (moisture < -0.20) return Tile(Type.bare, coordinate, height);
@@ -159,9 +161,13 @@ extension TileExtension on Tile {
       if (val < 6) return NaturalItem.spruce;
       if (val < 7) return NaturalItem.birch;
       if (val < 8) return NaturalItem.flower;
-    } else if (type == Type.beach) {
+    } else if (type == Type.grass) {
       if (val < 5) return NaturalItem.rock;
     } else if (type == Type.sand) {
+      if (val < 5) return NaturalItem.rock;
+    } else if (type == Type.lakeFloorVegetation) {
+      if (val < 2) return NaturalItem.rock;
+    } else if (type == Type.lakeFloorBare) {
       if (val < 5) return NaturalItem.rock;
     }
     return NaturalItem.empty;
