@@ -1,15 +1,15 @@
-import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'tile.dart';
+import 'package:anki/map/iso_coordinate.dart';
+import 'tile/tile.dart';
 
 class Region extends Comparable<Region> {
-  Point<int> regionCoordinate;
+  IsoCoordinate coord;
   List<Tile> tiles;
   Vertices? aboveWater;
   Vertices? underWater;
 
-  Region(this.tiles, this.regionCoordinate) {
+  Region(this.tiles, this.coord) {
     tiles.sort((a, b) => a.compareTo(b));
     List<double> aboveWaterPositions = [];
     List<int> aboveWaterColors = [];
@@ -37,12 +37,8 @@ class Region extends Comparable<Region> {
     );
   }
 
-  Region.empty()
-      : tiles = [],
-        regionCoordinate = const Point(0, 0);
-
   int _nearness() {
-    return regionCoordinate.x + regionCoordinate.y;
+    return coord.x.toInt() + coord.y.toInt();
   }
 
   @override
