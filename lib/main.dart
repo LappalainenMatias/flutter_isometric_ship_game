@@ -2,7 +2,7 @@ import 'package:anki/widget/joystick.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'map/map.dart';
-import 'widget/board.dart';
+import 'map_screen.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
@@ -10,19 +10,18 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  MapModel map = MapModel();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => map),
+        ChangeNotifierProvider(create: (context) => MapModel()),
       ],
-      child: const MyApp(),
+      child: const IsometricMapApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class IsometricMapApp extends StatelessWidget {
+  const IsometricMapApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +51,7 @@ class _MainScreenState extends State<MainScreen> {
     Size size = MediaQuery.of(context).size;
     return Stack(
       children: [
-        Align(
-            alignment: Alignment.bottomLeft,
-            child: Board(width: size.width, height: size.height)),
+        MapScreen(width: size.width, height: size.height),
         Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
