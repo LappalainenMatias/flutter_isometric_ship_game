@@ -24,7 +24,7 @@ IsoCoordinate offset = const IsoCoordinate(0, 0);
 ///   |____|
 ///      \
 ///       \
-List flower(Tile tile) {
+List flowerPosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 3,
     Random().nextDouble() / 3,

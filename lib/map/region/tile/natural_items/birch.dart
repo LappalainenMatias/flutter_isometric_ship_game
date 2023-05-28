@@ -26,7 +26,7 @@ IsoCoordinate offset = const IsoCoordinate(0, 0);
 /// |________|
 ///    |__|
 ///    |__|
-List birch(Tile tile) {
+List birchPosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 2,
     Random().nextDouble() / 2,

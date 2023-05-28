@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
 import 'package:anki/map/region/region.dart';
 import 'package:anki/map/region/tile/tile.dart';
+import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:fast_noise/fast_noise.dart';
 import 'dart:math';
 
@@ -54,7 +55,6 @@ class RegionManager {
       return _regions[point]!;
     } else {
       if (_regions.length > _maxRegionAmount) return null;
-      Stopwatch stopwatch = Stopwatch()..start();
       Region? region = _regionCreator.create(
         IsoCoordinate(regionX.toDouble(), regionY.toDouble()),
         _regionSideWidth,
@@ -62,7 +62,6 @@ class RegionManager {
         regionX * _regionSideWidth,
         regionY * _regionSideWidth,
       );
-      print("Region creation took ${stopwatch.elapsedMilliseconds}ms");
       _regions[point] = region;
       return _regions[point]!;
     }
@@ -91,9 +90,7 @@ class RegionCreator {
     int startX,
     int startY,
   ) {
-    Stopwatch stopwatch = Stopwatch()..start();
     var tables = _noise(width, height, startX, startY);
-    print("Noise took ${stopwatch.elapsedMilliseconds}ms");
     final elevationNoise = tables[0];
     final elevationNoise2 = tables[1];
     final elevationNoise4 = tables[2];
@@ -116,13 +113,12 @@ class RegionCreator {
             0.25 * moistureRow[y] + 0.5 * moisture2Row[y] + 1 * moisture4Row[y];
         elevation = elevation / (1 + 0.5 + 0.25) - 0.1;
         moisture = moisture / (1 + 0.5 + 0.25);
-        Tile tile = TileExtension.getTile(elevation, moisture,
-            IsoCoordinate((startX + x).toDouble(), (startY + y).toDouble()));
-        tiles.add(tile);
+        tiles.add(getTile(elevation, moisture,
+            IsoCoordinate((startX + x).toDouble(), (startY + y).toDouble())));
       }
     }
-    print("Tile creation took ${stopwatch.elapsedMilliseconds}ms");
-    return Region(tiles, regionCoordinate);
+    Region region = Region(tiles, regionCoordinate);
+    return region;
   }
 
   /// Increasing frequency adds details
@@ -140,47 +136,41 @@ class RegionCreator {
     List<List<double>> moisture4 = _fixedSizeList(w, h);
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
-        final e1x = (startX + x) * 0.04;
-        final e1y = (startY + y) * 0.04;
-        final e2x = (startX + x) * 0.01;
-        final e2y = (startY + y) * 0.01;
-        final e4x = (startX + x) * 0.005;
-        final e4y = (startY + y) * 0.005;
-        final m1x = (startX + x) * 0.04;
-        final m1y = (startY + y) * 0.04;
-        final m2x = (startX + x) * 0.02;
-        final m2y = (startY + y) * 0.02;
-        final m4x = (startX + x) * 0.005;
-        final m4y = (startY + y) * 0.005;
+        final x1 = (startX + x) * 0.04;
+        final y1 = (startY + y) * 0.04;
+        final x2 = (startX + x) * 0.01;
+        final y2 = (startY + y) * 0.01;
+        final x4 = (startX + x) * 0.005;
+        final y4 = (startY + y) * 0.005;
         elevation1[x][y] = _basicNoise.singlePerlin2(
-          _basicNoise.seed,
-          e1x,
-          e1y,
+          _basicNoise.seed + 1,
+          x1,
+          y1,
         );
         elevation2[x][y] = _basicNoise.singlePerlin2(
-          _basicNoise.seed,
-          e2x,
-          e2y,
+          _basicNoise.seed + 2,
+          x2,
+          y2,
         );
         elevation4[x][y] = _basicNoise.singlePerlin2(
-          _basicNoise.seed,
-          e4x,
-          e4y,
+          _basicNoise.seed + 3,
+          x4,
+          y4,
         );
         moisture1[x][y] = _basicNoise.singlePerlin2(
-          _basicNoise.seed,
-          m1x,
-          m1y,
+          _basicNoise.seed + 4,
+          x1,
+          y1,
         );
         moisture2[x][y] = _basicNoise.singlePerlin2(
-          _basicNoise.seed,
-          m2x,
-          m2y,
+          _basicNoise.seed + 5,
+          x2,
+          y2,
         );
         moisture4[x][y] = _basicNoise.singlePerlin2(
-          _basicNoise.seed,
-          m4x,
-          m4y,
+          _basicNoise.seed + 6,
+          x4,
+          y4,
         );
       }
     }

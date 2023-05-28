@@ -17,7 +17,7 @@ IsoCoordinate offset = const IsoCoordinate(0, 0);
 ///   |____|
 /// |______|
 /// |________|
-List rock(Tile tile) {
+List rockPosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 10,
     Random().nextDouble() / 10,

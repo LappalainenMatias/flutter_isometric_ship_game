@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
-
 import '../cube.dart';
 import '../tile.dart';
 
@@ -23,7 +22,7 @@ IsoCoordinate offset = const IsoCoordinate(0, 0);
 /// |________|
 ///    |__|
 ///    |__|
-List spruce(Tile tile) {
+List sprucePosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 2,
     Random().nextDouble() / 2,
