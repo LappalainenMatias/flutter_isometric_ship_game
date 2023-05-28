@@ -1,5 +1,6 @@
 import 'package:anki/map/map.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 import 'dart:math';
@@ -15,29 +16,47 @@ class MapScreen extends StatefulWidget {
   State<MapScreen> createState() => _MapScreenState();
 }
 
-class _MapScreenState extends State<MapScreen> {
+class _MapScreenState extends State<MapScreen>
+    with SingleTickerProviderStateMixin {
+  late final Ticker _ticker;
   var time = Stopwatch()..start();
 
   @override
+  void initState() {
+    super.initState();
+
+    _ticker = createTicker(
+      (Duration elapsed) {
+        setState(() {});
+      },
+    )..start();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var map = Provider.of<MapModel>(context, listen: false);
     return SizedBox(
       width: widget.width,
       height: widget.height,
       child: RepaintBoundary(
         child: ShaderBuilder(
           assetKey: 'shaders/simplewater.frag',
-          (context, waterShader, child) => Consumer<MapModel>(
-            builder: (context, map, child) => CustomPaint(
-              size: MediaQuery.of(context).size,
-              painter: MapPainter(
-                map,
-                waterShader,
-                time.elapsedMilliseconds.toDouble() / 1000,
-              ),
+          (context, waterShader, child) => CustomPaint(
+            size: MediaQuery.of(context).size,
+            painter: MapPainter(
+              map,
+              waterShader,
+              time.elapsedMilliseconds.toDouble() / 1000,
             ),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+          ),
+          child: const Center(
+            child: CircularProgressIndicator(),
           ),
         ),
       ),
