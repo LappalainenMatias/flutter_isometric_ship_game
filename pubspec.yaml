@@ -27,8 +27,4 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   shaders:
-    - shaders/example.frag
-    - shaders/water.frag
-    - shaders/windwaker.frag
-    - shaders/simplewater.frag
-    - shaders/cube.frag
+    - shaders/regtanglewater.frag

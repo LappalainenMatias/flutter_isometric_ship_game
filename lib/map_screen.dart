@@ -46,7 +46,7 @@ class _MapScreenState extends State<MapScreen>
       height: widget.height,
       child: RepaintBoundary(
         child: ShaderBuilder(
-          assetKey: 'shaders/simplewater.frag',
+          assetKey: 'shaders/regtanglewater.frag',
           (context, waterShader, child) => CustomPaint(
             size: MediaQuery.of(context).size,
             painter: MapPainter(
