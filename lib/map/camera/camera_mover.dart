@@ -3,7 +3,7 @@ import 'package:anki/map/iso_coordinate.dart';
 import 'camera.dart';
 
 class CameraMover {
-  double movementDistance = 0.001;
+  double movementDistance = 0.0020;
 
   void _move(double newX, double newY, Camera camera) {
     camera.centralize(IsoCoordinate(newX, newY));
@@ -21,9 +21,7 @@ class CameraMover {
     double x = camera.center.x;
     double y = camera.center.y;
     double md = movementDistance * camera.width;
-    if (euclideanDistance(0, 0, joyStickX, joyStickY) > 0.5) {
-      md = md * 2;
-    }
+    md = md * _euclideanDistance(0, 0, joyStickX, joyStickY);
     if (angle > 337.5 || angle < 22.5) {
       // Up
       _move(x + md, y + md, camera);
@@ -51,7 +49,7 @@ class CameraMover {
     }
   }
 
-  double euclideanDistance(double x1, double y1, double x2, double y2) {
+  double _euclideanDistance(double x1, double y1, double x2, double y2) {
     return sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
   }
 }
