@@ -1,7 +1,6 @@
 #include <flutter/runtime_effect.glsl>
 
 precision mediump float;
-uniform vec2 iResolution;
 uniform float iTime;
 out vec4 fragColor;
 
@@ -32,12 +31,13 @@ void main()
     vec2 gridPos = floor(uv / tileSize);
 
     // Define two colors
-    vec3 colorA = vec3(23.0 / 255.0, 116.0 / 255.0, 209.0 / 255.0);
+    float diff = 1.05;
+    vec3 colorA = vec3(21.0 * diff / 255.0, 109.0 * diff / 255.0, 205.0 * diff / 255.0);
     vec3 colorB = vec3(21.0 / 255.0, 109.0 / 255.0, 205.0 / 255.0);
 
     // Calculate color based on time and grid position
     vec2 r = rand(gridPos);
-    float t = (1.0 + sin(iTime * (0.5 + r.x) + r.y)) / 2.0;
+    float t = (1.0 + sin(iTime * (0.5 + r.x) + r.y));
     vec3 color = mix(colorA, colorB, t);
 
     fragColor = vec4(color, 0.85);
