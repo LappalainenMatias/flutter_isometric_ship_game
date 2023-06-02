@@ -20,14 +20,14 @@ class _JoyStickState extends State<JoyStick> {
       child: Joystick(
         base: Container(
           decoration: BoxDecoration(
-              color: Colors.black.withAlpha(60),
+              color: Colors.black.withOpacity(0.3),
               borderRadius: const BorderRadius.all(Radius.circular(50))),
         ),
         stick: Container(
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-              color: Colors.red.withAlpha(80),
+              color: Colors.red.withOpacity(1),
               borderRadius: const BorderRadius.all(Radius.circular(25))),
         ),
         period: const Duration(milliseconds: 15),

@@ -4,7 +4,10 @@ import 'camera_mover.dart';
 class Camera {
   late IsoCoordinate topLeft;
   late IsoCoordinate bottomRight;
-  final CameraMover cameraMover = CameraMover();
+  final CameraMover _cameraMover = CameraMover();
+  double _zoomLevel = 0.5;
+  final double _minWidth = 8;
+  final double _maxWidth = 512;
 
   Camera({IsoCoordinate center = const IsoCoordinate(0, 0)}) {
     topLeft = IsoCoordinate(
@@ -18,7 +21,7 @@ class Camera {
   }
 
   void move(double joyStickX, double joyStickY) {
-    cameraMover.joyStickIsometricMovement(joyStickX, joyStickY, this);
+    _cameraMover.joyStickIsometricMovement(joyStickX, joyStickY, this);
   }
 
   void centralize(IsoCoordinate coordinate) {
@@ -41,31 +44,16 @@ class Camera {
     );
   }
 
-  void zoomOut([double scale = 2.0]) {
-    double centerX = (topLeft.x + bottomRight.x) / 2.0;
-    double centerY = (topLeft.y + bottomRight.y) / 2.0;
-    double newWidth = width * scale;
-    double newHeight = height * scale;
-
-    topLeft = IsoCoordinate(
-      (centerX - newWidth / 2.0),
-      (centerY - newHeight / 2.0),
-    );
-    bottomRight = IsoCoordinate(
-      (centerX + newWidth / 2.0),
-      (centerY + newHeight / 2.0),
-    );
+  void setZoomLevel(double zoom) {
+    _zoomLevel = zoom;
+    _updateCamera();
   }
 
-  void zoomIn([double scale = 2.0]) {
+  void _updateCamera() {
     double centerX = (topLeft.x + bottomRight.x) / 2.0;
     double centerY = (topLeft.y + bottomRight.y) / 2.0;
-    double newWidth = width / scale;
-    double newHeight = height / scale;
-
-    if (newHeight < 10 || newWidth < 10) {
-      return;
-    }
+    double newWidth = _maxWidth * _zoomLevel + _minWidth;
+    double newHeight = _maxWidth * _zoomLevel + _minWidth;
 
     topLeft = IsoCoordinate(
       (centerX - newWidth / 2.0),
@@ -75,5 +63,6 @@ class Camera {
       (centerX + newWidth / 2.0),
       (centerY + newHeight / 2.0),
     );
+    centralize(center);
   }
 }

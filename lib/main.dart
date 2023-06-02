@@ -26,11 +26,11 @@ class IsometricMapApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flying game',
+      title: 'Isometric map',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MainScreen(title: 'Flying game'),
+      home: const MainScreen(title: 'Isometric map'),
     );
   }
 }
@@ -45,52 +45,45 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  double _zoomLevel = 0.5;
+
   @override
   Widget build(BuildContext context) {
     var map = Provider.of<MapModel>(context, listen: false);
     Size size = MediaQuery.of(context).size;
-    return Stack(
-      children: [
-        MapScreen(width: size.width, height: size.height),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GestureDetector(
-                  child: const Icon(
-                    Icons.zoom_in,
-                    color: Colors.white,
-                    size: 36.0,
-                  ),
-                  onTap: () {
-                    map.zoomIn();
-                  },
-                ),
-                GestureDetector(
-                  child: const Icon(
-                    Icons.zoom_out,
-                    color: Colors.white,
-                    size: 36.0,
-                  ),
-                  onTap: () {
-                    map.zoomOut();
-                  },
-                ),
-              ],
+    return Material(
+      child: Stack(
+        children: [
+          MapScreen(width: size.width, height: size.height),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SizedBox(
+              height: 50,
+              width: 250,
+              child: Slider(
+                min: 0,
+                max: 1,
+                value: _zoomLevel,
+                activeColor: Colors.red,
+                inactiveColor: Colors.black.withOpacity(0.3),
+                onChanged: (zoomLevel) {
+                  setState(() {
+                    _zoomLevel = zoomLevel;
+                    map.setZoomLevel(_zoomLevel);
+                  });
+                },
+              ),
             ),
           ),
-        ),
-        const Align(
-          alignment: Alignment.bottomRight,
-          child: Padding(
-            padding: EdgeInsets.all(32.0),
-            child: JoyStick(),
+          const Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: JoyStick(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

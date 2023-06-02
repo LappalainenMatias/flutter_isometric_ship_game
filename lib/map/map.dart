@@ -18,7 +18,6 @@ class MapModel extends ChangeNotifier {
   /// (0, 1) = up, (-1, 0) = left
   void moveCamera(double joyStickX, double joyStickY) {
     _camera.move(joyStickX, joyStickY);
-    notifyListeners();
   }
 
   double get width => _camera.width;
@@ -27,13 +26,7 @@ class MapModel extends ChangeNotifier {
 
   IsoCoordinate get center => _camera.center;
 
-  void zoomIn() {
-    _camera.zoomIn();
-    notifyListeners();
-  }
-
-  void zoomOut() {
-    _camera.zoomOut();
-    notifyListeners();
+  void setZoomLevel(double level) {
+    _camera.setZoomLevel(level);
   }
 }
