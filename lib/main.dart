@@ -45,7 +45,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  double _zoomLevel = 0.5;
+  double _zoomLevel = 1.0;
 
   @override
   Widget build(BuildContext context) {

@@ -5,9 +5,9 @@ class Camera {
   late IsoCoordinate topLeft;
   late IsoCoordinate bottomRight;
   final CameraMover _cameraMover = CameraMover();
-  double _zoomLevel = 0.5;
-  final double _minWidth = 8;
-  final double _maxWidth = 512;
+  double _zoomLevel = 1.0;
+  final double _minWidth = 16;
+  final double _maxWidth = 600;
 
   Camera({IsoCoordinate center = const IsoCoordinate(0, 0)}) {
     topLeft = IsoCoordinate(
@@ -18,6 +18,7 @@ class Camera {
       center.x + 128,
       center.y - 128,
     );
+    _updateCamera();
   }
 
   void move(double joyStickX, double joyStickY) {
