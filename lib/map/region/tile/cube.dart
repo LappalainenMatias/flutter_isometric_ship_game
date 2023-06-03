@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:anki/map/iso_coordinate.dart';
 
+const Color blueColor = Color(0xFF012E8F);
 /// Creates a list of positions and colors
 /// Isometric cube has 7 corners and 3 visible sides.
 /// From the 7 corners we can create 6 triangles that make up the cube.
@@ -15,6 +18,13 @@ List createCube(
   double widthScale = 1,
   IsoCoordinate offset = const IsoCoordinate(0, 0),
 }) {
+  if (tileHeight < 0) {
+    double depthPercentage = (tileHeight / 10).abs() + 0.3;
+    if (depthPercentage > 1) depthPercentage = 1;
+    colorTop = mix(Color(colorTop), blueColor, depthPercentage).value;
+    colorLeft = mix(Color(colorLeft), blueColor, depthPercentage).value;
+    colorRight = mix(Color(colorRight), blueColor, depthPercentage).value;
+  }
   double x = coordinate.x.toDouble() + tileHeight;
   double y = coordinate.y.toDouble() + tileHeight;
   final cenBot = IsoCoordinate(x, y) + offset;
@@ -67,4 +77,8 @@ List createCube(
   colors.addAll(List.generate(6, (index) => colorTop));
   colors.addAll(List.generate(6, (index) => colorRight));
   return [positions, colors];
+}
+
+Color mix(Color color1, Color color2, double percent) {
+  return Color.lerp(color1, color2, percent)!;
 }
