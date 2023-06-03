@@ -13,6 +13,14 @@ class IsoCoordinate {
     return 'IsoCoordinate{x: $isoX, y: $isoY}';
   }
 
+  IsoCoordinate center(IsoCoordinate other) {
+    return IsoCoordinate((x + other.x) / 2, (y + other.y) / 2);
+  }
+
+  double euclideanIsoDistance(IsoCoordinate other) {
+    return (isoX - other.isoX).abs() + (isoY - other.isoY).abs();
+  }
+
   IsoCoordinate operator +(IsoCoordinate other) {
     return IsoCoordinate(x + other.x, y + other.y);
   }

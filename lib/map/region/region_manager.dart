@@ -12,6 +12,10 @@ class RegionManager {
   final int _regionSideWidth = 64;
   final int _maxRegionAmount = 512;
 
+  /// Used for liming the amount of regions created per second (frame rate drops)
+  final Stopwatch _previousRegionCreated = Stopwatch()..start();
+  final int _minElapsedMS = 200;
+
   Map<String, List<Vertices>> getVertices(
     IsoCoordinate topLeft,
     IsoCoordinate bottomRight,
@@ -31,6 +35,7 @@ class RegionManager {
     IsoCoordinate topLeft,
     IsoCoordinate bottomRight,
   ) {
+    List<IsoCoordinate> regionCoordinates = [];
     Set<Region> regions = {};
     for (double y = topLeft.y;
         y >= bottomRight.y - _regionSideWidth;
@@ -38,13 +43,30 @@ class RegionManager {
       for (double x = topLeft.x;
           x <= bottomRight.x + _regionSideWidth;
           x += _regionSideWidth) {
-        Region? region = _getRegion(x, y);
-        if (region != null) {
-          regions.add(region);
-        }
+        regionCoordinates.add(IsoCoordinate(x, y));
+      }
+    }
+    _sortByDistanceToCenter(regionCoordinates, topLeft, bottomRight);
+    for (var c in regionCoordinates) {
+      Region? region = _getRegion(c.x, c.y);
+      if (region != null) {
+        regions.add(region);
       }
     }
     return regions.toList();
+  }
+
+  /// We want to create and find the regions that are
+  /// closest to the center of the screen first
+  void _sortByDistanceToCenter(
+    List<IsoCoordinate> coordinates,
+    IsoCoordinate topLeft,
+    IsoCoordinate bottomRight,
+  ) {
+    var center = topLeft.center(bottomRight);
+    coordinates.sort((a, b) => a
+        .euclideanIsoDistance(center)
+        .compareTo(b.euclideanIsoDistance(center)));
   }
 
   Region? _getRegion(double x, double y) {
@@ -55,6 +77,9 @@ class RegionManager {
       return _regions[point]!;
     } else {
       if (_regions.length > _maxRegionAmount) return null;
+      if (_previousRegionCreated.elapsedMilliseconds < _minElapsedMS) {
+        return null;
+      }
       Region? region = _regionCreator.create(
         IsoCoordinate(regionX.toDouble(), regionY.toDouble()),
         _regionSideWidth,
@@ -63,6 +88,7 @@ class RegionManager {
         regionY * _regionSideWidth,
       );
       _regions[point] = region;
+      _previousRegionCreated.reset();
       return _regions[point]!;
     }
   }
@@ -71,7 +97,7 @@ class RegionManager {
 class RegionCreator {
   late PerlinNoise _basicNoise;
 
-  RegionCreator([int seed = 0]) {
+  RegionCreator([int seed = 2]) {
     _basicNoise = PerlinNoise(
         cellularReturnType: CellularReturnType.Distance2Add,
         fractalType: FractalType.FBM,
@@ -118,6 +144,7 @@ class RegionCreator {
       }
     }
     Region region = Region(tiles, regionCoordinate);
+    print("Region created: $regionCoordinate");
     return region;
   }
 
@@ -136,12 +163,12 @@ class RegionCreator {
     List<List<double>> moisture4 = _fixedSizeList(w, h);
     for (int x = 0; x < w; x++) {
       for (int y = 0; y < h; y++) {
-        final x1 = (startX + x) * 0.04;
-        final y1 = (startY + y) * 0.04;
-        final x2 = (startX + x) * 0.01;
-        final y2 = (startY + y) * 0.01;
-        final x4 = (startX + x) * 0.005;
-        final y4 = (startY + y) * 0.005;
+        final x1 = (startX + x) * 0.03;
+        final y1 = (startY + y) * 0.03;
+        final x2 = (startX + x) * 0.005;
+        final y2 = (startY + y) * 0.005;
+        final x4 = (startX + x) * 0.0025;
+        final y4 = (startY + y) * 0.0025;
         elevation1[x][y] = _basicNoise.singlePerlin2(
           _basicNoise.seed + 1,
           x1,
