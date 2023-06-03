@@ -27,8 +27,8 @@ void main() {
 
     // Define two colors
     float diff = 1.04;
-    vec4 colorA = vec4(7.0 * diff / 255.0, 95.0 * diff / 255.0, 187.0 * diff / 255.0, 170.0 * diff / 255.0);
-    vec4 colorB = vec4(7.0 / 255.0, 95.0 / 255.0, 187.0 / 255.0, 170.0 / 255.0);
+    vec4 colorA = vec4(7.0 * diff / 255.0, 95.0 * diff / 255.0, 187.0 * diff / 255.0, 200.0 * diff / 255.0);
+    vec4 colorB = vec4(7.0 / 255.0, 95.0 / 255.0, 187.0 / 255.0, 200.0 / 255.0);
 
     // Calculate color based on time and grid position
     vec2 r = rand(gridPos);
