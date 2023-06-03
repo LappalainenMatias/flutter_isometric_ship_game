@@ -20,17 +20,17 @@ class _JoyStickState extends State<JoyStick> {
       child: Joystick(
         base: Container(
           decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.grey.withOpacity(0.3),
               borderRadius: const BorderRadius.all(Radius.circular(50))),
         ),
         stick: Container(
           width: 50,
           height: 50,
-          decoration: BoxDecoration(
-              color: Colors.red.withOpacity(1),
-              borderRadius: const BorderRadius.all(Radius.circular(25))),
+          decoration: const BoxDecoration(
+              color: Colors.red,
+              borderRadius: BorderRadius.all(Radius.circular(25))),
         ),
-        period: const Duration(milliseconds: 15),
+        period: const Duration(milliseconds: 10),
         mode: JoystickMode.all,
         listener: (details) {
           map.moveCamera(details.x, -1 * details.y);

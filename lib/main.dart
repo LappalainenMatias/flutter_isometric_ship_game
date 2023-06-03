@@ -1,4 +1,5 @@
 import 'package:anki/widget/joystick.dart';
+import 'package:anki/widget/slider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'map/map.dart';
@@ -45,36 +46,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  double _zoomLevel = 1.0;
-
   @override
   Widget build(BuildContext context) {
-    var map = Provider.of<MapModel>(context, listen: false);
     Size size = MediaQuery.of(context).size;
     return Material(
+      color: Colors.black,
       child: Stack(
         children: [
           MapScreen(width: size.width, height: size.height),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: SizedBox(
-              height: 50,
-              width: 250,
-              child: Slider(
-                min: 0,
-                max: 1,
-                value: _zoomLevel,
-                activeColor: Colors.red,
-                inactiveColor: Colors.black.withOpacity(0.3),
-                onChanged: (zoomLevel) {
-                  setState(() {
-                    _zoomLevel = zoomLevel;
-                    map.setZoomLevel(_zoomLevel);
-                  });
-                },
-              ),
-            ),
-          ),
+          const Align(alignment: Alignment.bottomCenter, child: ZoomSlider()),
           const Align(
             alignment: Alignment.bottomRight,
             child: Padding(
