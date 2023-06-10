@@ -50,7 +50,7 @@ List _spruceFoliage(Tile tile) {
     foliageLeft.value,
     foliageRight.value,
     widthScale: (Random().nextDouble() / 5 + 1.0),
-    heightScale: 3.0 * (Random().nextDouble() + 0.5),
+    heightScale: 3.5 * (Random().nextDouble() + 0.5),
     offset: offset,
   );
 }

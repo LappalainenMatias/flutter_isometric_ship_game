@@ -51,7 +51,7 @@ List _birchFoliage(Tile tile) {
     foliageLeft.value,
     foliageRight.value,
     widthScale: 1.25,
-    heightScale: 3.0 * (Random().nextDouble() + 0.5),
+    heightScale: 3.5 * (Random().nextDouble() + 0.5),
     offset: offset,
   );
 }
@@ -64,8 +64,8 @@ List _birchTrunk(Tile tile) {
     trunkTop.value,
     trunkLeft.value,
     trunkRight.value,
-    widthScale: 0.25,
-    heightScale: 1.75 * (Random().nextDouble() + 0.5),
+    widthScale: 0.30,
+    heightScale: 2.00 * (Random().nextDouble() + 0.5),
     offset: offset,
   );
 }
