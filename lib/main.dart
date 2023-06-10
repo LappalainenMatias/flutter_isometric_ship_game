@@ -48,13 +48,27 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return const Material(
       color: Colors.black,
       child: Stack(
         children: [
           MapScreen(),
-          const Align(alignment: Alignment.bottomCenter, child: ZoomSlider()),
-          const Align(alignment: Alignment.bottomRight, child: JoyStick()),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ZoomSlider(),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: JoyStick(),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
