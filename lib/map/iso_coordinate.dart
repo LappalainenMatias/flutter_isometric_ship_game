@@ -1,37 +1,45 @@
+import 'dart:math';
+
 class IsoCoordinate {
-  final double x;
-  final double y;
   final double isoX;
   final double isoY;
 
-  const IsoCoordinate(this.x, this.y)
+  const IsoCoordinate(double x, double y)
       : isoX = x * 2 - 2 * y,
         isoY = x + y;
 
-  @override
-  String toString() {
-    return 'IsoCoordinate{x: $isoX, y: $isoY}';
-  }
+  const IsoCoordinate.fromIso(this.isoX, this.isoY);
 
   IsoCoordinate center(IsoCoordinate other) {
-    return IsoCoordinate((x + other.x) / 2, (y + other.y) / 2);
+    return IsoCoordinate.fromIso(
+        (isoX + other.isoX) / 2, (isoY + other.isoY) / 2);
   }
 
-  double euclideanIsoDistance(IsoCoordinate other) {
+  double euclideanDistance(IsoCoordinate other) {
     return (isoX - other.isoX).abs() + (isoY - other.isoY).abs();
   }
 
   IsoCoordinate operator +(IsoCoordinate other) {
-    return IsoCoordinate(x + other.x, y + other.y);
+    return IsoCoordinate.fromIso(isoX + other.isoX, isoY + other.isoY);
+  }
+
+  Point<double> toPoint() {
+    double y = isoY / 2 - isoX / 4;
+    double x = isoY - y;
+    return Point(x, y);
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-
-    return other is IsoCoordinate && other.x == x && other.y == y;
+    return other is IsoCoordinate && other.isoX == isoX && other.isoY == isoY;
   }
 
   @override
-  int get hashCode => x.hashCode ^ y.hashCode;
+  int get hashCode => isoX.hashCode ^ isoY.hashCode;
+
+  @override
+  String toString() {
+    return "${isoX.toInt()}, ${isoY.toInt()}";
+  }
 }
