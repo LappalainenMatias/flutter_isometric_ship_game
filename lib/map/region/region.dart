@@ -4,19 +4,20 @@ import 'package:anki/map/iso_coordinate.dart';
 import 'tile/tile.dart';
 
 class Region extends Comparable<Region> {
+  int verticesCount = 0;
   IsoCoordinate coord;
-  List<Tile> tiles;
   Vertices? aboveWater;
   Vertices? underWater;
 
-  Region(this.tiles, this.coord) {
+  Region(List<Tile> tiles, this.coord) {
     tiles.sort((a, b) => a.compareTo(b));
     List<double> aboveWaterPositions = [];
     List<int> aboveWaterColors = [];
     List<double> underWaterPositions = [];
     List<int> underWaterColors = [];
     for (var tile in tiles) {
-      List<dynamic> pc = tile.getPositionsAndColors();
+      if (tile.height < -5) continue;
+      List pc = tile.getPosAndCols();
       if (tile.height < 0) {
         underWaterPositions.addAll(pc[0]);
         underWaterColors.addAll(pc[1]);
@@ -25,6 +26,8 @@ class Region extends Comparable<Region> {
         aboveWaterColors.addAll(pc[1]);
       }
     }
+    verticesCount =
+        (aboveWaterPositions.length + underWaterPositions.length) ~/ 2;
     aboveWater = Vertices.raw(
       VertexMode.triangles,
       Float32List.fromList(aboveWaterPositions),
@@ -38,7 +41,7 @@ class Region extends Comparable<Region> {
   }
 
   int _nearness() {
-    return coord.x.toInt() + coord.y.toInt();
+    return coord.isoX.toInt() + coord.isoY.toInt();
   }
 
   @override
