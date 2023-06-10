@@ -7,10 +7,7 @@ import '../tile.dart';
 
 const Color trunkTop = Color.fromARGB(255, 197, 187, 181);
 const Color trunkLeft = Color.fromARGB(255, 183, 173, 167);
-const Color trunkRight = Color.fromARGB(255, 173, 162, 156);
-const Color lineTop = Color.fromARGB(255, 108, 105, 104);
-const Color lineLeft = Color.fromARGB(255, 89, 86, 85);
-const Color lineRight = Color.fromARGB(255, 91, 87, 87);
+const Color trunkRight = Color.fromARGB(255, 164, 152, 147);
 const Color foliageTop = Color.fromARGB(255, 15, 169, 52);
 const Color foliageLeft = Color.fromARGB(255, 10, 152, 44);
 const Color foliageRight = Color.fromARGB(255, 8, 133, 38);
@@ -40,13 +37,13 @@ List birchPosAndCol(Tile tile) {
 
 List _birch(Tile tile) {
   var trunk = _birchTrunk(tile);
-  var foliage1 = _birchFoliageFirstLayer(tile);
+  var foliage1 = _birchFoliage(tile);
   trunk[0].addAll(foliage1[0]);
   trunk[1].addAll(foliage1[1]);
   return trunk;
 }
 
-List _birchFoliageFirstLayer(Tile tile) {
+List _birchFoliage(Tile tile) {
   return createCube(
     tile.coordinate,
     tile.height + 2.00,
@@ -54,7 +51,7 @@ List _birchFoliageFirstLayer(Tile tile) {
     foliageLeft.value,
     foliageRight.value,
     widthScale: 1.25,
-    heightScale: 2.25 * (Random().nextDouble() + 0.5),
+    heightScale: 3.0 * (Random().nextDouble() + 0.5),
     offset: offset,
   );
 }

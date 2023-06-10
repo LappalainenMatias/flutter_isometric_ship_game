@@ -36,20 +36,21 @@ List sprucePosAndCol(Tile tile) {
 
 List _spruce(Tile tile) {
   var trunk = _spruceTrunk(tile);
-  var foliage1 = _spruceFoliageFirstLayer(tile);
+  var foliage1 = _spruceFoliage(tile);
   trunk[0].addAll(foliage1[0]);
   trunk[1].addAll(foliage1[1]);
   return trunk;
 }
 
-List _spruceFoliageFirstLayer(Tile tile) {
+List _spruceFoliage(Tile tile) {
   return createCube(
     tile.coordinate,
     tile.height + 2.00,
     foliageTop.value,
     foliageLeft.value,
     foliageRight.value,
-    heightScale: 2.5 * (Random().nextDouble() + 0.5),
+    widthScale: (Random().nextDouble() / 5 + 1.0),
+    heightScale: 3.0 * (Random().nextDouble() + 0.5),
     offset: offset,
   );
 }
