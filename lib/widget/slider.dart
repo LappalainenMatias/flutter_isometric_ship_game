@@ -15,21 +15,24 @@ class _ZoomSliderState extends State<ZoomSlider> {
   @override
   Widget build(BuildContext context) {
     MapModel map = Provider.of<MapModel>(context, listen: false);
-    return SizedBox(
-      height: 50,
-      width: 250,
-      child: Slider(
-        min: 0,
-        max: 1,
-        value: _zoomLevel,
-        activeColor: Colors.red,
-        inactiveColor: Colors.grey.withOpacity(0.3),
-        onChanged: (zoomLevel) {
-          setState(() {
-            _zoomLevel = zoomLevel;
-            map.setZoomLevel(1 - _zoomLevel);
-          });
-        },
+    return RotatedBox(
+      quarterTurns: -1,
+      child: SizedBox(
+        height: 50,
+        width: 250,
+        child: Slider(
+          min: 0,
+          max: 1,
+          value: _zoomLevel,
+          activeColor: Colors.red,
+          inactiveColor: Colors.red.withOpacity(0.4),
+          onChanged: (zoomLevel) {
+            setState(() {
+              _zoomLevel = zoomLevel;
+              map.setZoomLevel(1 - _zoomLevel);
+            });
+          },
+        ),
       ),
     );
   }
