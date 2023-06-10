@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 import 'package:anki/map/region/tile/tile.dart';
-import '../../iso_coordinate.dart';
 import 'natural_items/natural_items.dart';
 
 enum TileType {
@@ -45,8 +44,8 @@ enum TileType {
   final Color right;
 }
 
-Tile getTile(double elevation, double moisture, IsoCoordinate coordinate) {
-  double height = (elevation * 30).round().toDouble();
+Tile getTile(double elevation, double moisture, Point<double> coordinate) {
+  double height = (elevation * 20).round().toDouble();
   if (elevation < 0.0 && moisture < -0.25) {
     return Tile(TileType.lakeFloorBare, coordinate, height,
         getNaturalItem(TileType.lakeFloorBare));
@@ -130,7 +129,7 @@ NaturalItem getNaturalItem(TileType type) {
   } else if (type == TileType.lakeFloorVegetation) {
     if (val < 2) return NaturalItem.rock;
   } else if (type == TileType.lakeFloorBare) {
-    if (val < 5) return NaturalItem.rock;
+    if (val < 3) return NaturalItem.rock;
   }
   return NaturalItem.empty;
 }
