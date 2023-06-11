@@ -21,7 +21,7 @@ class Camera {
 
   double get width => _zoomLevel * _maxWidth + _minWidth;
 
-  double get height => _zoomLevel * (_maxWidth / _aspectRatio) + _minWidth;
+  double get height => (_zoomLevel * _maxWidth + _minWidth) / _aspectRatio;
 
   IsoCoordinate get bottomRight =>
       IsoCoordinate.fromIso(center.isoX + width / 2, center.isoY - height / 2);
