@@ -25,6 +25,7 @@ class _MapScreenState extends State<MapScreen>
   @override
   void initState() {
     super.initState();
+    _time.start();
     _ticker = createTicker(
       (Duration elapsed) {
         setState(
@@ -53,71 +54,95 @@ class _MapScreenState extends State<MapScreen>
   Widget build(BuildContext context) {
     var map = Provider.of<MapModel>(context, listen: false);
     var screenSize = MediaQuery.of(context).size;
-    return LayoutBuilder(builder: (context, constraints) {
-      map.setAspectRatio(screenSize.width / screenSize.height);
-      return SizedBox(
-        child: Stack(
-          children: [
-            Align(
-              child: ShaderBuilder(
-                assetKey: 'shaders/regtanglewater.frag',
-                (context, waterShader, child) => CustomPaint(
-                  size: screenSize,
-                  painter: MapPainter(
-                      map, waterShader, _time.elapsedMilliseconds.toDouble()),
-                ),
-                child: const Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Statistics(
-                  fps: _fps,
-                  verticesCount: map.verticesCount,
-                  regionCount: map.regionCount,
-                  center: map.center,
-                  size: Size(screenSize.width, screenSize.height),
-                  topLeft: map.topLeft,
-                  bottomRight: map.bottomRight,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        map.setAspectRatio(screenSize.width / screenSize.height);
+        return SizedBox(
+          child: Stack(
+            children: [
+              Align(
+                child: ShaderBuilder(
+                  assetKey: 'shaders/regtanglewater.frag',
+                  (context, waterShader, child) => CustomPaint(
+                    size: screenSize,
+                    painter: MapPainter(
+                        map, waterShader, _time.elapsedMilliseconds.toDouble() / 1000),
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
-      );
-    });
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Statistics(
+                    fps: _fps,
+                    verticesCount: map.verticesCount,
+                    regionCount: map.regionCount,
+                    center: map.center,
+                    size: Size(screenSize.width, screenSize.height),
+                    topLeft: map.topLeft,
+                    bottomRight: map.bottomRight,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 
 class MapPainter extends CustomPainter {
   final MapModel map;
   FragmentShader waterShader;
-  var defaultPaint = Paint()..style = PaintingStyle.fill;
-  var paintWithWaterShader = Paint()..style = PaintingStyle.fill;
+  var landPaint = Paint()..style = PaintingStyle.fill;
+  var backgroundWaterPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF012E8F);
+  var waterShaderPaint = Paint()..style = PaintingStyle.fill;
   double dt;
 
   MapPainter(this.map, this.waterShader, this.dt);
 
   @override
   void paint(Canvas canvas, Size size) {
-    //_addWaterShader(size);
+    _addWaterShader(size);
     _isometricTransformation(canvas, size);
+    _paintBackgroundWater(canvas, size);
     Map vertices = map.getVerticesInView();
     for (var v in vertices["underWater"]) {
-      canvas.drawVertices(v, BlendMode.srcOver, paintWithWaterShader);
+      canvas.drawVertices(v, BlendMode.srcOver, waterShaderPaint);
     }
     for (var v in vertices["aboveWater"]) {
-      canvas.drawVertices(v, BlendMode.dst, defaultPaint);
+      canvas.drawVertices(v, BlendMode.dst, landPaint);
     }
+  }
+
+  /// Currently we do not create tiles which are
+  /// deep under water. Because of this we have to paint the background with
+  /// water so that it does not contain holes.
+  void _paintBackgroundWater(Canvas canvas, Size size) {
+    canvas.drawRect(
+        Rect.fromPoints(
+          Offset(map.topLeft.isoX, map.topLeft.isoY),
+          Offset(map.bottomRight.isoX, map.bottomRight.isoY),
+        ),
+        backgroundWaterPaint);
+    canvas.drawRect(
+        Rect.fromPoints(
+          Offset(map.topLeft.isoX, map.topLeft.isoY),
+          Offset(map.bottomRight.isoX, map.bottomRight.isoY),
+        ),
+        waterShaderPaint);
   }
 
   void _addWaterShader(Size size) {
     waterShader.setFloat(0, dt);
-    paintWithWaterShader.shader = waterShader;
+    waterShaderPaint.shader = waterShader;
   }
 
   void _isometricTransformation(Canvas canvas, Size size) {

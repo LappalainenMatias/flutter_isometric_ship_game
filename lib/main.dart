@@ -49,7 +49,6 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return const Material(
-      color: Colors.black,
       child: Stack(
         children: [
           MapScreen(),

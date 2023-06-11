@@ -20,7 +20,7 @@ List createCube(
   IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
 }) {
   if (tileHeight < 0) {
-    double depthPercentage = (tileHeight / 5).abs();
+    double depthPercentage = 0.25 + ((tileHeight - 0.25) / 5).abs();
     if (depthPercentage > 1) {
       colorTop = blueColor.value;
       colorLeft = blueColor.value;
