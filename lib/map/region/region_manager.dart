@@ -128,12 +128,12 @@ class RegionManager {
 }
 
 class RegionCreator {
-  late OpenSimplexNoise _openNoiseE1;
-  late OpenSimplexNoise _openNoiseM1;
+  late OpenSimplexNoise _elevationNoise;
+  late OpenSimplexNoise _moistureNoise;
 
   RegionCreator([int seed = 1]) {
-    _openNoiseE1 = OpenSimplexNoise(seed + 1);
-    _openNoiseM1 = OpenSimplexNoise(seed + 2);
+    _elevationNoise = OpenSimplexNoise(seed + 1);
+    _moistureNoise = OpenSimplexNoise(seed + 2);
   }
 
   Region create(
@@ -169,6 +169,8 @@ class RegionCreator {
     List<List<double>> elevationMap = _fixedSizeList(w, h);
     List<List<double>> moistureMap = _fixedSizeList(w, h);
     for (int x = 0; x < w; x++) {
+      var rowElevation = elevationMap[x];
+      var rowMoisture = moistureMap[x];
       for (int y = 0; y < h; y++) {
         final x1 = (startX + x) * 0.008;
         final y1 = (startY + y) * 0.008;
@@ -176,14 +178,14 @@ class RegionCreator {
         final y2 = (startY + y) * 0.016;
         final x3 = (startX + x) * 0.050;
         final y3 = (startY + y) * 0.050;
-        double elevation = _openNoiseE1.eval2D(x1, y1) +
-            0.5 * _openNoiseE1.eval2D(x2, y2) +
-            0.25 * _openNoiseE1.eval2D(x3, y3);
-        double moisture = _openNoiseM1.eval2D(x1, y1) +
-            0.5 * _openNoiseM1.eval2D(x2, y2) +
-            0.25 * _openNoiseM1.eval2D(x3, y3);
-        elevationMap[x][y] = elevation - 0.15;
-        moistureMap[x][y] = moisture;
+        double elevation = _elevationNoise.eval2D(x1, y1) +
+            0.5 * _elevationNoise.eval2D(x2, y2) +
+            0.25 * _elevationNoise.eval2D(x3, y3);
+        double moisture = _moistureNoise.eval2D(x1, y1) +
+            0.5 * _moistureNoise.eval2D(x2, y2) +
+            0.25 * _moistureNoise.eval2D(x3, y3);
+        rowElevation[y] = elevation - 0.15;
+        rowMoisture[y] = moisture;
       }
     }
     return [elevationMap, moistureMap];
