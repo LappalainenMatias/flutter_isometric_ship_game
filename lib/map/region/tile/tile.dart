@@ -32,8 +32,9 @@ class Tile extends Comparable<Tile> {
       type.left.value,
       type.right.value,
     );
-    if (naturalItem.getPosAndCol != null) {
-      var posAndCol = naturalItem.getPosAndCol!(this);
+    var function = naturalItem.getPosAndCol;
+    if (function != null) {
+      var posAndCol = function(this);
       posAndCols[0].addAll(posAndCol[0]);
       posAndCols[1].addAll(posAndCol[1]);
     }
