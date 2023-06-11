@@ -9,12 +9,12 @@ import 'package:open_simplex_noise/open_simplex_noise.dart';
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
   final RegionCreator _regionCreator = RegionCreator();
-  final int _regionSideWidth = 64;
+  final int _regionSideWidth = 32;
   final int _maxRegionAmount = 1024;
 
   /// Used for liming the amount of regions created per second (frame rate drops)
   final Stopwatch _previousRegionCreated = Stopwatch()..start();
-  final int _minElapsedMS = 50;
+  final int _minElapsedMS = 5;
 
   Map<String, dynamic> getVertices(
     IsoCoordinate topLeft,
