@@ -33775,7 +33775,7 @@ n=m.d
 if(n!=null)q.push(n)
 p+=m.a}return A.aI(["aboveWater",r,"underWater",q,"verticesCount",p,"regionCount",n],t.N,t.z)},
 ER(a,b){var s,r,q,p,o,n=A.a([],t.Bp)
-for(s=a.b+64,r=b.b-128,q=a.a-64,p=b.a+128;s>=r;s-=64)for(o=q;o<=p;o+=64)n.push(new A.cm(o,s))
+for(s=a.b+32,r=b.b-64,q=a.a-32,p=b.a+64;s>=r;s-=32)for(o=q;o<=p;o+=32)n.push(new A.cm(o,s))
 return n},
 KO(a,b){var s,r,q,p,o=this.ER(a,b)
 this.OZ(o,a,b)
@@ -33783,14 +33783,14 @@ s=A.ay(t.sx)
 for(r=o.length,q=0;q<o.length;o.length===r||(0,A.A)(o),++q){p=this.KN(o[q])
 if(p!=null)s.D(0,p)}return A.ao(s,!0,s.$ti.c)},
 OZ(a,b,c){B.b.d9(a,new A.Qz(new A.cm((b.a+c.a)/2,(b.b+c.b)/2)))},
-KN(a){var s,r=this,q=a.b,p=q/2-a.a/4,o=B.c.c_((q-p)/64),n=B.c.c_(p/64),m=new A.fI(o,n,t.Df)
+KN(a){var s,r=this,q=a.b,p=q/2-a.a/4,o=B.c.c_((q-p)/32),n=B.c.c_(p/32),m=new A.fI(o,n,t.Df)
 q=r.a
 if(q.X(0,m)){q=q.j(0,m)
 q.toString
 return q}else{if(q.a>1024){r.O6(m)
 return null}s=r.e
-if(s.gBU()<50)return null
-q.l(0,m,r.b.QT(0,new A.cm(o,n),64,64,o*64,n*64))
+if(s.gBU()<5)return null
+q.l(0,m,r.b.QT(0,new A.cm(o,n),32,32,o*32,n*32))
 s.em(0)
 q=q.j(0,m)
 q.toString
