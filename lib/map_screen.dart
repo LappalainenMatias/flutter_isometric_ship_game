@@ -104,7 +104,7 @@ class MapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _addWaterShader(size);
+    //_addWaterShader(size);
     _isometricTransformation(canvas, size);
     Map vertices = map.getVerticesInView();
     for (var v in vertices["underWater"]) {
