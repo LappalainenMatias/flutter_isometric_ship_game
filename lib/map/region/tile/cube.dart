@@ -78,10 +78,12 @@ List createCube(
     cenBot.isoX,
     cenBot.isoY,
   ];
-  List<int> colors = [];
-  colors.addAll(List.generate(6, (index) => colorLeft));
-  colors.addAll(List.generate(6, (index) => colorTop));
-  colors.addAll(List.generate(6, (index) => colorRight));
+  List<int> colors = List<int>.filled(18, 0, growable: true);
+  for (var i = 0; i < 6; i++) {
+    colors[i] = colorLeft;
+    colors[i + 6] = colorTop;
+    colors[i + 12] = colorRight;
+  }
   return [positions, colors];
 }
 
