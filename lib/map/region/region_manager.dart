@@ -105,21 +105,14 @@ class RegionManager {
       if (_previousRegionCreated.elapsedMilliseconds < _minElapsedMS) {
         return null;
       }
-      Map regionData = _regionCreator.create(
+      var regionData = _regionCreator.create(
         IsoCoordinate.fromIso(regionX.toDouble(), regionY.toDouble()),
         _regionSideWidth,
         _regionSideWidth,
         regionX * _regionSideWidth,
         regionY * _regionSideWidth,
       );
-      _regions[point] = Region(
-          regionData["verticesCount"],
-          IsoCoordinate.fromIso(regionX.toDouble(), regionY.toDouble()),
-          regionData["tiles"],
-          regionData["aboveWaterPositions"],
-          regionData["aboveWaterColors"],
-          regionData["underWaterPositions"],
-          regionData["underWaterColors"]);
+      _regions[point] = Region.fromData(regionData);
       _previousRegionCreated.reset();
       return _regions[point]!;
     }

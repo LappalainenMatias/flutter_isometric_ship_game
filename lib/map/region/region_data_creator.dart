@@ -15,7 +15,7 @@ class RegionDataCreator {
     _moistureNoise = OpenSimplexNoise(seed + 2);
   }
 
-  Map create(
+  RegionData create(
     IsoCoordinate regionCoordinate,
     int width,
     int height,
@@ -50,15 +50,15 @@ class RegionDataCreator {
         aboveWaterColors.addAll(pc[1]);
       }
     }
-    return {
-      "verticesCount":
-          (aboveWaterPositions.length + underWaterPositions.length) ~/ 2,
-      "aboveWaterPositions": aboveWaterPositions,
-      "aboveWaterColors": aboveWaterColors,
-      "underWaterPositions": underWaterPositions,
-      "underWaterColors": underWaterColors,
-      "tiles": tiles,
-    };
+    return RegionData(
+      regionCoordinate,
+      (aboveWaterPositions.length + underWaterPositions.length) ~/ 2,
+      aboveWaterPositions,
+      aboveWaterColors,
+      underWaterPositions,
+      underWaterColors,
+      tiles,
+    );
   }
 
   /// Increasing frequency adds details
@@ -101,4 +101,24 @@ class RegionDataCreator {
     );
     return map;
   }
+}
+
+class RegionData {
+  final IsoCoordinate regionCoordinate;
+  final int verticesCount;
+  final List<double> aboveWaterPositions;
+  final List<int> aboveWaterColors;
+  final List<double> underWaterPositions;
+  final List<int> underWaterColors;
+  final List<Tile> tiles;
+
+  RegionData(
+    this.regionCoordinate,
+    this.verticesCount,
+    this.aboveWaterPositions,
+    this.aboveWaterColors,
+    this.underWaterPositions,
+    this.underWaterColors,
+    this.tiles,
+  );
 }

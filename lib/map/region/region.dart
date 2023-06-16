@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/map/region/region_data_creator.dart';
 import 'tile/tile.dart';
 
 class Region extends Comparable<Region> {
@@ -21,6 +22,18 @@ class Region extends Comparable<Region> {
       VertexMode.triangles,
       Float32List.fromList(underWaterPositions),
       colors: Int32List.fromList(underWaterColors),
+    );
+  }
+
+  factory Region.fromData(RegionData data) {
+    return Region(
+      data.verticesCount,
+      data.regionCoordinate,
+      data.tiles,
+      data.aboveWaterPositions,
+      data.aboveWaterColors,
+      data.underWaterPositions,
+      data.underWaterColors,
     );
   }
 
