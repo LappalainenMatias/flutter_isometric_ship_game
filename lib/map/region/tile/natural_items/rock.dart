@@ -1,13 +1,13 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/map/region/tile/tile_creator.dart';
 
 import '../cube.dart';
 import '../tile.dart';
 
-const Color rockTop = Color.fromARGB(255, 107, 129, 124);
-const Color rockLeft = Color.fromARGB(255, 91, 112, 107);
-const Color rockRight = Color.fromARGB(255, 83, 105, 100);
+const CustomColor rockTop = CustomColor.fromARGB(255, 107, 129, 124);
+const CustomColor rockLeft = CustomColor.fromARGB(255, 91, 112, 107);
+const CustomColor rockRight = CustomColor.fromARGB(255, 83, 105, 100);
 
 /// Used for reducing symmetry
 IsoCoordinate offset = const IsoCoordinate(0, 0);
@@ -23,6 +23,8 @@ List rockPosAndCol(Tile tile) {
     Random().nextDouble() / 10,
   );
   int random = Random().nextInt(100);
+
+  /// Todo: This could be refactored to single function which creates random width and height
   if (random < 70) {
     return _smallRock(tile);
   } else if (random < 95) {
@@ -36,9 +38,9 @@ List _smallRock(Tile tile) {
   var base = createCube(
     tile.coordinate,
     tile.height + 1,
-    rockTop.value,
-    rockLeft.value,
-    rockRight.value,
+    rockTop,
+    rockLeft,
+    rockRight,
     widthScale: 0.4,
     heightScale: 0.3,
     offset: offset,
@@ -50,9 +52,9 @@ List _mediumRock(Tile tile) {
   var base = createCube(
     tile.coordinate,
     tile.height + 1,
-    rockTop.value,
-    rockLeft.value,
-    rockRight.value,
+    rockTop,
+    rockLeft,
+    rockRight,
     widthScale: 0.75,
     heightScale: 0.6,
     offset: offset,
@@ -64,9 +66,9 @@ List _largeRock(Tile tile) {
   var base = createCube(
     tile.coordinate,
     tile.height + 1,
-    rockTop.value,
-    rockLeft.value,
-    rockRight.value,
+    rockTop,
+    rockLeft,
+    rockRight,
     widthScale: 0.9,
     heightScale: 0.7,
     offset: offset,

@@ -19,15 +19,23 @@ class Camera {
     _aspectRatio = ratio;
   }
 
-  double get width => _zoomLevel * _maxWidth + _minWidth;
+  double width() {
+    if (_aspectRatio < 1) {
+      // This limits the height and width
+      return (_zoomLevel * _maxWidth + _minWidth) * _aspectRatio;
+    }
+    return _zoomLevel * _maxWidth + _minWidth;
+  }
 
-  double get height => (_zoomLevel * _maxWidth + _minWidth) / _aspectRatio;
+  double height() {
+    return width() / _aspectRatio;
+  }
 
   IsoCoordinate get bottomRight =>
-      IsoCoordinate.fromIso(center.isoX + width / 2, center.isoY - height / 2);
+      IsoCoordinate.fromIso(center.isoX + width() / 2, center.isoY - height() / 2);
 
   IsoCoordinate get topLeft =>
-      IsoCoordinate.fromIso(center.isoX - width / 2, center.isoY + height / 2);
+      IsoCoordinate.fromIso(center.isoX - width() / 2, center.isoY + height() / 2);
 
   void setZoomLevel(double zoomLevel) {
     _zoomLevel = zoomLevel;

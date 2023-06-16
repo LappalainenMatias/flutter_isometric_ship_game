@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:anki/map/iso_coordinate.dart';
-import 'package:anki/map/region/region_manager.dart';
+import 'package:anki/map/region/region_data_creator.dart';
 import 'package:anki/map/region/tile/natural_items/natural_items.dart';
 import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
@@ -18,7 +18,7 @@ void main() {
   /// 34/32/32/31
   test('Region creation', () {
     Stopwatch stopwatch = Stopwatch()..start();
-    RegionCreator regionCreator = RegionCreator();
+    RegionDataCreator regionCreator = RegionDataCreator();
     regionCreator.create(const IsoCoordinate(0, 0), 256, 256, 0, 0);
     print("Test took ${stopwatch.elapsedMilliseconds} ms");
   });

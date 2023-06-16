@@ -6,28 +6,12 @@ import 'tile/tile.dart';
 class Region extends Comparable<Region> {
   int verticesCount = 0;
   IsoCoordinate coord;
+  List<Tile> tiles;
   Vertices? aboveWater;
   Vertices? underWater;
 
-  Region(List<Tile> tiles, this.coord) {
-    tiles.sort((a, b) => a.compareTo(b));
-    List<double> aboveWaterPositions = [];
-    List<int> aboveWaterColors = [];
-    List<double> underWaterPositions = [];
-    List<int> underWaterColors = [];
-    for (var tile in tiles) {
-      if (tile.height < -5) continue;
-      List pc = tile.getPosAndCols();
-      if (tile.height < 0) {
-        underWaterPositions.addAll(pc[0]);
-        underWaterColors.addAll(pc[1]);
-      } else {
-        aboveWaterPositions.addAll(pc[0]);
-        aboveWaterColors.addAll(pc[1]);
-      }
-    }
-    verticesCount =
-        (aboveWaterPositions.length + underWaterPositions.length) ~/ 2;
+  Region(this.verticesCount, this.coord, this.tiles, var aboveWaterPositions,
+      var aboveWaterColors, var underWaterPositions, var underWaterColors) {
     aboveWater = Vertices.raw(
       VertexMode.triangles,
       Float32List.fromList(aboveWaterPositions),

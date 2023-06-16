@@ -1,16 +1,15 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
-
+import 'package:anki/map/region/tile/tile_creator.dart';
 import '../cube.dart';
 import '../tile.dart';
 
-const Color trunkTop = Color.fromARGB(255, 197, 187, 181);
-const Color trunkLeft = Color.fromARGB(255, 183, 173, 167);
-const Color trunkRight = Color.fromARGB(255, 164, 152, 147);
-const Color foliageTop = Color.fromARGB(255, 15, 169, 52);
-const Color foliageLeft = Color.fromARGB(255, 10, 152, 44);
-const Color foliageRight = Color.fromARGB(255, 8, 133, 38);
+const CustomColor trunkTop = CustomColor.fromARGB(255, 197, 187, 181);
+const CustomColor trunkLeft = CustomColor.fromARGB(255, 183, 173, 167);
+const CustomColor trunkRight = CustomColor.fromARGB(255, 164, 152, 147);
+const CustomColor foliageTop = CustomColor.fromARGB(255, 15, 169, 52);
+const CustomColor foliageLeft = CustomColor.fromARGB(255, 10, 152, 44);
+const CustomColor foliageRight = CustomColor.fromARGB(255, 8, 133, 38);
 
 /// Used for reducing symmetry
 IsoCoordinate offset = const IsoCoordinate(0, 0);
@@ -47,9 +46,9 @@ List _birchFoliage(Tile tile) {
   return createCube(
     tile.coordinate,
     tile.height + 2.00,
-    foliageTop.value,
-    foliageLeft.value,
-    foliageRight.value,
+    foliageTop,
+    foliageLeft,
+    foliageRight,
     widthScale: 1.25,
     heightScale: 3.5 * (Random().nextDouble() + 0.5),
     offset: offset,
@@ -61,9 +60,9 @@ List _birchTrunk(Tile tile) {
   return createCube(
     tile.coordinate,
     tile.height + 1.25,
-    trunkTop.value,
-    trunkLeft.value,
-    trunkRight.value,
+    trunkTop,
+    trunkLeft,
+    trunkRight,
     widthScale: 0.30,
     heightScale: 2.00 * (Random().nextDouble() + 0.5),
     offset: offset,

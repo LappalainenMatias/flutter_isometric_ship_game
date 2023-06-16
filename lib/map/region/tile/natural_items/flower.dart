@@ -1,29 +1,28 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/map/region/tile/tile_creator.dart';
 
 import '../cube.dart';
 import '../tile.dart';
 
-const Color purpleTop = Color.fromARGB(255, 150, 76, 150);
-const Color purpleLeft = Color.fromARGB(255, 141, 69, 141);
-const Color purpleRight = Color.fromARGB(255, 129, 63, 129);
-const Color whiteTop = Color.fromARGB(255, 225, 203, 112);
-const Color whiteLeft = Color.fromARGB(255, 213, 192, 102);
-const Color whiteRight = Color.fromARGB(255, 199, 178, 92);
-const Color stemTop = Color.fromARGB(255, 10, 150, 43);
-const Color stemLeft = Color.fromARGB(255, 7, 131, 37);
-const Color stemRight = Color.fromARGB(255, 5, 112, 30);
+const CustomColor purpleTop = CustomColor.fromARGB(255, 150, 76, 150);
+const CustomColor purpleLeft = CustomColor.fromARGB(255, 141, 69, 141);
+const CustomColor purpleRight = CustomColor.fromARGB(255, 129, 63, 129);
+const CustomColor whiteTop = CustomColor.fromARGB(255, 225, 203, 112);
+const CustomColor whiteLeft = CustomColor.fromARGB(255, 213, 192, 102);
+const CustomColor whiteRight = CustomColor.fromARGB(255, 199, 178, 92);
+const CustomColor stemTop = CustomColor.fromARGB(255, 10, 150, 43);
+const CustomColor stemLeft = CustomColor.fromARGB(255, 7, 131, 37);
+const CustomColor stemRight = CustomColor.fromARGB(255, 5, 112, 30);
 
 /// Used for reducing symmetry
 IsoCoordinate offset = const IsoCoordinate(0, 0);
 
 /// Creates flower from cubes
-///   _______
-///  |______|
+///    _____
 ///   |____|
-///      \
-///       \
+///     ||
+///     ||
 List flowerPosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 3,
@@ -41,21 +40,21 @@ List _yellowFlower(Tile tile) {
   int random = Random().nextInt(10);
   var flower1 = _flowerPosition1(
     tile,
-    whiteTop.value,
-    whiteLeft.value,
-    whiteRight.value,
+    whiteTop,
+    whiteLeft,
+    whiteRight,
   );
   var flower2 = _flowerPosition2(
     tile,
-    whiteTop.value,
-    whiteLeft.value,
-    whiteRight.value,
+    whiteTop,
+    whiteLeft,
+    whiteRight,
   );
   var flower3 = _flowerPosition3(
     tile,
-    whiteTop.value,
-    whiteLeft.value,
-    whiteRight.value,
+    whiteTop,
+    whiteLeft,
+    whiteRight,
   );
   if (random < 4) flower1[0].addAll(flower2[0]);
   if (random < 4) flower1[1].addAll(flower2[1]);
@@ -68,21 +67,21 @@ List _purpleFlower(Tile tile) {
   int random = Random().nextInt(10);
   var flower1 = _flowerPosition1(
     tile,
-    purpleTop.value,
-    purpleLeft.value,
-    purpleRight.value,
+    purpleTop,
+    purpleLeft,
+    purpleRight,
   );
   var flower2 = _flowerPosition2(
     tile,
-    purpleTop.value,
-    purpleLeft.value,
-    purpleRight.value,
+    purpleTop,
+    purpleLeft,
+    purpleRight,
   );
   var flower3 = _flowerPosition3(
     tile,
-    purpleTop.value,
-    purpleLeft.value,
-    purpleRight.value,
+    purpleTop,
+    purpleLeft,
+    purpleRight,
   );
   if (random < 4) flower1[0].addAll(flower2[0]);
   if (random < 4) flower1[1].addAll(flower2[1]);
@@ -91,13 +90,14 @@ List _purpleFlower(Tile tile) {
   return flower1;
 }
 
-List _flowerPosition3(Tile tile, int top, int left, int right) {
+List _flowerPosition3(
+    Tile tile, CustomColor top, CustomColor left, CustomColor right) {
   var stem = createCube(
     tile.coordinate,
     tile.height + 1.00,
-    stemTop.value,
-    stemLeft.value,
-    stemRight.value,
+    stemTop,
+    stemLeft,
+    stemRight,
     widthScale: 0.05,
     heightScale: 0.4,
     offset: offset + const IsoCoordinate(0.0, 0.2),
@@ -117,13 +117,14 @@ List _flowerPosition3(Tile tile, int top, int left, int right) {
   return stem;
 }
 
-List _flowerPosition1(Tile tile, int top, int left, int right) {
+List _flowerPosition1(
+    Tile tile, CustomColor top, CustomColor left, CustomColor right) {
   var stem = createCube(
     tile.coordinate,
     tile.height + 1.0,
-    stemTop.value,
-    stemLeft.value,
-    stemRight.value,
+    stemTop,
+    stemLeft,
+    stemRight,
     widthScale: 0.05,
     heightScale: 0.4,
     offset: offset + const IsoCoordinate(0.3, 0.3),
@@ -143,13 +144,14 @@ List _flowerPosition1(Tile tile, int top, int left, int right) {
   return stem;
 }
 
-List _flowerPosition2(Tile tile, int top, int left, int right) {
+List _flowerPosition2(
+    Tile tile, CustomColor top, CustomColor left, CustomColor right) {
   var stem = createCube(
     tile.coordinate,
     tile.height + 1.00,
-    stemTop.value,
-    stemLeft.value,
-    stemRight.value,
+    stemTop,
+    stemLeft,
+    stemRight,
     widthScale: 0.05,
     heightScale: 0.4,
     offset: offset + const IsoCoordinate(0.2, 0.0),

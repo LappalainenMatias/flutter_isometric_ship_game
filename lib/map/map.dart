@@ -29,9 +29,9 @@ class MapModel extends ChangeNotifier {
 
   int get regionCount => _regionCount;
 
-  double get width => _camera.width;
+  double get width => _camera.width();
 
-  double get height => _camera.height;
+  double get height => _camera.height();
 
   IsoCoordinate get topLeft => _camera.topLeft;
 

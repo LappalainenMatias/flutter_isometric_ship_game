@@ -1,15 +1,15 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/map/region/tile/tile_creator.dart';
 import '../cube.dart';
 import '../tile.dart';
 
-const Color trunkTop = Color.fromARGB(255, 126, 56, 5);
-const Color trunkLeft = Color.fromARGB(255, 119, 53, 5);
-const Color trunkRight = Color.fromARGB(255, 101, 46, 4);
-const Color foliageTop = Color.fromARGB(255, 14, 145, 45);
-const Color foliageLeft = Color.fromARGB(255, 9, 122, 36);
-const Color foliageRight = Color.fromARGB(255, 6, 101, 28);
+const CustomColor trunkTop = CustomColor.fromARGB(255, 126, 56, 5);
+const CustomColor trunkLeft = CustomColor.fromARGB(255, 119, 53, 5);
+const CustomColor trunkRight = CustomColor.fromARGB(255, 101, 46, 4);
+const CustomColor foliageTop = CustomColor.fromARGB(255, 14, 145, 45);
+const CustomColor foliageLeft = CustomColor.fromARGB(255, 9, 122, 36);
+const CustomColor foliageRight = CustomColor.fromARGB(255, 6, 101, 28);
 
 /// Used for reducing symmetry
 IsoCoordinate offset = const IsoCoordinate(0, 0);
@@ -46,9 +46,9 @@ List _spruceFoliage(Tile tile) {
   return createCube(
     tile.coordinate,
     tile.height + 2.00,
-    foliageTop.value,
-    foliageLeft.value,
-    foliageRight.value,
+    foliageTop,
+    foliageLeft,
+    foliageRight,
     widthScale: (Random().nextDouble() / 5 + 1.0),
     heightScale: 3.5 * (Random().nextDouble() + 0.5),
     offset: offset,
@@ -59,9 +59,9 @@ List _spruceTrunk(Tile tile) {
   return createCube(
     tile.coordinate,
     tile.height + 1.25,
-    trunkTop.value,
-    trunkLeft.value,
-    trunkRight.value,
+    trunkTop,
+    trunkLeft,
+    trunkRight,
     widthScale: 0.25,
     heightScale: 2.0 * (Random().nextDouble() + 0.5),
     offset: offset,

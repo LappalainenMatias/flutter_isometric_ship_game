@@ -14,8 +14,8 @@ class CameraMover {
     Camera camera,
   ) {
     camera.center = IsoCoordinate.fromIso(
-      camera.center.isoX + joyStickX * _movementDistance * camera.width,
-      camera.center.isoY + joyStickY * _movementDistance * camera.width
+      camera.center.isoX + joyStickX * _movementDistance * camera.width(),
+      camera.center.isoY + joyStickY * _movementDistance * camera.width()
     );
   }
 }

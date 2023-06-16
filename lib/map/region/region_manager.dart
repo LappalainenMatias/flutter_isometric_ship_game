@@ -1,14 +1,14 @@
 import 'dart:ui';
+
 import 'package:anki/map/iso_coordinate.dart';
 import 'package:anki/map/region/region.dart';
-import 'package:anki/map/region/tile/tile.dart';
-import 'package:anki/map/region/tile/tile_creator.dart';
 import 'dart:math';
-import 'package:open_simplex_noise/open_simplex_noise.dart';
+
+import 'package:anki/map/region/region_data_creator.dart';
 
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
-  final RegionCreator _regionCreator = RegionCreator();
+  final RegionDataCreator _regionCreator = RegionDataCreator();
   final int _regionSideWidth = 32;
   final int _maxRegionAmount = 1024;
 
@@ -105,14 +105,21 @@ class RegionManager {
       if (_previousRegionCreated.elapsedMilliseconds < _minElapsedMS) {
         return null;
       }
-      Region? region = _regionCreator.create(
+      Map regionData = _regionCreator.create(
         IsoCoordinate.fromIso(regionX.toDouble(), regionY.toDouble()),
         _regionSideWidth,
         _regionSideWidth,
         regionX * _regionSideWidth,
         regionY * _regionSideWidth,
       );
-      _regions[point] = region;
+      _regions[point] = Region(
+          regionData["verticesCount"],
+          IsoCoordinate.fromIso(regionX.toDouble(), regionY.toDouble()),
+          regionData["tiles"],
+          regionData["aboveWaterPositions"],
+          regionData["aboveWaterColors"],
+          regionData["underWaterPositions"],
+          regionData["underWaterColors"]);
       _previousRegionCreated.reset();
       return _regions[point]!;
     }
@@ -124,79 +131,5 @@ class RegionManager {
         _regions.remove(key);
       }
     }
-  }
-}
-
-class RegionCreator {
-  late OpenSimplexNoise _elevationNoise;
-  late OpenSimplexNoise _moistureNoise;
-
-  RegionCreator([int seed = 1]) {
-    _elevationNoise = OpenSimplexNoise(seed + 1);
-    _moistureNoise = OpenSimplexNoise(seed + 2);
-  }
-
-  Region create(
-    IsoCoordinate regionCoordinate,
-    int width,
-    int height,
-    int startX,
-    int startY,
-  ) {
-    var noises = _noise(width, height, startX, startY);
-    final elevationNoise = noises[0];
-    final moistureNoise = noises[1];
-    List<Tile> tiles = [];
-    for (var x = 0; x < width; x++) {
-      var elevationRow = elevationNoise[x];
-      var moistureRow = moistureNoise[x];
-      for (var y = 0; y < height; y++) {
-        tiles.add(getTile(elevationRow[y], moistureRow[y],
-            Point((startX + x).toDouble(), (startY + y).toDouble())));
-      }
-    }
-    Region region = Region(tiles, regionCoordinate);
-    return region;
-  }
-
-  /// Increasing frequency adds details
-  List<List<List<double>>> _noise(
-    int w,
-    int h,
-    int startX,
-    int startY,
-  ) {
-    List<List<double>> elevationMap = _fixedSizeList(w, h);
-    List<List<double>> moistureMap = _fixedSizeList(w, h);
-    for (int x = 0; x < w; x++) {
-      var rowElevation = elevationMap[x];
-      var rowMoisture = moistureMap[x];
-      for (int y = 0; y < h; y++) {
-        final x1 = (startX + x) * 0.008;
-        final y1 = (startY + y) * 0.008;
-        final x2 = (startX + x) * 0.016;
-        final y2 = (startY + y) * 0.016;
-        final x3 = (startX + x) * 0.050;
-        final y3 = (startY + y) * 0.050;
-        double elevation = _elevationNoise.eval2D(x1, y1) +
-            0.5 * _elevationNoise.eval2D(x2, y2) +
-            0.25 * _elevationNoise.eval2D(x3, y3);
-        double moisture = _moistureNoise.eval2D(x1, y1) +
-            0.5 * _moistureNoise.eval2D(x2, y2) +
-            0.25 * _moistureNoise.eval2D(x3, y3);
-        rowElevation[y] = elevation - 0.15;
-        rowMoisture[y] = moisture;
-      }
-    }
-    return [elevationMap, moistureMap];
-  }
-
-  List<List<double>> _fixedSizeList(int width, int height) {
-    List<List<double>> map = List.generate(
-      width,
-      (i) => List.generate(height, (i) => 0, growable: false),
-      growable: false,
-    );
-    return map;
   }
 }

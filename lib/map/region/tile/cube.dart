@@ -1,8 +1,8 @@
-import 'dart:ui';
 import 'dart:math';
 import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/map/region/tile/tile_creator.dart';
 
-const Color blueColor = Color(0xFF012E8F);
+const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 
 /// Creates a list of positions and colors
 /// Isometric cube has 7 corners and 3 visible sides.
@@ -12,9 +12,9 @@ const Color blueColor = Color(0xFF012E8F);
 List createCube(
   Point<double> coordinate,
   double tileHeight,
-  int colorTop,
-  int colorLeft,
-  int colorRight, {
+  CustomColor colorTop,
+  CustomColor colorLeft,
+  CustomColor colorRight, {
   double heightScale = 1,
   double widthScale = 1,
   IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
@@ -22,13 +22,13 @@ List createCube(
   if (tileHeight < 0) {
     double depthPercentage = 0.25 + ((tileHeight - 0.25) / 5).abs();
     if (depthPercentage > 1) {
-      colorTop = blueColor.value;
-      colorLeft = blueColor.value;
-      colorRight = blueColor.value;
+      colorTop = blueColor;
+      colorLeft = blueColor;
+      colorRight = blueColor;
     } else {
-      colorTop = mix(Color(colorTop), blueColor, depthPercentage).value;
-      colorLeft = mix(Color(colorLeft), blueColor, depthPercentage).value;
-      colorRight = mix(Color(colorRight), blueColor, depthPercentage).value;
+      colorTop = mix(colorTop, blueColor, depthPercentage);
+      colorLeft = mix(colorLeft, blueColor, depthPercentage);
+      colorRight = mix(colorRight, blueColor, depthPercentage);
     }
   }
   final cenBot =
@@ -80,13 +80,22 @@ List createCube(
   ];
   List<int> colors = List<int>.filled(18, 0, growable: true);
   for (var i = 0; i < 6; i++) {
-    colors[i] = colorLeft;
-    colors[i + 6] = colorTop;
-    colors[i + 12] = colorRight;
+    colors[i] = colorLeft.value;
+    colors[i + 6] = colorTop.value;
+    colors[i + 12] = colorRight.value;
   }
   return [positions, colors];
 }
 
-Color mix(Color color1, Color color2, double percent) {
-  return Color.lerp(color1, color2, percent)!;
+CustomColor mix(CustomColor color1, CustomColor color2, double percent) {
+  return CustomColor.fromNormalizedARGB(
+    _lerp(color1.normalizedA, color2.normalizedA, percent),
+    _lerp(color1.normalizedR, color2.normalizedR, percent),
+    _lerp(color1.normalizedG, color2.normalizedG, percent),
+    _lerp(color1.normalizedB, color2.normalizedB, percent),
+  );
+}
+
+double _lerp(double a, double b, double t) {
+  return a + (b - a) * t;
 }

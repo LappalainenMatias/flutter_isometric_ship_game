@@ -1,48 +1,73 @@
 import 'dart:math';
-import 'dart:ui';
 import 'package:anki/map/region/tile/tile.dart';
 import 'natural_items/natural_items.dart';
 
+/// We use this because Color uses dart:ui which cannot be used concurrently
+class CustomColor {
+  final int a, r, g, b;
+
+  const CustomColor.fromARGB(this.a, this.r, this.g, this.b);
+
+  int get value {
+    return (a << 24) | (r << 16) | (g << 8) | b;
+  }
+
+  double get normalizedA => a / 255.0;
+  double get normalizedR => r / 255.0;
+  double get normalizedG => g / 255.0;
+  double get normalizedB => b / 255.0;
+
+  static CustomColor fromNormalizedARGB(double a, double r, double g, double b) {
+    return CustomColor.fromARGB(
+      (a * 255).round(),
+      (r * 255).round(),
+      (g * 255).round(),
+      (b * 255).round(),
+    );
+  }
+}
+
 enum TileType {
   taiga(
-    Color.fromARGB(255, 100, 164, 93),
-    Color.fromARGB(255, 75, 140, 76),
-    Color.fromARGB(255, 59, 117, 60),
+    CustomColor.fromARGB(255, 100, 164, 93),
+    CustomColor.fromARGB(255, 75, 140, 76),
+    CustomColor.fromARGB(255, 59, 117, 60),
   ),
   grass(
-    Color.fromARGB(255, 109, 150, 86),
-    Color.fromARGB(255, 92, 129, 72),
-    Color.fromARGB(255, 79, 112, 60),
+    CustomColor.fromARGB(255, 109, 150, 86),
+    CustomColor.fromARGB(255, 92, 129, 72),
+    CustomColor.fromARGB(255, 79, 112, 60),
   ),
   bare(
-    Color.fromARGB(255, 139, 162, 127),
-    Color.fromARGB(255, 125, 148, 113),
-    Color.fromARGB(255, 109, 129, 98),
+    CustomColor.fromARGB(255, 139, 162, 127),
+    CustomColor.fromARGB(255, 125, 148, 113),
+    CustomColor.fromARGB(255, 109, 129, 98),
   ),
   sand(
-    Color.fromARGB(255, 194, 178, 128),
-    Color.fromARGB(255, 161, 146, 100),
-    Color.fromARGB(255, 138, 124, 82),
+    CustomColor.fromARGB(255, 194, 178, 128),
+    CustomColor.fromARGB(255, 161, 146, 100),
+    CustomColor.fromARGB(255, 138, 124, 82),
   ),
   lakeFloorVegetation(
-    Color.fromARGB(255, 150, 157, 102),
-    Color.fromARGB(255, 138, 145, 92),
-    Color.fromARGB(255, 121, 128, 80),
+    CustomColor.fromARGB(255, 150, 157, 102),
+    CustomColor.fromARGB(255, 138, 145, 92),
+    CustomColor.fromARGB(255, 121, 128, 80),
   ),
   lakeFloorBare(
-    Color.fromARGB(255, 173, 162, 115),
-    Color.fromARGB(255, 159, 148, 103),
-    Color.fromARGB(255, 148, 138, 95),
+    CustomColor.fromARGB(255, 173, 162, 115),
+    CustomColor.fromARGB(255, 159, 148, 103),
+    CustomColor.fromARGB(255, 148, 138, 95),
   );
 
   /// These are the cube's side colors. Isometric cube has 3 visible sides.
   /// Top is brighter because it is in the light.
   const TileType(this.top, this.left, this.right);
 
-  final Color top;
-  final Color left;
-  final Color right;
+  final CustomColor top;
+  final CustomColor left;
+  final CustomColor right;
 }
+
 
 Tile getTile(double elevation, double moisture, Point<double> coordinate) {
   double height = (elevation * 20).round().toDouble();
