@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:anki/map/region/tile/tile_creator.dart';
+import 'package:anki/map/region/tile/tile_type.dart';
 import 'cube.dart';
 import 'natural_items/natural_items.dart';
 

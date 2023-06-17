@@ -1,13 +1,13 @@
 import 'dart:ui';
-import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/region/region.dart';
 import 'dart:math';
-import 'package:anki/map/region/region_data_creator.dart';
+import 'package:anki/map/region/region_creator.dart';
 
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
-  final RegionDataCreator _regionCreator = RegionDataCreator();
+  final RegionCreator _regionCreator = RegionCreator();
   final int _regionSideWidth = 64;
   final int _maxRegionCount = 1024;
 

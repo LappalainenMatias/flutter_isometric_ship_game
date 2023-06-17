@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import '../cube.dart';
-import '../custom_color.dart';
+import '../../../../utils/custom_color.dart';
 import '../tile.dart';
 
 const CustomColor purpleTop = CustomColor.fromARGB(255, 150, 76, 150);
@@ -18,10 +18,6 @@ const CustomColor stemRight = CustomColor.fromARGB(255, 5, 112, 30);
 IsoCoordinate offset = const IsoCoordinate(0, 0);
 
 /// Creates flower from cubes
-///    _____
-///   |____|
-///     ||
-///     ||
 List flowerPosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 3,

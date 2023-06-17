@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';

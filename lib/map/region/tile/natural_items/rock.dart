@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import '../cube.dart';
-import '../custom_color.dart';
+import '../../../../utils/custom_color.dart';
 import '../tile.dart';
 
 const CustomColor rockTop = CustomColor.fromARGB(255, 107, 129, 124);
@@ -9,9 +9,6 @@ const CustomColor rockLeft = CustomColor.fromARGB(255, 91, 112, 107);
 const CustomColor rockRight = CustomColor.fromARGB(255, 83, 105, 100);
 
 /// Creates rock from cubes
-///  ________
-/// |________|
-/// |________|
 List rockPosAndCol(Tile tile) {
   double random = Random().nextDouble() / 2 + 0.25;
   return createCube(

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:anki/map/iso_coordinate.dart';
-import 'package:anki/map/region/region_data_creator.dart';
+import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/map/region/region_creator.dart';
 import 'tile/tile.dart';
 
 class Region extends Comparable<Region> {

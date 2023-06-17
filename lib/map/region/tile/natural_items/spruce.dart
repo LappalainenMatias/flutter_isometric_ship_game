@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import '../cube.dart';
-import '../custom_color.dart';
+import '../../../../utils/custom_color.dart';
 import '../tile.dart';
 
 const CustomColor trunkTop = CustomColor.fromARGB(255, 126, 56, 5);
@@ -15,12 +15,6 @@ const CustomColor foliageRight = CustomColor.fromARGB(255, 6, 101, 28);
 IsoCoordinate offset = const IsoCoordinate(0, 0);
 
 /// Creates tree from cubes
-///  ________
-/// |________|
-/// |________|
-/// |________|
-///    |__|
-///    |__|
 List sprucePosAndCol(Tile tile) {
   offset = IsoCoordinate(
     Random().nextDouble() / 2,

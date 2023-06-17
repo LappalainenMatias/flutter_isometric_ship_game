@@ -2,15 +2,15 @@ import 'dart:math';
 import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:open_simplex_noise/open_simplex_noise.dart';
-import '../iso_coordinate.dart';
+import '../../utils/iso_coordinate.dart';
 
 /// We have seperate class for creating the region data because this class
 /// does not use dart:ui and because of that it can be run concurrently
-class RegionDataCreator {
+class RegionCreator {
   late OpenSimplexNoise _elevationNoise;
   late OpenSimplexNoise _moistureNoise;
 
-  RegionDataCreator([int seed = 1]) {
+  RegionCreator([int seed = 1]) {
     _elevationNoise = OpenSimplexNoise(seed + 1);
     _moistureNoise = OpenSimplexNoise(seed + 2);
   }
@@ -22,7 +22,7 @@ class RegionDataCreator {
     int startX,
     int startY,
   ) {
-    var noises = _noise(width, height, startX, startY);
+    var noises = _createNoises(width, height, startX, startY);
     final elevationNoise = noises[0];
     final moistureNoise = noises[1];
     List<Tile> tiles = [];
@@ -62,24 +62,24 @@ class RegionDataCreator {
   }
 
   /// Increasing frequency adds details
-  List<List<List<double>>> _noise(
-    int w,
-    int h,
+  List<List<List<double>>> _createNoises(
+    int width,
+    int height,
     int startX,
     int startY,
   ) {
-    List<List<double>> elevationMap = _fixedSizeList(w, h);
-    List<List<double>> moistureMap = _fixedSizeList(w, h);
-    for (int x = 0; x < w; x++) {
+    List<List<double>> elevationMap = _fixedSizeList(width, height);
+    List<List<double>> moistureMap = _fixedSizeList(width, height);
+    for (int x = 0; x < width; x++) {
       var rowElevation = elevationMap[x];
       var rowMoisture = moistureMap[x];
-      for (int y = 0; y < h; y++) {
+      for (int y = 0; y < height; y++) {
         final x1 = (startX + x) * 0.008;
         final y1 = (startY + y) * 0.008;
         final x2 = (startX + x) * 0.016;
         final y2 = (startY + y) * 0.016;
-        final x3 = (startX + x) * 0.050;
-        final y3 = (startY + y) * 0.050;
+        final x3 = (startX + x) * 0.064;
+        final y3 = (startY + y) * 0.064;
         double elevation = _elevationNoise.eval2D(x1, y1) +
             0.5 * _elevationNoise.eval2D(x2, y2) +
             0.25 * _elevationNoise.eval2D(x3, y3);

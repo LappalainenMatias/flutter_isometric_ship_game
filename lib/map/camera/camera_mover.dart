@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import 'camera.dart';
 
 class CameraMover {
