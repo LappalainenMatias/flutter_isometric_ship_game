@@ -15,7 +15,7 @@ class RegionDataCreator {
     _moistureNoise = OpenSimplexNoise(seed + 2);
   }
 
-  RegionData create(
+  RegionDTO create(
     IsoCoordinate regionCoordinate,
     int width,
     int height,
@@ -50,7 +50,7 @@ class RegionDataCreator {
         aboveWaterColors.addAll(pc[1]);
       }
     }
-    return RegionData(
+    return RegionDTO(
       regionCoordinate,
       (aboveWaterPositions.length + underWaterPositions.length) ~/ 2,
       aboveWaterPositions,
@@ -103,7 +103,7 @@ class RegionDataCreator {
   }
 }
 
-class RegionData {
+class RegionDTO {
   final IsoCoordinate regionCoordinate;
   final int verticesCount;
   final List<double> aboveWaterPositions;
@@ -112,7 +112,7 @@ class RegionData {
   final List<int> underWaterColors;
   final List<Tile> tiles;
 
-  RegionData(
+  RegionDTO(
     this.regionCoordinate,
     this.verticesCount,
     this.aboveWaterPositions,

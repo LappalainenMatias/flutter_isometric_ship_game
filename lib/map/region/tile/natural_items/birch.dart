@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:anki/map/iso_coordinate.dart';
-import 'package:anki/map/region/tile/tile_creator.dart';
 import '../cube.dart';
+import '../custom_color.dart';
 import '../tile.dart';
 
 const CustomColor trunkTop = CustomColor.fromARGB(255, 197, 187, 181);

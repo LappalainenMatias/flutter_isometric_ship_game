@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:anki/map/iso_coordinate.dart';
-import 'package:anki/map/region/tile/tile_creator.dart';
+
+import 'custom_color.dart';
 
 const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 

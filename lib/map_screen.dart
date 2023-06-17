@@ -65,8 +65,8 @@ class _MapScreenState extends State<MapScreen>
                   assetKey: 'shaders/regtanglewater.frag',
                   (context, waterShader, child) => CustomPaint(
                     size: screenSize,
-                    painter: MapPainter(
-                        map, waterShader, _time.elapsedMilliseconds.toDouble() / 1000),
+                    painter: MapPainter(map, waterShader,
+                        _time.elapsedMilliseconds.toDouble() / 1000),
                   ),
                   child: const Center(
                     child: CircularProgressIndicator(),
@@ -80,11 +80,7 @@ class _MapScreenState extends State<MapScreen>
                   child: Statistics(
                     fps: _fps,
                     verticesCount: map.verticesCount,
-                    regionCount: map.regionCount,
                     center: map.center,
-                    size: Size(screenSize.width, screenSize.height),
-                    topLeft: map.topLeft,
-                    bottomRight: map.bottomRight,
                   ),
                 ),
               ),
@@ -98,27 +94,27 @@ class _MapScreenState extends State<MapScreen>
 
 class MapPainter extends CustomPainter {
   final MapModel map;
-  FragmentShader waterShader;
-  var landPaint = Paint()..style = PaintingStyle.fill;
-  var backgroundWaterPaint = Paint()
+  final FragmentShader _waterShader;
+  final _landPaint = Paint()..style = PaintingStyle.fill;
+  final _backgroundWaterPaint = Paint()
     ..style = PaintingStyle.fill
     ..color = const Color(0xFF012E8F);
-  var waterShaderPaint = Paint()..style = PaintingStyle.fill;
-  double dt;
+  final _waterShaderPaint = Paint()..style = PaintingStyle.fill;
+  final double _dt;
 
-  MapPainter(this.map, this.waterShader, this.dt);
+  MapPainter(this.map, this._waterShader, this._dt);
 
   @override
   void paint(Canvas canvas, Size size) {
-    _addWaterShader(size);
+    _addWaterShader(_waterShaderPaint);
     _isometricTransformation(canvas, size);
     _paintBackgroundWater(canvas, size);
-    Map vertices = map.getVerticesInView();
-    for (var v in vertices["underWater"]) {
-      canvas.drawVertices(v, BlendMode.srcOver, waterShaderPaint);
+    MapDTO vertices = map.getVerticesInView();
+    for (var v in vertices.underWater) {
+      canvas.drawVertices(v, BlendMode.srcOver, _waterShaderPaint);
     }
-    for (var v in vertices["aboveWater"]) {
-      canvas.drawVertices(v, BlendMode.dst, landPaint);
+    for (var v in vertices.aboveWater) {
+      canvas.drawVertices(v, BlendMode.dst, _landPaint);
     }
   }
 
@@ -131,18 +127,18 @@ class MapPainter extends CustomPainter {
           Offset(map.topLeft.isoX, map.topLeft.isoY),
           Offset(map.bottomRight.isoX, map.bottomRight.isoY),
         ),
-        backgroundWaterPaint);
+        _backgroundWaterPaint);
     canvas.drawRect(
         Rect.fromPoints(
           Offset(map.topLeft.isoX, map.topLeft.isoY),
           Offset(map.bottomRight.isoX, map.bottomRight.isoY),
         ),
-        waterShaderPaint);
+        _waterShaderPaint);
   }
 
-  void _addWaterShader(Size size) {
-    waterShader.setFloat(0, dt);
-    waterShaderPaint.shader = waterShader;
+  void _addWaterShader(Paint paint) {
+    _waterShader.setFloat(0, _dt);
+    paint.shader = _waterShader;
   }
 
   void _isometricTransformation(Canvas canvas, Size size) {

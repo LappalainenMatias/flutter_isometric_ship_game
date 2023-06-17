@@ -1,22 +1,21 @@
 import 'dart:ui';
-
 import 'package:anki/map/iso_coordinate.dart';
+import 'package:anki/map/map.dart';
 import 'package:anki/map/region/region.dart';
 import 'dart:math';
-
 import 'package:anki/map/region/region_data_creator.dart';
 
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
   final RegionDataCreator _regionCreator = RegionDataCreator();
   final int _regionSideWidth = 32;
-  final int _maxRegionAmount = 1024;
+  final int _maxRegionCount = 1024;
 
   /// Used for liming the amount of regions created per second (frame rate drops)
   final Stopwatch _previousRegionCreated = Stopwatch()..start();
   final int _minElapsedMS = 5;
 
-  Map<String, dynamic> getVertices(
+  MapDTO getVertices(
     IsoCoordinate topLeft,
     IsoCoordinate bottomRight,
   ) {
@@ -34,12 +33,11 @@ class RegionManager {
       }
       verticesCount += region.verticesCount;
     }
-    return {
-      "aboveWater": aboveWater,
-      "underWater": underWater,
-      "verticesCount": verticesCount,
-      "regionCount": regions.length,
-    };
+    return MapDTO(
+      underWater: underWater,
+      aboveWater: aboveWater,
+      verticesCount: verticesCount,
+    );
   }
 
   List<IsoCoordinate> getRegionCoordinates(
@@ -59,10 +57,7 @@ class RegionManager {
     return regionCoordinates;
   }
 
-  List<Region> _getRegions(
-    IsoCoordinate topLeft,
-    IsoCoordinate bottomRight,
-  ) {
+  List<Region> _getRegions(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     List<IsoCoordinate> regionCoordinates = getRegionCoordinates(
       topLeft,
       bottomRight,
@@ -98,21 +93,21 @@ class RegionManager {
     if (_regions.containsKey(point)) {
       return _regions[point]!;
     } else {
-      if (_regions.length > _maxRegionAmount) {
+      if (_regions.length > _maxRegionCount) {
         _removeFarawayRegions(point);
         return null;
       }
       if (_previousRegionCreated.elapsedMilliseconds < _minElapsedMS) {
         return null;
       }
-      var regionData = _regionCreator.create(
+      var regionDTO = _regionCreator.create(
         IsoCoordinate.fromIso(regionX.toDouble(), regionY.toDouble()),
         _regionSideWidth,
         _regionSideWidth,
         regionX * _regionSideWidth,
         regionY * _regionSideWidth,
       );
-      _regions[point] = Region.fromData(regionData);
+      _regions[point] = Region.fromRegionDTO(regionDTO);
       _previousRegionCreated.reset();
       return _regions[point]!;
     }

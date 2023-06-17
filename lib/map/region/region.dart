@@ -25,7 +25,7 @@ class Region extends Comparable<Region> {
     );
   }
 
-  factory Region.fromData(RegionData data) {
+  factory Region.fromRegionDTO(RegionDTO data) {
     return Region(
       data.verticesCount,
       data.regionCoordinate,
