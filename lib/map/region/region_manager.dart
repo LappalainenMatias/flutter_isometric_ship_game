@@ -8,7 +8,7 @@ import 'package:anki/map/region/region_data_creator.dart';
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
   final RegionDataCreator _regionCreator = RegionDataCreator();
-  final int _regionSideWidth = 32;
+  final int _regionSideWidth = 64;
   final int _maxRegionCount = 1024;
 
   /// Used for liming the amount of regions created per second (frame rate drops)
@@ -40,17 +40,21 @@ class RegionManager {
     );
   }
 
-  List<IsoCoordinate> getRegionCoordinates(
+  /// Returns coordinates that are between the coordinates.
+  /// Because of the region shape (diamond) we return more coordinates than needed so
+  /// that we are not going to have holes in the map.
+  List<IsoCoordinate> getCoordinates(
     IsoCoordinate topLeft,
     IsoCoordinate bottomRight,
+    step,
   ) {
     List<IsoCoordinate> regionCoordinates = [];
-    for (double isoY = topLeft.isoY + _regionSideWidth;
-        isoY >= bottomRight.isoY - 2 * _regionSideWidth;
-        isoY -= _regionSideWidth) {
-      for (double isoX = topLeft.isoX - _regionSideWidth;
-          isoX <= bottomRight.isoX + 2 * _regionSideWidth;
-          isoX += _regionSideWidth) {
+    for (double isoY = topLeft.isoY + step;
+        isoY >= bottomRight.isoY - 2 * step;
+        isoY -= step) {
+      for (double isoX = topLeft.isoX - step;
+          isoX <= bottomRight.isoX + 2 * step;
+          isoX += step) {
         regionCoordinates.add(IsoCoordinate.fromIso(isoX, isoY));
       }
     }
@@ -58,14 +62,12 @@ class RegionManager {
   }
 
   List<Region> _getRegions(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
-    List<IsoCoordinate> regionCoordinates = getRegionCoordinates(
-      topLeft,
-      bottomRight,
-    );
-    _sortByDistanceToCenter(regionCoordinates, topLeft, bottomRight);
+    List<IsoCoordinate> coordinates =
+        getCoordinates(topLeft, bottomRight, _regionSideWidth);
+    _sortByDistanceToCenter(coordinates, topLeft, bottomRight);
     Set<Region> regions = {};
-    for (var isoCoordinate in regionCoordinates) {
-      Region? region = _getRegion(isoCoordinate);
+    for (var coordinate in coordinates) {
+      Region? region = _getRegion(coordinate);
       if (region != null) {
         regions.add(region);
       }
