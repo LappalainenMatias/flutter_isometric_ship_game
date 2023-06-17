@@ -13,15 +13,15 @@ const CustomColor rockRight = CustomColor.fromARGB(255, 83, 105, 100);
 /// |________|
 /// |________|
 List rockPosAndCol(Tile tile) {
-  double random = Random().nextDouble();
+  double random = Random().nextDouble() / 2 + 0.25;
   return createCube(
     tile.coordinate,
     tile.height + 1,
     rockTop,
     rockLeft,
     rockRight,
-    widthScale: 0.9 * random,
-    heightScale: 0.7 * random,
+    widthScale: 1.0 * random,
+    heightScale: 0.8 * random,
     offset: IsoCoordinate(
       Random().nextDouble() / 10,
       Random().nextDouble() / 10,
