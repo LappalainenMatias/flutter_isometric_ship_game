@@ -15,13 +15,8 @@ class RegionCreator {
     _moistureNoise = OpenSimplexNoise(seed + 2);
   }
 
-  RegionDTO create(
-    IsoCoordinate regionCoordinate,
-    int width,
-    int height,
-    int startX,
-    int startY,
-  ) {
+  RegionDTO create(IsoCoordinate regionCoordinate, int width, int height,
+      int startX, int startY) {
     var noises = _createNoises(width, height, startX, startY);
     final elevationNoise = noises[0];
     final moistureNoise = noises[1];
@@ -74,12 +69,12 @@ class RegionCreator {
       var rowElevation = elevationMap[x];
       var rowMoisture = moistureMap[x];
       for (int y = 0; y < height; y++) {
-        final x1 = (startX + x) * 0.008;
-        final y1 = (startY + y) * 0.008;
+        final x1 = (startX + x) * 0.006;
+        final y1 = (startY + y) * 0.006;
         final x2 = (startX + x) * 0.016;
         final y2 = (startY + y) * 0.016;
-        final x3 = (startX + x) * 0.064;
-        final y3 = (startY + y) * 0.064;
+        final x3 = (startX + x) * 0.048;
+        final y3 = (startY + y) * 0.048;
         double elevation = _elevationNoise.eval2D(x1, y1) +
             0.5 * _elevationNoise.eval2D(x2, y2) +
             0.25 * _elevationNoise.eval2D(x3, y3);
