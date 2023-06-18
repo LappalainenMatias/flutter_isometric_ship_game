@@ -1,4 +1,4 @@
-/// We use this because Color uses dart:ui which cannot be used concurrently
+/// We use this because Color is part of dart:ui which cannot be used concurrently
 class CustomColor {
   final int a, r, g, b;
 

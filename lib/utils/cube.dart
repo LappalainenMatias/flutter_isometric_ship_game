@@ -1,15 +1,17 @@
 import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
 
-import '../../../utils/custom_color.dart';
+import 'custom_color.dart';
 
 const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 
-/// Creates a list of positions and colors
-/// Isometric cube has 7 corners and 3 visible sides.
-/// From the 7 corners we can create 6 triangles that make up the cube.
-/// The scale makes the cubes thinner/wider/shorter/taller
-/// offset can be used to reduce symmetry by moving the cube slightly
+/// Returns a list of positions and colors. Everything visible at the map uses this
+/// function (except whater shader).
+/// Isometric cube has 7 corners and 3 visible sides. From the 7 corners we create
+/// 6 triangles that make up the cube (two for each visible side). The 3 visible sides
+/// have different colors (colorTop, colorLeft, colorRight).
+/// The heightScale/widthScale makes the cubes thinner/wider/shorter/taller.
+/// Offset can be used to reduce symmetry by moving the cube slightly
 List createCube(
   Point<double> coordinate,
   double tileHeight,
@@ -21,6 +23,7 @@ List createCube(
   IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
 }) {
   if (tileHeight < 0) {
+    // Adds blueish color to underwater cubes
     double depthPercentage = 0.25 + ((tileHeight - 0.25) / 5).abs();
     if (depthPercentage > 1) {
       colorTop = blueColor;
@@ -32,6 +35,7 @@ List createCube(
       colorRight = mix(colorRight, blueColor, depthPercentage);
     }
   }
+  // Creates the 7 corners of the cube
   final cenBot =
       IsoCoordinate(coordinate.x + tileHeight, coordinate.y + tileHeight) +
           offset;

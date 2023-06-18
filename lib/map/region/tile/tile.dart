@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/map/region/tile/tile_type.dart';
-import 'cube.dart';
+import '../../../utils/cube.dart';
 import 'natural_items/natural_items.dart';
 
 class Tile extends Comparable<Tile> {

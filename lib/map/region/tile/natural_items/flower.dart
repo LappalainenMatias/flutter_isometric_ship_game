@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
-import '../cube.dart';
+import '../../../../utils/cube.dart';
 import '../../../../utils/custom_color.dart';
 import '../tile.dart';
 
