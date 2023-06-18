@@ -11,7 +11,7 @@ class RegionManager {
   final int _regionSideWidth = 64;
   final int _maxRegionCount = 1024;
 
-  /// Used for liming the amount of regions created per second (frame rate drops)
+  /// Used for liming the amount of regions created per second because of fps
   final Stopwatch _previousRegionCreated = Stopwatch()..start();
   final int _minElapsedMS = 5;
 
