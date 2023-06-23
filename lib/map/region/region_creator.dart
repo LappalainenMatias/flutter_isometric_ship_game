@@ -4,7 +4,7 @@ import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:open_simplex_noise/open_simplex_noise.dart';
 import '../../utils/iso_coordinate.dart';
 
-/// We have seperate class for creating the region data because this class
+/// We use seperate class for creating the region data because this class
 /// does not use dart:ui and because of that it can be run concurrently
 class RegionCreator {
   late OpenSimplexNoise _elevationNoise;

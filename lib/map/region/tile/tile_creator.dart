@@ -3,6 +3,7 @@ import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_type.dart';
 import 'natural_items/natural_items.dart';
 
+/// Returns true if the elevation and moisture limitations are met.
 class TileRule {
   final TileType type;
   final double? elevationLimit;
@@ -43,25 +44,25 @@ List<TileRule> rules = [
   TileRule(TileType.bare, null, null),
 ];
 
-///Todo these probabilities are not exactyly correct because they are looped through in order.
+///Todo these probabilities are not exactly correct because they are looped through in order.
 Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
   TileType.taiga: [
-    NaturalItemProbability(NaturalItem.rock, 0.03),
-    NaturalItemProbability(NaturalItem.spruce, 0.10),
     NaturalItemProbability(NaturalItem.birch, 0.02),
     NaturalItemProbability(NaturalItem.flower, 0.02),
+    NaturalItemProbability(NaturalItem.rock, 0.03),
+    NaturalItemProbability(NaturalItem.spruce, 0.10),
   ],
   TileType.grass: [
     NaturalItemProbability(NaturalItem.rock, 0.02),
     NaturalItemProbability(NaturalItem.spruce, 0.02),
-    NaturalItemProbability(NaturalItem.birch, 0.04),
     NaturalItemProbability(NaturalItem.flower, 0.02),
+    NaturalItemProbability(NaturalItem.birch, 0.04),
   ],
   TileType.bare: [
-    NaturalItemProbability(NaturalItem.rock, 0.06),
-    NaturalItemProbability(NaturalItem.spruce, 0.03),
     NaturalItemProbability(NaturalItem.birch, 0.02),
     NaturalItemProbability(NaturalItem.flower, 0.02),
+    NaturalItemProbability(NaturalItem.spruce, 0.03),
+    NaturalItemProbability(NaturalItem.rock, 0.06),
   ],
   TileType.sand: [
     NaturalItemProbability(NaturalItem.rock, 0.10),
@@ -76,7 +77,7 @@ Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
 
 Tile getTile(double elevation, double moisture, Point<double> coordinate) {
   // TODO We increase the elevation to add height differences. This should be refactored
-  double height = (elevation * 10).round().toDouble();
+  double height = (elevation * 12).round().toDouble();
   for (TileRule rule in rules) {
     if (rule.match(elevation, moisture)) {
       return Tile(rule.type, coordinate, height, getNaturalItem(rule.type));
