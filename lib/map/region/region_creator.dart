@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:open_simplex_noise/open_simplex_noise.dart';
@@ -6,6 +7,7 @@ import '../../utils/iso_coordinate.dart';
 
 /// We use seperate class for creating the region data because this class
 /// does not use dart:ui and because of that it can be run concurrently
+/*
 class RegionCreator {
   late OpenSimplexNoise _elevationNoise;
   late OpenSimplexNoise _moistureNoise;
@@ -48,11 +50,10 @@ class RegionCreator {
     return RegionDTO(
       regionCoordinate,
       (aboveWaterPositions.length + underWaterPositions.length) ~/ 2,
-      aboveWaterPositions,
-      aboveWaterColors,
-      underWaterPositions,
-      underWaterColors,
-      tiles,
+      aboveWaterPositions.cast<Float32List>(),
+      aboveWaterColors.cast<Int32List>(),
+      underWaterPositions.cast<Float32List>(),
+      underWaterColors.cast<Int32List>(),
     );
   }
 
@@ -97,15 +98,15 @@ class RegionCreator {
     return map;
   }
 }
+*/
 
 class RegionDTO {
   final IsoCoordinate regionCoordinate;
   final int verticesCount;
-  final List<double> aboveWaterPositions;
-  final List<int> aboveWaterColors;
-  final List<double> underWaterPositions;
-  final List<int> underWaterColors;
-  final List<Tile> tiles;
+  final Float32List aboveWaterPositions;
+  final Int32List aboveWaterColors;
+  final Float32List underWaterPositions;
+  final Int32List underWaterColors;
 
   RegionDTO(
     this.regionCoordinate,
@@ -114,6 +115,5 @@ class RegionDTO {
     this.aboveWaterColors,
     this.underWaterPositions,
     this.underWaterColors,
-    this.tiles,
   );
 }

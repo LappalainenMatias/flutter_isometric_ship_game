@@ -4,16 +4,13 @@ import 'package:anki/map/map.dart';
 import 'package:anki/map/region/region.dart';
 import 'dart:math';
 import 'package:anki/map/region/region_creator.dart';
+import 'package:isolated_worker/js_isolated_worker.dart';
 
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
-  final RegionCreator _regionCreator = RegionCreator();
-  final int _regionSideWidth = 64;
+  final int _regionSideWidth = 32;
   final int _maxRegionCount = 1024;
-
-  /// Used for liming the amount of regions created per second because of fps
-  final Stopwatch _previousRegionCreated = Stopwatch()..start();
-  final int _minElapsedMS = 5;
+  Set<Point> _queue = {};
 
   MapDTO getVertices(
     IsoCoordinate topLeft,
@@ -40,10 +37,10 @@ class RegionManager {
     );
   }
 
-  /// Returns coordinates that are between the coordinates.
+  /// Returns coordinates that are between the two coordinates.
   /// Because of the region shape (diamond) we return more coordinates than needed so
   /// that we are not going to have holes in the map.
-  List<IsoCoordinate> getCoordinates(
+  List<IsoCoordinate> _getCoordinates(
     IsoCoordinate topLeft,
     IsoCoordinate bottomRight,
     step,
@@ -63,7 +60,7 @@ class RegionManager {
 
   List<Region> _getRegions(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     List<IsoCoordinate> coordinates =
-        getCoordinates(topLeft, bottomRight, _regionSideWidth);
+        _getCoordinates(topLeft, bottomRight, _regionSideWidth);
     _sortByDistanceToCenter(coordinates, topLeft, bottomRight);
     Set<Region> regions = {};
     for (var coordinate in coordinates) {
@@ -97,22 +94,11 @@ class RegionManager {
     } else {
       if (_regions.length > _maxRegionCount) {
         _removeFarawayRegions(point);
-        return null;
+      } else {
+        _createRegion(regionX, regionY);
       }
-      if (_previousRegionCreated.elapsedMilliseconds < _minElapsedMS) {
-        return null;
-      }
-      var regionDTO = _regionCreator.create(
-        IsoCoordinate.fromIso(regionX.toDouble(), regionY.toDouble()),
-        _regionSideWidth,
-        _regionSideWidth,
-        regionX * _regionSideWidth,
-        regionY * _regionSideWidth,
-      );
-      _regions[point] = Region.fromRegionDTO(regionDTO);
-      _previousRegionCreated.reset();
-      return _regions[point]!;
     }
+    return null;
   }
 
   void _removeFarawayRegions(Point<int> point) {
@@ -121,5 +107,33 @@ class RegionManager {
         _regions.remove(key);
       }
     }
+  }
+
+  void _createRegion(int x, int y) async {
+    if (_queue.contains(Point(x, y)) || _queue.length > 10) {
+      return;
+    }
+    _queue.add(Point(x, y));
+    final result = await JsIsolatedWorker().run(
+      functionName: 'myworker',
+      arguments: [
+        x,
+        y,
+        _regionSideWidth,
+        _regionSideWidth,
+        x * _regionSideWidth,
+        y * _regionSideWidth
+      ],
+    );
+    var regionDTO = RegionDTO(
+      IsoCoordinate.fromIso(result[0], result[1]),
+      result[2],
+      result[3],
+      result[4],
+      result[5],
+      result[6],
+    );
+    _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
+    _queue.remove(Point(x, y));
   }
 }

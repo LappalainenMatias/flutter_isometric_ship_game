@@ -30,7 +30,7 @@ class _JoyStickState extends State<JoyStick> {
               color: Colors.red,
               borderRadius: BorderRadius.all(Radius.circular(25))),
         ),
-        period: const Duration(milliseconds: 10),
+        period: const Duration(milliseconds: 16),
         mode: JoystickMode.all,
         listener: (details) {
           map.moveCamera(details.x, -1 * details.y);

@@ -32,14 +32,14 @@ List<TileRule> rules = [
   TileRule(TileType.lakeFloorBare, -0.10, 0.0),
   TileRule(TileType.lakeFloorVegetation, -0.05, 0.1),
   TileRule(TileType.sand, 0.0, null),
-  TileRule(TileType.bare, 0.02, -0.30),
+  TileRule(TileType.bare, 0.02, -0.20),
   TileRule(TileType.sand, 0.02, 0.0),
   TileRule(TileType.grass, 0.02, null),
-  TileRule(TileType.bare, 0.2, -0.30),
-  TileRule(TileType.taiga, 0.2, -0.20),
+  TileRule(TileType.bare, 0.2, -0.20),
+  TileRule(TileType.taiga, 0.2, -0.10),
   TileRule(TileType.grass, 0.2, 0),
   TileRule(TileType.taiga, 0.2, null),
-  TileRule(TileType.bare, 0.4, -0.30),
+  TileRule(TileType.bare, 0.4, -0.20),
   TileRule(TileType.taiga, 0.5, null),
   TileRule(TileType.bare, null, null),
 ];
@@ -88,7 +88,6 @@ Tile getTile(double elevation, double moisture, Point<double> coordinate) {
 
 NaturalItem getNaturalItem(TileType type) {
   final items = naturalItemsMap[type];
-
   if (items != null) {
     for (var item in items) {
       if (Random().nextDouble() < item.percentage) {
@@ -96,6 +95,5 @@ NaturalItem getNaturalItem(TileType type) {
       }
     }
   }
-
   return NaturalItem.empty;
 }

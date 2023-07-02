@@ -6,12 +6,12 @@ import 'flower.dart';
 
 enum NaturalItem {
   empty(null),
-  spruce(sprucePosAndCol),
-  rock(rockPosAndCol),
-  birch(birchPosAndCol),
-  flower(flowerPosAndCol);
+  spruce(SpruceCreator.positionsAndColors),
+  rock(RockCreator.positionsAndColors),
+  birch(BirchCreator.positionsAndColors),
+  flower(FlowerCreator.positionsAndColors);
 
-  const NaturalItem(this.getPosAndCol);
+  const NaturalItem(this.positionsAndColors);
 
-  final Function? getPosAndCol;
+  final Function? positionsAndColors;
 }

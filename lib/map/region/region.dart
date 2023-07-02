@@ -2,26 +2,24 @@ import 'dart:typed_data';
 import 'dart:ui';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_creator.dart';
-import 'tile/tile.dart';
 
 class Region extends Comparable<Region> {
   int verticesCount = 0;
   IsoCoordinate coord;
-  List<Tile> tiles;
   Vertices? aboveWater;
   Vertices? underWater;
 
-  Region(this.verticesCount, this.coord, this.tiles, var aboveWaterPositions,
-      var aboveWaterColors, var underWaterPositions, var underWaterColors) {
+  Region(this.verticesCount, this.coord, Float32List aboveWaterPositions,
+      Int32List aboveWaterColors, Float32List underWaterPositions, Int32List underWaterColors) {
     aboveWater = Vertices.raw(
       VertexMode.triangles,
-      Float32List.fromList(aboveWaterPositions),
-      colors: Int32List.fromList(aboveWaterColors),
+      aboveWaterPositions,
+      colors: aboveWaterColors,
     );
     underWater = Vertices.raw(
       VertexMode.triangles,
-      Float32List.fromList(underWaterPositions),
-      colors: Int32List.fromList(underWaterColors),
+      underWaterPositions,
+      colors: underWaterColors,
     );
   }
 
@@ -29,7 +27,6 @@ class Region extends Comparable<Region> {
     return Region(
       data.verticesCount,
       data.regionCoordinate,
-      data.tiles,
       data.aboveWaterPositions,
       data.aboveWaterColors,
       data.underWaterPositions,

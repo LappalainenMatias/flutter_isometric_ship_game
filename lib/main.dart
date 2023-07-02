@@ -1,6 +1,7 @@
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/slider.dart';
 import 'package:flutter/material.dart';
+import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:provider/provider.dart';
 import 'map/map.dart';
 import 'map_screen.dart';
@@ -11,6 +12,7 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+  await JsIsolatedWorker().importScripts(['myworker.js']);
   runApp(
     MultiProvider(
       providers: [

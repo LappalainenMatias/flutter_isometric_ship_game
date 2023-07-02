@@ -31,7 +31,7 @@ class Tile extends Comparable<Tile> {
       type.left,
       type.right,
     );
-    var function = naturalItem.getPosAndCol;
+    var function = naturalItem.positionsAndColors;
     if (function != null) {
       var posAndCol = function(this);
       posAndCols[0].addAll(posAndCol[0]);
