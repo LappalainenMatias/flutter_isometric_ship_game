@@ -115,7 +115,7 @@ class RegionManager {
     }
     _queue.add(Point(x, y));
     final result = await JsIsolatedWorker().run(
-      functionName: 'myworker',
+      functionName: 'jsregionworker',
       arguments: [
         x,
         y,

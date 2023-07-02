@@ -7,7 +7,6 @@ import '../../utils/iso_coordinate.dart';
 
 /// We use seperate class for creating the region data because this class
 /// does not use dart:ui and because of that it can be run concurrently
-/*
 class RegionCreator {
   late OpenSimplexNoise _elevationNoise;
   late OpenSimplexNoise _moistureNoise;
@@ -50,10 +49,10 @@ class RegionCreator {
     return RegionDTO(
       regionCoordinate,
       (aboveWaterPositions.length + underWaterPositions.length) ~/ 2,
-      aboveWaterPositions.cast<Float32List>(),
-      aboveWaterColors.cast<Int32List>(),
-      underWaterPositions.cast<Float32List>(),
-      underWaterColors.cast<Int32List>(),
+      Float32List.fromList(aboveWaterPositions),
+      Int32List.fromList(aboveWaterColors),
+      Float32List.fromList(underWaterPositions),
+      Int32List.fromList(underWaterColors),
     );
   }
 
@@ -98,7 +97,6 @@ class RegionCreator {
     return map;
   }
 }
-*/
 
 class RegionDTO {
   final IsoCoordinate regionCoordinate;

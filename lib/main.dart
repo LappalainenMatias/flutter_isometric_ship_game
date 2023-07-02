@@ -12,7 +12,8 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
-  await JsIsolatedWorker().importScripts(['myworker.js']);
+  /// Used for running region creation web worker
+  await JsIsolatedWorker().importScripts(['jsregionworker.js']);
   runApp(
     MultiProvider(
       providers: [
