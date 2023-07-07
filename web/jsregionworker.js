@@ -1584,7 +1584,7 @@ J.n(r,s[1])
 return t}else return A.cI(a)},
 cI(a){return A.F(a.b,a.d+1.25,B.a_,B.X,B.S,2*(B.b.t()+0.5),$.c7,0.25)},
 F(a5,a6,a7,a8,a9,b0,b1,b2){var t,s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c,b,a,a0,a1,a2,a3,a4
-if(a6<0){t=0.25+Math.abs((a6-0.25)/5)
+if(a6<0){t=0.2+Math.abs((a6-0.2)/5)
 if(t>1){a7=B.e
 a8=B.e
 a9=B.e}else{a7=A.ck(a7,B.e,t)
@@ -2321,7 +2321,7 @@ f=A.al(c.a,new A.q(m,f)).F()
 c=b.f
 c===$&&A.ag()
 d=A.al(c.a,new A.q(l,d)).F()
-B.a.i(q,k,B.c.ai((i+0.5*g+0.25*e-0.35)*20))
+B.a.i(q,k,B.c.ai((i+0.5*g+0.25*e-0.3)*15))
 B.a.i(p,k,h+0.5*f+0.25*d)}}return A.f([a,a0],u.G)},
 a1(a,b){var t,s,r,q,p=J.cz(a,u.r)
 for(t=u.i,s=0;s<a;++s){r=J.cz(b,t)

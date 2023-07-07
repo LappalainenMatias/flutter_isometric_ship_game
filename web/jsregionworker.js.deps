@@ -21,6 +21,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/tile/natural_items/spruce.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/tile/tile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/tile/tile_creator.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/tile/tile_to_vertices.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/tile/tile_type.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/cube.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/custom_color.dart
