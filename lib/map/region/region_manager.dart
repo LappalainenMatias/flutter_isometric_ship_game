@@ -9,8 +9,8 @@ import 'package:isolated_worker/js_isolated_worker.dart';
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
   final int _regionSideWidth = 32;
-  final int _maxRegionCount = 1024;
-  Set<Point> _queue = {};
+  final int _maxRegionCount = 2048;
+  final Set<Point> _buildQueue = {};
 
   MapDTO getVertices(
     IsoCoordinate topLeft,
@@ -110,10 +110,10 @@ class RegionManager {
   }
 
   void _createRegion(int x, int y) async {
-    if (_queue.contains(Point(x, y)) || _queue.length > 10) {
+    if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 10) {
       return;
     }
-    _queue.add(Point(x, y));
+    _buildQueue.add(Point(x, y));
     final result = await JsIsolatedWorker().run(
       functionName: 'jsregionworker',
       arguments: [
@@ -134,6 +134,6 @@ class RegionManager {
       result[6],
     );
     _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
-    _queue.remove(Point(x, y));
+    _buildQueue.remove(Point(x, y));
   }
 }
