@@ -30,6 +30,7 @@ class _MapScreenState extends State<MapScreen>
       (Duration elapsed) {
         setState(
           () {
+            /// Todo refactor this to somewhere else. Maybe own widget
             _frameCount++;
             _totalTime += elapsed.inMilliseconds - _previousTime;
             _previousTime = elapsed.inMilliseconds;

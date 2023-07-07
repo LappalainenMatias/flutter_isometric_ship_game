@@ -16,7 +16,7 @@ class Camera {
   }
 
   set aspectRatio(double ratio) {
-    _aspectRatio = ratio;
+    if (ratio > 0) _aspectRatio = ratio;
   }
 
   double width() {
@@ -37,7 +37,14 @@ class Camera {
   IsoCoordinate get topLeft =>
       IsoCoordinate.fromIso(center.isoX - width() / 2, center.isoY + height() / 2);
 
+  /// From 0 to 1
   void setZoomLevel(double zoomLevel) {
-    _zoomLevel = zoomLevel;
+    if (zoomLevel < 0) {
+      zoomLevel = 0;
+    } else if (zoomLevel > 1) {
+      zoomLevel = 1;
+    } else {
+      _zoomLevel = zoomLevel;
+    }
   }
 }

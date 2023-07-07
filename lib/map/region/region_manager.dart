@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:ui';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/region/region.dart';
 import 'dart:math';
 import 'package:anki/map/region/region_creator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
 class RegionManager {
@@ -81,7 +83,7 @@ class RegionManager {
   ) {
     var center = topLeft.center(bottomRight);
     coordinates.sort((a, b) =>
-        a.euclideanDistance(center).compareTo(b.euclideanDistance(center)));
+        a.manhattanDistance(center).compareTo(b.manhattanDistance(center)));
   }
 
   Region? _getRegion(IsoCoordinate isoCoordinate) {
@@ -110,30 +112,42 @@ class RegionManager {
   }
 
   void _createRegion(int x, int y) async {
-    if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 10) {
-      return;
-    }
-    _buildQueue.add(Point(x, y));
-    final result = await JsIsolatedWorker().run(
-      functionName: 'jsregionworker',
-      arguments: [
-        x,
-        y,
+    if (kIsWeb) {
+      if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 10) {
+        return;
+      }
+      _buildQueue.add(Point(x, y));
+      final result = await JsIsolatedWorker().run(
+        functionName: 'jsregionworker',
+        arguments: [
+          x,
+          y,
+          _regionSideWidth,
+          _regionSideWidth,
+          x * _regionSideWidth,
+          y * _regionSideWidth
+        ],
+      );
+      var regionDTO = RegionDTO(
+        IsoCoordinate.fromIso(result[0], result[1]),
+        result[2],
+        result[3],
+        result[4],
+        result[5],
+        result[6],
+      );
+      _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
+      _buildQueue.remove(Point(x, y));
+    } else {
+      // TODO no concurrency support yet
+      RegionDTO regionDTO = RegionCreator().create(
+        IsoCoordinate.fromIso(x.toDouble(), y.toDouble()),
         _regionSideWidth,
         _regionSideWidth,
         x * _regionSideWidth,
-        y * _regionSideWidth
-      ],
-    );
-    var regionDTO = RegionDTO(
-      IsoCoordinate.fromIso(result[0], result[1]),
-      result[2],
-      result[3],
-      result[4],
-      result[5],
-      result[6],
-    );
-    _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
-    _buildQueue.remove(Point(x, y));
+        y * _regionSideWidth,
+      );
+      _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
+    }
   }
 }

@@ -35,7 +35,7 @@ class Noise {
             0.5 * _moistureNoise2.eval2D(i * 0.016, j * 0.016) +
             0.25 * _moistureNoise3.eval2D(i * 0.048, j * 0.048);
         rowElevation[y] =
-            ((elevation - 0.35) * 20).roundToDouble(); // Increase height differences and water
+            ((elevation - 0.3) * 15).roundToDouble(); // Increase height differences and water
         rowMoisture[y] = moisture;
       }
     }

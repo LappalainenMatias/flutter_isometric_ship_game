@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:anki/map/region/tile/tile_type.dart';
-import '../../../utils/cube.dart';
 import 'natural_items/natural_items.dart';
 
 class Tile extends Comparable<Tile> {
@@ -21,22 +20,5 @@ class Tile extends Comparable<Tile> {
       return -1;
     }
     return 1;
-  }
-
-  List getPosAndCols() {
-    List? posAndCols = createCube(
-      coordinate,
-      height,
-      type.top,
-      type.left,
-      type.right,
-    );
-    var function = naturalItem.positionsAndColors;
-    if (function != null) {
-      var posAndCol = function(this);
-      posAndCols[0].addAll(posAndCol[0]);
-      posAndCols[1].addAll(posAndCol[1]);
-    }
-    return posAndCols;
   }
 }

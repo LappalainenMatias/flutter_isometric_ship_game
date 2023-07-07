@@ -24,7 +24,7 @@ List createCube(
 }) {
   if (tileHeight < 0) {
     // Adds blueish color to underwater cubes
-    double depthPercentage = 0.25 + ((tileHeight - 0.25) / 5).abs();
+    double depthPercentage = 0.20 + ((tileHeight - 0.20) / 5).abs();
     if (depthPercentage > 1) {
       colorTop = blueColor;
       colorLeft = blueColor;

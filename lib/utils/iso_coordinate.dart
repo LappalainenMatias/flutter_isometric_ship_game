@@ -15,7 +15,7 @@ class IsoCoordinate {
         (isoX + other.isoX) / 2, (isoY + other.isoY) / 2);
   }
 
-  double euclideanDistance(IsoCoordinate other) {
+  double manhattanDistance(IsoCoordinate other) {
     return (isoX - other.isoX).abs() + (isoY - other.isoY).abs();
   }
 

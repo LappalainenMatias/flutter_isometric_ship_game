@@ -1,5 +1,6 @@
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/slider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:provider/provider.dart';
@@ -12,8 +13,9 @@ void main() async {
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
   );
+
   /// Used for running region creation web worker
-  await JsIsolatedWorker().importScripts(['jsregionworker.js']);
+  if (kIsWeb) await JsIsolatedWorker().importScripts(['jsregionworker.js']);
   runApp(
     MultiProvider(
       providers: [

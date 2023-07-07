@@ -2,6 +2,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
+import 'package:anki/map/region/tile/tile_to_vertices.dart';
 import '../../utils/iso_coordinate.dart';
 import '../../utils/noise.dart';
 
@@ -31,7 +32,7 @@ class RegionCreator {
     List<int> underWaterColors = [];
     for (var tile in tiles) {
       if (tile.height < -5) continue;
-      List pc = tile.getPosAndCols();
+      List pc = getPosAndCols(tile);
       if (tile.height < 0) {
         underWaterPositions.addAll(pc[0]);
         underWaterColors.addAll(pc[1]);
