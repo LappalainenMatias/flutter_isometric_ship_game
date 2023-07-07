@@ -22,25 +22,24 @@ class NaturalItemProbability {
   final double percentage;
 
   NaturalItemProbability(this.item, this.percentage) {
-    assert(percentage > 0);
-    assert(percentage < 1);
+    assert(percentage > 0 && percentage < 1);
   }
 }
 
 /// We return the tiletype of the first rule that matches.
 List<TileRule> rules = [
-  TileRule(TileType.lakeFloorBare, -0.10, 0.0),
-  TileRule(TileType.lakeFloorVegetation, -0.05, 0.1),
+  TileRule(TileType.lakeFloorBare, 0.0, -0.2),
+  TileRule(TileType.lakeFloorVegetation, 0.0, 0.2),
   TileRule(TileType.sand, 0.0, null),
-  TileRule(TileType.bare, 0.02, -0.20),
-  TileRule(TileType.sand, 0.02, 0.0),
-  TileRule(TileType.grass, 0.02, null),
-  TileRule(TileType.bare, 0.2, -0.20),
-  TileRule(TileType.taiga, 0.2, -0.10),
-  TileRule(TileType.grass, 0.2, 0),
-  TileRule(TileType.taiga, 0.2, null),
-  TileRule(TileType.bare, 0.4, -0.20),
-  TileRule(TileType.taiga, 0.5, null),
+  TileRule(TileType.bare, 2.0, -0.20),
+  TileRule(TileType.sand, 2.0, 0.35),
+  TileRule(TileType.grass, 2.0, null),
+  TileRule(TileType.bare, 4.0, -0.20),
+  TileRule(TileType.taiga, 4.0, -0.10),
+  TileRule(TileType.grass, 4.0, 0),
+  TileRule(TileType.taiga, 4.0, null),
+  TileRule(TileType.bare, 10.0, -0.20),
+  TileRule(TileType.taiga, 10.0, null),
   TileRule(TileType.bare, null, null),
 ];
 
@@ -76,14 +75,12 @@ Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
 };
 
 Tile getTile(double elevation, double moisture, Point<double> coordinate) {
-  // TODO We increase the elevation to add height differences. This should be refactored
-  double height = (elevation * 12).round().toDouble();
   for (TileRule rule in rules) {
     if (rule.match(elevation, moisture)) {
-      return Tile(rule.type, coordinate, height, getNaturalItem(rule.type));
+      return Tile(rule.type, coordinate, elevation, getNaturalItem(rule.type));
     }
   }
-  return Tile(TileType.bare, coordinate, height, getNaturalItem(TileType.bare));
+  throw Exception('No tile type found for elevation: $elevation, moisture: $moisture. Fix the rules.');
 }
 
 NaturalItem getNaturalItem(TileType type) {
