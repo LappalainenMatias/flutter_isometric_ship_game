@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:ui';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/map.dart';

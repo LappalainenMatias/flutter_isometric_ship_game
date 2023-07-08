@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'camera.dart';
 

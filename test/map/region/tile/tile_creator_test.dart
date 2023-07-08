@@ -1,4 +1,3 @@
-import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:anki/map/region/tile/tile_type.dart';
 import 'package:test/test.dart';
