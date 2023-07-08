@@ -107,7 +107,7 @@ class MapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    //_addWaterShader(_waterShaderPaint);
+    _addWaterShader(_waterShaderPaint);
     _isometricTransformation(canvas, size);
     _paintBackgroundWater(canvas, size);
     MapDTO vertices = map.getVerticesInView();
