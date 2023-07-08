@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:anki/utils/cube.dart';
 import 'package:anki/utils/custom_color.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {

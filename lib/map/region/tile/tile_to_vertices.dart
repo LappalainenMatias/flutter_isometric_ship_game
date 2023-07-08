@@ -4,10 +4,11 @@ import '../../../utils/cube.dart';
 List getPosAndCols(Tile tile) {
   List? posAndCols = createCube(
     tile.coordinate,
-    tile.height,
+    tile.elevation,
     tile.type.top,
     tile.type.left,
     tile.type.right,
+    widthScale: tile.width,
   );
   var function = tile.naturalItem.positionsAndColors;
   if (function != null) {

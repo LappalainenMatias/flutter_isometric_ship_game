@@ -14,7 +14,7 @@ class RockCreator {
     double random = Random().nextDouble() / 2 + 0.25;
     return createCube(
       tile.coordinate,
-      tile.height + 1,
+      tile.elevation + 1,
       rockTop,
       rockLeft,
       rockRight,

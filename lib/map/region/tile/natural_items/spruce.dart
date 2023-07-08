@@ -41,7 +41,7 @@ class SpruceCreator {
   static List _spruceFoliage(Tile tile) {
     return createCube(
       tile.coordinate,
-      tile.height + 2.00,
+      tile.elevation + 2.00,
       foliageTop,
       foliageLeft,
       foliageRight,
@@ -54,7 +54,7 @@ class SpruceCreator {
   static List _spruceTrunk(Tile tile) {
     return createCube(
       tile.coordinate,
-      tile.height + 1.25,
+      tile.elevation + 1.25,
       trunkTop,
       trunkLeft,
       trunkRight,

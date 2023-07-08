@@ -4,14 +4,15 @@ import 'natural_items/natural_items.dart';
 
 class Tile extends Comparable<Tile> {
   final TileType type;
-  final Point<double> coordinate;
+  Point<double> coordinate;
   late NaturalItem naturalItem;
-  double height;
+  double elevation;
+  double width;
 
-  Tile(this.type, this.coordinate, this.height, this.naturalItem);
+  Tile(this.type, this.coordinate, this.elevation, this.naturalItem, {this.width = 1});
 
   double nearness() {
-    return coordinate.x + coordinate.y;
+    return coordinate.x + coordinate.y + width;
   }
 
   @override

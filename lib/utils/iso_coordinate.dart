@@ -1,5 +1,6 @@
 import 'dart:math';
 
+/// Used for changing between isometric and cartesian coordinates
 class IsoCoordinate {
   final double isoX;
   final double isoY;

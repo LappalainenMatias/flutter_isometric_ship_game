@@ -27,6 +27,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/util
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/custom_color.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/iso_coordinate.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/noise.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/tile_map_simplifier.dart
 org-dartlang-sdk:///lib/_http/crypto.dart
 org-dartlang-sdk:///lib/_http/embedder_config.dart
 org-dartlang-sdk:///lib/_http/http.dart

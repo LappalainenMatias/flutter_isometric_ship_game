@@ -90,7 +90,7 @@ class FlowerCreator {
       CustomColor right) {
     var stem = createCube(
       tile.coordinate,
-      tile.height + 1.00,
+      tile.elevation + 1.00,
       stemTop,
       stemLeft,
       stemRight,
@@ -100,7 +100,7 @@ class FlowerCreator {
     );
     var flower = createCube(
       tile.coordinate,
-      tile.height + 1.20,
+      tile.elevation + 1.20,
       top,
       left,
       right,
@@ -117,7 +117,7 @@ class FlowerCreator {
       CustomColor right) {
     var stem = createCube(
       tile.coordinate,
-      tile.height + 1.0,
+      tile.elevation + 1.0,
       stemTop,
       stemLeft,
       stemRight,
@@ -127,7 +127,7 @@ class FlowerCreator {
     );
     var flower = createCube(
       tile.coordinate,
-      tile.height + 1.20,
+      tile.elevation + 1.20,
       top,
       left,
       right,
@@ -144,7 +144,7 @@ class FlowerCreator {
       CustomColor right) {
     var stem = createCube(
       tile.coordinate,
-      tile.height + 1.00,
+      tile.elevation + 1.00,
       stemTop,
       stemLeft,
       stemRight,
@@ -154,7 +154,7 @@ class FlowerCreator {
     );
     var flower = createCube(
       tile.coordinate,
-      tile.height + 1.20,
+      tile.elevation + 1.20,
       top,
       left,
       right,

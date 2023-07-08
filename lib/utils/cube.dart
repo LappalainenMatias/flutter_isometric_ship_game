@@ -10,7 +10,7 @@ const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 /// Isometric cube has 7 corners and 3 visible sides. From the 7 corners we create
 /// 6 triangles that make up the cube (two for each visible side). The 3 visible sides
 /// have different colors (colorTop, colorLeft, colorRight).
-/// The heightScale/widthScale makes the cubes thinner/wider/shorter/taller.
+/// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
 /// Offset can be used to reduce symmetry by moving the cube slightly
 List createCube(
   Point<double> coordinate,

@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:anki/map/region/tile/tile_to_vertices.dart';
+import 'package:anki/utils/tile_map_simplifier.dart';
 import '../../utils/iso_coordinate.dart';
 import '../../utils/noise.dart';
 
@@ -16,24 +17,28 @@ class RegionCreator {
     var noises = _noise.create(width, height, startX, startY);
     final elevationNoise = noises[0];
     final moistureNoise = noises[1];
-    List<Tile> tiles = [];
+    List<List<Tile>> tileMatrix = [];
     for (var x = 0; x < width; x++) {
       var elevationRow = elevationNoise[x];
       var moistureRow = moistureNoise[x];
+      List<Tile> row = [];
       for (var y = 0; y < height; y++) {
-        tiles.add(getTile(elevationRow[y], moistureRow[y],
+        row.add(getTile(elevationRow[y], moistureRow[y],
             Point((startX + x).toDouble(), (startY + y).toDouble())));
       }
+      tileMatrix.add(row);
     }
+    List<Tile> tiles = simplifyTiles(tileMatrix);
+    //List<Tile> tiles = tileMatrix.expand((element) => element).toList();
     tiles.sort((a, b) => a.compareTo(b));
     List<double> aboveWaterPositions = [];
     List<int> aboveWaterColors = [];
     List<double> underWaterPositions = [];
     List<int> underWaterColors = [];
     for (var tile in tiles) {
-      if (tile.height < -5) continue;
+      if (tile.elevation < -5) continue;
       List pc = getPosAndCols(tile);
-      if (tile.height < 0) {
+      if (tile.elevation < 0) {
         underWaterPositions.addAll(pc[0]);
         underWaterColors.addAll(pc[1]);
       } else {
