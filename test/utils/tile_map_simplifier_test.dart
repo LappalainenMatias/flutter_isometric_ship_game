@@ -83,9 +83,6 @@ void main() {
     for (var tile in simplifiedTiles) {
       tilesCount += tile.width * tile.width;
     }
-    for (var tile in simplifiedTiles) {
-      print(tile.type.toString() + " " + tile.coordinate.toString() + " " + tile.width.toString());
-    }
     expect(tilesCount, 16);
     expect(simplifiedTiles.length, 10);
     expect(simplifiedTiles.first.width, 1);
