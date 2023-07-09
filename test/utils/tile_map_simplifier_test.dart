@@ -147,4 +147,25 @@ void main() {
     expect(simplifiedTiles.first.width, 1);
     expect(simplifiedTiles.first.elevation, 1);
   });
+
+  test("No simplification. One tile has different height", () {
+    List<List<Tile>> tiles = [
+      [
+        Tile(TileType.grass, const Point(0, 0), 1, NaturalItem.empty),
+        Tile(TileType.grass, const Point(1, 0), 1, NaturalItem.empty),
+      ],
+      [
+        Tile(TileType.grass, const Point(0, 1), 1, NaturalItem.empty),
+        Tile(TileType.grass, const Point(1, 1), 2, NaturalItem.empty),
+      ]
+    ];
+    List<Tile> simplifiedTiles = simplifyTiles(tiles);
+    double tilesCount = 0;
+    for (var tile in simplifiedTiles) {
+      tilesCount += tile.width * tile.width;
+    }
+    expect(tilesCount, 4);
+    expect(simplifiedTiles[0].width, 1);
+    expect(simplifiedTiles.first.coordinate, const Point<double>(0, 0));
+  });
 }

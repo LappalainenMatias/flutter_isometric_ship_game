@@ -34,13 +34,19 @@ List<Tile> simplifyTiles(List<List<Tile>> tiles) {
       TileType type = tiles[j][i].type;
       double height = tiles[j][i].elevation;
       while (true) {
-        bool moveToRight =
+        bool canMoveToRight =
             _canMoveToRight(visited, height, type, tiles, topLeft, bottomRight);
-        bool moveToDown =
-            _canMoveToDown(visited, height, type, tiles, topLeft, bottomRight);
-        if (moveToRight && moveToDown) {
-          bottomRight += const Point(1, 1);
+        if (canMoveToRight) {
+          bottomRight += const Point(1, 0);
         } else {
+          break;
+        }
+        bool canMoveToDown =
+            _canMoveToDown(visited, height, type, tiles, topLeft, bottomRight);
+        if (canMoveToDown) {
+          bottomRight += const Point(0, 1);
+        } else {
+          bottomRight -= const Point(1, 0);
           break;
         }
       }
