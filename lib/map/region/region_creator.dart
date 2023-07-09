@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:anki/map/region/tile/add_natural_items.dart';
 import 'package:anki/map/region/tile/tile.dart';
 import 'package:anki/map/region/tile/tile_creator.dart';
 import 'package:anki/map/region/tile/tile_to_vertices.dart';
@@ -15,27 +16,18 @@ class RegionCreator {
   RegionDTO create(IsoCoordinate regionCoordinate, int width, int height,
       int startX, int startY) {
     var noises = _noise.create(width, height, startX, startY);
-    final elevationNoise = noises[0];
-    final moistureNoise = noises[1];
-    List<List<Tile>> tileMatrix = [];
-    for (var x = 0; x < width; x++) {
-      var elevationRow = elevationNoise[x];
-      var moistureRow = moistureNoise[x];
-      List<Tile> row = [];
-      for (var y = 0; y < height; y++) {
-        row.add(getTile(elevationRow[y], moistureRow[y],
-            Point((startX + x).toDouble(), (startY + y).toDouble())));
-      }
-      tileMatrix.add(row);
+    List<List<Tile>> tileMatrix =
+        _tileMatrix(width, height, startX, startY, noises[0], noises[1]);
+    List<Tile> simplifiedTiles = simplifyTiles(tileMatrix);
+    for (var tile in simplifiedTiles) {
+      addNaturalItems(tile);
     }
-    List<Tile> tiles = simplifyTiles(tileMatrix);
-    //List<Tile> tiles = tileMatrix.expand((element) => element).toList();
-    tiles.sort((a, b) => a.compareTo(b));
+    simplifiedTiles.sort((a, b) => a.compareTo(b));
     List<double> aboveWaterPositions = [];
     List<int> aboveWaterColors = [];
     List<double> underWaterPositions = [];
     List<int> underWaterColors = [];
-    for (var tile in tiles) {
+    for (var tile in simplifiedTiles) {
       if (tile.elevation < -5) continue;
       List pc = getPosAndCols(tile);
       if (tile.elevation < 0) {
@@ -54,6 +46,22 @@ class RegionCreator {
       Float32List.fromList(underWaterPositions),
       Int32List.fromList(underWaterColors),
     );
+  }
+
+  List<List<Tile>> _tileMatrix(int width, int height, int startX, int startY,
+      List elevationNoise, List moistureNoise) {
+    List<List<Tile>> tileMatrix = [];
+    for (var x = 0; x < width; x++) {
+      var elevationRow = elevationNoise[x];
+      var moistureRow = moistureNoise[x];
+      List<Tile> row = [];
+      for (var y = 0; y < height; y++) {
+        row.add(getTile(elevationRow[y], moistureRow[y],
+            Point((startX + x).toDouble(), (startY + y).toDouble())));
+      }
+      tileMatrix.add(row);
+    }
+    return tileMatrix;
   }
 }
 
