@@ -6,12 +6,13 @@ import 'custom_color.dart';
 const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 
 /// Returns a list of positions and colors. Everything visible at the map uses this
-/// function (except whater shader).
+/// function (except water shader).
 /// Isometric cube has 7 corners and 3 visible sides. From the 7 corners we create
 /// 6 triangles that make up the cube (two for each visible side). The 3 visible sides
 /// have different colors (colorTop, colorLeft, colorRight).
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
-/// Offset can be used to reduce symmetry by moving the cube slightly
+/// Offset can be used to reduce symmetry by moving the cube slightly so that
+/// every tree and rock does not line up perfectly.
 List createCube(
   Point<double> coordinate,
   double tileHeight,
@@ -22,6 +23,7 @@ List createCube(
   double widthScale = 1,
   IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
 }) {
+  /// Todo This should not be here
   if (tileHeight < 0) {
     // Adds blueish color to underwater cubes
     double depthPercentage = 0.20 + ((tileHeight - 0.20) / 5).abs();

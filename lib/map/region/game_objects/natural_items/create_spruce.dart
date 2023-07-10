@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
 import '../../../../utils/cube.dart';
 import '../../../../utils/custom_color.dart';
-import '../tile.dart';
+import '../../game_objects/ground/tile.dart';
 
 class SpruceCreator {
 
@@ -13,54 +13,45 @@ class SpruceCreator {
   static const CustomColor foliageLeft = CustomColor.fromARGB(255, 9, 122, 36);
   static const CustomColor foliageRight = CustomColor.fromARGB(255, 6, 101, 28);
 
-  /// Used for reducing symmetry
-  static IsoCoordinate offset = const IsoCoordinate(0, 0);
-
   /// Creates tree from cubes
-  static List positionsAndColors(Tile tile) {
-    offset = IsoCoordinate(
-      Random().nextDouble() / 2,
-      Random().nextDouble() / 2,
-    );
+  static List positionsAndColors(Point<double> point, double elevation) {
     int random = Random().nextInt(100);
     if (random < 95) {
-      return _spruce(tile);
+      return _spruce(point, elevation);
     } else {
-      return _spruceTrunk(tile);
+      return _spruceTrunk(point, elevation);
     }
   }
 
-  static List _spruce(Tile tile) {
-    var trunk = _spruceTrunk(tile);
-    var foliage1 = _spruceFoliage(tile);
+  static List _spruce(Point<double> point, double elevation) {
+    var trunk = _spruceTrunk(point, elevation);
+    var foliage1 = _spruceFoliage(point, elevation);
     trunk[0].addAll(foliage1[0]);
     trunk[1].addAll(foliage1[1]);
     return trunk;
   }
 
-  static List _spruceFoliage(Tile tile) {
+  static List _spruceFoliage(Point<double> point, double elevation) {
     return createCube(
-      tile.coordinate,
-      tile.elevation + 2.00,
+      point,
+      elevation + 2.00,
       foliageTop,
       foliageLeft,
       foliageRight,
       widthScale: (Random().nextDouble() / 5 + 1.0),
       heightScale: 3.5 * (Random().nextDouble() + 0.5),
-      offset: offset,
     );
   }
 
-  static List _spruceTrunk(Tile tile) {
+  static List _spruceTrunk(Point<double> point, double elevation) {
     return createCube(
-      tile.coordinate,
-      tile.elevation + 1.25,
+      point,
+      elevation + 1.25,
       trunkTop,
       trunkLeft,
       trunkRight,
       widthScale: 0.25,
       heightScale: 2.0 * (Random().nextDouble() + 0.5),
-      offset: offset,
     );
   }
 }

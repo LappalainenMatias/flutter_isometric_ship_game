@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/map.dart';
 import 'package:anki/map/region/region.dart';
@@ -19,8 +19,8 @@ class RegionManager {
   ) {
     List<Region> regions = _getRegions(topLeft, bottomRight);
     regions.sort((a, b) => a.compareTo(b));
-    List<Vertices> aboveWater = [];
-    List<Vertices> underWater = [];
+    List<ui.Vertices> aboveWater = [];
+    List<ui.Vertices> underWater = [];
     int verticesCount = 0;
     for (Region region in regions) {
       if (region.aboveWater != null) {

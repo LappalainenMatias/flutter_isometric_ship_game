@@ -1,5 +1,5 @@
 
-/// WIP
+/// WIP The idea is to remove triangles that are not visible (behind other triangles).
 List<double> occlusionCulling(List<double> vertices) {
   int triangleCount = vertices.length ~/ 6;
 
@@ -32,7 +32,6 @@ bool covers(List<double> triangle1, int offset1, List<double> triangle2, int off
   }
   return true;
 }
-
 
 bool isInsideTriangle(List<double> triangle, int offset, double x, double y) {
   int intersections = 0;

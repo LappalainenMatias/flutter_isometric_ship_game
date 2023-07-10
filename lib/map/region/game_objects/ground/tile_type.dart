@@ -1,4 +1,4 @@
-import '../../../utils/custom_color.dart';
+import '../../../../utils/custom_color.dart';
 
 enum TileType {
   taiga(
