@@ -54,7 +54,7 @@ Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
   TileType.taiga: [
     NaturalItemProbability(NaturalItemType.birch, 0.02),
     NaturalItemProbability(NaturalItemType.rock, 0.03),
-    NaturalItemProbability(NaturalItemType.spruce, 0.10),
+    NaturalItemProbability(NaturalItemType.spruce, 0.09),
   ],
   TileType.grass: [
     NaturalItemProbability(NaturalItemType.rock, 0.02),
@@ -64,16 +64,16 @@ Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
   TileType.bare: [
     NaturalItemProbability(NaturalItemType.birch, 0.02),
     NaturalItemProbability(NaturalItemType.spruce, 0.03),
-    NaturalItemProbability(NaturalItemType.rock, 0.06),
+    NaturalItemProbability(NaturalItemType.rock, 0.05),
   ],
   TileType.sand: [
     NaturalItemProbability(NaturalItemType.rock, 0.10),
   ],
   TileType.lakeFloorVegetation: [
-    NaturalItemProbability(NaturalItemType.rock, 0.04),
+    NaturalItemProbability(NaturalItemType.rock, 0.03),
   ],
   TileType.lakeFloorBare: [
-    NaturalItemProbability(NaturalItemType.rock, 0.06),
+    NaturalItemProbability(NaturalItemType.rock, 0.05),
   ]
 };
 

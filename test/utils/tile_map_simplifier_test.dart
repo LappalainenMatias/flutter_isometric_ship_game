@@ -43,7 +43,7 @@ void main() {
   test("Multiple tiles to single large tile.", () {
     List<List<SingleTile>> tiles = [
       [
-        SingleTile(TileType.grass, const Point(0, 0), 1),
+        SingleTile(TileType.sand, const Point(0, 0), 1),
         SingleTile(TileType.grass, const Point(1, 0), 1),
         SingleTile(TileType.grass, const Point(2, 0), 1),
         SingleTile(TileType.grass, const Point(3, 0), 1),
@@ -64,14 +64,14 @@ void main() {
         SingleTile(TileType.grass, const Point(0, 3), 1),
         SingleTile(TileType.grass, const Point(1, 3), 1),
         SingleTile(TileType.grass, const Point(2, 3), 1),
-        SingleTile(TileType.sand, const Point(3, 3), 1),
+        SingleTile(TileType.grass, const Point(3, 3), 1),
       ],
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
     expect(simplifiedTiles.length, 8);
-    expect(simplifiedTiles.first is AreaTile, true);
-    expect(simplifiedTiles.first.getWidth(), 3);
-    expect(simplifiedTiles.first.getCoordinate(), const Point<double>(0, 0));
+    expect(simplifiedTiles[1] is AreaTile, true);
+    expect(simplifiedTiles[1].getWidth(), 3);
+    expect(simplifiedTiles[1].getCoordinate(), const Point<double>(1, 0));
   });
 
   test("Complex simplification", () {
