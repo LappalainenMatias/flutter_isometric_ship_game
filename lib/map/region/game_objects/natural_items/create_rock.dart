@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/utils/vertice_dto.dart';
 import '../../../../utils/cube.dart';
 import '../../../../utils/custom_color.dart';
-import '../../game_objects/ground/tile.dart';
 
 class RockCreator {
   static const CustomColor rockTop = CustomColor.fromARGB(255, 107, 129, 124);
@@ -10,7 +10,7 @@ class RockCreator {
   static const CustomColor rockRight = CustomColor.fromARGB(255, 83, 105, 100);
 
   /// Creates rock from cubes
-  static List positionsAndColors(Point<double> point, double elevation) {
+  static VerticeDTO positionsAndColors(Point<double> point, double elevation) {
     double random = Random().nextDouble() / 2 + 0.25;
     return createCube(
       point,

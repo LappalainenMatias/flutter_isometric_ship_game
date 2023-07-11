@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
 import '../../../../utils/cube.dart';
 import '../../../../utils/custom_color.dart';
+import '../../../../utils/vertice_dto.dart';
 import '../../game_objects/ground/tile.dart';
 
 class SpruceCreator {
@@ -14,7 +15,7 @@ class SpruceCreator {
   static const CustomColor foliageRight = CustomColor.fromARGB(255, 6, 101, 28);
 
   /// Creates tree from cubes
-  static List positionsAndColors(Point<double> point, double elevation) {
+  static VerticeDTO positionsAndColors(Point<double> point, double elevation) {
     int random = Random().nextInt(100);
     if (random < 95) {
       return _spruce(point, elevation);
@@ -23,15 +24,13 @@ class SpruceCreator {
     }
   }
 
-  static List _spruce(Point<double> point, double elevation) {
+  static VerticeDTO _spruce(Point<double> point, double elevation) {
     var trunk = _spruceTrunk(point, elevation);
-    var foliage1 = _spruceFoliage(point, elevation);
-    trunk[0].addAll(foliage1[0]);
-    trunk[1].addAll(foliage1[1]);
+    trunk.addVerticeDTO(_spruceFoliage(point, elevation));
     return trunk;
   }
 
-  static List _spruceFoliage(Point<double> point, double elevation) {
+  static VerticeDTO _spruceFoliage(Point<double> point, double elevation) {
     return createCube(
       point,
       elevation + 2.00,
@@ -43,7 +42,7 @@ class SpruceCreator {
     );
   }
 
-  static List _spruceTrunk(Point<double> point, double elevation) {
+  static VerticeDTO _spruceTrunk(Point<double> point, double elevation) {
     return createCube(
       point,
       elevation + 1.25,

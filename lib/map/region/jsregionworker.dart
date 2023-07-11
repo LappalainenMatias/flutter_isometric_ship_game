@@ -15,6 +15,6 @@ void main() {
     var res = regionCreator.create(IsoCoordinate.fromIso(args[0], args[1]), args[2], args[3], args[4], args[5]);
     return [res.regionCoordinate.isoX, res.regionCoordinate.isoY, res.verticesCount,
       res.aboveWaterPositions, res.aboveWaterColors,
-      res.underWaterPositions, res.underWaterColors];
+      res.underWaterPositions, res.underWaterColors, res.gameObjects];
   });
 }

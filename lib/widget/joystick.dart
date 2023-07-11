@@ -33,7 +33,7 @@ class _JoyStickState extends State<JoyStick> {
         period: const Duration(milliseconds: 16),
         mode: JoystickMode.all,
         listener: (details) {
-          map.moveCamera(details.x, -1 * details.y);
+          map.moveBoat(details.x, -1 * details.y);
         },
       ),
     );

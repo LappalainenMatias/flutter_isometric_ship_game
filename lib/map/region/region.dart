@@ -1,13 +1,18 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:anki/utils/game_objects_to_vertices.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_creator.dart';
+import '../../utils/vertice_dto.dart';
+import 'game_objects/game_object.dart';
 
 class Region extends Comparable<Region> {
   int verticesCount = 0;
   IsoCoordinate coord;
-  ui.Vertices? aboveWater;
-  ui.Vertices? underWater;
+  List<GameObject> _gameObjects = [];
+  ui.Vertices? _aboveWater;
+  ui.Vertices? _underWater;
+  bool _isDynamic = false;
 
   Region(
       this.verticesCount,
@@ -15,16 +20,64 @@ class Region extends Comparable<Region> {
       Float32List aboveWaterPositions,
       Int32List aboveWaterColors,
       Float32List underWaterPositions,
-      Int32List underWaterColors) {
-    aboveWater = ui.Vertices.raw(
+      Int32List underWaterColors,
+      List<GameObject> gameObjects) {
+    _gameObjects = gameObjects;
+    _isDynamic = _containsDynamicGameObject();
+    _aboveWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
       aboveWaterPositions,
       colors: aboveWaterColors,
     );
-    underWater = ui.Vertices.raw(
+    _underWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
       underWaterPositions,
       colors: underWaterColors,
+    );
+  }
+
+  Map<String, ui.Vertices?> getVertices() {
+    if (_isDynamic) {
+      _updateVertices();
+    }
+    return {"aboveWater": _aboveWater, "underWater": _underWater};
+  }
+
+  bool _containsDynamicGameObject() {
+    for (var gameObject in _gameObjects) {
+      if (gameObject.isDynamic()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  void addGameObject(GameObject gameObject) {
+    _gameObjects.add(gameObject);
+    _isDynamic = _containsDynamicGameObject();
+    _updateVertices();
+  }
+
+  void removeGameObject(GameObject gameObject) {
+    _gameObjects.remove(gameObject);
+    _isDynamic = _containsDynamicGameObject();
+    _updateVertices();
+  }
+
+  _updateVertices() {
+    _gameObjects.sort();
+    Map<String, VerticeDTO> verticeDTOs = toVertices(_gameObjects);
+    VerticeDTO underWaterVerticeDTO = verticeDTOs['underWater']!;
+    VerticeDTO aboveWaterVerticeDTO = verticeDTOs['aboveWater']!;
+    _aboveWater = ui.Vertices.raw(
+      ui.VertexMode.triangles,
+      Float32List.fromList(aboveWaterVerticeDTO.positions),
+      colors: Int32List.fromList(aboveWaterVerticeDTO.colors),
+    );
+    _underWater = ui.Vertices.raw(
+      ui.VertexMode.triangles,
+      Float32List.fromList(underWaterVerticeDTO.positions),
+      colors: Int32List.fromList(underWaterVerticeDTO.colors),
     );
   }
 
@@ -36,6 +89,7 @@ class Region extends Comparable<Region> {
       data.aboveWaterColors,
       data.underWaterPositions,
       data.underWaterColors,
+      data.gameObjects,
     );
   }
 

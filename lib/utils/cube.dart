@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/utils/vertice_dto.dart';
 
 import 'custom_color.dart';
 
@@ -13,7 +14,7 @@ const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
 /// Offset can be used to reduce symmetry by moving the cube slightly so that
 /// every tree and rock does not line up perfectly.
-List createCube(
+VerticeDTO createCube(
   Point<double> coordinate,
   double tileHeight,
   CustomColor colorTop,
@@ -91,9 +92,10 @@ List createCube(
     colors[i + 6] = colorTop.value;
     colors[i + 12] = colorRight.value;
   }
-  return [positions, colors];
+  return VerticeDTO(positions, colors);
 }
 
+/// Todo move this to some other class
 CustomColor mix(CustomColor color1, CustomColor color2, double percent) {
   return CustomColor.fromNormalizedARGB(
     _lerp(color1.normalizedA, color2.normalizedA, percent),

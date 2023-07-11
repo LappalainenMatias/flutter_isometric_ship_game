@@ -1,7 +1,8 @@
 import 'package:anki/map/region/game_objects/ground/tile.dart';
 import '../../../../utils/cube.dart';
+import '../../../../utils/vertice_dto.dart';
 
-List singleTilePosAndCols(SingleTile tile) {
+VerticeDTO singleTilePosAndCols(SingleTile tile) {
   return createCube(
     tile.coordinate,
     tile.elevation,
@@ -11,7 +12,7 @@ List singleTilePosAndCols(SingleTile tile) {
   );
 }
 
-List areaTilePosAndCols(AreaTile tile) {
+VerticeDTO areaTilePosAndCols(AreaTile tile) {
   return createCube(
     tile.coordinate,
     tile.elevation,

@@ -2,9 +2,10 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/map/region/game_objects/ground/tile.dart';
-import 'package:anki/map/region/game_objects/ground/tile_creator.dart';
+import 'package:anki/map/region/game_objects/ground/create_tile.dart';
 import 'package:anki/map/region/game_objects/natural_items/natural_items.dart';
 import 'package:anki/utils/tile_map_simplifier.dart';
+import 'package:anki/utils/vertice_dto.dart';
 import '../../utils/iso_coordinate.dart';
 import '../../utils/noise.dart';
 
@@ -22,27 +23,23 @@ class RegionCreator {
         width, height, startX, startY, noises[0], noises[1]);
     List<GameObject> gameObjects = [...tiles, ...naturalItems];
     gameObjects.sort();
-    List<double> aboveWaterPositions = [];
-    List<int> aboveWaterColors = [];
-    List<double> underWaterPositions = [];
-    List<int> underWaterColors = [];
+    VerticeDTO underWater = VerticeDTO.empty();
+    VerticeDTO aboveWater = VerticeDTO.empty();
     for (var gameObject in gameObjects) {
-      List pc = gameObject.getVertices();
       if (gameObject.isUnderWater()) {
-        underWaterPositions.addAll(pc[0]);
-        underWaterColors.addAll(pc[1]);
+        underWater.addVerticeDTO(gameObject.getVertices());
       } else {
-        aboveWaterPositions.addAll(pc[0]);
-        aboveWaterColors.addAll(pc[1]);
+        aboveWater.addVerticeDTO(gameObject.getVertices());
       }
     }
     return RegionDTO(
       regionCoordinate,
-      (aboveWaterPositions.length + underWaterPositions.length) ~/ 2,
-      Float32List.fromList(aboveWaterPositions),
-      Int32List.fromList(aboveWaterColors),
-      Float32List.fromList(underWaterPositions),
-      Int32List.fromList(underWaterColors),
+      (aboveWater.positions.length + underWater.positions.length) ~/ 2,
+      Float32List.fromList(aboveWater.positions),
+      Int32List.fromList(aboveWater.colors),
+      Float32List.fromList(underWater.positions),
+      Int32List.fromList(underWater.colors),
+      gameObjects,
     );
   }
 
@@ -107,6 +104,7 @@ class RegionDTO {
   final Int32List aboveWaterColors;
   final Float32List underWaterPositions;
   final Int32List underWaterColors;
+  final List<GameObject> gameObjects;
 
   RegionDTO(
     this.regionCoordinate,
@@ -115,5 +113,6 @@ class RegionDTO {
     this.aboveWaterColors,
     this.underWaterPositions,
     this.underWaterColors,
+    this.gameObjects,
   );
 }

@@ -1,6 +1,7 @@
 import 'package:anki/map/region/game_objects/natural_items/create_rock.dart';
 import 'package:anki/map/region/game_objects/natural_items/create_spruce.dart';
 import 'package:anki/map/region/game_objects/game_object.dart';
+import 'package:anki/utils/vertice_dto.dart';
 import 'dart:math';
 
 import '../ground/tile_type.dart';
@@ -11,22 +12,39 @@ class NaturalItem extends GameObject {
   final NaturalItemType type;
   final Point<double> coordinate;
   final double elevation;
+  VerticeDTO vertices = VerticeDTO.empty();
 
-  NaturalItem(this.type, this.coordinate, this.elevation);
+  NaturalItem(this.type, this.coordinate, this.elevation) {
+    vertices = type.positionsAndColors!(coordinate, elevation);
+  }
 
   @override
   getVertices() {
-    return type.positionsAndColors!(coordinate, elevation);
+    if (vertices.isEmpty()) {
+      vertices = type.positionsAndColors!(coordinate, elevation);
+    }
+    return vertices;
   }
 
   @override
   double nearness() {
-    return coordinate.x + coordinate.y;
+    return coordinate.x + coordinate.y + 1;
   }
 
   @override
   isUnderWater() {
     return elevation < 0;
+  }
+
+  @override
+  bool isDynamic() {
+    return false;
+  }
+
+  @override
+  bool collision(GameObject other) {
+    /// Currently there is no situation where a natural item collides with another object.
+    return false;
   }
 }
 

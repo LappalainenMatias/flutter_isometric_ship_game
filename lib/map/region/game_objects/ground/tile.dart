@@ -3,25 +3,27 @@ import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/map/region/game_objects/ground/tile_to_vertices.dart';
 import 'package:anki/map/region/game_objects/ground/tile_type.dart';
 
+import '../../../../utils/vertice_dto.dart';
+
 abstract class Tile extends GameObject {
   @override
-  getVertices();
+  VerticeDTO getVertices();
 
   @override
   double nearness() {
     return getCoordinate().x + getCoordinate().y + getWidth();
   }
 
-  getElevation();
+  double getElevation();
 
-  getCoordinate();
+  Point<double> getCoordinate();
 
-  getType();
+  TileType getType();
 
-  getWidth();
+  double getWidth();
 
   @override
-  isUnderWater() {
+  bool isUnderWater() {
     return getElevation() < 0;
   }
 }
@@ -32,12 +34,18 @@ class AreaTile extends Tile {
   Point<double> coordinate;
   double elevation;
   double width;
+  VerticeDTO vertices = VerticeDTO.empty();
 
-  AreaTile(this.type, this.coordinate, this.elevation, {this.width = 1});
+  AreaTile(this.type, this.coordinate, this.elevation, {this.width = 1}) {
+    vertices = areaTilePosAndCols(this);
+  }
 
   @override
   getVertices() {
-    return areaTilePosAndCols(this);
+    if (vertices.isEmpty()) {
+      vertices = areaTilePosAndCols(this);
+    }
+    return vertices;
   }
 
   @override
@@ -59,18 +67,29 @@ class AreaTile extends Tile {
   getWidth() {
     return width;
   }
+
+  @override
+  bool isDynamic() {
+    return false;
+  }
 }
 
 class SingleTile extends Tile {
   final TileType type;
   Point<double> coordinate;
   double elevation;
+  VerticeDTO vertices = VerticeDTO.empty();
 
-  SingleTile(this.type, this.coordinate, this.elevation);
+  SingleTile(this.type, this.coordinate, this.elevation) {
+    vertices = singleTilePosAndCols(this);
+  }
 
   @override
   getVertices() {
-    return singleTilePosAndCols(this);
+    if (vertices.isEmpty()) {
+      vertices = singleTilePosAndCols(this);
+    }
+    return vertices;
   }
 
   @override
@@ -95,5 +114,10 @@ class SingleTile extends Tile {
 
   AreaTile toAreaTile(double width) {
     return AreaTile(type, coordinate, elevation, width: width);
+  }
+
+  @override
+  bool isDynamic() {
+    return false;
   }
 }

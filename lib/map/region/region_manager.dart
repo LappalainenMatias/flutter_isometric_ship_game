@@ -7,11 +7,24 @@ import 'package:anki/map/region/region_creator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
+import 'game_objects/boat/boat.dart';
+
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
   final int _regionSideWidth = 32;
   final int _maxRegionCount = 2048;
   final Set<Point> _buildQueue = {};
+  Region? boatRegion;
+
+  void updateBoatRegion(Boat boat) {
+    Region? currentRegion = _getRegion(boat.coordinate);
+    if (currentRegion == null) return;
+    if (currentRegion != boatRegion) {
+      if (boatRegion != null) boatRegion!.removeGameObject(boat);
+      currentRegion.addGameObject(boat);
+      boatRegion = currentRegion;
+    }
+  }
 
   MapDTO getVertices(
     IsoCoordinate topLeft,
@@ -23,11 +36,12 @@ class RegionManager {
     List<ui.Vertices> underWater = [];
     int verticesCount = 0;
     for (Region region in regions) {
-      if (region.aboveWater != null) {
-        aboveWater.add(region.aboveWater!);
+      var verticeData = region.getVertices();
+      if (verticeData["aboveWater"] != null) {
+        aboveWater.add(verticeData["aboveWater"]!);
       }
-      if (region.underWater != null) {
-        underWater.add(region.underWater!);
+      if (verticeData["underWater"] != null) {
+        underWater.add(verticeData["underWater"]!);
       }
       verticesCount += region.verticesCount;
     }
@@ -127,14 +141,8 @@ class RegionManager {
           y * _regionSideWidth
         ],
       );
-      var regionDTO = RegionDTO(
-        IsoCoordinate.fromIso(result[0], result[1]),
-        result[2],
-        result[3],
-        result[4],
-        result[5],
-        result[6],
-      );
+      var regionDTO = RegionDTO(IsoCoordinate.fromIso(result[0], result[1]),
+          result[2], result[3], result[4], result[5], result[6], result[7]);
       _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
       _buildQueue.remove(Point(x, y));
     } else {
