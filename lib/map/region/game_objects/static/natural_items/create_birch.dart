@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:anki/utils/vertice_dto.dart';
-import '../../../../utils/cube.dart';
-import '../../../../utils/custom_color.dart';
+import '../../../../../utils/cube.dart';
+import '../../../../../utils/custom_color.dart';
 
 class BirchCreator {
   static const CustomColor trunkTop = CustomColor.fromARGB(255, 197, 187, 181);

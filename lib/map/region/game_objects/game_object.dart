@@ -1,7 +1,7 @@
 import '../../../utils/collision_box.dart';
 import '../../../utils/vertice_dto.dart';
 
-/// Everything at the screen is a game object (Ground, trees, rocks, etc.).
+/// Almost everything at the screen is a game object (ground, trees, rocks, etc.).
 abstract class GameObject implements Comparable<GameObject> {
   /// Used for drawing
   VerticeDTO getVertices();
@@ -20,7 +20,7 @@ abstract class GameObject implements Comparable<GameObject> {
     }
   }
 
-  /// Dynamic means that it can change during the game like move.
+  /// Dynamic means that the object can change (move, change color, ...) during the game.
   /// If region does not contain any dynamic game objects we can optimize the drawing
   /// by not updating the vertices.
   bool isDynamic();

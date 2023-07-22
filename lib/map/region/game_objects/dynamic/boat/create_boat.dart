@@ -1,8 +1,7 @@
 import 'dart:math';
 import 'package:anki/utils/cube.dart';
 import 'package:anki/utils/vertice_dto.dart';
-
-import '../../../../utils/custom_color.dart';
+import '../../../../../utils/custom_color.dart';
 
 class CreateBoat {
   static const CustomColor boatTop = CustomColor.fromARGB(255, 157, 129, 124);

@@ -1,13 +1,11 @@
 import 'dart:ui';
-
-import 'package:anki/map/region/game_objects/boat/boat.dart';
+import 'package:anki/map/region/game_objects/dynamic/boat/boat.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'camera/camera.dart';
-import 'dart:math';
 
 class MapModel extends ChangeNotifier {
   final Boat _boat = Boat(const IsoCoordinate(0,0), 0);

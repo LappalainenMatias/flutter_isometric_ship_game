@@ -6,8 +6,7 @@ import 'dart:math';
 import 'package:anki/map/region/region_creator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
-
-import 'game_objects/boat/boat.dart';
+import 'game_objects/dynamic/boat/boat.dart';
 import 'game_objects/game_object.dart';
 
 class RegionManager {

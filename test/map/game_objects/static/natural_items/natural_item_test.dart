@@ -1,4 +1,4 @@
-import 'package:anki/map/region/game_objects/natural_items/natural_items.dart';
+import 'package:anki/map/region/game_objects/static/natural_items/natural_items.dart';
 import 'package:anki/utils/vertice_dto.dart';
 import 'package:test/test.dart';
 import 'dart:math';

@@ -1,6 +1,6 @@
-import 'package:anki/map/region/game_objects/boat/boat.dart';
-import 'package:anki/map/region/game_objects/ground/tile.dart';
-import 'package:anki/map/region/game_objects/ground/tile_type.dart';
+import 'package:anki/map/region/game_objects/dynamic/boat/boat.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:math';

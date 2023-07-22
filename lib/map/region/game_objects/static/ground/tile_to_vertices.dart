@@ -1,6 +1,8 @@
-import 'package:anki/map/region/game_objects/ground/tile.dart';
-import '../../../../utils/cube.dart';
-import '../../../../utils/vertice_dto.dart';
+
+import 'package:anki/map/region/game_objects/static/ground/tile.dart';
+
+import '../../../../../utils/cube.dart';
+import '../../../../../utils/vertice_dto.dart';
 
 VerticeDTO singleTilePosAndCols(SingleTile tile) {
   // todo only a test

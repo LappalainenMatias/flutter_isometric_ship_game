@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/utils/vertice_dto.dart';
-import '../../../../utils/cube.dart';
-import '../../../../utils/custom_color.dart';
+
+import '../../../../../utils/cube.dart';
+import '../../../../../utils/custom_color.dart';
 
 class RockCreator {
   static const CustomColor rockTop = CustomColor.fromARGB(255, 107, 129, 124);

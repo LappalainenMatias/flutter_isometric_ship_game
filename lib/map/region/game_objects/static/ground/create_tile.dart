@@ -1,6 +1,7 @@
 import 'dart:math';
-import 'package:anki/map/region/game_objects/ground/tile.dart';
-import 'package:anki/map/region/game_objects/ground/tile_type.dart';
+
+import 'package:anki/map/region/game_objects/static/ground/tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 
 /// Returns true if the elevation and moisture limitations are met.
 class TileRule {

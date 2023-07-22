@@ -1,7 +1,6 @@
 import 'dart:math';
-
-import '../map/region/game_objects/ground/tile.dart';
-import '../map/region/game_objects/ground/tile_type.dart';
+import '../map/region/game_objects/static/ground/tile.dart';
+import '../map/region/game_objects/static/ground/tile_type.dart';
 
 /// Simplifies tiles together to improve performance.
 /// For example these 16 grass and sand tiles could be changed into 4 larger tiles.

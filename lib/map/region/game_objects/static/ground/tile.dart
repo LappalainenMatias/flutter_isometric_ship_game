@@ -1,11 +1,11 @@
 import 'dart:math';
 import 'package:anki/map/region/game_objects/game_object.dart';
-import 'package:anki/map/region/game_objects/ground/tile_to_vertices.dart';
-import 'package:anki/map/region/game_objects/ground/tile_type.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_to_vertices.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 
-import '../../../../utils/collision_box.dart';
-import '../../../../utils/vertice_dto.dart';
+import '../../../../../utils/collision_box.dart';
+import '../../../../../utils/vertice_dto.dart';
 
 abstract class Tile extends GameObject {
   @override

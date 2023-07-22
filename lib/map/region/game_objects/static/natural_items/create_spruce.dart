@@ -1,9 +1,7 @@
 import 'dart:math';
-import 'package:anki/utils/iso_coordinate.dart';
-import '../../../../utils/cube.dart';
-import '../../../../utils/custom_color.dart';
-import '../../../../utils/vertice_dto.dart';
-import '../../game_objects/ground/tile.dart';
+import '../../../../../utils/cube.dart';
+import '../../../../../utils/custom_color.dart';
+import '../../../../../utils/vertice_dto.dart';
 
 class SpruceCreator {
 

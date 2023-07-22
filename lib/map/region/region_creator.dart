@@ -1,13 +1,13 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:anki/map/region/game_objects/game_object.dart';
-import 'package:anki/map/region/game_objects/ground/tile.dart';
-import 'package:anki/map/region/game_objects/ground/create_tile.dart';
-import 'package:anki/map/region/game_objects/natural_items/natural_items.dart';
 import 'package:anki/utils/tile_map_simplifier.dart';
 import 'package:anki/utils/vertice_dto.dart';
 import '../../utils/iso_coordinate.dart';
 import '../../utils/noise.dart';
+import 'game_objects/static/ground/create_tile.dart';
+import 'game_objects/static/ground/tile.dart';
+import 'game_objects/static/natural_items/natural_items.dart';
 
 /// We use seperate class for creating the region data because this class
 /// does not use dart:ui and because of that it can be run concurrently

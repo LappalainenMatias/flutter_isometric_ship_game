@@ -1,6 +1,6 @@
 import 'dart:math';
-import 'package:anki/map/region/game_objects/ground/tile_type.dart';
-import 'package:anki/map/region/game_objects/ground/tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:test/test.dart';
 
 void main() {

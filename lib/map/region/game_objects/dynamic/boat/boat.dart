@@ -1,9 +1,9 @@
-import 'package:anki/map/region/game_objects/boat/create_boat.dart';
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'dart:math';
 
-import '../../../../utils/collision_box.dart';
+import '../../../../../utils/collision_box.dart';
+import 'create_boat.dart';
 
 class Boat extends GameObject {
   double elevation;

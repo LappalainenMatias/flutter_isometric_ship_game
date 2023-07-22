@@ -1,7 +1,7 @@
 import 'dart:math';
-import 'package:anki/map/region/game_objects/ground/tile.dart';
-import 'package:anki/map/region/game_objects/ground/tile_to_vertices.dart';
-import 'package:anki/map/region/game_objects/ground/tile_type.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_to_vertices.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:anki/utils/vertice_dto.dart';
 import 'package:test/test.dart';
 

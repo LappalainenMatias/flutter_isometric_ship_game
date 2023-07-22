@@ -1,13 +1,13 @@
-import 'package:anki/map/region/game_objects/natural_items/create_rock.dart';
-import 'package:anki/map/region/game_objects/natural_items/create_spruce.dart';
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/vertice_dto.dart';
 import 'dart:math';
 
-import '../../../../utils/collision_box.dart';
-import '../../../../utils/iso_coordinate.dart';
+import '../../../../../utils/collision_box.dart';
+import '../../../../../utils/iso_coordinate.dart';
 import '../ground/tile_type.dart';
 import 'create_birch.dart';
+import 'create_rock.dart';
+import 'create_spruce.dart';
 
 class NaturalItem extends GameObject {
   final NaturalItemType type;
@@ -44,7 +44,7 @@ class NaturalItem extends GameObject {
 
   @override
   CollisionBox getCollisionBox() {
-    /// todo we should not be constantly creating new collision boxes
+    /// todo we should not be constantly creating new collision boxes for static object
     return CollisionBox(IsoCoordinate(coordinate.x, coordinate.y), 8, 8);
   }
 }

@@ -1,5 +1,5 @@
-import 'package:anki/map/region/game_objects/ground/create_tile.dart';
-import 'package:anki/map/region/game_objects/ground/tile_type.dart';
+import 'package:anki/map/region/game_objects/static/ground/create_tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:test/test.dart';
 import 'dart:math';
 
