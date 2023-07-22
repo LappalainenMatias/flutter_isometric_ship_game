@@ -1,6 +1,6 @@
 import 'package:anki/utils/vertice_dto.dart';
 
-import '../map/region/game_objects/game_object.dart';
+import 'game_object.dart';
 
 Map<String, VerticeDTO> toVertices(List<GameObject> gameObjects) {
   gameObjects.sort();
@@ -17,8 +17,4 @@ Map<String, VerticeDTO> toVertices(List<GameObject> gameObjects) {
     'underWater': underWater,
     'aboveWater': aboveWater,
   };
-}
-
-class VerticeData {
-
 }

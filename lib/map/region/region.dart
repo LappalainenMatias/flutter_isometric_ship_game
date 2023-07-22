@@ -1,6 +1,6 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:anki/utils/game_objects_to_vertices.dart';
+import 'package:anki/map/region/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_creator.dart';
 import '../../utils/vertice_dto.dart';

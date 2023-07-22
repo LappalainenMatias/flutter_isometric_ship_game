@@ -1,5 +1,7 @@
 
-/// WIP The idea is to remove triangles that are not visible (behind other triangles).
+/// Todo WIP The idea is to remove triangles that are not visible (behind other triangles).
+/// This could reduce even 1 / 3 of the triangles because the left and right side of the
+/// ground tiles are often behind other tiles.
 List<double> occlusionCulling(List<double> vertices) {
   int triangleCount = vertices.length ~/ 6;
 
