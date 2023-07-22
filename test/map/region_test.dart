@@ -28,8 +28,8 @@ void main() {
         Int32List.fromList([]), []);
     List<Region> regions = [r1, r2, r3];
     regions.sort((a, b) => a.compareTo(b));
-    expect(regions[0].coord, const IsoCoordinate.fromIso(1, 1));
-    expect(regions[1].coord, const IsoCoordinate.fromIso(1, 0));
-    expect(regions[2].coord, const IsoCoordinate.fromIso(0, 0));
+    expect(regions[0].coordinate, const IsoCoordinate.fromIso(1, 1));
+    expect(regions[1].coordinate, const IsoCoordinate.fromIso(1, 0));
+    expect(regions[2].coordinate, const IsoCoordinate.fromIso(0, 0));
   });
 }

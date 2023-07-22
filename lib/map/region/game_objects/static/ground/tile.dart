@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/map/region/game_objects/static/ground/tile_to_vertices.dart';
@@ -81,6 +82,31 @@ class AreaTile extends Tile {
   bool isDynamic() {
     return false;
   }
+
+  factory AreaTile.fromString(String json) {
+    final data = jsonDecode(json);
+    List<String> point = data['coordinate']!.split(',');
+    return AreaTile(
+      TileType.values.byName(data['type']),
+      Point<double>(
+        double.parse(point[0]),
+        double.parse(point[1]),
+      ),
+      data['elevation'] as double,
+      width: data['width'] as double,
+    );
+  }
+
+  @override
+  String encode() {
+    return jsonEncode({
+      'gameObjectType': 'AreaTile',
+      'type': type.name,
+      'coordinate': '${coordinate.x},${coordinate.y}',
+      'elevation': elevation,
+      'width': width,
+    });
+  }
 }
 
 class SingleTile extends Tile {
@@ -128,5 +154,28 @@ class SingleTile extends Tile {
   @override
   bool isDynamic() {
     return false;
+  }
+
+  factory SingleTile.fromString(String json) {
+    final data = jsonDecode(json);
+    List<String> point = data['coordinate']!.split(',');
+    return SingleTile(
+      TileType.values.byName(data['type']),
+      Point<double>(
+        double.parse(point[0]),
+        double.parse(point[1]),
+      ),
+      data['elevation'] as double,
+    );
+  }
+
+  @override
+  String encode() {
+    return jsonEncode({
+      'gameObjectType': 'SingleTile',
+      'type': type.name,
+      'coordinate': '${coordinate.x},${coordinate.y}',
+      'elevation': elevation,
+    });
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'dart:math';
@@ -10,6 +12,18 @@ class Boat extends GameObject {
   IsoCoordinate coordinate;
   final boatMover = BoatMover();
   Boat(this.coordinate, this.elevation);
+
+  factory Boat.fromString(String json) {
+    final data = jsonDecode(json);
+    List<String> isoCoordinateData = data['isoCoordinate']!.split(',');
+    return Boat(
+      IsoCoordinate.fromIso(
+        double.parse(isoCoordinateData[0]),
+        double.parse(isoCoordinateData[1]),
+      ),
+      data['elevation'] as double,
+    );
+  }
 
   @override
   getVertices() {
@@ -39,6 +53,15 @@ class Boat extends GameObject {
   @override
   CollisionBox? getCollisionBox() {
     return CollisionBox(coordinate, 8.0, 8.0);
+  }
+
+  @override
+  String encode() {
+    return jsonEncode({
+      'gameObjectType': 'Boat',
+      'elevation': elevation,
+      'isoCoordinate': '${coordinate.isoX},${coordinate.isoY}',
+    });
   }
 }
 

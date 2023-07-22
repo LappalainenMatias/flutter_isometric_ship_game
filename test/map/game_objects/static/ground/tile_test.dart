@@ -55,4 +55,25 @@ void main() {
     expect(tiles[1] == t2 || tiles[1] == t3, true);
     expect(tiles[2] == t2 || tiles[2] == t3, true);
   });
+
+  test("Decode and encode single tile", () {
+    SingleTile singleTile =
+        SingleTile(TileType.bare, const Point<double>(2, 2), 2);
+    String encoded = singleTile.encode();
+    SingleTile decoded = SingleTile.fromString(encoded);
+    expect(decoded.elevation, 2);
+    expect(decoded.type, TileType.bare);
+    expect(decoded.coordinate, const Point<double>(2, 2));
+  });
+
+  test("Decode and encode area tile", () {
+    AreaTile areaTile =
+        AreaTile(TileType.grass, const Point<double>(-1, -1), -1, width: 2);
+    String encoded = areaTile.encode();
+    AreaTile decoded = AreaTile.fromString(encoded);
+    expect(decoded.elevation, -1);
+    expect(decoded.type, TileType.grass);
+    expect(decoded.coordinate, const Point<double>(-1, -1));
+    expect(decoded.width, 2);
+  });
 }

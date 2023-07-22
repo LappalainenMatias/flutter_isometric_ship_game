@@ -24,4 +24,13 @@ void main() {
     expect(vertices.positions.length >= 36, true);
     expect(vertices.colors.length >= 18, true);
   });
+
+  test("Decode and encode natural item", () {
+    NaturalItem naturalItem = NaturalItem(NaturalItemType.rock, const Point(1,1), 1);
+    String encoded = naturalItem.encode();
+    NaturalItem decoded = NaturalItem.fromString(encoded);
+    expect(decoded.type, NaturalItemType.rock);
+    expect(decoded.coordinate, const Point(1,1));
+    expect(decoded.elevation, 1);
+  });
 }

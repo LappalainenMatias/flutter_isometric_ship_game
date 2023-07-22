@@ -8,7 +8,7 @@ import 'game_objects/game_object.dart';
 
 class Region extends Comparable<Region> {
   int verticesCount = 0;
-  IsoCoordinate coord;
+  IsoCoordinate coordinate;
   List<GameObject> gameObjects = [];
   ui.Vertices? _aboveWater;
   ui.Vertices? _underWater;
@@ -16,7 +16,7 @@ class Region extends Comparable<Region> {
 
   Region(
       this.verticesCount,
-      this.coord,
+      this.coordinate,
       Float32List aboveWaterPositions,
       Int32List aboveWaterColors,
       Float32List underWaterPositions,
@@ -101,7 +101,7 @@ class Region extends Comparable<Region> {
   }
 
   int _nearness() {
-    return coord.isoX.toInt() + coord.isoY.toDouble().toInt();
+    return coordinate.isoX.toInt() + coordinate.isoY.toDouble().toInt();
   }
 
   @override

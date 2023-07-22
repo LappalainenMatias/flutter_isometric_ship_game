@@ -1,4 +1,3 @@
-
 import 'package:anki/map/region/game_objects/static/ground/tile.dart';
 
 import '../../../../../utils/cube.dart';

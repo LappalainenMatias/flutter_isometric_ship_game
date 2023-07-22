@@ -12,7 +12,7 @@ import 'game_objects/game_object.dart';
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
   final int _regionSideWidth = 32;
-  final int _maxRegionCount = 2048;
+  final int _maxRegionCount = 4096;
   final Set<Point> _buildQueue = {};
   Region? boatRegion;
 
@@ -58,10 +58,7 @@ class RegionManager {
     return regions;
   }
 
-  MapDTO getVertices(
-    IsoCoordinate topLeft,
-    IsoCoordinate bottomRight,
-  ) {
+  MapDTO getVertices(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     List<Region> regions = _getRegions(topLeft, bottomRight);
     regions.sort((a, b) => a.compareTo(b));
     List<ui.Vertices> aboveWater = [];
@@ -150,7 +147,7 @@ class RegionManager {
 
   void _removeFarawayRegions(Point<int> point) {
     for (var key in _regions.keys.toList()) {
-      if ((key.x - point.x).abs() > 20 || (key.y - point.y).abs() > 20) {
+      if ((key.x - point.x).abs() > 60 || (key.y - point.y).abs() > 60) {
         _regions.remove(key);
       }
     }
@@ -158,7 +155,7 @@ class RegionManager {
 
   void _createRegion(int x, int y) async {
     if (kIsWeb) {
-      if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 10) {
+      if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 5) {
         return;
       }
       _buildQueue.add(Point(x, y));
@@ -173,8 +170,12 @@ class RegionManager {
           y * _regionSideWidth
         ],
       );
+      List<GameObject> gameObjects = [];
+      for (var encodedGameObject in result[7]) {
+        gameObjects.add(GameObject.decode(encodedGameObject));
+      }
       var regionDTO = RegionDTO(IsoCoordinate.fromIso(result[0], result[1]),
-          result[2], result[3], result[4], result[5], result[6], result[7]);
+          result[2], result[3], result[4], result[5], result[6], gameObjects);
       _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
       _buildQueue.remove(Point(x, y));
     } else {

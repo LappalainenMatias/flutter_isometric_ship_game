@@ -15,7 +15,7 @@ void main() async {
   );
 
   /// Used for running region creation web worker
-  if (kIsWeb) await JsIsolatedWorker().importScripts(['jsregionworker.js']);
+  if (kIsWeb) await JsIsolatedWorker().importScripts(['regionworker.js']);
   runApp(
     MultiProvider(
       providers: [

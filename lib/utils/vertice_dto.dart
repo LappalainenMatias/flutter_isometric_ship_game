@@ -1,5 +1,4 @@
 
-
 class VerticeDTO {
   List<double> positions = [];
   List<int> colors = [];
