@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 
 import 'game_objects/boat/boat.dart';
+import 'game_objects/game_object.dart';
 
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
@@ -24,6 +25,38 @@ class RegionManager {
       currentRegion.addGameObject(boat);
       boatRegion = currentRegion;
     }
+  }
+
+  void boatCollision(Boat boat) {
+    List<GameObject> collisionObjects = [];
+    for (var region in _getBoatRegions(boat)) {
+      for (GameObject gameObject in region.gameObjects) {
+        if (boat.collision(gameObject)) {
+          collisionObjects.add(gameObject);
+        }
+      }
+    }
+    if (collisionObjects.isNotEmpty) {
+      boatRegion!.removeGameObjects(collisionObjects);
+    }
+  }
+
+  /// We want to know the regions next to the boat, so we can have collision
+  /// with their game objects.
+  Set<Region> _getBoatRegions(Boat boat) {
+    Set<Region> regions = {};
+    Region? regionTop = _getRegion(boat.coordinate + const IsoCoordinate(0, 2));
+    if (regionTop != null) regions.add(regionTop);
+    Region? regionBottom =
+        _getRegion(boat.coordinate + const IsoCoordinate(0, -2));
+    if (regionBottom != null) regions.add(regionBottom);
+    Region? regionLeft =
+        _getRegion(boat.coordinate + const IsoCoordinate(-2, 0));
+    if (regionLeft != null) regions.add(regionLeft);
+    Region? regionRight =
+        _getRegion(boat.coordinate + const IsoCoordinate(2, 0));
+    if (regionRight != null) regions.add(regionRight);
+    return regions;
   }
 
   MapDTO getVertices(

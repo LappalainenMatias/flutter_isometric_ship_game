@@ -2,7 +2,9 @@ import 'dart:math';
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/map/region/game_objects/ground/tile_to_vertices.dart';
 import 'package:anki/map/region/game_objects/ground/tile_type.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 
+import '../../../../utils/collision_box.dart';
 import '../../../../utils/vertice_dto.dart';
 
 abstract class Tile extends GameObject {
@@ -25,6 +27,13 @@ abstract class Tile extends GameObject {
   @override
   bool isUnderWater() {
     return getElevation() < 0;
+  }
+
+  @override
+  CollisionBox getCollisionBox() {
+    /// todo we should not be constantly creating new collision boxes
+    return CollisionBox(IsoCoordinate(getCoordinate().x, getCoordinate().y),
+        getWidth() * 2 + 8, getWidth() * 2 + 8);
   }
 }
 

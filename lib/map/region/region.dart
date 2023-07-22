@@ -9,7 +9,7 @@ import 'game_objects/game_object.dart';
 class Region extends Comparable<Region> {
   int verticesCount = 0;
   IsoCoordinate coord;
-  List<GameObject> _gameObjects = [];
+  List<GameObject> gameObjects = [];
   ui.Vertices? _aboveWater;
   ui.Vertices? _underWater;
   bool _isDynamic = false;
@@ -21,8 +21,7 @@ class Region extends Comparable<Region> {
       Int32List aboveWaterColors,
       Float32List underWaterPositions,
       Int32List underWaterColors,
-      List<GameObject> gameObjects) {
-    _gameObjects = gameObjects;
+      this.gameObjects) {
     _isDynamic = _containsDynamicGameObject();
     _aboveWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
@@ -44,7 +43,7 @@ class Region extends Comparable<Region> {
   }
 
   bool _containsDynamicGameObject() {
-    for (var gameObject in _gameObjects) {
+    for (var gameObject in gameObjects) {
       if (gameObject.isDynamic()) {
         return true;
       }
@@ -53,20 +52,28 @@ class Region extends Comparable<Region> {
   }
 
   void addGameObject(GameObject gameObject) {
-    _gameObjects.add(gameObject);
+    gameObjects.add(gameObject);
     _isDynamic = _containsDynamicGameObject();
     _updateVertices();
   }
 
   void removeGameObject(GameObject gameObject) {
-    _gameObjects.remove(gameObject);
+    gameObjects.remove(gameObject);
+    _isDynamic = _containsDynamicGameObject();
+    _updateVertices();
+  }
+
+  void removeGameObjects(List<GameObject> gameObjects) {
+    for (var gameObject in gameObjects) {
+      this.gameObjects.remove(gameObject);
+    }
     _isDynamic = _containsDynamicGameObject();
     _updateVertices();
   }
 
   _updateVertices() {
-    _gameObjects.sort();
-    Map<String, VerticeDTO> verticeDTOs = toVertices(_gameObjects);
+    gameObjects.sort();
+    Map<String, VerticeDTO> verticeDTOs = toVertices(gameObjects);
     VerticeDTO underWaterVerticeDTO = verticeDTOs['underWater']!;
     VerticeDTO aboveWaterVerticeDTO = verticeDTOs['aboveWater']!;
     _aboveWater = ui.Vertices.raw(

@@ -4,9 +4,10 @@ import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/vertice_dto.dart';
 import 'dart:math';
 
+import '../../../../utils/collision_box.dart';
+import '../../../../utils/iso_coordinate.dart';
 import '../ground/tile_type.dart';
 import 'create_birch.dart';
-
 
 class NaturalItem extends GameObject {
   final NaturalItemType type;
@@ -42,9 +43,9 @@ class NaturalItem extends GameObject {
   }
 
   @override
-  bool collision(GameObject other) {
-    /// Currently there is no situation where a natural item collides with another object.
-    return false;
+  CollisionBox getCollisionBox() {
+    /// todo we should not be constantly creating new collision boxes
+    return CollisionBox(IsoCoordinate(coordinate.x, coordinate.y), 8, 8);
   }
 }
 
@@ -95,7 +96,8 @@ Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
   ]
 };
 
-NaturalItem? getNaturalItem(TileType type, Point<double> coordinate, double elevation) {
+NaturalItem? getNaturalItem(
+    TileType type, Point<double> coordinate, double elevation) {
   final probabilities = naturalItemsMap[type];
   if (probabilities != null) {
     for (var naturalItem in probabilities) {

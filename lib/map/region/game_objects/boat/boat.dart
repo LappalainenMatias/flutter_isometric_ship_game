@@ -3,11 +3,12 @@ import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'dart:math';
 
+import '../../../../utils/collision_box.dart';
+
 class Boat extends GameObject {
   double elevation;
   IsoCoordinate coordinate;
   final boatMover = BoatMover();
-
   Boat(this.coordinate, this.elevation);
 
   @override
@@ -33,6 +34,11 @@ class Boat extends GameObject {
   @override
   bool isDynamic() {
     return true;
+  }
+
+  @override
+  CollisionBox? getCollisionBox() {
+    return CollisionBox(coordinate, 8.0, 8.0);
   }
 }
 

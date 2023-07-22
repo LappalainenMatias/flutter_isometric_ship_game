@@ -34,6 +34,7 @@ class MapModel extends ChangeNotifier {
     _boat.move(joyStickX, joyStickY);
     _camera.center = _boat.coordinate;
     _regionManager.updateBoatRegion(_boat);
+    _regionManager.boatCollision(_boat);
   }
 
   int get verticesCount => _verticesCount;
