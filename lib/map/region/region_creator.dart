@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/tile_map_simplifier.dart';
 import 'package:anki/utils/vertice_dto.dart';
@@ -12,11 +13,12 @@ import 'game_objects/static/natural_items/natural_items.dart';
 /// We use seperate class for creating the region data because this class
 /// does not use dart:ui and because of that it can be run concurrently
 class RegionCreator {
-  final _noise = Noise();
+  final MapCreationRules _mapCreationRules = SvalbardCreationRules();
 
   RegionDTO create(IsoCoordinate regionCoordinate, int width, int height,
       int startX, int startY) {
-    var noises = _noise.create(width, height, startX, startY);
+    final noise = Noise(_mapCreationRules);
+    var noises = noise.create(width, height, startX, startY);
     List<Tile> tiles =
         _createTiles(width, height, startX, startY, noises[0], noises[1]);
     List<NaturalItem> naturalItems = _createNaturalItems(
@@ -51,8 +53,12 @@ class RegionCreator {
       var moistureRow = moistureNoise[x];
       List<SingleTile> row = [];
       for (var y = 0; y < height; y++) {
-        row.add(getTile(elevationRow[y], moistureRow[y],
-            Point((startX + x).toDouble(), (startY + y).toDouble())));
+        row.add(getTile(
+          elevationRow[y],
+          moistureRow[y],
+          Point((startX + x).toDouble(), (startY + y).toDouble()),
+          _mapCreationRules.tileRules(),
+        ));
       }
       tileMatrix.add(row);
     }
@@ -83,9 +89,15 @@ class RegionCreator {
           (startY + y).toDouble(),
         );
         NaturalItem? naturalItem = getNaturalItem(
-          getTile(elevationRow[y], moistureRow[y], point).type,
+          getTile(
+            elevationRow[y],
+            moistureRow[y],
+            point,
+            _mapCreationRules.tileRules(),
+          ).type,
           point,
           elevationRow[y],
+          _mapCreationRules.naturalItemProbabilities(),
         );
 
         if (naturalItem != null) {

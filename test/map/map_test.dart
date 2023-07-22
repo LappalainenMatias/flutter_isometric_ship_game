@@ -13,9 +13,9 @@ void main() {
 
   test("Map should have less vertices after zoom in", () {
     MapModel map = MapModel();
-    map.setZoomLevel(1.0);
+    map.setZoomLevel(0.4);
     MapDTO mapDTO1 = map.getVerticesInView();
-    map.setZoomLevel(0.5);
+    map.setZoomLevel(0.2);
     MapDTO mapDTO2 = map.getVerticesInView();
     map.setZoomLevel(0.0);
     MapDTO mapDTO3 = map.getVerticesInView();

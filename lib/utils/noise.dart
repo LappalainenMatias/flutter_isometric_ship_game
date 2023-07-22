@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:open_simplex_noise/open_simplex_noise.dart';
+
+import '../map/map_creation_rules.dart';
 
 class Noise {
   late OpenSimplexNoise _elevationNoise1;
@@ -7,8 +11,9 @@ class Noise {
   late OpenSimplexNoise _moistureNoise1;
   late OpenSimplexNoise _moistureNoise2;
   late OpenSimplexNoise _moistureNoise3;
+  MapCreationRules mapCreationRules;
 
-  Noise([int seed = 1]) {
+  Noise(this.mapCreationRules, [int seed = 1]) {
     _elevationNoise1 = OpenSimplexNoise(seed + 1);
     _elevationNoise2 = OpenSimplexNoise(seed + 2);
     _elevationNoise3 = OpenSimplexNoise(seed + 3);
@@ -28,14 +33,17 @@ class Noise {
       for (int y = 0; y < height; y++) {
         var i = (startX + x).toDouble();
         var j = (startY + y).toDouble();
-        double elevation = _elevationNoise1.eval2D(i * 0.006, j * 0.006) +
-            0.5 * _elevationNoise2.eval2D(i * 0.016, j * 0.016) +
-            0.25 * _elevationNoise3.eval2D(i * 0.048, j * 0.048);
+        double elevation = _elevationNoise1.eval2D(i * 0.001, j * 0.001) +
+            0.1 * _elevationNoise2.eval2D(i * 0.01, j * 0.01) +
+            0.01 * _elevationNoise3.eval2D(i * 0.1, j * 0.1);
+        double threshold = 0.2;  // choose a suitable threshold
+        elevation = elevation > threshold ? elevation * 1.5 : elevation;
         double moisture = _moistureNoise1.eval2D(i * 0.006, j * 0.006) +
             0.5 * _moistureNoise2.eval2D(i * 0.016, j * 0.016) +
             0.25 * _moistureNoise3.eval2D(i * 0.048, j * 0.048);
-        rowElevation[y] =
-            ((elevation - 0.3) * 15).roundToDouble(); // Increase height differences and water
+        rowElevation[y] = ((elevation + mapCreationRules.amountOfWater()) *
+                mapCreationRules.elevationAmplitude())
+            .roundToDouble();
         rowMoisture[y] = moisture;
       }
     }

@@ -2,6 +2,21 @@
 import '../../../../../utils/custom_color.dart';
 
 enum TileType {
+  svalbardIce(
+    CustomColor.fromARGB(255, 191, 200, 202),
+    CustomColor.fromARGB(255, 171, 180, 182),
+    CustomColor.fromARGB(255, 151, 160, 162),
+  ),
+  svalbardMountain(
+    CustomColor.fromARGB(255, 110, 110, 121),
+    CustomColor.fromARGB(255, 90, 90, 101),
+    CustomColor.fromARGB(255, 70, 70, 81),
+  ),
+  svalbardGrass(
+    CustomColor.fromARGB(255, 135, 143, 102),
+    CustomColor.fromARGB(255, 115, 123, 82),
+    CustomColor.fromARGB(255, 95, 103, 62),
+  ),
   taiga(
     CustomColor.fromARGB(255, 100, 164, 93),
     CustomColor.fromARGB(255, 75, 140, 76),

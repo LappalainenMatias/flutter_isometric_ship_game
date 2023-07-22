@@ -1,3 +1,4 @@
+import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/game_objects/static/ground/create_tile.dart';
 import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:test/test.dart';
@@ -13,13 +14,33 @@ void main() {
     expect(TileRule(TileType.taiga, null, null).match(1.0, 1.0), true);
   });
 
-  test("Create tile from elevation and moisture", () {
+  test("Create tile from elevation and moisture for svalbard creation rules",
+      () {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
-    getTile(0.0, 0.0, const Point(0, 0));
-    getTile(-1000000, -1000000, const Point(-1000000, -1000000));
-    getTile(1000000, 1000000, const Point(1000000, 1000000));
-    getTile(-1000000, 1000000, const Point(-1000000, 1000000));
-    getTile(1000000, -1000000, const Point(1000000, -1000000));
+    getTile(0.0, 0.0, const Point(0, 0), SvalbardCreationRules().tileRules());
+    getTile(-1000000, -1000000, const Point(-1000000, -1000000),
+        SvalbardCreationRules().tileRules());
+    getTile(1000000, 1000000, const Point(1000000, 1000000),
+        SvalbardCreationRules().tileRules());
+    getTile(-1000000, 1000000, const Point(-1000000, 1000000),
+        SvalbardCreationRules().tileRules());
+    getTile(1000000, -1000000, const Point(1000000, -1000000),
+        SvalbardCreationRules().tileRules());
+  });
+
+  test("Create tile from elevation and moisture for finland creation rules",
+      () {
+    /// Get tile throws error if no tile rule matches
+    /// Always one tile rule should match
+    getTile(0.0, 0.0, const Point(0, 0), FinlandCreationRules().tileRules());
+    getTile(-1000000, -1000000, const Point(-1000000, -1000000),
+        FinlandCreationRules().tileRules());
+    getTile(1000000, 1000000, const Point(1000000, 1000000),
+        FinlandCreationRules().tileRules());
+    getTile(-1000000, 1000000, const Point(-1000000, 1000000),
+        FinlandCreationRules().tileRules());
+    getTile(1000000, -1000000, const Point(1000000, -1000000),
+        FinlandCreationRules().tileRules());
   });
 }

@@ -4,9 +4,9 @@ import 'camera_mover.dart';
 class Camera {
   late IsoCoordinate center;
   final CameraMover _cameraMover = CameraMover();
-  double _zoomLevel = 0.5;
+  double _zoomLevel = 0.25;
   final double _minWidth = 32;
-  final double _maxWidth = 1024;
+  final double _maxWidth = 4096;
   double _aspectRatio = 1.0;
 
   Camera({this.center = const IsoCoordinate(0, 0)});

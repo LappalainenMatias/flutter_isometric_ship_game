@@ -4,6 +4,7 @@ import 'dart:math';
 
 import '../../../../../utils/collision_box.dart';
 import '../../../../../utils/iso_coordinate.dart';
+import '../../../../map_creation_rules.dart';
 import '../ground/tile_type.dart';
 import 'create_birch.dart';
 import 'create_rock.dart';
@@ -59,45 +60,11 @@ enum NaturalItemType {
   final Function? positionsAndColors;
 }
 
-class NaturalItemProbability {
-  final NaturalItemType type;
-  final double percentage;
-
-  NaturalItemProbability(this.type, this.percentage) {
-    assert(percentage > 0 && percentage < 1);
-  }
-}
-
-///Todo these probabilities are not exactly correct because they are looped through in order.
-Map<TileType, List<NaturalItemProbability>> naturalItemsMap = {
-  TileType.taiga: [
-    NaturalItemProbability(NaturalItemType.birch, 0.02),
-    NaturalItemProbability(NaturalItemType.rock, 0.03),
-    NaturalItemProbability(NaturalItemType.spruce, 0.09),
-  ],
-  TileType.grass: [
-    NaturalItemProbability(NaturalItemType.rock, 0.02),
-    NaturalItemProbability(NaturalItemType.spruce, 0.02),
-    NaturalItemProbability(NaturalItemType.birch, 0.04),
-  ],
-  TileType.bare: [
-    NaturalItemProbability(NaturalItemType.birch, 0.02),
-    NaturalItemProbability(NaturalItemType.spruce, 0.03),
-    NaturalItemProbability(NaturalItemType.rock, 0.05),
-  ],
-  TileType.sand: [
-    NaturalItemProbability(NaturalItemType.rock, 0.10),
-  ],
-  TileType.lakeFloorVegetation: [
-    NaturalItemProbability(NaturalItemType.rock, 0.03),
-  ],
-  TileType.lakeFloorBare: [
-    NaturalItemProbability(NaturalItemType.rock, 0.05),
-  ]
-};
-
 NaturalItem? getNaturalItem(
-    TileType type, Point<double> coordinate, double elevation) {
+    TileType type,
+    Point<double> coordinate,
+    double elevation,
+    Map<TileType, List<NaturalItemProbability>> naturalItemsMap) {
   final probabilities = naturalItemsMap[type];
   if (probabilities != null) {
     for (var naturalItem in probabilities) {
