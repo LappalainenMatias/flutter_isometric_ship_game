@@ -6,9 +6,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 import 'dart:math';
-import 'dart:ui' as ui;
-
-import 'map/region/region.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -21,10 +18,6 @@ class _MapScreenState extends State<MapScreen>
     with SingleTickerProviderStateMixin {
   final Stopwatch _time = Stopwatch();
   late final Ticker _ticker;
-  int _previousTime = 0;
-  int _frameCount = 0;
-  int _totalTime = 0;
-  int _fps = 0;
 
   @override
   void initState() {
@@ -33,17 +26,7 @@ class _MapScreenState extends State<MapScreen>
     _ticker = createTicker(
       (Duration elapsed) {
         setState(
-          () {
-            /// Todo refactor this to somewhere else. Maybe own widget
-            _frameCount++;
-            _totalTime += elapsed.inMilliseconds - _previousTime;
-            _previousTime = elapsed.inMilliseconds;
-            if (_totalTime >= 1000) {
-              _fps = _frameCount;
-              _frameCount = 0;
-              _totalTime = 0;
-            }
-          },
+          () {},
         );
       },
     )..start();
@@ -83,9 +66,8 @@ class _MapScreenState extends State<MapScreen>
                 child: Align(
                   alignment: Alignment.topLeft,
                   child: Statistics(
-                    fps: _fps,
                     verticesCount: map.verticesCount,
-                    center: map.center,
+                    center: map.cameraCenter,
                   ),
                 ),
               ),
@@ -119,7 +101,7 @@ class MapPainter extends CustomPainter {
       canvas.drawVertices(v, BlendMode.srcOver, _waterShaderPaint);
     }
     for (var v in vertices.aboveWater) {
-      canvas.drawVertices(v, BlendMode.dst, _landPaint);
+      canvas.drawVertices(v, BlendMode.multiply, _landPaint);
     }
   }
 
@@ -129,14 +111,14 @@ class MapPainter extends CustomPainter {
   void _paintBackgroundWater(Canvas canvas, Size size) {
     canvas.drawRect(
         Rect.fromPoints(
-          Offset(map.topLeft.isoX, map.topLeft.isoY),
-          Offset(map.bottomRight.isoX, map.bottomRight.isoY),
+          Offset(map.cameraTopLeft.isoX, map.cameraTopLeft.isoY),
+          Offset(map.cameraBottomRight.isoX, map.cameraBottomRight.isoY),
         ),
         _backgroundWaterPaint);
     canvas.drawRect(
         Rect.fromPoints(
-          Offset(map.topLeft.isoX, map.topLeft.isoY),
-          Offset(map.bottomRight.isoX, map.bottomRight.isoY),
+          Offset(map.cameraTopLeft.isoX, map.cameraTopLeft.isoY),
+          Offset(map.cameraBottomRight.isoX, map.cameraBottomRight.isoY),
         ),
         _waterShaderPaint);
   }
@@ -148,11 +130,10 @@ class MapPainter extends CustomPainter {
 
   void _isometricTransformation(Canvas canvas, Size size) {
     double scale = min(size.width / map.width, size.height / map.height);
-    var center = map.center;
     canvas.scale(scale, -scale);
     canvas.translate(
-      -center.isoX.toDouble() + size.width / scale / 2,
-      -center.isoY.toDouble() - size.height / scale / 2,
+      -map.cameraCenter.isoX.toDouble() + size.width / scale / 2,
+      -map.cameraCenter.isoY.toDouble() - size.height / scale / 2,
     );
   }
 

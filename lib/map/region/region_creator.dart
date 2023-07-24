@@ -2,51 +2,40 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/game_objects/game_object.dart';
-import 'package:anki/utils/tile_map_simplifier.dart';
-import 'package:anki/utils/vertice_dto.dart';
 import '../../utils/iso_coordinate.dart';
 import '../../utils/noise.dart';
+import '../../utils/tile_map_simplifier.dart';
 import 'game_objects/static/ground/create_tile.dart';
 import 'game_objects/static/ground/tile.dart';
 import 'game_objects/static/natural_items/natural_items.dart';
 
-/// We use seperate class for creating the region data because this class
-/// does not use dart:ui and because of that it can be run concurrently
+/// This class and the classes that it uses should NOT use dart:ui so that
+/// we can create regions concurrently. Because of this it cannot return vertices
+/// but it can return the data for creating the vertices.
 class RegionCreator {
   final MapCreationRules _mapCreationRules = SvalbardCreationRules();
 
-  RegionDTO create(IsoCoordinate regionCoordinate, int width, int height,
+  RegionDTO create(Point regionCoordinate, int width, int height,
       int startX, int startY) {
     final noise = Noise(_mapCreationRules);
+
+    /// Todo rename noises[0] and noises[1] to elevationNoise and moistureNoise
     var noises = noise.create(width, height, startX, startY);
-    List<Tile> tiles =
+
+    List<List<SingleTile>> tileMatrix =
         _createTiles(width, height, startX, startY, noises[0], noises[1]);
-    List<NaturalItem> naturalItems = _createNaturalItems(
-        width, height, startX, startY, noises[0], noises[1]);
-    List<GameObject> gameObjects = [...tiles, ...naturalItems];
-    gameObjects.sort();
-    VerticeDTO underWater = VerticeDTO.empty();
-    VerticeDTO aboveWater = VerticeDTO.empty();
-    for (var gameObject in gameObjects) {
-      if (gameObject.isUnderWater()) {
-        underWater.addVerticeDTO(gameObject.getVertices());
-      } else {
-        aboveWater.addVerticeDTO(gameObject.getVertices());
-      }
-    }
+    List<NaturalItem> naturalItems = _createNaturalItems(tileMatrix);
+    List<Tile> simplifiedTiles = simplifyTiles(tileMatrix);
+    List<Tile> filteredTiles = _removeDeepUnderWaterTiles(simplifiedTiles);
+    List<GameObject> gameObjects = [...filteredTiles, ...naturalItems];
     return RegionDTO(
       regionCoordinate,
-      (aboveWater.positions.length + underWater.positions.length) ~/ 2,
-      Float32List.fromList(aboveWater.positions),
-      Int32List.fromList(aboveWater.colors),
-      Float32List.fromList(underWater.positions),
-      Int32List.fromList(underWater.colors),
       gameObjects,
     );
   }
 
-  List<Tile> _createTiles(int width, int height, int startX, int startY,
-      List elevationNoise, List moistureNoise) {
+  List<List<SingleTile>> _createTiles(int width, int height, int startX,
+      int startY, List elevationNoise, List moistureNoise) {
     List<List<SingleTile>> tileMatrix = [];
     for (var x = 0; x < width; x++) {
       var elevationRow = elevationNoise[x];
@@ -62,9 +51,7 @@ class RegionCreator {
       }
       tileMatrix.add(row);
     }
-    List<Tile> simplifiedTiles = simplifyTiles(tileMatrix);
-    List<Tile> filteredTiles = _removeDeepUnderWaterTiles(simplifiedTiles);
-    return filteredTiles;
+    return tileMatrix;
   }
 
   List<Tile> _removeDeepUnderWaterTiles(List<Tile> simplifiedTiles) {
@@ -77,26 +64,14 @@ class RegionCreator {
     return filteredTiles;
   }
 
-  List<NaturalItem> _createNaturalItems(int width, int height, int startX,
-      int startY, List elevationNoise, List moistureNoise) {
+  List<NaturalItem> _createNaturalItems(List<List<SingleTile>> tileMatrix) {
     List<NaturalItem> naturalItems = [];
-    for (var x = 0; x < width; x++) {
-      var elevationRow = elevationNoise[x];
-      var moistureRow = moistureNoise[x];
-      for (var y = 0; y < height; y++) {
-        Point<double> point = Point(
-          (startX + x).toDouble(),
-          (startY + y).toDouble(),
-        );
+    for (var x = 0; x < tileMatrix.length; x++) {
+      for (var y = 0; y < tileMatrix[0].length; y++) {
         NaturalItem? naturalItem = getNaturalItem(
-          getTile(
-            elevationRow[y],
-            moistureRow[y],
-            point,
-            _mapCreationRules.tileRules(),
-          ).type,
-          point,
-          elevationRow[y],
+          tileMatrix[x][y].type,
+          tileMatrix[x][y].isoCoordinate,
+          tileMatrix[x][y].elevation,
           _mapCreationRules.naturalItemProbabilities(),
         );
 
@@ -110,21 +85,11 @@ class RegionCreator {
 }
 
 class RegionDTO {
-  final IsoCoordinate regionCoordinate;
-  final int verticesCount;
-  final Float32List aboveWaterPositions;
-  final Int32List aboveWaterColors;
-  final Float32List underWaterPositions;
-  final Int32List underWaterColors;
+  final Point regionCoordinate;
   final List<GameObject> gameObjects;
 
   RegionDTO(
     this.regionCoordinate,
-    this.verticesCount,
-    this.aboveWaterPositions,
-    this.aboveWaterColors,
-    this.underWaterPositions,
-    this.underWaterColors,
     this.gameObjects,
   );
 }

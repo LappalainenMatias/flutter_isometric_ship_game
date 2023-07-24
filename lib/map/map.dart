@@ -30,7 +30,7 @@ class MapModel extends ChangeNotifier {
   /// (0, 1) = up, (-1, 0) = left
   void moveBoat(double joyStickX, double joyStickY) {
     _boat.move(joyStickX, joyStickY);
-    _camera.center = _boat.coordinate;
+    _camera.center = _boat.isoCoordinate;
     _regionManager.updateBoatRegion(_boat);
     //_regionManager.boatCollision(_boat);
   }
@@ -41,11 +41,11 @@ class MapModel extends ChangeNotifier {
 
   double get height => _camera.height();
 
-  IsoCoordinate get topLeft => _camera.topLeft;
+  IsoCoordinate get cameraTopLeft => _camera.topLeft;
 
-  IsoCoordinate get bottomRight => _camera.bottomRight;
+  IsoCoordinate get cameraBottomRight => _camera.bottomRight;
 
-  IsoCoordinate get center => _camera.center;
+  IsoCoordinate get cameraCenter => _camera.center;
 
   void setAspectRatio(double ratio) {
     _camera.aspectRatio = ratio;

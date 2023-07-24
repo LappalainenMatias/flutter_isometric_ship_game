@@ -1,13 +1,15 @@
 import 'dart:math';
 
 /// Used for changing between isometric and cartesian coordinates
+/// isoX-coordinate increases towards the top left
+/// isoY-coordinate increases towards the top right
 class IsoCoordinate {
   final double isoX;
   final double isoY;
 
-  const IsoCoordinate(double x, double y)
-      : isoX = x * 2 - 2 * y,
-        isoY = x + y;
+  const IsoCoordinate(double pointX, double pointY)
+      : isoX = pointX * 2 - 2 * pointY,
+        isoY = pointX + pointY;
 
   const IsoCoordinate.fromIso(this.isoX, this.isoY);
 

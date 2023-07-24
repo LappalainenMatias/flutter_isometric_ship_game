@@ -5,15 +5,12 @@ import 'package:intl/intl.dart';
 class Statistics extends StatelessWidget {
   const Statistics({
     super.key,
-    required int fps,
     required int verticesCount,
     required IsoCoordinate center,
-  })  : _fps = fps,
-        _verticesCount = verticesCount,
+  })  : _verticesCount = verticesCount,
         _center = center;
 
   final IsoCoordinate _center;
-  final int _fps;
   final int _verticesCount;
 
   @override
@@ -26,10 +23,6 @@ class Statistics extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "FPS: ${_fps.toString()}",
-              style: const TextStyle(color: Colors.white),
-            ),
             Text(
               "Vertices: ${NumberFormat('###,###,###').format(_verticesCount).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),

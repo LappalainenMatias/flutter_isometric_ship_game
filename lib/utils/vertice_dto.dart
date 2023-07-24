@@ -20,4 +20,8 @@ class VerticeDTO {
   bool isEmpty() {
     return positions.isEmpty && colors.isEmpty;
   }
+
+  int verticesCount () {
+    return positions.length ~/ 2;
+  }
 }

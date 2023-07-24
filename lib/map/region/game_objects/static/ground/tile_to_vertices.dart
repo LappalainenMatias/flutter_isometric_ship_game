@@ -3,11 +3,11 @@ import 'package:anki/map/region/game_objects/static/ground/tile.dart';
 import '../../../../../utils/cube.dart';
 import '../../../../../utils/vertice_dto.dart';
 
-VerticeDTO singleTilePosAndCols(SingleTile tile) {
-  // todo only a test
+VerticeDTO singleTileVertices(SingleTile tile) {
+  // todo only a test. remove the heightscale elevation at some point
   if (tile.elevation > 0) {
     return createCube(
-      tile.coordinate,
+      tile.isoCoordinate,
       0,
       tile.type.top,
       tile.type.left,
@@ -16,7 +16,7 @@ VerticeDTO singleTilePosAndCols(SingleTile tile) {
     );
   }
   return createCube(
-    tile.coordinate,
+    tile.isoCoordinate,
     tile.elevation,
     tile.type.top,
     tile.type.left,
@@ -24,10 +24,11 @@ VerticeDTO singleTilePosAndCols(SingleTile tile) {
   );
 }
 
-VerticeDTO areaTilePosAndCols(AreaTile tile) {
+VerticeDTO areaTileVertices(AreaTile tile) {
+  // todo only a test. remove the heightscale elevation at some point
   if (tile.elevation > 0) {
     return createCube(
-      tile.coordinate,
+      tile.isoCoordinate,
       0,
       tile.type.top,
       tile.type.left,
@@ -37,7 +38,7 @@ VerticeDTO areaTilePosAndCols(AreaTile tile) {
     );
   }
   return createCube(
-    tile.coordinate,
+    tile.isoCoordinate,
     tile.elevation,
     tile.type.top,
     tile.type.left,

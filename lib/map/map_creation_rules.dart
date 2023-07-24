@@ -1,15 +1,17 @@
 import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
 import 'package:anki/map/region/game_objects/static/natural_items/natural_items.dart';
 
-
 abstract class MapCreationRules {
   /// return the tiletype of the first rule that matches.
   List<TileRule> tileRules();
+
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities();
+
   /// -1 means everything is water and 1 means everything is land.
   double amountOfWater();
+
   /// Increases the elevation differences. 0 means that the map is flat.
-  /// The is no upper limit. You have to find the correct value by testing.
+  /// The is no upper limit.
   double elevationAmplitude();
 }
 
@@ -112,7 +114,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double elevationAmplitude() {
-    return 60;
+    return 30;
   }
 }
 

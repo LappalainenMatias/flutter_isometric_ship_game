@@ -17,7 +17,7 @@ class RegionManager {
   Region? boatRegion;
 
   void updateBoatRegion(Boat boat) {
-    Region? currentRegion = _getRegion(boat.coordinate);
+    Region? currentRegion = _getRegion(boat.isoCoordinate);
     if (currentRegion == null) return;
     if (currentRegion != boatRegion) {
       if (boatRegion != null) boatRegion!.removeGameObject(boat);
@@ -41,26 +41,27 @@ class RegionManager {
   }
 
   /// We want to know the regions next to the boat, so we can have collision
-  /// with their game objects.
+  /// with their game objects as well.
   Set<Region> _getBoatRegions(Boat boat) {
     Set<Region> regions = {};
-    Region? regionTop = _getRegion(boat.coordinate + const IsoCoordinate(0, 2));
+    Region? regionTop =
+        _getRegion(boat.isoCoordinate + const IsoCoordinate(0, 2));
     if (regionTop != null) regions.add(regionTop);
     Region? regionBottom =
-        _getRegion(boat.coordinate + const IsoCoordinate(0, -2));
+        _getRegion(boat.isoCoordinate + const IsoCoordinate(0, -2));
     if (regionBottom != null) regions.add(regionBottom);
     Region? regionLeft =
-        _getRegion(boat.coordinate + const IsoCoordinate(-2, 0));
+        _getRegion(boat.isoCoordinate + const IsoCoordinate(-2, 0));
     if (regionLeft != null) regions.add(regionLeft);
     Region? regionRight =
-        _getRegion(boat.coordinate + const IsoCoordinate(2, 0));
+        _getRegion(boat.isoCoordinate + const IsoCoordinate(2, 0));
     if (regionRight != null) regions.add(regionRight);
     return regions;
   }
 
   MapDTO getVertices(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     List<Region> regions = _getRegions(topLeft, bottomRight);
-    regions.sort((a, b) => a.compareTo(b));
+    regions.sort();
     List<ui.Vertices> aboveWater = [];
     List<ui.Vertices> underWater = [];
     int verticesCount = 0;
@@ -155,7 +156,7 @@ class RegionManager {
 
   void _createRegion(int x, int y) async {
     if (kIsWeb) {
-      if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 5) {
+      if (_buildQueue.contains(Point(x, y)) || _buildQueue.length > 1) {
         return;
       }
       _buildQueue.add(Point(x, y));
@@ -171,17 +172,19 @@ class RegionManager {
         ],
       );
       List<GameObject> gameObjects = [];
-      for (var encodedGameObject in result[7]) {
+      for (var encodedGameObject in result[2]) {
         gameObjects.add(GameObject.decode(encodedGameObject));
       }
-      var regionDTO = RegionDTO(IsoCoordinate.fromIso(result[0], result[1]),
-          result[2], result[3], result[4], result[5], result[6], gameObjects);
+      var regionDTO = RegionDTO(
+        Point(result[0], result[1]),
+        gameObjects,
+      );
       _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
       _buildQueue.remove(Point(x, y));
     } else {
       // TODO no concurrency support yet
       RegionDTO regionDTO = RegionCreator().create(
-        IsoCoordinate.fromIso(x.toDouble(), y.toDouble()),
+        Point(x.toDouble(), y.toDouble()),
         _regionSideWidth,
         _regionSideWidth,
         x * _regionSideWidth,

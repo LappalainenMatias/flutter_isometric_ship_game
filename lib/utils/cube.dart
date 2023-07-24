@@ -15,8 +15,8 @@ const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 /// Offset can be used to reduce symmetry by moving the cube slightly so that
 /// every tree and rock does not line up perfectly.
 VerticeDTO createCube(
-  Point<double> coordinate,
-  double tileHeight,
+  IsoCoordinate isoCoordinate,
+  double elevation,
   CustomColor colorTop,
   CustomColor colorLeft,
   CustomColor colorRight, {
@@ -25,9 +25,9 @@ VerticeDTO createCube(
   IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
 }) {
   /// Todo This should not be here
-  if (tileHeight < 0) {
+  if (elevation < 0) {
     // Adds blueish color to underwater cubes
-    double depthPercentage = 0.20 + ((tileHeight - 0.20) / 5).abs();
+    double depthPercentage = 0.20 + ((elevation - 0.20) / 5).abs();
     if (depthPercentage > 1) {
       colorTop = blueColor;
       colorLeft = blueColor;
@@ -39,9 +39,7 @@ VerticeDTO createCube(
     }
   }
   // Creates the 7 corners of the cube
-  final cenBot =
-      IsoCoordinate(coordinate.x + tileHeight, coordinate.y + tileHeight) +
-          offset;
+  final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation) + offset;
   final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
   final lefBot = cenBot + IsoCoordinate(0, widthScale);
   final lefTop = cenCen + IsoCoordinate(0, widthScale);

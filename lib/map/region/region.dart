@@ -1,38 +1,22 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:anki/map/region/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_creator.dart';
 import '../../utils/vertice_dto.dart';
 import 'game_objects/game_object.dart';
+import 'dart:math';
 
 class Region extends Comparable<Region> {
   int verticesCount = 0;
-  IsoCoordinate coordinate;
+  Point regionCoordinate;
   List<GameObject> gameObjects = [];
   ui.Vertices? _aboveWater;
   ui.Vertices? _underWater;
   bool _isDynamic = false;
 
-  Region(
-      this.verticesCount,
-      this.coordinate,
-      Float32List aboveWaterPositions,
-      Int32List aboveWaterColors,
-      Float32List underWaterPositions,
-      Int32List underWaterColors,
-      this.gameObjects) {
+  Region(this.regionCoordinate, this.gameObjects) {
     _isDynamic = _containsDynamicGameObject();
-    _aboveWater = ui.Vertices.raw(
-      ui.VertexMode.triangles,
-      aboveWaterPositions,
-      colors: aboveWaterColors,
-    );
-    _underWater = ui.Vertices.raw(
-      ui.VertexMode.triangles,
-      underWaterPositions,
-      colors: underWaterColors,
-    );
+    _updateVertices();
   }
 
   Map<String, ui.Vertices?> getVertices() {
@@ -57,15 +41,15 @@ class Region extends Comparable<Region> {
     _updateVertices();
   }
 
-  void removeGameObject(GameObject gameObject) {
-    gameObjects.remove(gameObject);
+  void removeGameObject(GameObject removeGameObject) {
+    gameObjects.remove(removeGameObject);
     _isDynamic = _containsDynamicGameObject();
     _updateVertices();
   }
 
-  void removeGameObjects(List<GameObject> gameObjects) {
-    for (var gameObject in gameObjects) {
-      this.gameObjects.remove(gameObject);
+  void removeGameObjects(List<GameObject> removeGameObjects) {
+    for (var gameObject in removeGameObjects) {
+      gameObjects.remove(gameObject);
     }
     _isDynamic = _containsDynamicGameObject();
     _updateVertices();
@@ -76,6 +60,8 @@ class Region extends Comparable<Region> {
     Map<String, VerticeDTO> verticeDTOs = toVertices(gameObjects);
     VerticeDTO underWaterVerticeDTO = verticeDTOs['underWater']!;
     VerticeDTO aboveWaterVerticeDTO = verticeDTOs['aboveWater']!;
+    verticesCount = underWaterVerticeDTO.verticesCount() +
+        aboveWaterVerticeDTO.verticesCount();
     _aboveWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
       Float32List.fromList(aboveWaterVerticeDTO.positions),
@@ -90,25 +76,20 @@ class Region extends Comparable<Region> {
 
   factory Region.fromRegionDTO(RegionDTO data) {
     return Region(
-      data.verticesCount,
       data.regionCoordinate,
-      data.aboveWaterPositions,
-      data.aboveWaterColors,
-      data.underWaterPositions,
-      data.underWaterColors,
       data.gameObjects,
     );
   }
 
   int _nearness() {
-    return coordinate.isoX.toInt() + coordinate.isoY.toDouble().toInt();
+    return -1 * (regionCoordinate.x + regionCoordinate.y).toInt();
   }
 
   @override
   int compareTo(Region other) {
     if (_nearness() > other._nearness()) {
-      return -1;
+      return 1;
     }
-    return 1;
+    return -1;
   }
 }

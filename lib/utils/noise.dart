@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:open_simplex_noise/open_simplex_noise.dart';
 
 import '../map/map_creation_rules.dart';
@@ -36,7 +34,7 @@ class Noise {
         double elevation = _elevationNoise1.eval2D(i * 0.001, j * 0.001) +
             0.1 * _elevationNoise2.eval2D(i * 0.01, j * 0.01) +
             0.01 * _elevationNoise3.eval2D(i * 0.1, j * 0.1);
-        double threshold = 0.2;  // choose a suitable threshold
+        double threshold = 0.2; // choose a suitable threshold
         elevation = elevation > threshold ? elevation * 1.5 : elevation;
         double moisture = _moistureNoise1.eval2D(i * 0.006, j * 0.006) +
             0.5 * _moistureNoise2.eval2D(i * 0.016, j * 0.016) +

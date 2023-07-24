@@ -13,25 +13,24 @@ import 'create_spruce.dart';
 /// Trees, rocks, etc. are natural items.
 class NaturalItem extends GameObject {
   final NaturalItemType type;
-  final Point<double> coordinate;
+  final IsoCoordinate isoCoordinate;
   final double elevation;
   late final CollisionBox collisionBox;
   VerticeDTO vertices = VerticeDTO.empty();
 
-  NaturalItem(this.type, this.coordinate, this.elevation) {
-    vertices = type.positionsAndColors!(coordinate, elevation);
+  NaturalItem(this.type, this.isoCoordinate, this.elevation) {
+    vertices = type.positionsAndColors!(isoCoordinate, elevation);
 
     /// Todo fix the collision box size
-    collisionBox =
-        CollisionBox(IsoCoordinate(coordinate.x, coordinate.y), 8, 8);
+    collisionBox = CollisionBox(isoCoordinate, 8, 8);
   }
 
   factory NaturalItem.fromString(String json) {
     final data = jsonDecode(json);
-    List<String> point = data['coordinate']!.split(',');
+    List<String> point = data['isoCoordinate']!.split(',');
     return NaturalItem(
       NaturalItemType.values.byName(data['type']),
-      Point<double>(
+      IsoCoordinate.fromIso(
         double.parse(point[0]),
         double.parse(point[1]),
       ),
@@ -42,19 +41,20 @@ class NaturalItem extends GameObject {
   @override
   getVertices() {
     if (vertices.isEmpty()) {
-      vertices = type.positionsAndColors!(coordinate, elevation);
+      vertices = type.positionsAndColors!(isoCoordinate, elevation);
     }
     return vertices;
   }
 
   @override
   double nearness() {
-    return coordinate.x + coordinate.y + 1;
+    Point point = isoCoordinate.toPoint();
+    return -1 * (point.x + point.y + 1 + _getWidth());
   }
 
   @override
   isUnderWater() {
-    return elevation < 0;
+    return elevation <= 0;
   }
 
   @override
@@ -72,9 +72,15 @@ class NaturalItem extends GameObject {
     return jsonEncode({
       'gameObjectType': 'NaturalItem',
       'type': type.name,
-      'coordinate': '${coordinate.x},${coordinate.y}',
+      'isoCoordinate': '${isoCoordinate.isoX},${isoCoordinate.isoY}',
       'elevation': elevation,
     });
+  }
+
+  /// This is used for sorting the drawing order
+  /// Currently all naturalItems are width 1 but this can be changed.
+  double _getWidth() {
+    return 1;
   }
 }
 
@@ -90,14 +96,15 @@ enum NaturalItemType {
 
 NaturalItem? getNaturalItem(
     TileType type,
-    Point<double> coordinate,
+    IsoCoordinate isoCoordinate,
     double elevation,
     Map<TileType, List<NaturalItemProbability>> naturalItemsMap) {
   final probabilities = naturalItemsMap[type];
   if (probabilities != null) {
     for (var naturalItem in probabilities) {
       if (Random().nextDouble() < naturalItem.percentage) {
-        return NaturalItem(naturalItem.type, coordinate, elevation);
+        // NaturalItems are top of the ground, so we add 1 to the elevation
+        return NaturalItem(naturalItem.type, isoCoordinate, elevation + 1);
       }
     }
   }

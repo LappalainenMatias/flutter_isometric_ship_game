@@ -10,19 +10,6 @@ import '../map/region/game_objects/static/ground/tile_type.dart';
 /// S S G G
 /// We can simplify when the tiles have same height and type and they make a rectangle.
 List<Tile> simplifyTiles(List<List<SingleTile>> tiles) {
-  Point preY = tiles[0][0].coordinate;
-  for (int j = 0; j < tiles.length; j++) {
-    Point pre = tiles[j][0].coordinate;
-    for (int i = 0; i < tiles[j].length; i++) {
-      if (tiles[j][i].coordinate.x < pre.x) {
-        throw Exception("Tiles are not sorted by x coordinate");
-      }
-      if (tiles[j][i].coordinate.y < preY.y) {
-        throw Exception("Tiles are not sorted by y coordinate");
-      }
-    }
-    preY = tiles[j][0].coordinate;
-  }
   Set<Point> visited = {};
   List<Tile> simplifiedTiles = [];
   for (int j = 0; j < tiles.length; j++) {

@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/utils/vertice_dto.dart';
 import '../../../../../utils/cube.dart';
 import '../../../../../utils/custom_color.dart';
@@ -12,25 +13,25 @@ class BirchCreator {
   static const CustomColor foliageRight = CustomColor.fromARGB(255, 8, 133, 38);
 
   /// Creates tree from cubes
-  static VerticeDTO positionsAndColors(Point<double> point, double elevation) {
+  static VerticeDTO positionsAndColors(IsoCoordinate isoCoordinate, double elevation) {
     int random = Random().nextInt(100);
     if (random < 95) {
-      return _birch(point, elevation);
+      return _birch(isoCoordinate, elevation);
     } else {
-      return _birchTrunk(point, elevation);
+      return _birchTrunk(isoCoordinate, elevation);
     }
   }
 
-  static VerticeDTO _birch(Point<double> point, double elevation) {
-    var birch = _birchTrunk(point, elevation);
-    birch.addVerticeDTO(_birchFoliage(point, elevation));
+  static VerticeDTO _birch(IsoCoordinate isoCoordinate, double elevation) {
+    var birch = _birchTrunk(isoCoordinate, elevation);
+    birch.addVerticeDTO(_birchFoliage(isoCoordinate, elevation));
     return birch;
   }
 
-  static VerticeDTO _birchFoliage(Point<double> point, double elevation) {
+  static VerticeDTO _birchFoliage(IsoCoordinate isoCoordinate, double elevation) {
     return createCube(
-      point,
-      elevation + 2.00,
+      isoCoordinate,
+      elevation + 1.00,
       foliageTop,
       foliageLeft,
       foliageRight,
@@ -40,10 +41,10 @@ class BirchCreator {
   }
 
 
-  static VerticeDTO _birchTrunk(Point<double> point, double elevation) {
+  static VerticeDTO _birchTrunk(IsoCoordinate isoCoordinate, double elevation) {
     return createCube(
-      point,
-      elevation + 1.25,
+      isoCoordinate,
+      elevation + 0.25,
       trunkTop,
       trunkLeft,
       trunkRight,

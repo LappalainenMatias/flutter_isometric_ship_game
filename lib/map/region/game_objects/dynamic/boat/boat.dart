@@ -2,16 +2,16 @@ import 'dart:convert';
 
 import 'package:anki/map/region/game_objects/game_object.dart';
 import 'package:anki/utils/iso_coordinate.dart';
-import 'dart:math';
 
 import '../../../../../utils/collision_box.dart';
 import 'create_boat.dart';
+import 'dart:math';
 
 class Boat extends GameObject {
   double elevation;
-  IsoCoordinate coordinate;
+  IsoCoordinate isoCoordinate;
   final boatMover = BoatMover();
-  Boat(this.coordinate, this.elevation);
+  Boat(this.isoCoordinate, this.elevation);
 
   factory Boat.fromString(String json) {
     final data = jsonDecode(json);
@@ -27,13 +27,13 @@ class Boat extends GameObject {
 
   @override
   getVertices() {
-    return CreateBoat().positionsAndColors(coordinate.toPoint(), elevation);
+    return CreateBoat().positionsAndColors(isoCoordinate, elevation);
   }
 
   @override
   double nearness() {
-    Point<double> point = coordinate.toPoint();
-    return point.x + point.y + 1;
+    Point point = isoCoordinate.toPoint();
+    return -1 * (point.x + point.y + _getWidth()).toDouble();
   }
 
   @override
@@ -52,7 +52,7 @@ class Boat extends GameObject {
 
   @override
   CollisionBox? getCollisionBox() {
-    return CollisionBox(coordinate, 8.0, 8.0);
+    return CollisionBox(isoCoordinate, 2.0, 2.0);
   }
 
   @override
@@ -60,14 +60,18 @@ class Boat extends GameObject {
     return jsonEncode({
       'gameObjectType': 'Boat',
       'elevation': elevation,
-      'isoCoordinate': '${coordinate.isoX},${coordinate.isoY}',
+      'isoCoordinate': '${isoCoordinate.isoX},${isoCoordinate.isoY}',
     });
+  }
+
+  _getWidth() {
+    return 1.0;
   }
 }
 
 /// Todo we now have two movers. BoatMover and CameraMover which are the same
 class BoatMover {
-  final double _movementDistance = 1.0;
+  final double _movementDistance = 5.0;
 
   /// Moves the Boat in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left. Notice that the map is isometric which means that
@@ -77,8 +81,8 @@ class BoatMover {
     double joyStickY,
     Boat boat,
   ) {
-    boat.coordinate = IsoCoordinate.fromIso(
-        boat.coordinate.isoX + joyStickX * _movementDistance,
-        boat.coordinate.isoY + joyStickY * _movementDistance);
+    boat.isoCoordinate = IsoCoordinate.fromIso(
+        boat.isoCoordinate.isoX + joyStickX * _movementDistance,
+        boat.isoCoordinate.isoY + joyStickY * _movementDistance);
   }
 }

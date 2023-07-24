@@ -7,7 +7,7 @@ void main() {
     Boat boat = Boat(const IsoCoordinate(1, 1), 0.0);
     String encoded = boat.encode();
     Boat decoded = Boat.fromString(encoded);
-    expect(const IsoCoordinate(1, 1), decoded.coordinate);
+    expect(const IsoCoordinate(1, 1), decoded.isoCoordinate);
     expect(0.0, decoded.elevation);
   });
 }

@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:anki/utils/iso_coordinate.dart';
+
 import '../../../../../utils/cube.dart';
 import '../../../../../utils/custom_color.dart';
 import '../../../../../utils/vertice_dto.dart';
@@ -13,25 +15,26 @@ class SpruceCreator {
   static const CustomColor foliageRight = CustomColor.fromARGB(255, 6, 101, 28);
 
   /// Creates tree from cubes
-  static VerticeDTO positionsAndColors(Point<double> point, double elevation) {
+  static VerticeDTO positionsAndColors(IsoCoordinate isoCoordinate, double elevation) {
+    /// Todo we have to remove all the random stuff because the trees might get relocated
     int random = Random().nextInt(100);
     if (random < 95) {
-      return _spruce(point, elevation);
+      return _spruce(isoCoordinate, elevation);
     } else {
-      return _spruceTrunk(point, elevation);
+      return _spruceTrunk(isoCoordinate, elevation);
     }
   }
 
-  static VerticeDTO _spruce(Point<double> point, double elevation) {
-    var trunk = _spruceTrunk(point, elevation);
-    trunk.addVerticeDTO(_spruceFoliage(point, elevation));
+  static VerticeDTO _spruce(IsoCoordinate isoCoordinate, double elevation) {
+    var trunk = _spruceTrunk(isoCoordinate, elevation);
+    trunk.addVerticeDTO(_spruceFoliage(isoCoordinate, elevation));
     return trunk;
   }
 
-  static VerticeDTO _spruceFoliage(Point<double> point, double elevation) {
+  static VerticeDTO _spruceFoliage(IsoCoordinate isoCoordinate, double elevation) {
     return createCube(
-      point,
-      elevation + 2.00,
+      isoCoordinate,
+      elevation + 1.00,
       foliageTop,
       foliageLeft,
       foliageRight,
@@ -40,10 +43,10 @@ class SpruceCreator {
     );
   }
 
-  static VerticeDTO _spruceTrunk(Point<double> point, double elevation) {
+  static VerticeDTO _spruceTrunk(IsoCoordinate isoCoordinate, double elevation) {
     return createCube(
-      point,
-      elevation + 1.25,
+      isoCoordinate,
+      elevation + 0.25,
       trunkTop,
       trunkLeft,
       trunkRight,

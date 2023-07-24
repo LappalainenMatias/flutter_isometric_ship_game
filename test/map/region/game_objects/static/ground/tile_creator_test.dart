@@ -1,6 +1,8 @@
 import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/game_objects/static/ground/create_tile.dart';
+import 'package:anki/map/region/game_objects/static/ground/tile.dart';
 import 'package:anki/map/region/game_objects/static/ground/tile_type.dart';
+import 'package:anki/utils/iso_coordinate.dart';
 import 'package:test/test.dart';
 import 'dart:math';
 
@@ -42,5 +44,12 @@ void main() {
         FinlandCreationRules().tileRules());
     getTile(1000000, -1000000, const Point(1000000, -1000000),
         FinlandCreationRules().tileRules());
+  });
+
+  test("Check that elevation and coordinate stays the same", () {
+    SingleTile tile = getTile(
+        1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules());
+    expect(tile.elevation, 1.0);
+    expect(tile.isoCoordinate, const IsoCoordinate(1, 1));
   });
 }

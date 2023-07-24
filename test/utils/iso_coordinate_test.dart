@@ -3,7 +3,7 @@ import 'package:test/test.dart';
 import 'dart:math';
 
 void main() {
-  test('Find iso coordinate center', () {
+  test('Find isocoordinate center', () {
     IsoCoordinate topLeft = const IsoCoordinate.fromIso(0, 0);
     IsoCoordinate bottomRight = const IsoCoordinate.fromIso(128, 128);
     IsoCoordinate center = topLeft.center(bottomRight);
@@ -11,7 +11,7 @@ void main() {
     expect(center.isoY, 64);
   });
 
-  test("Find iso coordinate center", () {
+  test("Find isocoordinate center", () {
     IsoCoordinate topLeft = const IsoCoordinate.fromIso(-2000, -1000);
     IsoCoordinate bottomRight = const IsoCoordinate.fromIso(1000, 3000);
     IsoCoordinate center = topLeft.center(bottomRight);
@@ -42,12 +42,24 @@ void main() {
     expect(c1 == c3, true);
   });
 
-  test("Isocoordinate to point", () {
+  test("Point to isometric coordinate and back to point", () {
     double x = -2;
     double y = 2;
     IsoCoordinate c1 = IsoCoordinate(x, y);
     Point p1 = c1.toPoint();
     expect(p1.x, x);
     expect(p1.y, y);
+  });
+
+  test('IsoCoordinate correctly converts to point', () {
+    const pointX = 3.0;
+    const pointY = 4.0;
+    const isoCoordinate = IsoCoordinate(pointX, pointY);
+
+    const expectedIsoX = pointX * 2 - 2 * pointY;
+    const expectedIsoY = pointX + pointY;
+
+    expect(isoCoordinate.isoX, expectedIsoX);
+    expect(isoCoordinate.isoY, expectedIsoY);
   });
 }

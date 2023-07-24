@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 void main() {
   test("Map should have vertices", () {
     MapModel map = MapModel();
-    map.setZoomLevel(0.5);
+    map.setZoomLevel(0.1);
     MapDTO mapDTO = map.getVerticesInView();
     expect(mapDTO.aboveWater.isNotEmpty || mapDTO.underWater.isNotEmpty, true);
     expect(map.verticesCount > 0, true);
@@ -13,9 +13,9 @@ void main() {
 
   test("Map should have less vertices after zoom in", () {
     MapModel map = MapModel();
-    map.setZoomLevel(0.4);
-    MapDTO mapDTO1 = map.getVerticesInView();
     map.setZoomLevel(0.2);
+    MapDTO mapDTO1 = map.getVerticesInView();
+    map.setZoomLevel(0.1);
     MapDTO mapDTO2 = map.getVerticesInView();
     map.setZoomLevel(0.0);
     MapDTO mapDTO3 = map.getVerticesInView();
@@ -63,27 +63,27 @@ void main() {
     MapModel map = MapModel();
     map.setZoomLevel(0.1);
 
-    IsoCoordinate preTopLeft = map.topLeft;
+    IsoCoordinate preTopLeft = map.cameraTopLeft;
     map.moveCamera(1, 1);
-    IsoCoordinate postTopLeft = map.topLeft;
+    IsoCoordinate postTopLeft = map.cameraTopLeft;
     expect(preTopLeft.isoX < postTopLeft.isoX, true);
     expect(preTopLeft.isoY < postTopLeft.isoY, true);
 
-    preTopLeft = map.topLeft;
+    preTopLeft = map.cameraTopLeft;
     map.moveCamera(-1, -1);
-    postTopLeft = map.topLeft;
+    postTopLeft = map.cameraTopLeft;
     expect(preTopLeft.isoX > postTopLeft.isoX, true);
     expect(preTopLeft.isoY > postTopLeft.isoY, true);
 
-    preTopLeft = map.topLeft;
+    preTopLeft = map.cameraTopLeft;
     map.moveCamera(1, -1);
-    postTopLeft = map.topLeft;
+    postTopLeft = map.cameraTopLeft;
     expect(preTopLeft.isoX < postTopLeft.isoX, true);
     expect(preTopLeft.isoY > postTopLeft.isoY, true);
 
-    preTopLeft = map.topLeft;
+    preTopLeft = map.cameraTopLeft;
     map.moveCamera(-1, 1);
-    postTopLeft = map.topLeft;
+    postTopLeft = map.cameraTopLeft;
     expect(preTopLeft.isoX > postTopLeft.isoX, true);
     expect(preTopLeft.isoY < postTopLeft.isoY, true);
   });
