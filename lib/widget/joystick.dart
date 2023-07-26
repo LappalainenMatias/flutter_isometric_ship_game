@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
-import 'package:provider/provider.dart';
-import '../map/map.dart';
+import '../map/game_map.dart';
 
 class JoyStick extends StatefulWidget {
   const JoyStick({super.key});
@@ -13,7 +12,7 @@ class JoyStick extends StatefulWidget {
 class _JoyStickState extends State<JoyStick> {
   @override
   Widget build(BuildContext context) {
-    MapModel map = Provider.of<MapModel>(context, listen: false);
+    GameMap map = GameMap();
     return SizedBox(
       width: 100,
       height: 100,

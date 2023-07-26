@@ -54,4 +54,21 @@ void main() {
     camera.aspectRatio = 0.2;
     expect(camera.width() * 5, camera.height());
   });
+
+  test("Level of detail should be in order from highest to lowest detail", () {
+    /// Add some parts of the code we are assuming that the LevelOfDetail.values are from the highest to the lowest detail.
+    /// This test can be removed if that is changed.
+    int preTileMinSize = 0;
+    for (var lod in LevelOfDetail.values) {
+      expect(lod.tileMinSize > preTileMinSize, true);
+      preTileMinSize = lod.tileMinSize;
+    }
+  });
+
+  test("Level of detail tile min size should be power of 2", () {
+    /// Power of 2 makes lowering the noise detail easier
+    for (var lod in LevelOfDetail.values) {
+      expect(lod.tileMinSize > 0 && (lod.tileMinSize & (lod.tileMinSize - 1)) == 0, true);
+    }
+  });
 }

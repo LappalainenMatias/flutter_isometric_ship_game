@@ -114,7 +114,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double elevationAmplitude() {
-    return 30;
+    return 100;
   }
 }
 

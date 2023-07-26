@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../map/map.dart';
+import '../map/game_map.dart';
 
 class ZoomSlider extends StatefulWidget {
   const ZoomSlider({super.key});
@@ -10,11 +9,12 @@ class ZoomSlider extends StatefulWidget {
 }
 
 class _ZoomSliderState extends State<ZoomSlider> {
-  double _zoomLevel = 0.5;
+  double _zoomLevel = 0.25;
 
   @override
   Widget build(BuildContext context) {
-    MapModel map = Provider.of<MapModel>(context, listen: false);
+    GameMap map = GameMap();
+    _zoomLevel = 1 - map.zoomLevel;
     return RotatedBox(
       quarterTurns: -1,
       child: SizedBox(

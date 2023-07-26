@@ -32,6 +32,11 @@ abstract class Tile extends GameObject {
   }
 
   @override
+  bool isDynamic() {
+    return false;
+  }
+
+  @override
   CollisionBox getCollisionBox() {
     /// todo we should not be constantly creating new collision boxes
     return CollisionBox(getIsoCoordinate(), getWidth(), getWidth());
@@ -76,11 +81,6 @@ class AreaTile extends Tile {
   @override
   getWidth() {
     return width;
-  }
-
-  @override
-  bool isDynamic() {
-    return false;
   }
 
   factory AreaTile.fromString(String json) {
@@ -149,11 +149,6 @@ class SingleTile extends Tile {
 
   AreaTile toAreaTile(double width) {
     return AreaTile(type, isoCoordinate, elevation, width: width);
-  }
-
-  @override
-  bool isDynamic() {
-    return false;
   }
 
   factory SingleTile.fromString(String json) {

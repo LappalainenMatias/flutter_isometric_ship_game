@@ -1,9 +1,7 @@
-import 'package:anki/map/map.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/map/game_map.dart';
 import 'package:anki/widget/statistics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 import 'dart:math';
 
@@ -40,7 +38,7 @@ class _MapScreenState extends State<MapScreen>
 
   @override
   Widget build(BuildContext context) {
-    var map = Provider.of<MapModel>(context, listen: false);
+    var map = GameMap();
     var screenSize = MediaQuery.of(context).size;
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -80,7 +78,7 @@ class _MapScreenState extends State<MapScreen>
 }
 
 class MapPainter extends CustomPainter {
-  final MapModel map;
+  final GameMap map;
   final FragmentShader _waterShader;
   final _landPaint = Paint()..style = PaintingStyle.fill;
   final _backgroundWaterPaint = Paint()
@@ -101,7 +99,7 @@ class MapPainter extends CustomPainter {
       canvas.drawVertices(v, BlendMode.srcOver, _waterShaderPaint);
     }
     for (var v in vertices.aboveWater) {
-      canvas.drawVertices(v, BlendMode.multiply, _landPaint);
+      canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
   }
 

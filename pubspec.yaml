@@ -18,7 +18,6 @@ dependencies:
   matrix2d: ^1.0.4
   open_simplex_noise: ^2.3.1
   isolated_worker: ^0.1.1
-  provider: ^6.0.0
 
 dev_dependencies:
   flutter_test:

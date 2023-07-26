@@ -3,8 +3,6 @@ import 'package:anki/widget/slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
-import 'package:provider/provider.dart';
-import 'map/map.dart';
 import 'map_screen.dart';
 import 'package:flutter/services.dart';
 
@@ -16,14 +14,7 @@ void main() async {
 
   /// Used for running region creation web worker
   if (kIsWeb) await JsIsolatedWorker().importScripts(['regionworker.js']);
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => MapModel()),
-      ],
-      child: const IsometricMapApp(),
-    ),
-  );
+  runApp(const IsometricMapApp());
 }
 
 class IsometricMapApp extends StatelessWidget {

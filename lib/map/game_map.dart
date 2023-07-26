@@ -2,20 +2,29 @@ import 'dart:ui';
 import 'package:anki/map/region/game_objects/dynamic/boat/boat.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_manager.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'camera/camera.dart';
 
-class MapModel extends ChangeNotifier {
-  final Boat _boat = Boat(const IsoCoordinate(0,0), 0);
+class GameMap {
+  final Boat _boat = Boat(const IsoCoordinate(0, 0), 0);
   final RegionManager _regionManager = RegionManager();
   final Camera _camera = Camera();
   int _verticesCount = 0;
 
-  MapDTO getVerticesInView() {
-    MapDTO mapDTO =
-        _regionManager.getVertices(_camera.topLeft, _camera.bottomRight);
+  static final GameMap _singleton = GameMap._internal();
+
+  factory GameMap() {
+    return _singleton;
+  }
+
+  GameMap._internal();
+
+  MapDTO getVerticesInView([LevelOfDetail? levelOfDetail]) {
+    levelOfDetail ??= _camera.getLevelOfDetail();
+    MapDTO mapDTO = _regionManager.getVertices(
+      _camera.topLeft,
+      _camera.bottomRight,
+      levelOfDetail,
+    );
     _verticesCount = mapDTO.verticesCount;
     return mapDTO;
   }
@@ -46,6 +55,8 @@ class MapModel extends ChangeNotifier {
   IsoCoordinate get cameraBottomRight => _camera.bottomRight;
 
   IsoCoordinate get cameraCenter => _camera.center;
+
+  double get zoomLevel => _camera.zoomLevel;
 
   void setAspectRatio(double ratio) {
     _camera.aspectRatio = ratio;

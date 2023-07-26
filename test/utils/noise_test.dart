@@ -1,14 +1,15 @@
+import 'package:anki/map/camera/camera.dart';
 import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/utils/noise.dart';
 import 'package:test/test.dart';
 
 void main() {
   test("Noise range of values", () {
-    Noise noise = Noise(
+    NoiseCreator noise = NoiseCreator(
       FinlandCreationRules(),
       1,
     );
-    var noises = noise.create(256, 256, 0, 0);
+    var noises = noise.create(256, 256, 0, 0, LevelOfDetail.maximum);
     var elevation = noises[0];
     var moisture = noises[1];
     for (var column in elevation) {

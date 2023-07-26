@@ -103,7 +103,7 @@ NaturalItem? getNaturalItem(
   if (probabilities != null) {
     for (var naturalItem in probabilities) {
       if (Random().nextDouble() < naturalItem.percentage) {
-        // NaturalItems are top of the ground, so we add 1 to the elevation
+        // NaturalItems are top of the ground cubes, so we add 1 to the elevation
         return NaturalItem(naturalItem.type, isoCoordinate, elevation + 1);
       }
     }
