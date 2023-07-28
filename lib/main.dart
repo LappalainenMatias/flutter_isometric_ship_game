@@ -3,7 +3,10 @@ import 'package:anki/widget/slider.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
-import 'map_screen.dart';
+import 'package:anki/game.dart';
+import 'package:flutter_shaders/flutter_shaders.dart';
+import 'game_loop.dart';
+import 'game_map_painter.dart';
 import 'package:flutter/services.dart';
 
 void main() async {
@@ -13,8 +16,11 @@ void main() async {
   );
 
   /// Used for running region creation web worker
-  if (kIsWeb) await JsIsolatedWorker().importScripts(['regionworker.js']);
-  runApp(const IsometricMapApp());
+  if (kIsWeb) {
+    await JsIsolatedWorker().importScripts(['regionworker.js']);
+  }
+
+  runApp(const IsometricMapApp(),);
 }
 
 class IsometricMapApp extends StatelessWidget {
@@ -41,14 +47,30 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
+  late final GameLoop gameLoop;
+
+  @override
+  void initState() {
+    super.initState();
+    gameLoop = GameLoop(this);
+  }
+
+  @override
+  void dispose() {
+    gameLoop.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Material(
+    return Material(
       child: Stack(
         children: [
-          MapScreen(),
-          Align(
+          GameScreen(
+            gameLoop: gameLoop,
+          ),
+          const Align(
             alignment: Alignment.bottomRight,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -66,6 +88,56 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ],
       ),
+    );
+  }
+}
+
+class GameScreen extends StatefulWidget {
+  const GameScreen({super.key, required this.gameLoop});
+
+  final GameLoop gameLoop;
+
+  @override
+  State<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  var game = Game();
+
+  @override
+  Widget build(BuildContext context) {
+    var screenSize = MediaQuery.of(context).size;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        game.updateScreenAspectRatio(screenSize.width / screenSize.height);
+        return SizedBox(
+          child: Stack(
+            children: [
+              Align(
+                child: ShaderBuilder(
+                  assetKey: 'shaders/regtanglewater.frag',
+                  (context, waterShader, child) => CustomPaint(
+                    size: screenSize,
+                    painter: GameMapPainter(waterShader, widget.gameLoop),
+                  ),
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              ),
+              /*
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Statistics(),
+                ),
+              ),
+               */
+            ],
+          ),
+        );
+      },
     );
   }
 }

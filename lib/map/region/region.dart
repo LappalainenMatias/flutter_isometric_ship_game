@@ -1,25 +1,22 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:anki/map/camera/camera.dart';
 import 'package:anki/map/region/region_creator.dart';
+import 'package:anki/utils/iso_coordinate.dart';
+import '../../camera/level_of_detail.dart';
+import '../../game_objects/game_object.dart';
 import '../../utils/vertice_dto.dart';
-import 'game_objects/game_object.dart';
 import 'dart:math';
 
 /// The region contains dynamic and static game objects. Because of zoom out
 /// we save static game objects in different levels of detail. The dynamic
 /// game objects are always visible.
 class Region extends Comparable<Region> {
-  Point regionCoordinate;
+  IsoCoordinate regionBottomCoordinate;
   final List<GameObject> _dynamicGameObjects = [];
-  final Map<LevelOfDetail, List<GameObject>> _staticGameObjectsByDetailLevel = {};
+  Map<LevelOfDetail, List<GameObject>> _staticGameObjectsByDetailLevel;
   RegionLOD regionLOD = RegionLOD();
 
-  /// When we create the region for the first time we only add static game objects
-  /// for a single level of detail to make it faster.
-  Region(this.regionCoordinate, List<GameObject> staticGameObjects, LevelOfDetail lod) {
-    /// todo lod should not be a variable here because it is confusing. update the comment
-    _staticGameObjectsByDetailLevel[lod] = staticGameObjects;
+  Region(this.regionBottomCoordinate, this._staticGameObjectsByDetailLevel) {
     _createNewVertices();
   }
 
@@ -98,19 +95,19 @@ class Region extends Comparable<Region> {
 
   factory Region.fromRegionDTO(RegionDTO data) {
     return Region(
-      data.regionCoordinate,
-      data.gameObjects,
-      data.lod,
+      data.regionBottomCoordinate,
+      data.gameObjectsByLOD
     );
   }
 
-  int _nearness() {
-    return -1 * (regionCoordinate.x + regionCoordinate.y).toInt();
+  int nearness() {
+    Point bottom = regionBottomCoordinate.toPoint();
+    return -1 * (bottom.x + bottom.y).toInt();
   }
 
   @override
   int compareTo(Region other) {
-    if (_nearness() > other._nearness()) {
+    if (nearness() > other.nearness()) {
       return 1;
     }
     return -1;

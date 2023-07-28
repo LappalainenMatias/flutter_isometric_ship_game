@@ -1,86 +1,49 @@
 import 'dart:ui' as ui;
-import 'package:anki/map/camera/camera.dart';
+import 'package:anki/map/region/visible_regions.dart';
 import 'package:anki/utils/iso_coordinate.dart';
-import 'package:anki/map/game_map.dart';
 import 'package:anki/map/region/region.dart';
 import 'dart:math';
 import 'package:anki/map/region/region_creator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
-import 'game_objects/dynamic/boat/boat.dart';
-import 'game_objects/game_object.dart';
+import '../../camera/camera.dart';
+import '../../camera/level_of_detail.dart';
+import '../../game_objects/dynamic/player/player.dart';
+import '../../game_objects/game_object.dart';
+import '../../utils/map_dto.dart';
 
 class RegionManager {
   final Map<Point<int>, Region> _regions = {};
+  late final VisibleRegion _visibleRegion;
 
   /// This needs to be power of two because it makes the level of detail changes easier.
-  final int _regionSideWidth = 32;
+  final int regionSideWidth = 32;
+
+  /// Todo maybe we should create a file for constants like these
   final int _maxRegionCount = 4096;
   final Set<Point> _buildQueue = {};
-  Region? boatRegion;
+  Region? playerRegion;
 
-  void updateBoatRegion(Boat boat) {
+  RegionManager(Camera camera) {
+    _visibleRegion = VisibleRegion(camera, this);
+  }
+
+  void updatePlayerRegion(Player player) {
     Region? currentRegion =
-        _getRegion(boat.isoCoordinate, LevelOfDetail.maximum);
+    getRegion(player.isoCoordinate, LevelOfDetail.maximum);
     if (currentRegion == null) return;
-    if (currentRegion != boatRegion) {
-      if (boatRegion != null) boatRegion!.removeGameObject(boat);
-      boatRegion = currentRegion;
-      boatRegion!.addDynamicGameObject(boat);
+    if (currentRegion != playerRegion) {
+      if (playerRegion != null) playerRegion!.removeGameObject(player);
+      playerRegion = currentRegion;
+      playerRegion!.addDynamicGameObject(player);
     }
   }
 
-  /// Todo this should be done in somewhere else
-  /*
-  void boatCollision(Boat boat) {
-    List<GameObject> collisionObjects = [];
-    for (var region in _getBoatRegions(boat)) {
-      for (GameObject gameObject in region.gameObjects) {
-        if (boat.collision(gameObject)) {
-          collisionObjects.add(gameObject);
-        }
-      }
-    }
-    if (collisionObjects.isNotEmpty) {
-      boatRegion!.removeGameObjects(collisionObjects);
-    }
-  }
-
-
-  /// We want to know the regions next to the boat, so we can have collision
-  /// with their game objects as well.
-  Set<Region> _getBoatRegions(Boat boat) {
-    Set<Region> regions = {};
-    Region? regionTop =
-        _getRegion(boat.isoCoordinate + const IsoCoordinate(0, 2));
-    if (regionTop != null) regions.add(regionTop);
-    Region? regionBottom =
-        _getRegion(boat.isoCoordinate + const IsoCoordinate(0, -2));
-    if (regionBottom != null) regions.add(regionBottom);
-    Region? regionLeft =
-        _getRegion(boat.isoCoordinate + const IsoCoordinate(-2, 0));
-    if (regionLeft != null) regions.add(regionLeft);
-    Region? regionRight =
-        _getRegion(boat.isoCoordinate + const IsoCoordinate(2, 0));
-    if (regionRight != null) regions.add(regionRight);
-    return regions;
-  }
-   */
-
-  MapDTO getVertices(
-    IsoCoordinate topLeft,
-    IsoCoordinate bottomRight,
-    LevelOfDetail lod,
-  ) {
-    Stopwatch stopwatch = Stopwatch()..start();
-    List<Region> regions = _getRegions(topLeft, bottomRight, lod);
-    print("0: ${stopwatch.elapsedMilliseconds}");
-    stopwatch.reset();
-    regions.sort();
-    print("1: ${stopwatch.elapsedMilliseconds}");
-    stopwatch.reset();
-
-    /// Todo this is slow if done every frame for a lot of regions
+  MapDTO getVertices(IsoCoordinate topLeft,
+      IsoCoordinate bottomRight,
+      LevelOfDetail lod,) {
+    _visibleRegion.updateVisibleRegions(lod);
+    List<Region> regions = _visibleRegion.getVisibleRegionsInDrawingOrder();
     List<ui.Vertices> aboveWater = [];
     List<ui.Vertices> underWater = [];
     int verticesCount = 0;
@@ -94,8 +57,6 @@ class RegionManager {
       }
       verticesCount += region.getVerticesCount(lod);
     }
-
-    print("2: ${stopwatch.elapsedMilliseconds}");
     return MapDTO(
       underWater: underWater,
       aboveWater: aboveWater,
@@ -103,63 +64,11 @@ class RegionManager {
     );
   }
 
-  /// Returns coordinates that are between the two coordinates.
-  /// Because of the region shape (diamond) we return more coordinates than needed so
-  /// that we are not going to have holes in the map.
-  List<IsoCoordinate> _getCoordinates(
-    IsoCoordinate topLeft,
-    IsoCoordinate bottomRight,
-    step,
-  ) {
-    List<IsoCoordinate> regionCoordinates = [];
-    for (double isoY = topLeft.isoY + step;
-        isoY >= bottomRight.isoY - 2 * step;
-        isoY -= step) {
-      for (double isoX = topLeft.isoX - step;
-          isoX <= bottomRight.isoX + 2 * step;
-          isoX += step) {
-        regionCoordinates.add(IsoCoordinate.fromIso(isoX, isoY));
-      }
-    }
-    return regionCoordinates;
-  }
-
-  List<Region> _getRegions(
-      IsoCoordinate topLeft, IsoCoordinate bottomRight, LevelOfDetail lod) {
-    List<IsoCoordinate> coordinates =
-        _getCoordinates(topLeft, bottomRight, _regionSideWidth);
-    //_sortByDistanceToCenter(coordinates, topLeft, bottomRight);
-    Stopwatch stopwatch = Stopwatch()..start();
-    Set<Region> regions = {};
-    for (var coordinate in coordinates) {
-      Region? region = _getRegion(coordinate, lod);
-      if (region != null) {
-        regions.add(region);
-      }
-    }
-    print("Getting regions took ${stopwatch.elapsedMilliseconds} ms");
-    return regions.toList();
-  }
-
-  /// We want to create and find the regions that are
-  /// closest to the center of the screen first
-  /// TODO the performance is really slow when zoomed out (can take 20ms per frame)
-  void _sortByDistanceToCenter(
-    List<IsoCoordinate> coordinates,
-    IsoCoordinate topLeft,
-    IsoCoordinate bottomRight,
-  ) {
-    var center = topLeft.center(bottomRight);
-    Stopwatch stopwatch = Stopwatch()..start();
-    coordinates.sort((a, b) =>
-        a.manhattanDistance(center).compareTo(b.manhattanDistance(center)));
-    print("Sorting took ${stopwatch.elapsedMilliseconds} ms");
-  }
-
-  Region? _getRegion(IsoCoordinate isoCoordinate, LevelOfDetail lod) {
+  /// Returns the region which the isoCoordinate is part of
+  Region? getRegion(IsoCoordinate isoCoordinate, LevelOfDetail lod) {
     Point isoPoint = isoCoordinate.toPoint();
-    int regionX = (isoPoint.x / _regionSideWidth).floor();
-    int regionY = (isoPoint.y / _regionSideWidth).floor();
+    int regionX = (isoPoint.x / regionSideWidth).floor();
+    int regionY = (isoPoint.y / regionSideWidth).floor();
     Point<int> point = Point(regionX, regionY);
     if (_regions.containsKey(point)) {
       if (!_regions[point]!.hasLevelOfDetail(lod)) {
@@ -176,6 +85,14 @@ class RegionManager {
     return null;
   }
 
+  bool hasRegion(IsoCoordinate isoCoordinate) {
+    Point isoPoint = isoCoordinate.toPoint();
+    int regionX = (isoPoint.x / regionSideWidth).floor();
+    int regionY = (isoPoint.y / regionSideWidth).floor();
+    Point<int> point = Point(regionX, regionY);
+    return _regions.containsKey(point);
+  }
+
   void _removeFarawayRegions(Point<int> point) {
     for (var key in _regions.keys.toList()) {
       if ((key.x - point.x).abs() > 60 || (key.y - point.y).abs() > 60) {
@@ -184,58 +101,84 @@ class RegionManager {
     }
   }
 
-  void _createRegion(int x, int y, LevelOfDetail lod) {
+  void _createRegion(int regionX, int regionY, LevelOfDetail lod) {
     if (kIsWeb) {
-      _webCreateRegion(x, y, lod);
+      _webCreateRegion(regionX, regionY, lod);
     } else {
-      _otherPlatformsCreateRegion(x, y, lod);
+      _otherPlatformsCreateRegion(regionX, regionY, lod);
     }
   }
 
   /// Creates the region concurrently
-  void _webCreateRegion(int x, int y, LevelOfDetail lod) async {
-    if (_buildQueue.isNotEmpty || _buildQueue.contains(Point(x, y))) {
+  void _webCreateRegion(int regionX, int regionY, LevelOfDetail minLOD) async {
+    if (_buildQueue.isNotEmpty ||
+        _buildQueue.contains(Point(regionX, regionY))) {
       /// Todo Should we allow large than 1 build queue?
       return;
     }
-    _buildQueue.add(Point(x, y));
-    final result = await JsIsolatedWorker().run(
+    _buildQueue.add(Point(regionX, regionY));
+    var result = await JsIsolatedWorker().run(
       functionName: 'jsregionworker',
       arguments: [
-        x,
-        y,
-        _regionSideWidth,
-        _regionSideWidth,
-        x * _regionSideWidth,
-        y * _regionSideWidth,
-        lod.index,
+        regionSideWidth,
+        regionSideWidth,
+        regionX * regionSideWidth,
+        regionY * regionSideWidth,
+        minLOD.index,
       ],
     );
 
-    List<GameObject> gameObjects = [];
-    for (var encoded in result[2]) {
-      gameObjects.add(GameObject.decode(encoded));
+    Map<LevelOfDetail, List<GameObject>> gameObjectsByLOD = {};
+    int index = 0;
+    if (result[0].length != LevelOfDetail.values.length) {
+      throw Exception("Wrong number of LODs");
+    }
+    for (var listOfEncodedObjects in result[0]) {
+      List<GameObject> gameObjects = [];
+      for (String encoded in listOfEncodedObjects) {
+        gameObjects.add(GameObject.decode(encoded));
+      }
+      gameObjectsByLOD[LevelOfDetail.values[index]] = gameObjects;
+      index++;
     }
 
-    if (_regions.containsKey(Point(x, y))) {
-      _regions[Point(x, y)]!.addNewLevelOfDetail(gameObjects, lod);
+    if (_regions.containsKey(Point(regionX, regionY))) {
+      for (LevelOfDetail lod in gameObjectsByLOD.keys) {
+        if (!_regions[Point(regionX, regionY)]!.hasLevelOfDetail(lod) &&
+            gameObjectsByLOD[lod]!.isNotEmpty) {
+          _regions[Point(regionX, regionY)]!
+              .addNewLevelOfDetail(gameObjectsByLOD[lod]!, lod);
+        }
+      }
     } else {
-      var regionDTO = RegionDTO(Point(result[0], result[1]), gameObjects, lod);
-      _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
+      var regionDTO = RegionDTO(
+        IsoCoordinate(
+          regionX * regionSideWidth.toDouble(),
+          regionY * regionSideWidth.toDouble(),
+        ),
+        gameObjectsByLOD,
+      );
+      _regions[Point(regionX, regionY)] = Region.fromRegionDTO(regionDTO);
     }
-    _buildQueue.remove(Point(x, y));
+    _buildQueue.remove(Point(regionX, regionY));
   }
 
-  /// Does NOT support concurrency yet
   /// TODO Add concurrency support
   void _otherPlatformsCreateRegion(int x, int y, LevelOfDetail lod) {
     RegionDTO regionDTO = RegionCreator().create(
-        Point(x.toDouble(), y.toDouble()),
-        _regionSideWidth,
-        _regionSideWidth,
-        x * _regionSideWidth,
-        y * _regionSideWidth,
+        IsoCoordinate(
+          x * regionSideWidth.toDouble(),
+          y * regionSideWidth.toDouble(),
+        ),
+        regionSideWidth,
+        regionSideWidth,
+        x * regionSideWidth,
+        y * regionSideWidth,
         lod);
     _regions[Point(x, y)] = Region.fromRegionDTO(regionDTO);
+  }
+
+  int visibleRegionSize() {
+    return _visibleRegion.visibleRegionSize();
   }
 }

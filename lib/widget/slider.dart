@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../map/game_map.dart';
+import '../game.dart';
 
 class ZoomSlider extends StatefulWidget {
   const ZoomSlider({super.key});
@@ -13,7 +13,7 @@ class _ZoomSliderState extends State<ZoomSlider> {
 
   @override
   Widget build(BuildContext context) {
-    GameMap map = GameMap();
+    Game map = Game();
     _zoomLevel = 1 - map.zoomLevel;
     return RotatedBox(
       quarterTurns: -1,

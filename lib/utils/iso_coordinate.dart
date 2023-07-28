@@ -32,6 +32,13 @@ class IsoCoordinate {
     return Point(x, y);
   }
 
+  bool isBetween(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
+    return isoX >= topLeft.isoX &&
+        isoX <= bottomRight.isoX &&
+        isoY >= bottomRight.isoY &&
+        isoY <= topLeft.isoY;
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
