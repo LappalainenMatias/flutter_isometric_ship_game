@@ -23,14 +23,7 @@ void main() async {
     await JsIsolatedWorker().importScripts(['regionworker.js']);
   }
 
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => Game()),
-      ],
-      child: const IsometricMapApp(),
-    ),
-  );
+  runApp(const IsometricMapApp());
 }
 
 class IsometricMapApp extends StatelessWidget {
@@ -74,49 +67,51 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Stack(
-        children: [
-          GameScreen(
-            gameLoop: gameLoop,
-          ),
-          const Align(
-            alignment: Alignment.bottomRight,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: ZoomSlider(),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: JoyStick(),
-                )
-              ],
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Game()),
+        ChangeNotifierProvider(create: (_) => gameLoop),
+      ],
+      child: const Material(
+        child: Stack(
+          children: [
+            GameScreen(),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: ZoomSlider(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: JoyStick(),
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 }
 
 class GameScreen extends StatefulWidget {
-  const GameScreen({super.key, required this.gameLoop});
-
-  final GameLoop gameLoop;
+  const GameScreen({super.key});
 
   @override
   State<GameScreen> createState() => _GameScreenState();
 }
 
 class _GameScreenState extends State<GameScreen> {
-
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     var game = Provider.of<Game>(context, listen: false);
+    var gameloop = Provider.of<GameLoop>(context, listen: false);
     return LayoutBuilder(
       builder: (context, constraints) {
         game.updateScreenAspectRatio(screenSize.width / screenSize.height);
@@ -129,7 +124,8 @@ class _GameScreenState extends State<GameScreen> {
                   (context, waterShader, child) => CustomPerformanceOverlay(
                     child: CustomPaint(
                       size: screenSize,
-                      painter: GameMapPainter(waterShader, widget.gameLoop, game),
+                      painter:
+                          GameMapPainter(waterShader, gameloop, game),
                     ),
                   ),
                   child: const Center(

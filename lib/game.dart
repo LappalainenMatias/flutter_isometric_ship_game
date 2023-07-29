@@ -20,7 +20,6 @@ class Game extends ChangeNotifier {
       levelOfDetail,
     );
     _verticesCount = mapDTO.verticesCount;
-    notifyListeners();
     return mapDTO;
   }
 

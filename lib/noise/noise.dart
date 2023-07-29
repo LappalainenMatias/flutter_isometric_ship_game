@@ -60,7 +60,8 @@ class NoiseCreator {
   }
 }
 
-class NoiseCreatorAnotherLibrary {
+/// Todo This seems to have best performance but testing is needed
+class NoiseCreator_open_simplex_2 {
   late OpenSimplex2F _elevationNoise1;
   late OpenSimplex2F _elevationNoise2;
   late OpenSimplex2F _elevationNoise3;
@@ -69,7 +70,7 @@ class NoiseCreatorAnotherLibrary {
   late OpenSimplex2F _moistureNoise3;
   MapCreationRules mapCreationRules;
 
-  NoiseCreatorAnotherLibrary(this.mapCreationRules, [int seed = 1]) {
+  NoiseCreator_open_simplex_2(this.mapCreationRules, [int seed = 1]) {
     _elevationNoise1 = OpenSimplex2F(seed + 1);
     _elevationNoise2 = OpenSimplex2F(seed + 2);
     _elevationNoise3 = OpenSimplex2F(seed + 3);

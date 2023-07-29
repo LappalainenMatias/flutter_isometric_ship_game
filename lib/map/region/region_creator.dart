@@ -14,7 +14,7 @@ import '../../optimization/tile_map_simplifier.dart';
 /// Because of this we cannot create Vertices or use dart:ui Colors.
 class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
-  late final noise = NoiseCreatorAnotherLibraryThird(_mapCreationRules);
+  late final noise = NoiseCreator_open_simplex_2(_mapCreationRules);
 
   /// Creates game objects for the spefic level of detail and the details lower than that.
   RegionDTO create(IsoCoordinate regionBottom, int width, int height,

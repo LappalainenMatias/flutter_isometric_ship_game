@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../game.dart';
+import '../game_loop.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
@@ -16,7 +17,8 @@ class Statistics extends StatefulWidget {
 class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
-    var game = Provider.of<Game>(context, listen: true);
+    var game = Provider.of<Game>(context, listen: false);
+    Provider.of<GameLoop>(context, listen: true);
     return Container(
       color: Colors.black.withOpacity(0.6),
       child: Padding(
