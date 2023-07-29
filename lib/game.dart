@@ -1,30 +1,16 @@
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:anki/utils/map_dto.dart';
+import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
 import 'camera/level_of_detail.dart';
 import 'game_objects/dynamic/player/player.dart';
 
-class Game {
+class Game extends ChangeNotifier {
   final Player _player = Player(const IsoCoordinate(0, 0), 0);
   final Camera _camera = Camera();
-  late final RegionManager _regionManager;
+  late final RegionManager _regionManager = RegionManager(_camera);
   int _verticesCount = 0;
-  Function()? updateStatistics;
-
-  static final Game _singleton = Game._internal();
-
-  factory Game() {
-    return _singleton;
-  }
-
-  Game._internal() {
-    _regionManager = RegionManager(_camera);
-  }
-
-  void followStatistics(Function() updateStatistics) {
-    this.updateStatistics = updateStatistics;
-  }
 
   MapDTO getVerticesInView([LevelOfDetail? levelOfDetail]) {
     levelOfDetail ??= _camera.getLevelOfDetail();
@@ -34,7 +20,7 @@ class Game {
       levelOfDetail,
     );
     _verticesCount = mapDTO.verticesCount;
-    if (updateStatistics != null) updateStatistics!(); //updates statistics
+    notifyListeners();
     return mapDTO;
   }
 
@@ -49,7 +35,7 @@ class Game {
   void movePlayer(double joyStickX, double joyStickY) {
     _player.move(joyStickX, joyStickY);
     _camera.center = _player.isoCoordinate;
-    _regionManager.updatePlayerRegion(_player);
+    //_regionManager.updatePlayerRegion(_player);
   }
 
   int get verticesCount => _verticesCount;
