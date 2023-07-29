@@ -55,10 +55,8 @@ abstract class GameObject implements Comparable<GameObject> {
     switch (data["gameObjectType"] as String) {
       case 'NaturalItem':
         return NaturalItem.fromString(json);
-      case 'SingleTile':
-        return SingleTile.fromString(json);
-      case 'AreaTile':
-        return AreaTile.fromString(json);
+      case 'Tile':
+        return Tile.fromString(json);
       case 'Player':
         return Player.fromString(json);
     }

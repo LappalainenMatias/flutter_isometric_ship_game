@@ -6,20 +6,13 @@ import '../map/map_creation_rules.dart';
 import '../utils/iso_coordinate.dart';
 import 'dart:math';
 
-class SingleTileCreator {
-  static SingleTile create(
-    double elevation,
-    double moisture,
-    Point<double> point,
-    List<TileRule> rules,
-  ) {
+class TileCreator {
+  static Tile create(double elevation, double moisture, Point<double> point,
+      List<TileRule> rules, int width) {
     for (TileRule rule in rules) {
       if (rule.match(elevation, moisture)) {
-        return SingleTile(
-          rule.type,
-          IsoCoordinate(point.x, point.y),
-          elevation,
-        );
+        return Tile(
+            rule.type, IsoCoordinate(point.x, point.y), elevation, width);
       }
     }
     throw Exception(

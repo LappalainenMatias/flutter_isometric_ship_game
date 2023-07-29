@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:anki/game_objects/static/ground/tile.dart';
+
 import '../utils/custom_color.dart';
 import '../utils/iso_coordinate.dart';
 import '../utils/vertice_dto.dart';
@@ -126,8 +127,8 @@ class SpruceToVertices {
   }
 }
 
-class SingleTileToVertices {
-  static VerticeDTO toVertices(SingleTile tile) {
+class TileToVertices {
+  static VerticeDTO toVertices(Tile tile) {
     // todo only a test. remove the heightscale elevation at some point
     if (tile.elevation > 0) {
       return CubeVerticeCreator.toVertices(
@@ -136,6 +137,7 @@ class SingleTileToVertices {
         tile.type.top,
         tile.type.left,
         tile.type.right,
+        widthScale: tile.width.toDouble(),
         heightScale: tile.elevation,
       );
     }
@@ -145,31 +147,7 @@ class SingleTileToVertices {
       tile.type.top,
       tile.type.left,
       tile.type.right,
-    );
-  }
-}
-
-class AreaTileToVertices {
-  static VerticeDTO toVertices(AreaTile tile) {
-    // todo only a test. remove the heightscale elevation at some point
-    if (tile.elevation > 0) {
-      return CubeVerticeCreator.toVertices(
-        tile.isoCoordinate,
-        0,
-        tile.type.top,
-        tile.type.left,
-        tile.type.right,
-        widthScale: tile.width,
-        heightScale: tile.elevation,
-      );
-    }
-    return CubeVerticeCreator.toVertices(
-      tile.isoCoordinate,
-      tile.elevation,
-      tile.type.top,
-      tile.type.left,
-      tile.type.right,
-      widthScale: tile.width,
+      widthScale: tile.width.toDouble(),
     );
   }
 }

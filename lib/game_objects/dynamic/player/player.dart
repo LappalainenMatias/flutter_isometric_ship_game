@@ -46,7 +46,7 @@ class Player extends GameObject {
 
   @override
   bool isDynamic() {
-    return true;
+    return false;
   }
 
   @override
@@ -70,7 +70,7 @@ class Player extends GameObject {
 
 /// Todo we now have two movers. BoatMover and CameraMover which are the same
 class PlayerMover {
-  final double _movementDistance = 5.0;
+  final double _movementDistance = 50.0;
 
   /// Moves the Boat in the direction indicated by the origin (0, 0) and (x, y)
   /// (0, 1) = up, (-1, 0) = left. Notice that the map is isometric which means that

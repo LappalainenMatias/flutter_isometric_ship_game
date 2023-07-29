@@ -1,10 +1,13 @@
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/slider.dart';
+import 'package:anki/widget/statistics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:anki/game.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
+import 'package:performance/performance.dart';
+import 'package:provider/provider.dart';
 import 'game_loop.dart';
 import 'game_map_painter.dart';
 import 'package:flutter/services.dart';
@@ -20,7 +23,14 @@ void main() async {
     await JsIsolatedWorker().importScripts(['regionworker.js']);
   }
 
-  runApp(const IsometricMapApp(),);
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Game()),
+      ],
+      child: const IsometricMapApp(),
+    ),
+  );
 }
 
 class IsometricMapApp extends StatelessWidget {
@@ -102,11 +112,11 @@ class GameScreen extends StatefulWidget {
 }
 
 class _GameScreenState extends State<GameScreen> {
-  var game = Game();
 
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
+    var game = Provider.of<Game>(context, listen: false);
     return LayoutBuilder(
       builder: (context, constraints) {
         game.updateScreenAspectRatio(screenSize.width / screenSize.height);
@@ -116,16 +126,17 @@ class _GameScreenState extends State<GameScreen> {
               Align(
                 child: ShaderBuilder(
                   assetKey: 'shaders/regtanglewater.frag',
-                  (context, waterShader, child) => CustomPaint(
-                    size: screenSize,
-                    painter: GameMapPainter(waterShader, widget.gameLoop),
+                  (context, waterShader, child) => CustomPerformanceOverlay(
+                    child: CustomPaint(
+                      size: screenSize,
+                      painter: GameMapPainter(waterShader, widget.gameLoop, game),
+                    ),
                   ),
                   child: const Center(
                     child: CircularProgressIndicator(),
                   ),
                 ),
               ),
-              /*
               const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Align(
@@ -133,7 +144,6 @@ class _GameScreenState extends State<GameScreen> {
                   child: Statistics(),
                 ),
               ),
-               */
             ],
           ),
         );
