@@ -50,9 +50,11 @@ class Camera {
   }
 
   LevelOfDetail getLevelOfDetail() {
-    if (zoomLevel < 0.05) return LevelOfDetail.maximum;
-    if (zoomLevel < 0.15) return LevelOfDetail.mid;
-    if (zoomLevel < 0.45) return LevelOfDetail.low;
-    return LevelOfDetail.minimal;
+    if (zoomLevel < 0.03) return LevelOfDetail.lod1x1;
+    if (zoomLevel < 0.09) return LevelOfDetail.lod2x2;
+    if (zoomLevel < 0.22) return LevelOfDetail.lod4x4;
+    if (zoomLevel < 0.40) return LevelOfDetail.lod8x8;
+    if (zoomLevel < 0.80) return LevelOfDetail.lod16x16;
+    return LevelOfDetail.lod32x32;
   }
 }

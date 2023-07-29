@@ -12,10 +12,12 @@
 /// [9, 9, 11, 11],
 /// [9, 9, 11, 11]
 enum LevelOfDetail {
-  maximum(1, true),
-  mid(2, false),
-  low(4, false),
-  minimal(8, false);
+  lod1x1(1, true),
+  lod2x2(2, false),
+  lod4x4(4, false),
+  lod8x8(8, false),
+  lod16x16(16, false),
+  lod32x32(32, false);
 
   const LevelOfDetail(this.tileMinSize, this.containsNaturalItems);
   final int tileMinSize;
