@@ -66,11 +66,15 @@ void main() {
   test("IsoCoordinate is between two coordinates", () {
     IsoCoordinate topLeft = const IsoCoordinate.fromIso(-1, 1);
     IsoCoordinate bottomRight = const IsoCoordinate.fromIso(3, -2);
-    IsoCoordinate c1 = const IsoCoordinate(0, 0);
-    IsoCoordinate c2 = const IsoCoordinate(2, 1);
-    IsoCoordinate c3 = const IsoCoordinate(-2, -2);
+    IsoCoordinate c1 = const IsoCoordinate.fromIso(-1, 1);
+    IsoCoordinate c2 = const IsoCoordinate.fromIso(3, -2);
+    IsoCoordinate c3 = const IsoCoordinate.fromIso(1, -1);
+    IsoCoordinate c4 = const IsoCoordinate.fromIso(-1, 2);
+    IsoCoordinate c5 = const IsoCoordinate.fromIso(4, -2);
     expect(c1.isBetween(topLeft, bottomRight), true);
-    expect(c2.isBetween(topLeft, bottomRight), false);
+    expect(c2.isBetween(topLeft, bottomRight), true);
     expect(c3.isBetween(topLeft, bottomRight), true);
+    expect(c4.isBetween(topLeft, bottomRight), false);
+    expect(c5.isBetween(topLeft, bottomRight), false);
   });
 }

@@ -11,10 +11,10 @@ void main() {
     Region r5 = Region(const IsoCoordinate(-32, -32), {});
     List<Region> regions = [r5, r4, r3, r2, r1];
     regions.sort();
-    expect(regions[0].regionBottomCoordinate, r1.regionBottomCoordinate);
-    expect(regions[1].regionBottomCoordinate, r2.regionBottomCoordinate);
-    expect(regions[2].regionBottomCoordinate, r3.regionBottomCoordinate);
-    expect(regions[3].regionBottomCoordinate, r4.regionBottomCoordinate);
-    expect(regions[4].regionBottomCoordinate, r5.regionBottomCoordinate);
+    expect(regions[0].bottomCoordinate, r1.bottomCoordinate);
+    expect(regions[1].bottomCoordinate, r2.bottomCoordinate);
+    expect(regions[2].bottomCoordinate, r3.bottomCoordinate);
+    expect(regions[3].bottomCoordinate, r4.bottomCoordinate);
+    expect(regions[4].bottomCoordinate, r5.bottomCoordinate);
   });
 }

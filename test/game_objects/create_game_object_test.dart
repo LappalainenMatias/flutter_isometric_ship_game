@@ -20,37 +20,37 @@ void main() {
       () {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
-    SingleTileCreator.create(
-        0.0, 0.0, const Point(0, 0), SvalbardCreationRules().tileRules());
-    SingleTileCreator.create(-1000000, -1000000,
-        const Point(-1000000, -1000000), SvalbardCreationRules().tileRules());
-    SingleTileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
-        SvalbardCreationRules().tileRules());
-    SingleTileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
-        SvalbardCreationRules().tileRules());
-    SingleTileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
-        SvalbardCreationRules().tileRules());
+    TileCreator.create(
+        0.0, 0.0, const Point(0, 0), SvalbardCreationRules().tileRules(), 1);
+    TileCreator.create(-1000000, -1000000, const Point(-1000000, -1000000),
+        SvalbardCreationRules().tileRules(), 1);
+    TileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
+        SvalbardCreationRules().tileRules(), 1);
+    TileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
+        SvalbardCreationRules().tileRules(), 1);
+    TileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
+        SvalbardCreationRules().tileRules(), 1);
   });
 
   test("Create tile from elevation and moisture for finland creation rules",
       () {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
-    SingleTileCreator.create(
-        0.0, 0.0, const Point(0, 0), FinlandCreationRules().tileRules());
-    SingleTileCreator.create(-1000000, -1000000,
-        const Point(-1000000, -1000000), FinlandCreationRules().tileRules());
-    SingleTileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
-        FinlandCreationRules().tileRules());
-    SingleTileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
-        FinlandCreationRules().tileRules());
-    SingleTileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
-        FinlandCreationRules().tileRules());
+    TileCreator.create(
+        0.0, 0.0, const Point(0, 0), FinlandCreationRules().tileRules(), 1);
+    TileCreator.create(-1000000, -1000000, const Point(-1000000, -1000000),
+        FinlandCreationRules().tileRules(), 1);
+    TileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
+        FinlandCreationRules().tileRules(), 1);
+    TileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
+        FinlandCreationRules().tileRules(), 1);
+    TileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
+        FinlandCreationRules().tileRules(), 1);
   });
 
   test("Check that elevation and coordinate stays the same", () {
-    SingleTile tile = SingleTileCreator.create(
-        1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules());
+    Tile tile = TileCreator.create(
+        1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules(), 1);
     expect(tile.elevation, 1.0);
     expect(tile.isoCoordinate, const IsoCoordinate(1, 1));
   });

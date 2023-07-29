@@ -57,7 +57,7 @@ void main() {
   });
 
   test("Level of detail should be in order from highest to lowest detail", () {
-    /// Add some parts of the code we are assuming that the LevelOfDetail.values are from the highest to the lowest detail.
+    /// Add some parts of the code we are assuming that the LevelOfDetail.values are from the highest to the lowest detail (jsregionworker).
     /// This test can be removed if that is changed.
     int preTileMinSize = 0;
     for (var lod in LevelOfDetail.values) {

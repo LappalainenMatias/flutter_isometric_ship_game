@@ -6,11 +6,11 @@ import 'package:test/test.dart';
 
 void main() {
   test("Sort tiles", () {
-    SingleTile t1 = SingleTile(TileType.taiga, const IsoCoordinate(1, 1), 1);
-    SingleTile t2 = SingleTile(TileType.taiga, const IsoCoordinate(0, 1), 1);
-    SingleTile t3 = SingleTile(TileType.taiga, const IsoCoordinate(0, 0), 1);
-    SingleTile t4 = SingleTile(TileType.taiga, const IsoCoordinate(-1, 0), 1);
-    SingleTile t5 = SingleTile(TileType.taiga, const IsoCoordinate(-1, -1), 1);
+    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(1, 1), 1, 1);
+    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(0, 1), 1, 1);
+    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 1);
+    Tile t4 = Tile(TileType.taiga, const IsoCoordinate(-1, 0), 1, 1);
+    Tile t5 = Tile(TileType.taiga, const IsoCoordinate(-1, -1), 1, 1);
     List<Tile> tiles = [t4, t5, t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -21,11 +21,11 @@ void main() {
   });
 
   test("Sort tiles with different widths", () {
-    AreaTile t1 = AreaTile(TileType.taiga, const IsoCoordinate(0, 0), 1, width: 3);
-    SingleTile t2 = SingleTile(TileType.taiga, const IsoCoordinate(2, -1), 1);
-    SingleTile t3 = SingleTile(TileType.taiga, const IsoCoordinate(3, 0), 1);
-    SingleTile t4 = SingleTile(TileType.taiga, const IsoCoordinate(-1, 1), 1);
-    AreaTile t5 = AreaTile(TileType.taiga, const IsoCoordinate(0, 0), 2, width: 2);
+    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
+    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(2, -1), 1, 1);
+    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(3, 0), 1, 1);
+    Tile t4 = Tile(TileType.taiga, const IsoCoordinate(-1, 1), 1, 1);
+    Tile t5 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 2, 2);
     List<GameObject> tiles = [t1, t2, t3, t4, t5];
     tiles.sort();
     expect(tiles[0], t3);
@@ -36,9 +36,9 @@ void main() {
   });
 
   test("Sort tiles with different heights", () {
-    AreaTile t1 = AreaTile(TileType.taiga, const IsoCoordinate(0, 0), 1, width: 3);
-    AreaTile t2 = AreaTile(TileType.taiga, const IsoCoordinate(0, 0), 2, width: 2);
-    SingleTile t3 = SingleTile(TileType.taiga, const IsoCoordinate(0, 0), 3);
+    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
+    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 2, 2);
+    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 3, 1);
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -47,9 +47,9 @@ void main() {
   });
 
   test("Sort tiles with different heights", () {
-    AreaTile t1 = AreaTile(TileType.taiga, const IsoCoordinate(0, 0), 1, width: 3);
-    SingleTile t2 = SingleTile(TileType.taiga, const IsoCoordinate(0, 0), 2);
-    SingleTile t3 = SingleTile(TileType.taiga, const IsoCoordinate(0, 0), 5);
+    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
+    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 2, 1);
+    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 5, 1);
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -57,21 +57,21 @@ void main() {
     expect(tiles[2] == t2 || tiles[2] == t3, true);
   });
 
-  test("Decode and encode single tile", () {
-    SingleTile singleTile =
-        SingleTile(TileType.bare, const IsoCoordinate.fromIso(2, 2), 2);
-    String encoded = singleTile.encode();
-    SingleTile decoded = SingleTile.fromString(encoded);
+  test("Decode and encode 1x1 tile", () {
+    Tile tile =
+    Tile(TileType.bare, const IsoCoordinate.fromIso(2, 2), 2, 1);
+    String encoded = tile.encode();
+    Tile decoded = Tile.fromString(encoded);
     expect(decoded.elevation, 2);
     expect(decoded.type, TileType.bare);
     expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(2, 2));
   });
 
-  test("Decode and encode area tile", () {
-    AreaTile areaTile =
-        AreaTile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, width: 2);
-    String encoded = areaTile.encode();
-    AreaTile decoded = AreaTile.fromString(encoded);
+  test("Decode and encode 2x2 tile", () {
+    Tile tile =
+    Tile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, 2);
+    String encoded = tile.encode();
+    Tile decoded = Tile.fromString(encoded);
     expect(decoded.elevation, -1);
     expect(decoded.type, TileType.grass);
     expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(-1, -1));

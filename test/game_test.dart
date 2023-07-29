@@ -28,8 +28,8 @@ void main() {
   test("Map with low level of detail should have less vertices", () {
     Game game = Game();
     game.setZoomLevel(0.2);
-    MapDTO highDetail = game.getVerticesInView(LevelOfDetail.maximum);
-    MapDTO lowDetail = game.getVerticesInView(LevelOfDetail.minimal);
+    MapDTO highDetail = game.getVerticesInView(LevelOfDetail.lod1x1);
+    MapDTO lowDetail = game.getVerticesInView(LevelOfDetail.lod16x16);
     expect(highDetail.verticesCount > lowDetail.verticesCount * 2, true);
   });
 

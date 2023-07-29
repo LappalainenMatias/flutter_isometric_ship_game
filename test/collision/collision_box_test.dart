@@ -21,14 +21,13 @@ void main() {
 
   test('Boat and Tile should collide', () {
     var player = Player(const IsoCoordinate.fromIso(-2, -2), 1);
-    var tile =
-        SingleTile(TileType.sand, const IsoCoordinate.fromIso(-1, -1), 1);
+    var tile = Tile(TileType.sand, const IsoCoordinate.fromIso(-1, -1), 1, 1);
     expect(player.collision(tile), isTrue);
   });
 
   test('Boat and Tile should NOT collide', () {
     var player = Player(const IsoCoordinate.fromIso(0, 0), 1);
-    var tile = SingleTile(TileType.sand, const IsoCoordinate.fromIso(4, 4), 1);
+    var tile = Tile(TileType.sand, const IsoCoordinate.fromIso(4, 4), 1, 1);
     expect(player.collision(tile), isFalse);
   });
 }

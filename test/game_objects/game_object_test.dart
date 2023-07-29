@@ -6,10 +6,10 @@ import 'package:anki/utils/vertice_dto.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test("Sort single tiles in x-axis", () {
-    SingleTile item1 = SingleTile(TileType.bare, const IsoCoordinate(0, 0), 0);
-    SingleTile item2 = SingleTile(TileType.sand, const IsoCoordinate(2, 0), 0);
-    SingleTile item3 = SingleTile(TileType.grass, const IsoCoordinate(1, 0), 0);
+  test("Sort tiles in x-axis", () {
+    Tile item1 = Tile(TileType.bare, const IsoCoordinate(0, 0), 0, 1);
+    Tile item2 = Tile(TileType.sand, const IsoCoordinate(2, 0), 0, 1);
+    Tile item3 = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1);
     List<GameObject> gameObjects = [item1, item2, item3];
     gameObjects.sort();
     expect(gameObjects[0], item2);
@@ -17,11 +17,10 @@ void main() {
     expect(gameObjects[2], item1);
   });
 
-  test("Sort single tiles in y-axis", () {
-    SingleTile item1 = SingleTile(TileType.bare, const IsoCoordinate(0, 0), 0);
-    SingleTile item2 = SingleTile(TileType.sand, const IsoCoordinate(0, -2), 0);
-    SingleTile item3 =
-        SingleTile(TileType.grass, const IsoCoordinate(0, -1), 0);
+  test("Sort tiles in y-axis", () {
+    Tile item1 = Tile(TileType.bare, const IsoCoordinate(0, 0), 0, 1);
+    Tile item2 = Tile(TileType.sand, const IsoCoordinate(0, -2), 0, 1);
+    Tile item3 = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
     List<GameObject> gameObjects = [item1, item2, item3];
     gameObjects.sort();
     expect(gameObjects[0], item1);
@@ -64,13 +63,14 @@ void main() {
     expect(gameObjects[6], item3);
     expect(gameObjects[7], item5);
      */
+
     /// Todo update this test
   });
 
   test("Change game objects to vertices", () {
     List<GameObject> gameObjects = [
-      SingleTile(TileType.grass, const IsoCoordinate(1, 1), 0),
-      AreaTile(TileType.grass, const IsoCoordinate(-1, -1), -1, width: 2),
+      Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1),
+      Tile(TileType.grass, const IsoCoordinate(-1, -1), -1, 2),
     ];
     Map<String, VerticeDTO> vertices = toVertices(gameObjects);
     expect(vertices.isEmpty, isFalse);

@@ -8,17 +8,17 @@ import 'package:anki/utils/vertice_dto.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Create single tile vertices", () {
-    SingleTile tile = SingleTile(TileType.taiga, const IsoCoordinate(0, 0), 1);
-    VerticeDTO verticeDTO = SingleTileToVertices.toVertices(tile);
+  test("Create tile vertices", () {
+    Tile tile = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 1);
+    VerticeDTO verticeDTO = TileToVertices.toVertices(tile);
     expect(verticeDTO.positions.length, 36);
     expect(verticeDTO.colors.length, 18);
   });
 
-  test("Create areatile vertices", () {
-    AreaTile tile =
-        AreaTile(TileType.taiga, const IsoCoordinate(0, 0), 1, width: 3);
-    VerticeDTO verticeDTO = AreaTileToVertices.toVertices(tile);
+  test("Create tile vertices for large tile", () {
+    Tile tile =
+    Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
+    VerticeDTO verticeDTO = TileToVertices.toVertices(tile);
     expect(verticeDTO.positions.length, 36);
     expect(verticeDTO.colors.length, 18);
   });
