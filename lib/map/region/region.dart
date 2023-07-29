@@ -11,12 +11,12 @@ import 'dart:math';
 /// we save static game objects in different levels of detail. The dynamic
 /// game objects are always visible.
 class Region extends Comparable<Region> {
-  IsoCoordinate regionBottomCoordinate;
+  IsoCoordinate bottomCoordinate;
   final List<GameObject> _dynamicGameObjects = [];
   Map<LevelOfDetail, List<GameObject>> _staticGameObjectsByDetailLevel;
   RegionLOD regionLOD = RegionLOD();
 
-  Region(this.regionBottomCoordinate, this._staticGameObjectsByDetailLevel) {
+  Region(this.bottomCoordinate, this._staticGameObjectsByDetailLevel) {
     _createNewVertices();
   }
 
@@ -26,7 +26,8 @@ class Region extends Comparable<Region> {
   }
 
   bool hasLevelOfDetail(LevelOfDetail lod) {
-    return _staticGameObjectsByDetailLevel.containsKey(lod);
+    if (!_staticGameObjectsByDetailLevel.containsKey(lod)) return false;
+    return _staticGameObjectsByDetailLevel[lod]!.isNotEmpty;
   }
 
   Map<String, ui.Vertices?> getVertices(LevelOfDetail lod) {
@@ -101,7 +102,7 @@ class Region extends Comparable<Region> {
   }
 
   int nearness() {
-    Point bottom = regionBottomCoordinate.toPoint();
+    Point bottom = bottomCoordinate.toPoint();
     return -1 * (bottom.x + bottom.y).toInt();
   }
 

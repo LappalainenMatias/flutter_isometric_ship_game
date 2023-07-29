@@ -33,10 +33,10 @@ class IsoCoordinate {
   }
 
   bool isBetween(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
-    return isoX >= topLeft.isoX &&
-        isoX <= bottomRight.isoX &&
-        isoY >= bottomRight.isoY &&
-        isoY <= topLeft.isoY;
+    return !(isoX < topLeft.isoX ||
+        isoX > bottomRight.isoX ||
+        isoY < bottomRight.isoY ||
+        isoY > topLeft.isoY);
   }
 
   @override

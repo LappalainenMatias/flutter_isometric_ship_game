@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../game.dart';
 
 class ZoomSlider extends StatefulWidget {
@@ -13,13 +14,13 @@ class _ZoomSliderState extends State<ZoomSlider> {
 
   @override
   Widget build(BuildContext context) {
-    Game map = Game();
-    _zoomLevel = 1 - map.zoomLevel;
+    var game = Provider.of<Game>(context, listen: false);
+    _zoomLevel = 1 - game.zoomLevel;
     return RotatedBox(
       quarterTurns: -1,
       child: SizedBox(
         height: 50,
-        width: 250,
+        width: 400,
         child: Slider(
           min: 0,
           max: 1,
@@ -29,7 +30,7 @@ class _ZoomSliderState extends State<ZoomSlider> {
           onChanged: (zoomLevel) {
             setState(() {
               _zoomLevel = zoomLevel;
-              map.setZoomLevel(1 - _zoomLevel);
+              game.setZoomLevel(1 - _zoomLevel);
             });
           },
         ),

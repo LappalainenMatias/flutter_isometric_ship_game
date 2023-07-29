@@ -3,6 +3,8 @@ import 'package:flutter/scheduler.dart';
 
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;
+
+  /// Time in seconds since last frame
   double deltaTime = 0.0;
   Duration _previous = Duration.zero;
 
@@ -12,7 +14,7 @@ class GameLoop extends ChangeNotifier {
 
   void _onTick(Duration timestamp) {
     final durationDelta = timestamp - _previous;
-    final dt = durationDelta.inMicroseconds / Duration.microsecondsPerSecond;
+    deltaTime = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
     _previous = timestamp;
     notifyListeners();
   }

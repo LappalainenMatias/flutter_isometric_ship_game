@@ -9,7 +9,7 @@ import '../game_objects/static/ground/tile_type.dart';
 /// S S G G
 /// S S G G
 /// We can simplify when the tiles have same height and type and they make a rectangle.
-List<Tile> simplifyTiles(List<List<SingleTile>> tiles) {
+List<Tile> simplifyTiles(List<List<Tile>> tiles) {
   Set<Point> visited = {};
   List<Tile> simplifiedTiles = [];
   for (int j = 0; j < tiles.length; j++) {
@@ -17,7 +17,7 @@ List<Tile> simplifyTiles(List<List<SingleTile>> tiles) {
       Point<int> topLeft = Point(i, j);
       Point<int> bottomRight = Point(i + 1, j + 1);
       if (visited.contains(topLeft)) continue;
-      SingleTile tile = tiles[j][i];
+      Tile tile = tiles[j][i];
       TileType type = tile.type;
       double height = tile.elevation;
       while (true) {
@@ -39,10 +39,9 @@ List<Tile> simplifyTiles(List<List<SingleTile>> tiles) {
       }
       double width = (bottomRight.x - topLeft.x).toDouble();
       if (width > 1) {
-        simplifiedTiles.add(tile.toAreaTile(width));
-      } else {
-        simplifiedTiles.add(tile);
+        tile.width = width.toInt();
       }
+      simplifiedTiles.add(tile);
       visited.addAll(_pointsInArea(topLeft, bottomRight));
     }
   }
@@ -93,11 +92,11 @@ bool _canMoveToDown(Set visited, double height, type, matrix,
 /// Todo Maybe add visibility to gameObjects instead of removing them?
 /// Some tiles are not visible because they are deep under water.
 /// Because of this it is unnecessary to render them.
-List<Tile> removeDeepUnderWaterTiles(List<Tile> simplifiedTiles) {
+List<Tile> removeDeepUnderWaterTiles(List<Tile> tiles) {
   List<Tile> filteredTiles = [];
-  for (var i = 0; i < simplifiedTiles.length; i++) {
-    if (simplifiedTiles[i].getElevation() > -5) {
-      filteredTiles.add(simplifiedTiles[i]);
+  for (var i = 0; i < tiles.length; i++) {
+    if (tiles[i].elevation > -5) {
+      filteredTiles.add(tiles[i]);
     }
   }
   return filteredTiles;

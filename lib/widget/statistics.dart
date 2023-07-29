@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import '../game.dart';
 
@@ -13,10 +14,9 @@ class Statistics extends StatefulWidget {
 }
 
 class _StatisticsState extends State<Statistics> {
-
   @override
   Widget build(BuildContext context) {
-    final game = Game();
+    var game = Provider.of<Game>(context, listen: true);
     return Container(
       color: Colors.black.withOpacity(0.6),
       child: Padding(
@@ -26,7 +26,7 @@ class _StatisticsState extends State<Statistics> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Vertices: ${NumberFormat('###,###,###').format(game.getVerticesInView()).replaceAll(',', ' ')}",
+              "Vertices: ${NumberFormat('###,###,###').format(game.verticesCount).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(

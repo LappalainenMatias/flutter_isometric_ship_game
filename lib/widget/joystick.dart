@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
+import 'package:provider/provider.dart';
 import '../game.dart';
 
 class JoyStick extends StatefulWidget {
@@ -12,7 +13,7 @@ class JoyStick extends StatefulWidget {
 class _JoyStickState extends State<JoyStick> {
   @override
   Widget build(BuildContext context) {
-    Game map = Game();
+    var game = Provider.of<Game>(context, listen: false);
     return SizedBox(
       width: 100,
       height: 100,
@@ -32,7 +33,7 @@ class _JoyStickState extends State<JoyStick> {
         period: const Duration(milliseconds: 16),
         mode: JoystickMode.all,
         listener: (details) {
-          map.movePlayer(details.x, -1 * details.y);
+          game.movePlayer(details.x, -1 * details.y);
         },
       ),
     );
