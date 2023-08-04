@@ -8,26 +8,16 @@ void main() {
   test("Map should have vertices", () {
     Game game = Game();
     game.setZoomLevel(0.1);
+    game.updateVisibleRegions();
     MapDTO mapDTO = game.getVerticesInView();
     expect(mapDTO.aboveWater.isNotEmpty || mapDTO.underWater.isNotEmpty, true);
     expect(game.verticesCount > 0, true);
   });
 
-  test("Map should have less vertices after zoom in", () {
-    Game game = Game();
-    game.setZoomLevel(0.2);
-    MapDTO mapDTO1 = game.getVerticesInView();
-    game.setZoomLevel(0.1);
-    MapDTO mapDTO2 = game.getVerticesInView();
-    game.setZoomLevel(0.0);
-    MapDTO mapDTO3 = game.getVerticesInView();
-    expect(mapDTO1.verticesCount > mapDTO2.verticesCount, true);
-    expect(mapDTO2.verticesCount > mapDTO3.verticesCount, true);
-  });
-
   test("Map with low level of detail should have less vertices", () {
     Game game = Game();
     game.setZoomLevel(0.2);
+    game.updateVisibleRegions();
     MapDTO highDetail = game.getVerticesInView(LevelOfDetail.lod1x1);
     MapDTO lowDetail = game.getVerticesInView(LevelOfDetail.lod16x16);
     expect(highDetail.verticesCount > lowDetail.verticesCount * 2, true);

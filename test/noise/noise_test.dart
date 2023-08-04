@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   test("Noise range of values", () {
-    NoiseCreator noise = NoiseCreator(
+    NoiseCreator_open_simplex_2 noise = NoiseCreator_open_simplex_2(
       FinlandCreationRules(),
       1,
     );
@@ -29,7 +29,7 @@ void main() {
   });
 
   test("Low LOD should have smaller noise than high LOD", () {
-    NoiseCreator noise = NoiseCreator(
+    NoiseCreator_open_simplex_2 noise = NoiseCreator_open_simplex_2(
       SvalbardCreationRules(),
       1,
     );
@@ -41,14 +41,9 @@ void main() {
     expect(maximum[1][0].length, greaterThan(minimal[1][0].length));
   });
 
-  test("Noise values should increase 4x from 1x1 to 2x2 to 4x4", () {
-    Stopwatch stopwatch = Stopwatch()..start();
-    NoiseCreator creator = NoiseCreator(SvalbardCreationRules(), 1);
-    creator = NoiseCreator(SvalbardCreationRules(), 1);
-    creator = NoiseCreator(SvalbardCreationRules(), 1);
-    creator = NoiseCreator(SvalbardCreationRules(), 1);
-    creator = NoiseCreator(SvalbardCreationRules(), 1);
-    print("NoiseCreator took ${stopwatch.elapsedMilliseconds}ms");
+  test("Noise values should decrease 4x from 1x1 to 2x2 to 4x4", () {
+    NoiseCreator_open_simplex_2 creator =
+        NoiseCreator_open_simplex_2(SvalbardCreationRules(), 1);
     var n1x1 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod1x1);
     var n2x2 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod2x2);
     var n4x4 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod4x4);
@@ -56,17 +51,5 @@ void main() {
         n2x2[0].expand((element) => element).toList().length * 4);
     expect(n2x2[1].expand((element) => element).toList().length,
         n4x4[1].expand((element) => element).toList().length * 4);
-  });
-
-  test("Noise performance", () {
-    NoiseCreator first = NoiseCreator(SvalbardCreationRules(), 1);
-    NoiseCreatorAnotherLibrary second = NoiseCreatorAnotherLibrary(SvalbardCreationRules(), 1);
-    int width = 1024;
-    Stopwatch stopwatch = Stopwatch()..start();
-    first.createComplexNoise(width, width, 0, 0, LevelOfDetail.lod1x1);
-    print("NoiseCreator took ${stopwatch.elapsedMilliseconds}ms");
-    stopwatch.reset();
-    second.createComplexNoise(width, width, 0, 0, LevelOfDetail.lod1x1);
-    print("NoiseCreator2 took ${stopwatch.elapsedMilliseconds}ms");
   });
 }

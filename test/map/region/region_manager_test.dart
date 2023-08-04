@@ -11,15 +11,10 @@ import 'dart:math';
 void main() {
   test("Get vertices in region manager which uses js worker", () async {
     Camera camera = Camera(center: const IsoCoordinate.fromIso(0, 0));
+    camera.zoomLevel = 0.1;
     RegionManager regionManager = RegionManager(camera);
-    MapDTO mapDTO = regionManager.getVertices(
-        const IsoCoordinate.fromIso(-100, 100),
-        const IsoCoordinate.fromIso(100, -100),
-        LevelOfDetail.lod1x1);
-
-    /// At some point this test will fail when concurrency is implemented TODO
-    mapDTO = regionManager.getVertices(const IsoCoordinate.fromIso(-100, 100),
-        const IsoCoordinate.fromIso(100, -100), LevelOfDetail.lod1x1);
+    regionManager.updateVisibleRegions();
+    MapDTO mapDTO = regionManager.getVerticesInView(LevelOfDetail.lod1x1);
     expect(mapDTO.verticesCount > 0, true);
     expect(mapDTO.underWater.isNotEmpty, true);
     expect(mapDTO.aboveWater.isNotEmpty, true);

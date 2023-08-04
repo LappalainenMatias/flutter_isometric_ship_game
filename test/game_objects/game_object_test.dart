@@ -1,4 +1,5 @@
 import 'package:anki/game_objects/game_object.dart';
+import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/utils/iso_coordinate.dart';
@@ -72,7 +73,7 @@ void main() {
       Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1),
       Tile(TileType.grass, const IsoCoordinate(-1, -1), -1, 2),
     ];
-    Map<String, VerticeDTO> vertices = toVertices(gameObjects);
+    Map<String, VerticeDTO> vertices = gameObjectsToVertices(gameObjects);
     expect(vertices.isEmpty, isFalse);
     expect(vertices["underWater"]!.positions.length, 36);
     expect(vertices["aboveWater"]!.positions.length, 36);

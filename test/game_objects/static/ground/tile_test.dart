@@ -60,8 +60,8 @@ void main() {
   test("Decode and encode 1x1 tile", () {
     Tile tile =
     Tile(TileType.bare, const IsoCoordinate.fromIso(2, 2), 2, 1);
-    String encoded = tile.encode();
-    Tile decoded = Tile.fromString(encoded);
+    List encoded = tile.gameObjectToList();
+    Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, 2);
     expect(decoded.type, TileType.bare);
     expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(2, 2));
@@ -70,8 +70,8 @@ void main() {
   test("Decode and encode 2x2 tile", () {
     Tile tile =
     Tile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, 2);
-    String encoded = tile.encode();
-    Tile decoded = Tile.fromString(encoded);
+    List encoded = tile.gameObjectToList();
+    Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, -1);
     expect(decoded.type, TileType.grass);
     expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(-1, -1));
