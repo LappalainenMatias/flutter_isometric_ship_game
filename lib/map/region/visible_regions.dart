@@ -1,3 +1,4 @@
+import 'package:anki/constants.dart';
 import 'package:anki/map/region/region.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:anki/utils/iso_coordinate.dart';
@@ -73,7 +74,7 @@ class VisibleRegions {
     LevelOfDetail lod = _camera.getLevelOfDetail();
     if (_spiralIndex == 0) {
       _coordinatesInSpiral = getSpiralStartingFromCorner(
-          _camera.topLeft, _camera.bottomRight, 128);
+          _camera.topLeft, _camera.bottomRight, regionSideWidth);
       _spiralIndex = _coordinatesInSpiral.length - 1;
     }
     int checked = 0;

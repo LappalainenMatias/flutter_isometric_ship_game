@@ -61,15 +61,15 @@ void main() {
     /// This test can be removed if that is changed.
     int preTileMinSize = 0;
     for (var lod in LevelOfDetail.values) {
-      expect(lod.tileMinSize > preTileMinSize, true);
-      preTileMinSize = lod.tileMinSize;
+      expect(lod.tileMinWidth > preTileMinSize, true);
+      preTileMinSize = lod.tileMinWidth;
     }
   });
 
   test("Level of detail tile min size should be power of 2", () {
     /// Power of 2 makes lowering the noise detail easier
     for (var lod in LevelOfDetail.values) {
-      expect(lod.tileMinSize > 0 && (lod.tileMinSize & (lod.tileMinSize - 1)) == 0, true);
+      expect(lod.tileMinWidth > 0 && (lod.tileMinWidth & (lod.tileMinWidth - 1)) == 0, true);
     }
   });
 }

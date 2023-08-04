@@ -21,7 +21,7 @@ class RegionCreator {
       int startX, int startY, LevelOfDetail minLOD) {
     Map<LevelOfDetail, List<GameObject>> gameObjectByLOD = {};
     for (var lod in LevelOfDetail.values) {
-      if (lod.tileMinSize < minLOD.tileMinSize) continue;
+      if (lod.tileMinWidth < minLOD.tileMinWidth) continue;
 
       /// Todo rename noises[0] and noises[1] to elevationNoise and moistureNoise
       var noises = noise.createComplexNoise(width, height, startX, startY, lod);
@@ -51,10 +51,10 @@ class RegionCreator {
         tiles.add(TileCreator.create(
           elevationRow[y],
           moistureRow[y],
-          Point((startX + x * lod.tileMinSize).toDouble(),
-              (startY + y * lod.tileMinSize).toDouble()),
+          Point((startX + x * lod.tileMinWidth).toDouble(),
+              (startY + y * lod.tileMinWidth).toDouble()),
           _mapCreationRules.tileRules(),
-          lod.tileMinSize,
+          lod.tileMinWidth,
         ));
       }
     }

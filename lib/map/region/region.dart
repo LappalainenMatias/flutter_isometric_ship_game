@@ -66,14 +66,20 @@ class Region extends Comparable<Region> {
   }
 
   void _updateLevelOfDetail(LevelOfDetail lod) {
+    Stopwatch stopwatch = Stopwatch()..start();
     List<GameObject> gameObjects = [
       ..._staticGameObjectsByDetailLevel[lod] ?? [],
       ..._dynamicGameObjects
     ];
+    print("Creating list took ${stopwatch.elapsedMilliseconds} ms, $lod");
+    stopwatch.reset();
 
     Map<String, VerticeDTO> verticeDTOs = gameObjectsToVertices(gameObjects);
     int verticesCount = (verticeDTOs['aboveWater']!.positions.length +
             verticeDTOs['underWater']!.positions.length) ~/ 2;
+
+    print("Creating verticeDTOs took ${stopwatch.elapsedMilliseconds} ms, $lod");
+    stopwatch.reset();
 
     var aboveWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
@@ -92,6 +98,7 @@ class Region extends Comparable<Region> {
       underWater,
       verticesCount,
     );
+    print("Creating Vertices.raw took ${stopwatch.elapsedMilliseconds} ms, $lod");
   }
 
   factory Region.fromRegionDTO(RegionDTO data) {

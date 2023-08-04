@@ -24,7 +24,7 @@ class NoiseCreator {
 
   List<List<List<double>>> createComplexNoise(int width, int height, int startX,
       int startY, LevelOfDetail levelOfDetail) {
-    int tileSize = levelOfDetail.tileMinSize;
+    int tileSize = levelOfDetail.tileMinWidth;
     List<List<double>> elevationMap =
         _fixedSizeList(width ~/ tileSize, height ~/ tileSize);
     List<List<double>> moistureMap =
@@ -81,7 +81,7 @@ class NoiseCreator_open_simplex_2 {
 
   List<List<List<double>>> createComplexNoise(int width, int height, int startX,
       int startY, LevelOfDetail levelOfDetail) {
-    int tileSize = levelOfDetail.tileMinSize;
+    int tileSize = levelOfDetail.tileMinWidth;
     List<List<double>> elevationMap =
         _fixedSizeList(width ~/ tileSize, height ~/ tileSize);
     List<List<double>> moistureMap =
@@ -137,7 +137,7 @@ class NoiseCreatorAnotherLibraryThird {
 
   List<List<List<double>>> createComplexNoise(int width, int height, int startX,
       int startY, LevelOfDetail levelOfDetail) {
-    int tileSize = levelOfDetail.tileMinSize;
+    int tileSize = levelOfDetail.tileMinWidth;
     List<List<double>> elevationMap =
         _fixedSizeList(width ~/ tileSize, height ~/ tileSize);
     List<List<double>> moistureMap =

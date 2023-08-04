@@ -16,7 +16,6 @@ class BirchToVertices {
   static const CustomColor foliageLeft = CustomColor.fromARGB(255, 10, 152, 44);
   static const CustomColor foliageRight = CustomColor.fromARGB(255, 8, 133, 38);
 
-  /// Creates tree from cubes
   static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
     int random = Random().nextInt(100);
     if (random < 95) {
@@ -211,7 +210,8 @@ class CubeVerticeCreator {
       }
     }
      */
-    // Creates the 7 corners of the cube
+
+    // Creates the 7 corners of the isometric cube
     final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation) + offset;
     final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
     final lefBot = cenBot + IsoCoordinate(0, widthScale);
@@ -285,98 +285,21 @@ class CubeVerticeCreator {
   }
 }
 
-class CubeVerticeCreator2 {
-  // The 7 cube corners.
-  // [0] is the center bottom corner.
-  // [1] is the center center corner.
-  // [2] is the center top corner.
-  // [3] is the left bottom corner.
-  // [4] is the left top corner.
-  // [5] is the right bottom corner.
-  // [6] is the right top corner.
-  static const List<IsoCoordinate> cubePrototype = [
-    IsoCoordinate(0, 0),
-    IsoCoordinate(0, 2),
-    IsoCoordinate(-2, -1),
-    IsoCoordinate(-2, 3),
-    IsoCoordinate(2, 1),
-    IsoCoordinate(2, 3),
-    IsoCoordinate(0, 4),
-  ];
-
-  static VerticeDTO toVertices(
-    IsoCoordinate isoCoordinate,
-    double elevation,
-    CustomColor colorTop,
-    CustomColor colorLeft,
-    CustomColor colorRight, {
-    double heightScale = 1,
-    double widthScale = 1,
-    IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
-  }) {
-    // Transform cubePrototype into the correct position
-    List<IsoCoordinate> cubeVertices = cubePrototype.map((prototypeVertex) {
-      return transform(prototypeVertex, isoCoordinate, heightScale, widthScale,
-          offset, elevation);
-    }).toList();
-
-    // Converting vertices to Float32List
-    Float32List positions =
-        Float32List(cubeVertices.length * 2); // Each vertex has 2 coordinates
-    for (int i = 0; i < cubeVertices.length; i++) {
-      positions[i * 2] = cubeVertices[i].isoX;
-      positions[i * 2 + 1] = cubeVertices[i].isoY;
-    }
-
-    // Creating color list
-    List<int> colors = List<int>.filled(18, 0, growable: false);
-    for (var i = 0; i < 6; i++) {
-      colors[i] = colorLeft.value;
-      colors[i + 6] = colorTop.value;
-      colors[i + 12] = colorRight.value;
-    }
-
-    return VerticeDTO(positions, Int32List.fromList(colors));
-  }
-
-  static IsoCoordinate transform(
-    IsoCoordinate prototypeVertex,
-    IsoCoordinate isoCoordinate,
-    double heightScale,
-    double widthScale,
-    IsoCoordinate offset,
-    double elevation,
-  ) {
-    double transformedX =
-        prototypeVertex.isoX * heightScale + isoCoordinate.isoX + offset.isoX;
-    double transformedY =
-        prototypeVertex.isoY * widthScale + isoCoordinate.isoY + offset.isoY;
-    return IsoCoordinate(transformedX, transformedY + elevation);
-  }
-}
-
 /// We do not want to draw every game object individually (because it's slow).
 /// Here we combine all the the vertices of all the game objects into one.
 Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
-  int aboveWaterColorSize = gameObjects.fold(
-    0,
-    (previousValue, gameObject) =>
-        previousValue +
-        (gameObject.isUnderWater()
-            ? 0
-            : gameObject.getVertices().colors.length),
-  );
 
-  int underWaterColorSize = gameObjects.fold(
-    0,
-    (previousValue, gameObject) =>
-        previousValue +
-        (!gameObject.isUnderWater()
-            ? 0
-            : gameObject.getVertices().colors.length),
-  );
+  int aboveWaterColorSize = 0;
+  int underWaterColorSize = 0;
+  gameObjects.forEach((gameObject) {
+    if (gameObject.isUnderWater()) {
+      underWaterColorSize += gameObject.getVertices().colors.length;
+    } else {
+      aboveWaterColorSize += gameObject.getVertices().colors.length;
+    }
+  });
 
-  /// Using Float32List.fromList() would be easier but updating the Float32List size is faster.
+  /// Using Float32List.fromList() would be easier but updating the Float32List is faster.
   /// Color list is always half the size of positions list.
   Float32List aboveWaterPositions = Float32List(aboveWaterColorSize * 2);
   Int32List aboveWaterColors = Int32List(aboveWaterColorSize);
@@ -385,7 +308,6 @@ Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
 
   int aboveWaterOffset = 0;
   int underWaterOffset = 0;
-
   for (var gameObject in gameObjects) {
     var vertices = gameObject.getVertices();
 

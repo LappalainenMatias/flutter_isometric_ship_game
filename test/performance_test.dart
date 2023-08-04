@@ -2,12 +2,15 @@ import 'dart:typed_data';
 
 import 'package:anki/camera/camera.dart';
 import 'package:anki/camera/level_of_detail.dart';
+import 'package:anki/game.dart';
+import 'package:anki/game_objects/create_game_object.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/region.dart';
+import 'package:anki/map/region/region_creator.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:anki/map/region/visible_regions.dart';
 import 'package:anki/noise/noise.dart';
@@ -53,10 +56,9 @@ void main() {
         VisibleRegions(camera, RegionManager(camera));
     Stopwatch stopwatch = Stopwatch()..start();
     List coordinates = visibleRegion.getSpiralStartingFromCorner(
-      const IsoCoordinate.fromIso(-10000, 10000),
-      const IsoCoordinate.fromIso(10000, -10000),
-      32
-    );
+        const IsoCoordinate.fromIso(-10000, 10000),
+        const IsoCoordinate.fromIso(10000, -10000),
+        32);
     print("Creating sprial took ${stopwatch.elapsedMilliseconds} ms");
 
     /// step:32 from:(-10000, 10000) to:(10000, -10000)
@@ -88,7 +90,7 @@ void main() {
     Map<LevelOfDetail, List<GameObject>> gameObjectsByLOD = {};
     for (LevelOfDetail lod in LevelOfDetail.values) {
       List<GameObject> gameObjects = [];
-      for (int i = 0; i < 62 * 62; i += lod.tileMinSize) {
+      for (int i = 0; i < 62 * 62; i += lod.tileMinWidth) {
         gameObjects.add(Tile(
             TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1));
       }
@@ -103,39 +105,6 @@ void main() {
 
     /// 1. 21, 22, 22
     /// 2. 16, 16, 16 (Removing sort from the region creation)
-  });
-
-  test('Convert Float32List to single list', () {
-    List<Float32List> float32Lists = [];
-    for (int i = 0; i < 64 * 64; i++) {
-      float32Lists.add(
-          Float32List.fromList(List<double>.generate(32, (i) => i.toDouble())));
-    }
-
-    Stopwatch stopwatch = Stopwatch()..start();
-
-    int totalSize = float32Lists.fold(
-        0, (previousValue, element) => previousValue + element.length);
-
-    print('Combining ${stopwatch.elapsedMicroseconds}ms');
-
-    Float32List positions = Float32List(totalSize);
-
-    int offset = 0;
-    for (int i = 0; i < float32Lists.length; i++) {
-      positions.setRange(
-          offset, offset + float32Lists[i].length, float32Lists[i]);
-      offset += float32Lists[i].length;
-    }
-
-    stopwatch.stop();
-
-    print('Combining ${stopwatch.elapsedMicroseconds}ms');
-
-    /// 1: 12, 11, 12
-    /// 2: 3, 3, 3
-    /// 3: 2, 3, 2
-    /// 4: 2, 2, 2
   });
 
   test('Create cube performance', () {
@@ -163,7 +132,28 @@ void main() {
     print('Creating cubes ${stopwatch.elapsedMilliseconds} ms');
 
     /// 1: 56, 56, 50 (With under water tiles)
-    /// 2: 50, 50, 48 (Without under water tiles
-    /// 3: 15, 16, 17 (Without converting list to FloatList32 or IntList32)
+    /// 2: 50, 50, 48 (Without under water tiles)
+    /// 3: 15, 16, 17 (Adding directly to FloatList32 or IntList32)
+  });
+
+  test('GameObjects to vertices performance', () {
+    List<GameObject> gameObjects = [];
+    for (int i = 0; i < 512 * 512; i++) {
+      gameObjects.add(
+        Tile(TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1),
+      );
+    }
+
+    Stopwatch stopwatch = Stopwatch()..start();
+
+    var res = gameObjectsToVertices(gameObjects);
+
+    stopwatch.stop();
+
+    print('GameObjectsToVertices took ${stopwatch.elapsedMilliseconds} ms');
+
+    /// 512*512 tiles
+    /// 1: 65, 63, 65
+    /// 2: 59, 71, 62 (Simplified list size calculation)
   });
 }

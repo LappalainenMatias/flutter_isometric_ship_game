@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import '../../camera/camera.dart';
 import '../../camera/level_of_detail.dart';
+import '../../constants.dart';
 import '../../game_objects/dynamic/player/player.dart';
 import '../../game_objects/game_object.dart';
 import '../../utils/map_dto.dart';
@@ -16,12 +17,6 @@ class RegionManager {
   final RegionCreator regionCreator = RegionCreator();
   final Map<Point<int>, Region> _regions = {};
   late final VisibleRegions _visibleRegions;
-
-  /// This needs to be power of two because it makes lowering the level of detail easier.
-  final int regionSideWidth = 64;
-
-  /// Todo maybe we should create a file for constants like these
-  final int _maxRegionCount = 1000000;
   final Set<Point> _creating = {};
   Region? playerRegion;
 
@@ -87,7 +82,7 @@ class RegionManager {
   }
 
   bool _tooManyRegionsExist() {
-    return _regions.length > _maxRegionCount;
+    return _regions.length > maxRegionCount;
   }
 
   /// Returns the region coordinate which the isoCoordinate is part of

@@ -45,7 +45,7 @@ abstract class GameObject implements Comparable<GameObject> {
 
   /// Webworkers can only return basic data types like lists, int, string. Because of
   /// this we need to convert the game object into a list before sending it to the main thread.
-  /// Encoding and decoding the game object to json is not an option because it is slower.
+  /// Encoding and decoding the game object to json is not an option because it is slow.
   /// [0] should always contain the game object type (Notice gameObjectFromList)
   List gameObjectToList();
 
