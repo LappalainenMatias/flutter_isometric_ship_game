@@ -66,6 +66,12 @@ class Player extends GameObject {
   _getWidth() {
     return 1.0;
   }
+
+  @override
+  List gameObjectToList() {
+    // TODO: implement gameObjectToList
+    throw UnimplementedError();
+  }
 }
 
 /// Todo we now have two movers. BoatMover and CameraMover which are the same

@@ -3,7 +3,6 @@ import 'dart:math';
 import 'dart:convert';
 import '../../../collision/collision_box.dart';
 import '../../../../../utils/iso_coordinate.dart';
-import '../../create_game_object.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 
@@ -13,7 +12,7 @@ class NaturalItem extends GameObject {
   final IsoCoordinate isoCoordinate;
   final double elevation;
   late final CollisionBox collisionBox;
-  VerticeDTO vertices = VerticeDTO.empty();
+  late VerticeDTO vertices;
 
   NaturalItem(this.type, this.isoCoordinate, this.elevation) {
     vertices = type.toVertices!(isoCoordinate, elevation);
@@ -22,7 +21,7 @@ class NaturalItem extends GameObject {
     collisionBox = CollisionBox(isoCoordinate, 8, 8);
   }
 
-  factory NaturalItem.fromString(String json) {
+  factory NaturalItem.fromList(String json) {
     final data = jsonDecode(json);
     List<String> point = data['isoCoordinate']!.split(',');
     return NaturalItem(
@@ -37,9 +36,6 @@ class NaturalItem extends GameObject {
 
   @override
   getVertices() {
-    if (vertices.isEmpty()) {
-      vertices = type.toVertices!(isoCoordinate, elevation);
-    }
     return vertices;
   }
 
@@ -78,6 +74,12 @@ class NaturalItem extends GameObject {
   /// Currently all naturalItems are width 1 but this can be changed.
   double _getWidth() {
     return 1;
+  }
+
+  @override
+  List gameObjectToList() {
+    // TODO: implement gameObjectToList
+    throw UnimplementedError();
   }
 }
 

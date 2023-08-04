@@ -13,7 +13,7 @@ import '../../optimization/tile_map_simplifier.dart';
 /// we can create regions concurrently (dart:ui only runs in main thread).
 /// Because of this we cannot create Vertices or use dart:ui Colors.
 class RegionCreator {
-  final _mapCreationRules = SvalbardCreationRules();
+  final _mapCreationRules = FinlandCreationRules();
   late final noise = NoiseCreator_open_simplex_2(_mapCreationRules);
 
   /// Creates game objects for the spefic level of detail and the details lower than that.
@@ -30,6 +30,7 @@ class RegionCreator {
           _createTiles(startX, startY, noises[0], noises[1], lod);
 
       List<Tile> filtered = removeDeepUnderWaterTiles(tiles);
+      filtered.sort();
 
       var allObjects = [
         //todo if (lod.containsNaturalItems) ..._createNaturalItems(tileMatrix)

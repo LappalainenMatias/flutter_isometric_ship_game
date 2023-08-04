@@ -1,4 +1,3 @@
-import 'dart:collection';
 import 'dart:ui' as ui;
 import 'package:anki/map/region/visible_regions.dart';
 import 'package:anki/utils/iso_coordinate.dart';
@@ -16,7 +15,7 @@ import '../../utils/map_dto.dart';
 class RegionManager {
   final RegionCreator regionCreator = RegionCreator();
   final Map<Point<int>, Region> _regions = {};
-  late final VisibleRegion _visibleRegion;
+  late final VisibleRegions _visibleRegions;
 
   /// This needs to be power of two because it makes lowering the level of detail easier.
   final int regionSideWidth = 64;
@@ -27,7 +26,7 @@ class RegionManager {
   Region? playerRegion;
 
   RegionManager(Camera camera) {
-    _visibleRegion = VisibleRegion(camera, this);
+    _visibleRegions = VisibleRegions(camera, this);
   }
 
   void updatePlayerRegion(Player player) {
@@ -40,16 +39,13 @@ class RegionManager {
     }
   }
 
-  MapDTO getVertices(
-    IsoCoordinate topLeft,
-    IsoCoordinate bottomRight,
-    LevelOfDetail lod,
-  ) {
-    _visibleRegion.updateVisibleRegions(lod);
-    List<Region> regions = _visibleRegion.getVisibleRegionsInDrawingOrder();
+  MapDTO getVerticesInView(LevelOfDetail lod) {
+    List<Region> regions = _visibleRegions.getVisibleRegionsInDrawingOrder();
     List<ui.Vertices> aboveWater = [];
     List<ui.Vertices> underWater = [];
     int verticesCount = 0;
+
+    /// Todo test how much time this adding takes because this is run every frame
     for (Region region in regions) {
       var verticeData = region.getVertices(lod);
       if (verticeData["aboveWater"] != null) {
@@ -69,42 +65,25 @@ class RegionManager {
 
   Region getRegion(IsoCoordinate coordinate, LevelOfDetail lod) {
     Point<int> point = isoCoordinateToRegionPoint(coordinate);
-    if (!_regionExist(point)) {
+    if (_regionDoesNotExist(point)) {
       if (_tooManyRegionsExist()) {
         /// todo We could reduce the level of detail instead of removing the regions
         _removeFarawayRegions(point);
       }
-      _regions[point] = Region(_regionPointToIsoCoordinate(point), {});
+      _regions[point] = Region(regionPointToIsoCoordinate(point), {});
     }
 
-    if (!_regions[point]!.hasLevelOfDetail(lod)) {
-      _addGameObjectsToRegion(_regions[point]!, lod);
+    Region region = _regions[point]!;
+
+    if (!region.hasLevelOfDetail(lod)) {
+      _addLevelOfDetailToRegion(region, lod);
     }
 
-    return _regions[point]!;
+    return region;
   }
 
-  /// Returns the region which the isoCoordinate is part of
-  Region getRegionFromIsoCoordinate(IsoCoordinate isoCoordinate, LevelOfDetail lod) {
-    Point<int> point = isoCoordinateToRegionPoint(isoCoordinate);
-
-    if (!_regionExist(point)) {
-      if (_tooManyRegionsExist()) {
-        /// todo We could reduce the level of detail instead of removing the regions
-        _removeFarawayRegions(point);
-      }
-      _regions[point] = Region(_regionPointToIsoCoordinate(point), {});
-    }
-
-    if (!_regions[point]!.hasLevelOfDetail(lod)) {
-      _addGameObjectsToRegion(_regions[point]!, lod);
-    }
-
-    return _regions[point]!;
-  }
-
-  bool _regionExist(Point<int> point) {
-    return _regions.containsKey(point);
+  bool _regionDoesNotExist(Point<int> point) {
+    return !_regions.containsKey(point);
   }
 
   bool _tooManyRegionsExist() {
@@ -122,11 +101,11 @@ class RegionManager {
   IsoCoordinate coordinateToRegionBottomCoordinate(
       IsoCoordinate isoCoordinate) {
     Point<int> regionPoint = isoCoordinateToRegionPoint(isoCoordinate);
-    return _regionPointToIsoCoordinate(regionPoint);
+    return regionPointToIsoCoordinate(regionPoint);
   }
 
   /// Region coordinate to iso coordinate
-  IsoCoordinate _regionPointToIsoCoordinate(Point<int> regionCoordinate) {
+  IsoCoordinate regionPointToIsoCoordinate(Point<int> regionCoordinate) {
     var isoCoordinate = IsoCoordinate(
       regionCoordinate.x * regionSideWidth.toDouble(),
       regionCoordinate.y * regionSideWidth.toDouble(),
@@ -142,7 +121,7 @@ class RegionManager {
     }
   }
 
-  void _addGameObjectsToRegion(Region region, LevelOfDetail lod) {
+  void _addLevelOfDetailToRegion(Region region, LevelOfDetail lod) {
     if (kIsWeb) {
       _webAddGameObjects(region, lod);
     } else {
@@ -154,11 +133,12 @@ class RegionManager {
   void _webAddGameObjects(Region region, LevelOfDetail minLOD) async {
     Point<int> regionCoordinate =
         isoCoordinateToRegionPoint(region.bottomCoordinate);
-    if (_creating.length > 100 || _creating.contains(regionCoordinate)) {
+    if (_creating.length > 1000 || _creating.contains(regionCoordinate)) {
       /// Todo Should we allow large than 1 build queue?
       return;
     }
     _creating.add(regionCoordinate);
+
     var result = await JsIsolatedWorker().run(
       functionName: 'jsregionworker',
       arguments: [
@@ -169,32 +149,25 @@ class RegionManager {
         minLOD.index,
       ],
     );
-
+    Stopwatch stopwatch = Stopwatch()..start();
     Map<LevelOfDetail, List<GameObject>> gameObjectsByLOD = {};
-
-    int index = 0;
-    if (result[0].length != LevelOfDetail.values.length) {
-      throw Exception("Wrong number of LODs");
-    }
-
-    for (var listOfEncodedObjects in result[0]) {
+    List levelsOfDetail = result[0];
+    List encodedGameObjectsByLOD = result[1];
+    for (int i = 0; i < levelsOfDetail.length; i++) {
       List<GameObject> gameObjects = [];
-      for (String encoded in listOfEncodedObjects) {
-        gameObjects.add(GameObject.decode(encoded));
+      for (List encoded in encodedGameObjectsByLOD[i]) {
+        gameObjects.add(GameObject.gameObjectFromList(encoded));
       }
-      gameObjectsByLOD[LevelOfDetail.values[index]] = gameObjects;
-      index++;
+      gameObjectsByLOD[LevelOfDetail.values[levelsOfDetail[i]]] = gameObjects;
     }
-
     for (LevelOfDetail lod in gameObjectsByLOD.keys) {
-      if (!_regions[regionCoordinate]!.hasLevelOfDetail(lod) &&
-          gameObjectsByLOD[lod]!.isNotEmpty) {
-        _regions[regionCoordinate]!
-            .addNewLevelOfDetail(gameObjectsByLOD[lod]!, lod);
+      if (!region.hasLevelOfDetail(lod)) {
+        region.addNewLevelOfDetail(gameObjectsByLOD[lod]!, lod);
       }
     }
 
     _creating.remove(regionCoordinate);
+    print("Decoding took ${stopwatch.elapsedMilliseconds} ms");
   }
 
   /// TODO Add concurrency support
@@ -212,15 +185,17 @@ class RegionManager {
     );
 
     for (LevelOfDetail lod in regionDTO.gameObjectsByLOD.keys) {
-      if (!region.hasLevelOfDetail(lod) &&
-          regionDTO.gameObjectsByLOD[lod]!.isNotEmpty) {
+      if (!region.hasLevelOfDetail(lod)) {
         region.addNewLevelOfDetail(regionDTO.gameObjectsByLOD[lod]!, lod);
       }
     }
   }
 
   int visibleRegionSize() {
-    return _visibleRegion.visibleRegionSize();
+    return _visibleRegions.visibleRegionSize();
+  }
+
+  void updateVisibleRegions() {
+    _visibleRegions.updateVisibleRegions();
   }
 }
-

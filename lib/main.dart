@@ -52,11 +52,13 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late final GameLoop gameLoop;
+  late final Game game;
 
   @override
   void initState() {
     super.initState();
-    gameLoop = GameLoop(this);
+    game = Game();
+    gameLoop = GameLoop(this, game);
   }
 
   @override
@@ -69,7 +71,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => Game()),
+        ChangeNotifierProvider(create: (_) => game),
         ChangeNotifierProvider(create: (_) => gameLoop),
       ],
       child: const Material(

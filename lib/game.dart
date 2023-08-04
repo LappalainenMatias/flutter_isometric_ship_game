@@ -12,13 +12,10 @@ class Game extends ChangeNotifier {
   late final RegionManager _regionManager = RegionManager(_camera);
   int _verticesCount = 0;
 
+  /// Notice that this method does not update what is currently visible
   MapDTO getVerticesInView([LevelOfDetail? levelOfDetail]) {
     levelOfDetail ??= _camera.getLevelOfDetail();
-    MapDTO mapDTO = _regionManager.getVertices(
-      _camera.topLeft,
-      _camera.bottomRight,
-      levelOfDetail,
-    );
+    MapDTO mapDTO = _regionManager.getVerticesInView(levelOfDetail);
     _verticesCount = mapDTO.verticesCount;
     return mapDTO;
   }
@@ -61,5 +58,9 @@ class Game extends ChangeNotifier {
 
   void setZoomLevel(double level) {
     _camera.setZoomLevel(level);
+  }
+
+  void updateVisibleRegions() {
+    _regionManager.updateVisibleRegions();
   }
 }

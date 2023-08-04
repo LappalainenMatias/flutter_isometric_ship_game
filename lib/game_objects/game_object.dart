@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 
+import 'package:anki/game_objects/static/ground/tile.dart';
 import '../collision/collision_box.dart';
 import '../../../utils/vertice_dto.dart';
-import 'dynamic/player/player.dart';
+
 
 /// A game object is something that is drawn on the screen.
 abstract class GameObject implements Comparable<GameObject> {
@@ -45,37 +43,21 @@ abstract class GameObject implements Comparable<GameObject> {
     return collisionBox1.overlaps(collisionBox2);
   }
 
-  /// Used for web concurrency and saving the game state.
-  /// It seems like we cannot create and return game objects concurrently
-  /// when using web workers, so we need to encode and decode them.
-  String encode();
+  /// Webworkers can only return basic data types like lists, int, string. Because of
+  /// this we need to convert the game object into a list before sending it to the main thread.
+  /// Encoding and decoding the game object to json is not an option because it is slower.
+  /// [0] should always contain the game object type (Notice gameObjectFromList)
+  List gameObjectToList();
 
-  static GameObject decode(String json) {
-    final data = jsonDecode(json);
-    switch (data["gameObjectType"] as String) {
+  static GameObject gameObjectFromList(List list) {
+    switch (list[0] as String) {
       case 'NaturalItem':
-        return NaturalItem.fromString(json);
+        throw Exception("Implement");
       case 'Tile':
-        return Tile.fromString(json);
+        return Tile.fromList(list);
       case 'Player':
-        return Player.fromString(json);
+        throw Exception("Implement");
     }
-    throw Exception("Class did not implement decode method for $json");
+    throw Exception("Class did not implement gameObjectFromList method for $list");
   }
-}
-
-Map<String, VerticeDTO> toVertices(List<GameObject> gameObjects) {
-  VerticeDTO underWater = VerticeDTO.empty();
-  VerticeDTO aboveWater = VerticeDTO.empty();
-  for (var gameObject in gameObjects) {
-    if (gameObject.isUnderWater()) {
-      underWater.addVerticeDTO(gameObject.getVertices());
-    } else {
-      aboveWater.addVerticeDTO(gameObject.getVertices());
-    }
-  }
-  return {
-    'underWater': underWater,
-    'aboveWater': aboveWater,
-  };
 }

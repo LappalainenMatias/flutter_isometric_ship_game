@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/map/region/region_creator.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import '../../camera/level_of_detail.dart';
@@ -14,29 +15,29 @@ class Region extends Comparable<Region> {
   IsoCoordinate bottomCoordinate;
   final List<GameObject> _dynamicGameObjects = [];
   Map<LevelOfDetail, List<GameObject>> _staticGameObjectsByDetailLevel;
-  RegionLOD regionLOD = RegionLOD();
+  RegionLOD _regionLOD = RegionLOD();
 
   Region(this.bottomCoordinate, this._staticGameObjectsByDetailLevel) {
-    _createNewVertices();
+    _updateAllLevelsOfDetail();
   }
 
-  void addNewLevelOfDetail(List<GameObject> staticGameObjects, LevelOfDetail lod) {
+  void addNewLevelOfDetail(
+      List<GameObject> staticGameObjects, LevelOfDetail lod) {
     _staticGameObjectsByDetailLevel[lod] = staticGameObjects;
-    _createNewVertices();
+    _updateLevelOfDetail(lod);
   }
 
   bool hasLevelOfDetail(LevelOfDetail lod) {
-    if (!_staticGameObjectsByDetailLevel.containsKey(lod)) return false;
-    return _staticGameObjectsByDetailLevel[lod]!.isNotEmpty;
+    return _regionLOD.hasLevelOfDetail(lod);
   }
 
   Map<String, ui.Vertices?> getVertices(LevelOfDetail lod) {
     if (_dynamicGameObjects.isNotEmpty) {
-      _createNewVertices();
+      _updateLevelOfDetail(lod);
     }
     return {
-      "aboveWater": regionLOD.getAboveWaterDetail(lod),
-      "underWater": regionLOD.getUnderWaterDetail(lod)
+      "aboveWater": _regionLOD.getAboveWaterDetail(lod),
+      "underWater": _regionLOD.getUnderWaterDetail(lod)
     };
   }
 
@@ -46,7 +47,7 @@ class Region extends Comparable<Region> {
       throw Exception("Can only add dynamic game objects");
     }
     _dynamicGameObjects.add(gameObject);
-    _createNewVertices();
+    _updateAllLevelsOfDetail();
   }
 
   void removeGameObject(GameObject removeGameObject) {
@@ -55,50 +56,46 @@ class Region extends Comparable<Region> {
     } else {
       throw Exception("Can only remove dynamic game objects");
     }
-    _createNewVertices();
+    _updateAllLevelsOfDetail();
   }
 
-  void _createNewVertices() {
-    regionLOD = RegionLOD();
+  void _updateAllLevelsOfDetail() {
     for (LevelOfDetail lod in _staticGameObjectsByDetailLevel.keys) {
-      List<GameObject> staticGameObjects =
-          _staticGameObjectsByDetailLevel[lod] ?? [];
-      List<GameObject> allGameObjects = [
-        ...staticGameObjects,
-        ..._dynamicGameObjects
-      ];
-      allGameObjects.sort();
-      if (allGameObjects.isNotEmpty) {
-        Map<String, VerticeDTO> verticeDTOs = toVertices(allGameObjects);
-        VerticeDTO underWaterVerticeDTO = verticeDTOs['underWater']!;
-        VerticeDTO aboveWaterVerticeDTO = verticeDTOs['aboveWater']!;
-        int verticesCount = underWaterVerticeDTO.verticesCount() +
-            aboveWaterVerticeDTO.verticesCount();
-        var aboveWater = ui.Vertices.raw(
-          ui.VertexMode.triangles,
-          Float32List.fromList(aboveWaterVerticeDTO.positions),
-          colors: Int32List.fromList(aboveWaterVerticeDTO.colors),
-        );
-        var underWater = ui.Vertices.raw(
-          ui.VertexMode.triangles,
-          Float32List.fromList(underWaterVerticeDTO.positions),
-          colors: Int32List.fromList(underWaterVerticeDTO.colors),
-        );
-        regionLOD.setDetail(
-          lod,
-          aboveWater,
-          underWater,
-          verticesCount,
-        );
-      }
+      _updateLevelOfDetail(lod);
     }
   }
 
-  factory Region.fromRegionDTO(RegionDTO data) {
-    return Region(
-      data.regionBottomCoordinate,
-      data.gameObjectsByLOD
+  void _updateLevelOfDetail(LevelOfDetail lod) {
+    List<GameObject> gameObjects = [
+      ..._staticGameObjectsByDetailLevel[lod] ?? [],
+      ..._dynamicGameObjects
+    ];
+
+    Map<String, VerticeDTO> verticeDTOs = gameObjectsToVertices(gameObjects);
+    int verticesCount = (verticeDTOs['aboveWater']!.positions.length +
+            verticeDTOs['underWater']!.positions.length) ~/ 2;
+
+    var aboveWater = ui.Vertices.raw(
+      ui.VertexMode.triangles,
+      verticeDTOs['aboveWater']!.positions,
+      colors: verticeDTOs['aboveWater']!.colors,
     );
+    var underWater = ui.Vertices.raw(
+      ui.VertexMode.triangles,
+      verticeDTOs['underWater']!.positions,
+      colors: verticeDTOs['underWater']!.colors,
+    );
+
+    _regionLOD.setDetail(
+      lod,
+      aboveWater,
+      underWater,
+      verticesCount,
+    );
+  }
+
+  factory Region.fromRegionDTO(RegionDTO data) {
+    return Region(data.regionBottomCoordinate, data.gameObjectsByLOD);
   }
 
   int nearness() {
@@ -115,7 +112,7 @@ class Region extends Comparable<Region> {
   }
 
   int getVerticesCount(LevelOfDetail lod) {
-    return regionLOD.getVerticeCount(lod);
+    return _regionLOD.getVerticeCount(lod);
   }
 }
 
@@ -125,12 +122,14 @@ class RegionLOD {
   final Map<LevelOfDetail, int> _verticesCountByDetailLevel = {};
   final Map<LevelOfDetail, ui.Vertices> _aboveWaterDetails = {};
   final Map<LevelOfDetail, ui.Vertices> _underWaterDetails = {};
+  final Set<LevelOfDetail> _addedLevelsOfDetail = {};
 
   void setDetail(LevelOfDetail level, ui.Vertices aboveWater,
       ui.Vertices underWater, int count) {
     _verticesCountByDetailLevel[level] = count;
     _aboveWaterDetails[level] = aboveWater;
     _underWaterDetails[level] = underWater;
+    _addedLevelsOfDetail.add(level);
   }
 
   /// If level of detail is not found we return the highest level of detail we find
@@ -172,5 +171,9 @@ class RegionLOD {
       }
     }
     return null;
+  }
+
+  bool hasLevelOfDetail(LevelOfDetail lod) {
+    return _addedLevelsOfDetail.contains(lod);
   }
 }

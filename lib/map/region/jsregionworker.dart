@@ -11,6 +11,8 @@ import '../../camera/level_of_detail.dart';
 @JS('jsregionworker')
 external set jsregionworker(obj);
 
+/// Returns game objects by levels of details.
+/// So if [0][0] is high level of detail then [1][0] should have the game objects for high level of detail
 void main() {
   jsregionworker = allowInterop((args) {
     RegionCreator regionCreator = RegionCreator();
@@ -18,21 +20,21 @@ void main() {
     int height = args[1];
     double pointX = args[2];
     double pointY = args[3];
-    LevelOfDetail lod = LevelOfDetail.values[args[4]];
-    RegionDTO regionDTO = regionCreator.create(IsoCoordinate(pointX, pointY), width,
-        height, pointX.toInt(), pointY.toInt(), lod);
+    LevelOfDetail minLOD = LevelOfDetail.values[args[4]];
+    RegionDTO regionDTO = regionCreator.create(IsoCoordinate(pointX, pointY),
+        width, height, pointX.toInt(), pointY.toInt(), minLOD);
 
-    List<List<String>> encodedByLOD = [];
+    List<List> encodedByGameObjects = [];
+    List LODs = [];
 
-    for (LevelOfDetail lod in LevelOfDetail.values) {
-      List<String> encoded = [];
-      if (regionDTO.gameObjectsByLOD.containsKey(lod)) {
-        for (var gameObject in regionDTO.gameObjectsByLOD[lod]!) {
-          encoded.add(gameObject.encode());
-        }
+    for (LevelOfDetail lod in regionDTO.gameObjectsByLOD.keys) {
+      List<List?> encoded = [];
+      for (var gameObject in regionDTO.gameObjectsByLOD[lod]!) {
+        encoded.add(gameObject.gameObjectToList());
       }
-      encodedByLOD.add(encoded);
+      LODs.add(lod.index);
+      encodedByGameObjects.add(encoded);
     }
-    return [encodedByLOD];
+    return [LODs, encodedByGameObjects];
   });
 }
