@@ -30,8 +30,9 @@ class BirchToVertices {
     var trunk = _birchFoliage(isoCoordinate, elevation);
     var position = birch.positions.toList()..addAll(trunk.positions.toList());
     var colors = birch.colors.toList()..addAll(trunk.colors.toList());
-    return VerticeDTO(
-        Float32List.fromList(position), Int32List.fromList(colors));
+    var textures = birch.textures.toList()..addAll(trunk.textures.toList());
+    return VerticeDTO(Float32List.fromList(position),
+        Int32List.fromList(colors), Float32List.fromList(textures));
   }
 
   static VerticeDTO _birchFoliage(
@@ -101,10 +102,13 @@ class SpruceToVertices {
   static VerticeDTO _spruce(IsoCoordinate isoCoordinate, double elevation) {
     var spruce = _spruceTrunk(isoCoordinate, elevation);
     var trunk = _spruceFoliage(isoCoordinate, elevation);
+
+    /// Todo create a better way to do this.
     var position = spruce.positions.toList()..addAll(trunk.positions.toList());
     var colors = spruce.colors.toList()..addAll(trunk.colors.toList());
-    return VerticeDTO(
-        Float32List.fromList(position), Int32List.fromList(colors));
+    var textures = spruce.textures.toList()..addAll(trunk.textures.toList());
+    return VerticeDTO(Float32List.fromList(position),
+        Int32List.fromList(colors), Float32List.fromList(textures));
   }
 
   static VerticeDTO _spruceFoliage(
@@ -266,7 +270,59 @@ class CubeVerticeCreator {
     colors[12] = colors[13] =
         colors[14] = colors[15] = colors[16] = colors[17] = colorRight.value;
 
-    return VerticeDTO(positions, colors);
+    Float32List textures = Float32List(36);
+    double centerBottomX = 32;
+    double centerBottomY = 64;
+    double centerCenterX = 32;
+    double centerCenterY = 32;
+    double centerTopX = 32;
+    double centerTopY = 0;
+    double leftBottomX = 0;
+    double leftBottomY = 48;
+    double leftTopX = 0;
+    double leftTopY = 16;
+    double rightBottomX = 64;
+    double rightBottomY = 48;
+    double rightTopX = 64;
+    double rightTopY = 16;
+    textures[0] = centerBottomX;
+    textures[1] = centerBottomY;
+    textures[2] = centerCenterX;
+    textures[3] = centerCenterY;
+    textures[4] = leftBottomX;
+    textures[5] = leftBottomY;
+    textures[6] = centerCenterX;
+    textures[7] = centerCenterY;
+    textures[8] = leftBottomX;
+    textures[9] = leftBottomY;
+    textures[10] = leftTopX;
+    textures[11] = leftTopY;
+    textures[12] = centerCenterX;
+    textures[13] = centerCenterY;
+    textures[14] = leftTopX;
+    textures[15] = leftTopY;
+    textures[16] = centerTopX;
+    textures[17] = centerTopY;
+    textures[18] = centerCenterX;
+    textures[19] = centerCenterY;
+    textures[20] = centerTopX;
+    textures[21] = centerTopY;
+    textures[22] = rightTopX;
+    textures[23] = rightTopY;
+    textures[24] = centerCenterX;
+    textures[25] = centerCenterY;
+    textures[26] = rightTopX;
+    textures[27] = rightTopY;
+    textures[28] = rightBottomX;
+    textures[29] = rightBottomY;
+    textures[30] = centerCenterX;
+    textures[31] = centerCenterY;
+    textures[32] = rightBottomX;
+    textures[33] = rightBottomY;
+    textures[34] = centerBottomX;
+    textures[35] = centerBottomY;
+
+    return VerticeDTO(positions, colors, textures);
   }
 
   /// Todo move this to some other class
@@ -288,7 +344,6 @@ class CubeVerticeCreator {
 /// We do not want to draw every game object individually (because it's slow).
 /// Here we combine all the the vertices of all the game objects into one.
 Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
-
   int aboveWaterColorSize = 0;
   int underWaterColorSize = 0;
   gameObjects.forEach((gameObject) {
@@ -303,8 +358,10 @@ Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
   /// Color list is always half the size of positions list.
   Float32List aboveWaterPositions = Float32List(aboveWaterColorSize * 2);
   Int32List aboveWaterColors = Int32List(aboveWaterColorSize);
+  Float32List aboveWaterTextures = Float32List(aboveWaterColorSize * 2);
   Float32List underWaterPositions = Float32List(underWaterColorSize * 2);
   Int32List underWaterColors = Int32List(underWaterColorSize);
+  Float32List underWaterTextures = Float32List(underWaterColorSize * 2);
 
   int aboveWaterOffset = 0;
   int underWaterOffset = 0;
@@ -314,16 +371,20 @@ Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
     if (gameObject.isUnderWater()) {
       underWaterPositions.setAll(underWaterOffset, vertices.positions);
       underWaterColors.setAll(underWaterOffset ~/ 2, vertices.colors);
+      underWaterTextures.setAll(underWaterOffset, vertices.textures);
       underWaterOffset += vertices.positions.length;
     } else {
       aboveWaterPositions.setAll(aboveWaterOffset, vertices.positions);
       aboveWaterColors.setAll(aboveWaterOffset ~/ 2, vertices.colors);
+      aboveWaterTextures.setAll(aboveWaterOffset, vertices.textures);
       aboveWaterOffset += vertices.positions.length;
     }
   }
 
   return {
-    'underWater': VerticeDTO(underWaterPositions, underWaterColors),
-    'aboveWater': VerticeDTO(aboveWaterPositions, aboveWaterColors)
+    'underWater':
+        VerticeDTO(underWaterPositions, underWaterColors, underWaterTextures),
+    'aboveWater':
+        VerticeDTO(aboveWaterPositions, aboveWaterColors, aboveWaterTextures)
   };
 }

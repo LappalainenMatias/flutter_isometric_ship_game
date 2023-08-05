@@ -1,3 +1,4 @@
+import 'package:anki/shader_testing.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/slider.dart';
 import 'package:anki/widget/statistics.dart';
@@ -11,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'game_loop.dart';
 import 'game_map_painter.dart';
 import 'package:flutter/services.dart';
+import 'dart:ui' as ui;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,12 +34,12 @@ class IsometricMapApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Isometric map',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MainScreen(title: 'Isometric map'),
-    );
+        title: 'Isometric map',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MainScreen(title: 'Isometric map'),
+        );
   }
 }
 
@@ -110,42 +112,64 @@ class GameScreen extends StatefulWidget {
 
 class _GameScreenState extends State<GameScreen> {
   @override
+  void initState() {
+    super.initState();
+    loadTexture();
+  }
+
+  ui.Image? textureImage;
+
+  Future<void> loadTexture() async {
+    final textureData = await rootBundle.load('assets/texture.png');
+    final bytes = textureData.buffer.asUint8List();
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    setState(() {
+      textureImage = frame.image;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
     var game = Provider.of<Game>(context, listen: false);
     var gameloop = Provider.of<GameLoop>(context, listen: false);
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        game.updateScreenAspectRatio(screenSize.width / screenSize.height);
-        return SizedBox(
-          child: Stack(
-            children: [
-              Align(
-                child: ShaderBuilder(
-                  assetKey: 'shaders/regtanglewater.frag',
-                  (context, waterShader, child) => CustomPerformanceOverlay(
-                    child: CustomPaint(
-                      size: screenSize,
-                      painter:
-                          GameMapPainter(waterShader, gameloop, game),
+    return textureImage == null
+        ? const Center(child: CircularProgressIndicator())
+        : LayoutBuilder(
+            builder: (context, constraints) {
+              game.updateScreenAspectRatio(
+                  screenSize.width / screenSize.height);
+              return SizedBox(
+                child: Stack(
+                  children: [
+                    Align(
+                      child: ShaderBuilder(
+                        assetKey: 'shaders/regtanglewater.frag',
+                        (context, waterShader, child) =>
+                            CustomPerformanceOverlay(
+                          child: CustomPaint(
+                            size: screenSize,
+                            painter: GameMapPainter(
+                                waterShader, gameloop, game, textureImage!),
+                          ),
+                        ),
+                        child: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
                     ),
-                  ),
-                  child: const Center(
-                    child: CircularProgressIndicator(),
-                  ),
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.topLeft,
+                        child: Statistics(),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Statistics(),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
+              );
+            },
+          );
   }
 }

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:ui';
+import 'dart:ui' as ui;
 import 'package:anki/utils/map_dto.dart';
 import 'package:flutter/cupertino.dart';
 import 'game.dart';
@@ -8,29 +8,42 @@ import 'game_loop.dart';
 class GameMapPainter extends CustomPainter {
   final GameLoop gameLoop;
   final Game game;
-  final FragmentShader _waterShader;
+  final ui.FragmentShader _waterShader;
   final _landPaint = Paint()..style = PaintingStyle.fill;
   final _backgroundWaterPaint = Paint()
     ..style = PaintingStyle.fill
     ..color = const Color(0xFF012E8F);
-  final _waterShaderPaint = Paint()..style = PaintingStyle.fill;
+  final _underWaterPaint = Paint()..style = PaintingStyle.fill;
   double _timePassed = 0;
+  ui.Image textureImage;
 
-  GameMapPainter(this._waterShader, this.gameLoop, this.game) : super(repaint: gameLoop);
+  GameMapPainter(this._waterShader, this.gameLoop, this.game, this.textureImage)
+      : super(repaint: gameLoop);
 
   @override
   void paint(Canvas canvas, Size size) {
     _timePassed += gameLoop.deltaTime;
-    _addWaterShader(_waterShaderPaint);
+    // TODO: Do we have to do all of these every frame?
+    _addWaterShader(_underWaterPaint);
+    _addTexture(_landPaint);
     _isometricTransformation(canvas, size);
     _paintBackgroundWater(canvas, size);
     MapDTO vertices = game.getVerticesInView();
     for (var v in vertices.underWater) {
-      canvas.drawVertices(v, BlendMode.srcOver, _waterShaderPaint);
+      canvas.drawVertices(v, BlendMode.srcOver, _underWaterPaint);
     }
     for (var v in vertices.aboveWater) {
       canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
+  }
+
+  void _addTexture(Paint paint) {
+    paint.shader = ImageShader(
+      textureImage,
+      TileMode.repeated,
+      TileMode.repeated,
+      Matrix4.identity().storage,
+    );
   }
 
   /// Currently we do not create tiles which are
@@ -49,7 +62,7 @@ class GameMapPainter extends CustomPainter {
         Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
         Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
       ),
-      _waterShaderPaint,
+      _underWaterPaint,
     );
   }
 

@@ -144,7 +144,6 @@ class RegionManager {
         minLOD.index,
       ],
     );
-    Stopwatch stopwatch = Stopwatch()..start();
     Map<LevelOfDetail, List<GameObject>> gameObjectsByLOD = {};
     List levelsOfDetail = result[0];
     List encodedGameObjectsByLOD = result[1];
@@ -162,7 +161,6 @@ class RegionManager {
     }
 
     _creating.remove(regionCoordinate);
-    print("Decoding took ${stopwatch.elapsedMilliseconds} ms");
   }
 
   /// TODO Add concurrency support

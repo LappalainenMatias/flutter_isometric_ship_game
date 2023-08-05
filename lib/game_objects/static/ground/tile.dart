@@ -38,6 +38,7 @@ class Tile extends GameObject {
       vertices: VerticeDTO(
         (list[6][0] as Float32List),
         (list[6][1] as Int32List),
+        (list[6][2] as Float32List),
       ),
     );
   }
@@ -55,6 +56,7 @@ class Tile extends GameObject {
       [
         vertices.positions,
         vertices.colors,
+        vertices.textures,
       ]
     ];
   }
