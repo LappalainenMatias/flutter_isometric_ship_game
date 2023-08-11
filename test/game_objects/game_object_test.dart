@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Sort tiles in x-axis", () {
-    Tile item1 = Tile(TileType.bare, const IsoCoordinate(0, 0), 0, 1);
+    Tile item1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1);
     Tile item2 = Tile(TileType.sand, const IsoCoordinate(2, 0), 0, 1);
     Tile item3 = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1);
     List<GameObject> gameObjects = [item1, item2, item3];
@@ -19,7 +19,7 @@ void main() {
   });
 
   test("Sort tiles in y-axis", () {
-    Tile item1 = Tile(TileType.bare, const IsoCoordinate(0, 0), 0, 1);
+    Tile item1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1);
     Tile item2 = Tile(TileType.sand, const IsoCoordinate(0, -2), 0, 1);
     Tile item3 = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
     List<GameObject> gameObjects = [item1, item2, item3];

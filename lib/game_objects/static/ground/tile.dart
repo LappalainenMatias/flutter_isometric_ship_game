@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:typed_data';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/utils/iso_coordinate.dart';
@@ -37,8 +36,7 @@ class Tile extends GameObject {
       list[5],
       vertices: VerticeDTO(
         (list[6][0] as Float32List),
-        (list[6][1] as Int32List),
-        (list[6][2] as Float32List),
+        (list[6][1] as Float32List),
       ),
     );
   }
@@ -55,7 +53,6 @@ class Tile extends GameObject {
       width,
       [
         vertices.positions,
-        vertices.colors,
         vertices.textures,
       ]
     ];

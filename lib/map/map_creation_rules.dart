@@ -20,56 +20,36 @@ class FinlandCreationRules extends MapCreationRules {
   @override
   List<TileRule> tileRules() {
     return [
-      TileRule(TileType.lakeFloorBare, 0.0, -0.2),
-      TileRule(TileType.lakeFloorVegetation, 0.0, 0.2),
       TileRule(TileType.sand, 0.0, null),
-      TileRule(TileType.bare, 2.0, -0.20),
+      TileRule(TileType.deathGrass, 2.0, -0.20),
       TileRule(TileType.sand, 2.0, 0.35),
       TileRule(TileType.grass, 2.0, null),
-      TileRule(TileType.bare, 4.0, -0.20),
-      TileRule(TileType.taiga, 4.0, -0.10),
-      TileRule(TileType.grass, 4.0, 0),
-      TileRule(TileType.taiga, 4.0, null),
-      TileRule(TileType.bare, 10.0, -0.20),
-      TileRule(TileType.taiga, 10.0, null),
-      TileRule(TileType.bare, null, null),
+      TileRule(TileType.deathGrass, 4.0, -0.20),
+      TileRule(TileType.grass, 4.0, null),
+      TileRule(TileType.deathGrass, 10.0, -0.20),
+      TileRule(TileType.rock, null, null),
     ];
   }
 
   @override
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
     ///Todo these probabilities are not exactly correct because they are looped through in order.
+    ///Todo add probabilities
     return {
-      TileType.taiga: [
-        NaturalItemProbability(NaturalItemType.birch, 0.02),
-        NaturalItemProbability(NaturalItemType.rock, 0.03),
-        NaturalItemProbability(NaturalItemType.spruce, 0.09),
-      ],
       TileType.grass: [
         NaturalItemProbability(NaturalItemType.rock, 0.02),
         NaturalItemProbability(NaturalItemType.spruce, 0.02),
         NaturalItemProbability(NaturalItemType.birch, 0.04),
       ],
-      TileType.bare: [
-        NaturalItemProbability(NaturalItemType.birch, 0.02),
-        NaturalItemProbability(NaturalItemType.spruce, 0.03),
-        NaturalItemProbability(NaturalItemType.rock, 0.05),
-      ],
       TileType.sand: [
         NaturalItemProbability(NaturalItemType.rock, 0.10),
       ],
-      TileType.lakeFloorVegetation: [
-        NaturalItemProbability(NaturalItemType.rock, 0.03),
-      ],
-      TileType.lakeFloorBare: [
-        NaturalItemProbability(NaturalItemType.rock, 0.05),
-      ]
     };
   }
 
   @override
   double amountOfWater() {
-    return -0.3;
+    return -0.5;
   }
 
   @override
@@ -82,10 +62,16 @@ class SvalbardCreationRules extends MapCreationRules {
   @override
   List<TileRule> tileRules() {
     return [
-      TileRule(TileType.lakeFloorBare, 0.0, null),
-      TileRule(TileType.svalbardGrass, 0.2, 0.3),
-      TileRule(TileType.svalbardMountain, null, 0.3),
-      TileRule(TileType.svalbardIce, null, null),
+      TileRule(TileType.sand, 0.0, null),
+      TileRule(TileType.rock, 6.0, -0.2),
+      TileRule(TileType.deathGrass, 6.0, 0.4),
+      TileRule(TileType.grass, 6.0, null),
+      TileRule(TileType.rock, 12.0, -0.2),
+      TileRule(TileType.deathGrass, 12.0, 0.4),
+      TileRule(TileType.grass, 12.0, null),
+      TileRule(TileType.rock, 20.0, 0.1),
+      TileRule(TileType.deathGrass, 20.0, 0.4),
+      TileRule(TileType.snow, null, null),
     ];
   }
 
@@ -93,16 +79,16 @@ class SvalbardCreationRules extends MapCreationRules {
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
     ///Todo these probabilities are not exactly correct because they are looped through in order.
     return {
-      TileType.lakeFloorBare: [
+      TileType.sand: [
         NaturalItemProbability(NaturalItemType.rock, 0.03),
       ],
-      TileType.svalbardGrass: [
+      TileType.deathGrass: [
         NaturalItemProbability(NaturalItemType.rock, 0.05),
       ],
-      TileType.svalbardMountain: [
+      TileType.rock: [
         NaturalItemProbability(NaturalItemType.rock, 0.08),
       ],
-      TileType.svalbardIce: [
+      TileType.snow: [
         NaturalItemProbability(NaturalItemType.rock, 0.02),
       ],
     };
@@ -115,7 +101,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double elevationAmplitude() {
-    return 100;
+    return 30;
   }
 }
 

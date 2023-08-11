@@ -78,13 +78,11 @@ class Region extends Comparable<Region> {
     var aboveWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
       verticeDTOs['aboveWater']!.positions,
-      colors: verticeDTOs['aboveWater']!.colors,
       textureCoordinates: verticeDTOs['aboveWater']!.textures,
     );
     var underWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
       verticeDTOs['underWater']!.positions,
-      colors: verticeDTOs['underWater']!.colors,
       textureCoordinates: verticeDTOs['underWater']!.textures,
     );
 

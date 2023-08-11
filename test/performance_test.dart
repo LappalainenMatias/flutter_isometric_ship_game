@@ -14,6 +14,7 @@ import 'package:anki/map/region/region_creator.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:anki/map/region/visible_regions.dart';
 import 'package:anki/noise/noise.dart';
+import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/utils/custom_color.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -116,15 +117,11 @@ void main() {
 
     print('Creating isoCoordinates ${stopwatch.elapsedMilliseconds} ms');
 
-    CustomColor color1 = const CustomColor.fromARGB(255, 100, 100, 100);
-    CustomColor color2 = const CustomColor.fromARGB(255, 101, 101, 101);
-    CustomColor color3 = const CustomColor.fromARGB(255, 102, 102, 102);
-
     stopwatch.reset();
 
     for (int i = 0; i < isoCoordinates.length; i++) {
       CubeVerticeCreator.toVertices(
-          isoCoordinates[i], -1, color1, color2, color3);
+          getTextureCoordinates(TileType.ice), isoCoordinates[i], -1);
     }
 
     stopwatch.stop();

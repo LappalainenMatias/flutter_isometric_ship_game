@@ -40,8 +40,8 @@ class GameMapPainter extends CustomPainter {
   void _addTexture(Paint paint) {
     paint.shader = ImageShader(
       textureImage,
-      TileMode.repeated,
-      TileMode.repeated,
+      TileMode.clamp,
+      TileMode.clamp,
       Matrix4.identity().storage,
     );
   }

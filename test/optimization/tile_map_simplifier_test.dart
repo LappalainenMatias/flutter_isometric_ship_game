@@ -118,11 +118,11 @@ void main() {
     List<List<Tile>> tiles = [
       [
         Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.taiga, const IsoCoordinate.fromIso(0, 1), 1, 1),
+        Tile(TileType.deathGrass, const IsoCoordinate.fromIso(0, 1), 1, 1),
       ],
       [
         Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1),
-        Tile(TileType.bare, const IsoCoordinate.fromIso(1, 1), 1, 1),
+        Tile(TileType.snow, const IsoCoordinate.fromIso(1, 1), 1, 1),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);

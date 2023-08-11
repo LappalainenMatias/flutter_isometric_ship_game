@@ -120,7 +120,7 @@ class _GameScreenState extends State<GameScreen> {
   ui.Image? textureImage;
 
   Future<void> loadTexture() async {
-    final textureData = await rootBundle.load('assets/texture.png');
+    final textureData = await rootBundle.load('assets/sprite_sheet.png');
     final bytes = textureData.buffer.asUint8List();
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();

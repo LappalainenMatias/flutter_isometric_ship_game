@@ -6,11 +6,11 @@ import 'package:test/test.dart';
 
 void main() {
   test("Sort tiles", () {
-    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(1, 1), 1, 1);
-    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(0, 1), 1, 1);
-    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 1);
-    Tile t4 = Tile(TileType.taiga, const IsoCoordinate(-1, 0), 1, 1);
-    Tile t5 = Tile(TileType.taiga, const IsoCoordinate(-1, -1), 1, 1);
+    Tile t1 = Tile(TileType.grass, const IsoCoordinate(1, 1), 1, 1);
+    Tile t2 = Tile(TileType.grass, const IsoCoordinate(0, 1), 1, 1);
+    Tile t3 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
+    Tile t4 = Tile(TileType.grass, const IsoCoordinate(-1, 0), 1, 1);
+    Tile t5 = Tile(TileType.grass, const IsoCoordinate(-1, -1), 1, 1);
     List<Tile> tiles = [t4, t5, t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -21,11 +21,11 @@ void main() {
   });
 
   test("Sort tiles with different widths", () {
-    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
-    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(2, -1), 1, 1);
-    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(3, 0), 1, 1);
-    Tile t4 = Tile(TileType.taiga, const IsoCoordinate(-1, 1), 1, 1);
-    Tile t5 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 2, 2);
+    Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);
+    Tile t2 = Tile(TileType.grass, const IsoCoordinate(2, -1), 1, 1);
+    Tile t3 = Tile(TileType.grass, const IsoCoordinate(3, 0), 1, 1);
+    Tile t4 = Tile(TileType.grass, const IsoCoordinate(-1, 1), 1, 1);
+    Tile t5 = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 2);
     List<GameObject> tiles = [t1, t2, t3, t4, t5];
     tiles.sort();
     expect(tiles[0], t3);
@@ -36,9 +36,9 @@ void main() {
   });
 
   test("Sort tiles with different heights", () {
-    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
-    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 2, 2);
-    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 3, 1);
+    Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);
+    Tile t2 = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 2);
+    Tile t3 = Tile(TileType.grass, const IsoCoordinate(0, 0), 3, 1);
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -47,9 +47,9 @@ void main() {
   });
 
   test("Sort tiles with different heights", () {
-    Tile t1 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 1, 3);
-    Tile t2 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 2, 1);
-    Tile t3 = Tile(TileType.taiga, const IsoCoordinate(0, 0), 5, 1);
+    Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);
+    Tile t2 = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1);
+    Tile t3 = Tile(TileType.grass, const IsoCoordinate(0, 0), 5, 1);
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -59,11 +59,11 @@ void main() {
 
   test("Decode and encode 1x1 tile", () {
     Tile tile =
-    Tile(TileType.bare, const IsoCoordinate.fromIso(2, 2), 2, 1);
+    Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 2, 1);
     List encoded = tile.gameObjectToList();
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, 2);
-    expect(decoded.type, TileType.bare);
+    expect(decoded.type, TileType.grass);
     expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(2, 2));
   });
 

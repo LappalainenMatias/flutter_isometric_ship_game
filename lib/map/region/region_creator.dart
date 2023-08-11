@@ -13,7 +13,7 @@ import '../../optimization/tile_map_simplifier.dart';
 /// we can create regions concurrently (dart:ui only runs in main thread).
 /// Because of this we cannot create Vertices or use dart:ui Colors.
 class RegionCreator {
-  final _mapCreationRules = FinlandCreationRules();
+  final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator_open_simplex_2(_mapCreationRules);
 
   /// Creates game objects for the spefic level of detail and the details lower than that.
