@@ -71,8 +71,8 @@ void main() {
 
   test("Noise performance", () {
     NoiseCreator first = NoiseCreator(SvalbardCreationRules(), 1);
-    NoiseCreator_open_simplex_2 second =
-        NoiseCreator_open_simplex_2(SvalbardCreationRules(), 1);
+    NoiseCreator second =
+        NoiseCreator(SvalbardCreationRules(), 1);
     int width = 1024;
     Stopwatch stopwatch = Stopwatch()..start();
     first.createComplexNoise(width, width, 0, 0, LevelOfDetail.lod1x1);
@@ -120,8 +120,8 @@ void main() {
     stopwatch.reset();
 
     for (int i = 0; i < isoCoordinates.length; i++) {
-      CubeVerticeCreator.toVertices(
-          getTextureCoordinates(TileType.ice), isoCoordinates[i], -1);
+      CubeVerticesCreator.toVertices(
+          getTileTextureCoordinates(TileType.ice), isoCoordinates[i], -1);
     }
 
     stopwatch.stop();

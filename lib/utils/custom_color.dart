@@ -21,4 +21,18 @@ class CustomColor {
       (b * 255).round(),
     );
   }
+
+  static CustomColor _mix(
+      CustomColor color1, CustomColor color2, double percent) {
+    return CustomColor.fromNormalizedARGB(
+      _lerp(color1.normalizedA, color2.normalizedA, percent),
+      _lerp(color1.normalizedR, color2.normalizedR, percent),
+      _lerp(color1.normalizedG, color2.normalizedG, percent),
+      _lerp(color1.normalizedB, color2.normalizedB, percent),
+    );
+  }
+
+  static double _lerp(double a, double b, double t) {
+    return a + (b - a) * t;
+  }
 }

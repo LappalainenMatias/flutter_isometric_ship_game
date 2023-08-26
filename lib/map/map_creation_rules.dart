@@ -8,12 +8,23 @@ abstract class MapCreationRules {
   /// List of probabilities for naturalItem to appear on a tile.
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities();
 
-  /// -1 means everything is water and 1 means everything is land.
+  /// 1 means 100% of water, 0 means 0% of water.
+  /// 0.5 does not mean 50% of water because other settings affect the amount of water.
   double amountOfWater();
 
-  /// Increases the elevation differences. 0 means that the map is flat.
-  /// There is no upper limit.
-  double elevationAmplitude();
+  /// Needs to be >= 0. Defines max height differences.
+  /// 0 means no height differences.
+  double peakToPeakAmplitude();
+
+  /// Needs to be >= 0.
+  /// 0 means everything is high and flat,
+  /// 1 means that there is no affect,
+  /// 5 means that there is large height differences.
+  double terrainSharpness();
+
+  /// Needs to be >= 0.
+  /// For example, 0.008 has more details than 0.004.
+  double frequency();
 }
 
 class FinlandCreationRules extends MapCreationRules {
@@ -34,7 +45,6 @@ class FinlandCreationRules extends MapCreationRules {
   @override
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
     ///Todo these probabilities are not exactly correct because they are looped through in order.
-    ///Todo add probabilities
     return {
       TileType.grass: [
         NaturalItemProbability(NaturalItemType.rock, 0.02),
@@ -49,12 +59,22 @@ class FinlandCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return -0.5;
+    return 0.5;
   }
 
   @override
-  double elevationAmplitude() {
-    return 15;
+  double peakToPeakAmplitude() {
+    return 30;
+  }
+
+  @override
+  double terrainSharpness() {
+    return 3;
+  }
+
+  @override
+  double frequency() {
+    return 0.002;
   }
 }
 
@@ -96,12 +116,22 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.0;
+    return 0.40;
   }
 
   @override
-  double elevationAmplitude() {
-    return 30;
+  double peakToPeakAmplitude() {
+    return 40;
+  }
+
+  @override
+  double terrainSharpness() {
+    return 3;
+  }
+
+  @override
+  double frequency() {
+    return 0.0005;
   }
 }
 

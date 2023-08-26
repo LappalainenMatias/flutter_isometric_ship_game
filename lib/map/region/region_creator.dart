@@ -14,7 +14,7 @@ import '../../optimization/tile_map_simplifier.dart';
 /// Because of this we cannot create Vertices or use dart:ui Colors.
 class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
-  late final noise = NoiseCreator_open_simplex_2(_mapCreationRules);
+  late final noise = NoiseCreator(_mapCreationRules);
 
   /// Creates game objects for the spefic level of detail and the details lower than that.
   RegionDTO create(IsoCoordinate regionBottom, int width, int height,
@@ -28,15 +28,14 @@ class RegionCreator {
 
       List<Tile> tiles =
           _createTiles(startX, startY, noises[0], noises[1], lod);
-
-      List<Tile> filtered = removeDeepUnderWaterTiles(tiles);
-      filtered.sort();
+      //tiles = removeDeepUnderWaterTiles(tiles);
+      tiles.sort();
 
       var allObjects = [
         //todo if (lod.containsNaturalItems) ..._createNaturalItems(tileMatrix)
       ];
 
-      gameObjectByLOD[lod] = filtered;
+      gameObjectByLOD[lod] = tiles;
     }
     return RegionDTO(regionBottom, gameObjectByLOD);
   }

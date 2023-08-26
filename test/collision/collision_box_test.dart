@@ -1,31 +1,31 @@
-import 'package:anki/game_objects/dynamic/player/player.dart';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
+import 'package:anki/collision/collision_box.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('Two players should collide', () {
-    var player1 = Player(const IsoCoordinate.fromIso(0, 0), 1);
-    var player2 = Player(const IsoCoordinate.fromIso(1.0, 1.0), 1);
-    expect(player1.collision(player2), isTrue);
+  test('getters should return correct values', () {
+    var box = CollisionBox(const IsoCoordinate.fromIso(5, 5), 10, 20);
+    expect(box.left, 0);
+    expect(box.right, 10);
+    expect(box.top, 15);
+    expect(box.bottom, -5);
   });
 
-  test('Two players should not collide', () {
-    var player1 = Player(const IsoCoordinate.fromIso(0, 0), 1);
-    var player2 = Player(const IsoCoordinate.fromIso(5, 5), 1);
-    expect(player1.collision(player2), isFalse);
+  test('should detect overlap with another box', () {
+    var box1 = CollisionBox(const IsoCoordinate.fromIso(5, 5), 10, 10);
+    var box2 = CollisionBox(const IsoCoordinate.fromIso(10, 10), 10, 10);
+    expect(box1.overlaps(box2), true);
   });
 
-  test('Player and Tile should collide', () {
-    var player = Player(const IsoCoordinate.fromIso(-2, -2), 1);
-    var tile = Tile(TileType.sand, const IsoCoordinate.fromIso(-1, -1), 1, 1);
-    expect(player.collision(tile), isTrue);
+  test('should detect no overlap with another box', () {
+    var box1 = CollisionBox(const IsoCoordinate.fromIso(5, 5), 10, 10);
+    var box2 = CollisionBox(const IsoCoordinate.fromIso(20, 20), 10, 10);
+    expect(box1.overlaps(box2), false);
   });
 
-  test('Player and Tile should NOT collide', () {
-    var player = Player(const IsoCoordinate.fromIso(0, 0), 1);
-    var tile = Tile(TileType.sand, const IsoCoordinate.fromIso(4, 4), 1, 1);
-    expect(player.collision(tile), isFalse);
+  test('should detect no overlap when boxes touch but do not overlap', () {
+    var box1 = CollisionBox(const IsoCoordinate.fromIso(5, 5), 10, 10);
+    var box2 = CollisionBox(const IsoCoordinate.fromIso(15, 15), 10, 10);
+    expect(box1.overlaps(box2), false);
   });
 }

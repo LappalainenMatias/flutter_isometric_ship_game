@@ -3,7 +3,7 @@ import '../game_objects/static/ground/tile_type.dart';
 
 /// Contains the texture coordinate for each tile type.
 /// 36 vertices which create 6 triangles (2 for each visible side)
-Float32List getTextureCoordinates(TileType type) {
+Float32List getTileTextureCoordinates(TileType type) {
   switch (type) {
     case TileType.ice:
       return iceTexture;

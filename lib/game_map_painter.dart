@@ -22,7 +22,7 @@ class GameMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    _timePassed += gameLoop.deltaTime;
+    _timePassed += gameLoop.dt;
     // TODO: Do we have to do all of these every frame?
     _addWaterShader(_underWaterPaint);
     _addTexture(_landPaint);
@@ -37,8 +37,8 @@ class GameMapPainter extends CustomPainter {
     }
   }
 
-  void _addTexture(Paint paint) {
-    paint.shader = ImageShader(
+  void _addTexture(Paint myPaint) {
+    myPaint.shader = ImageShader(
       textureImage,
       TileMode.clamp,
       TileMode.clamp,
@@ -66,9 +66,9 @@ class GameMapPainter extends CustomPainter {
     );
   }
 
-  void _addWaterShader(Paint paint) {
+  void _addWaterShader(Paint myPaint) {
     _waterShader.setFloat(0, _timePassed);
-    paint.shader = _waterShader;
+    myPaint.shader = _waterShader;
   }
 
   void _isometricTransformation(Canvas canvas, Size size) {

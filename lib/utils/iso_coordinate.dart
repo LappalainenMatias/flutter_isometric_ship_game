@@ -26,6 +26,10 @@ class IsoCoordinate {
     return IsoCoordinate.fromIso(isoX + other.isoX, isoY + other.isoY);
   }
 
+  IsoCoordinate copy() {
+    return IsoCoordinate.fromIso(isoX, isoY);
+  }
+
   Point<double> toPoint() {
     double y = isoY / 2 - isoX / 4;
     double x = isoY - y;

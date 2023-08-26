@@ -13,9 +13,11 @@ class Tile extends GameObject {
   double elevation;
   late VerticeDTO vertices;
   int width;
+  late final CollisionBox collisionBox;
 
   Tile(this.type, this.isoCoordinate, this.elevation, this.width,
       {VerticeDTO? vertices}) {
+    collisionBox = CollisionBox(isoCoordinate, width.toDouble(), elevation + 1);
     this.vertices = vertices ?? TileToVertices.toVertices(this);
   }
 
@@ -76,7 +78,6 @@ class Tile extends GameObject {
 
   @override
   CollisionBox getCollisionBox() {
-    /// todo we should not be constantly creating new collision boxes
-    return CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
+    return collisionBox;
   }
 }

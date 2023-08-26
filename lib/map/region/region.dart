@@ -1,10 +1,10 @@
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/map/region/region_creator.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import '../../camera/level_of_detail.dart';
 import '../../game_objects/game_object.dart';
+import '../../utils/list_binary_search.dart';
 import '../../utils/vertice_dto.dart';
 import 'dart:math';
 
@@ -14,16 +14,16 @@ import 'dart:math';
 class Region extends Comparable<Region> {
   IsoCoordinate bottomCoordinate;
   final List<GameObject> _dynamicGameObjects = [];
-  Map<LevelOfDetail, List<GameObject>> _staticGameObjectsByDetailLevel;
+  Map<LevelOfDetail, List<GameObject>> staticGameObjectsByLOD;
   final RegionLOD _regionLOD = RegionLOD();
 
-  Region(this.bottomCoordinate, this._staticGameObjectsByDetailLevel) {
+  Region(this.bottomCoordinate, this.staticGameObjectsByLOD) {
     _updateAllLevelsOfDetail();
   }
 
   void addNewLevelOfDetail(
       List<GameObject> staticGameObjects, LevelOfDetail lod) {
-    _staticGameObjectsByDetailLevel[lod] = staticGameObjects;
+    staticGameObjectsByLOD[lod] = staticGameObjects;
     _updateLevelOfDetail(lod);
   }
 
@@ -43,7 +43,6 @@ class Region extends Comparable<Region> {
 
   void addDynamicGameObject(GameObject gameObject) {
     if (!gameObject.isDynamic()) {
-      /// Todo we only support adding dynamic game objects. Static game objects are harder to add because there is multiple levels of detail.
       throw Exception("Can only add dynamic game objects");
     }
     _dynamicGameObjects.add(gameObject);
@@ -60,18 +59,18 @@ class Region extends Comparable<Region> {
   }
 
   void _updateAllLevelsOfDetail() {
-    for (LevelOfDetail lod in _staticGameObjectsByDetailLevel.keys) {
+    for (LevelOfDetail lod in staticGameObjectsByLOD.keys) {
       _updateLevelOfDetail(lod);
     }
   }
 
   void _updateLevelOfDetail(LevelOfDetail lod) {
-    List<GameObject> gameObjects = [
-      ..._staticGameObjectsByDetailLevel[lod] ?? [],
-      ..._dynamicGameObjects
-    ];
+    List<GameObject> allGameObjects = addDynamicObjectsToStaticGameObjects(
+      staticGameObjectsByLOD[lod] ?? [],
+      _dynamicGameObjects,
+    );
 
-    Map<String, VerticeDTO> verticeDTOs = gameObjectsToVertices(gameObjects);
+    Map<String, VerticeDTO> verticeDTOs = gameObjectsToVertices(allGameObjects);
     int verticesCount = (verticeDTOs['aboveWater']!.positions.length +
             verticeDTOs['underWater']!.positions.length) ~/ 2;
 

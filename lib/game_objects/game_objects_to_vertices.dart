@@ -1,11 +1,14 @@
 import 'dart:math';
 import 'dart:typed_data';
 import 'package:anki/game_objects/static/ground/tile.dart';
+import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 
+import '../collision/collision_box.dart';
 import '../utils/custom_color.dart';
 import '../utils/iso_coordinate.dart';
 import '../utils/vertice_dto.dart';
+import 'dynamic/player/player.dart';
 import 'game_object.dart';
 
 class BirchToVertices {
@@ -29,7 +32,7 @@ class BirchToVertices {
 
   static VerticeDTO _birchFoliage(
       IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticeCreator.toVertices(
+    return CubeVerticesCreator.toVertices(
       Float32List(0),
       isoCoordinate,
       elevation + 1.00,
@@ -39,7 +42,7 @@ class BirchToVertices {
   }
 
   static VerticeDTO _birchTrunk(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticeCreator.toVertices(
+    return CubeVerticesCreator.toVertices(
       Float32List(0),
       isoCoordinate,
       elevation + 0.25,
@@ -50,9 +53,8 @@ class BirchToVertices {
 }
 
 class RockToVertices {
-  /// Creates rock from cubes
   static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticeCreator.toVertices(
+    return CubeVerticesCreator.toVertices(
       Float32List(0),
       isoCoordinate,
       elevation,
@@ -63,7 +65,6 @@ class RockToVertices {
 }
 
 class SpruceToVertices {
-  /// Creates tree from cubes
   static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
     /// Todo we have to remove all the random stuff because the trees might get relocated
     int random = Random().nextInt(100);
@@ -87,7 +88,7 @@ class SpruceToVertices {
 
   static VerticeDTO _spruceFoliage(
       IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticeCreator.toVertices(
+    return CubeVerticesCreator.toVertices(
       Float32List(0),
       isoCoordinate,
       elevation + 1.00,
@@ -98,7 +99,7 @@ class SpruceToVertices {
 
   static VerticeDTO _spruceTrunk(
       IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticeCreator.toVertices(
+    return CubeVerticesCreator.toVertices(
       Float32List(0),
       isoCoordinate,
       elevation + 0.25,
@@ -110,64 +111,56 @@ class SpruceToVertices {
 
 class TileToVertices {
   static VerticeDTO toVertices(Tile tile) {
-    var textures = getTextureCoordinates(tile.type);
-    return CubeVerticeCreator.toVertices(
+    var textures = getTileTextureCoordinates(tile.type);
+    return CubeVerticesCreator.toVertices(
       textures,
       tile.isoCoordinate,
       tile.elevation,
       widthScale: tile.width.toDouble(),
+      heightScale: tile.width.toDouble(),
     );
   }
 }
 
+class CollisionBoxToVertices {
+  static VerticeDTO toVertices(CollisionBox box) {
+    return CubeVerticesCreator.toVertices(
+        getTileTextureCoordinates(TileType.rock), box.point, 0,
+        widthScale: box.width, heightScale: box.height);
+  }
+}
+
 class PlayerToVertices {
-  static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticeCreator.toVertices(
-        Float32List(0), isoCoordinate, elevation,
-        widthScale: 2, heightScale: 2);
+  static VerticeDTO toVertices(Player player) {
+    return CubeVerticesCreator.toVertices(
+      getTileTextureCoordinates(TileType.deathGrass),
+      player.isoCoordinate,
+      player.elevation,
+    );
   }
 }
 
 /// Almost everything visible at the map uses this so performance is important.
 ///
 /// Isometric cube has 7 corners and 3 visible sides. From the 7 corners we create
-/// 6 triangles that make up the cube (two for each visible side). The 3 visible sides
-/// have different colors (colorTop, colorLeft, colorRight).
+/// 6 triangles that make up the cube (two for each visible side).
 ///
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
 ///
 /// Offset can be used to reduce symmetry by moving the cube slightly so that
 /// every tree and rock does not line up perfectly.
-class CubeVerticeCreator {
+class CubeVerticesCreator {
   static const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 
   static VerticeDTO toVertices(
     Float32List textures,
     IsoCoordinate isoCoordinate,
-    double elevation, {
+    double z, {
     double heightScale = 1,
     double widthScale = 1,
-    IsoCoordinate offset = const IsoCoordinate.fromIso(0, 0),
   }) {
-    /// Todo This should not be here
-    /*
-    if (elevation < 0) {
-      // Adds blueish color to underwater cubes
-      double depthPercentage = 0.20 + ((elevation - 0.20) / 5).abs();
-      if (depthPercentage > 1) {
-        colorTop = blueColor;
-        colorLeft = blueColor;
-        colorRight = blueColor;
-      } else {
-        colorTop = _mix(colorTop, blueColor, depthPercentage);
-        colorLeft = _mix(colorLeft, blueColor, depthPercentage);
-        colorRight = _mix(colorRight, blueColor, depthPercentage);
-      }
-    }
-     */
-
     // Creates the 7 corners of the isometric cube
-    final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation) + offset;
+    final cenBot = isoCoordinate + IsoCoordinate(z, z);
     final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
     final lefBot = cenBot + IsoCoordinate(0, widthScale);
     final lefTop = cenCen + IsoCoordinate(0, widthScale);
@@ -217,21 +210,6 @@ class CubeVerticeCreator {
 
     return VerticeDTO(positions, textures);
   }
-
-  /// Todo move this to some other class
-  static CustomColor _mix(
-      CustomColor color1, CustomColor color2, double percent) {
-    return CustomColor.fromNormalizedARGB(
-      _lerp(color1.normalizedA, color2.normalizedA, percent),
-      _lerp(color1.normalizedR, color2.normalizedR, percent),
-      _lerp(color1.normalizedG, color2.normalizedG, percent),
-      _lerp(color1.normalizedB, color2.normalizedB, percent),
-    );
-  }
-
-  static double _lerp(double a, double b, double t) {
-    return a + (b - a) * t;
-  }
 }
 
 /// We do not want to draw every game object individually (because it's slow).
@@ -271,9 +249,7 @@ Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
   }
 
   return {
-    'underWater':
-        VerticeDTO(underWaterPositions, underWaterTextures),
-    'aboveWater':
-        VerticeDTO(aboveWaterPositions, aboveWaterTextures)
+    'underWater': VerticeDTO(underWaterPositions, underWaterTextures),
+    'aboveWater': VerticeDTO(aboveWaterPositions, aboveWaterTextures)
   };
 }

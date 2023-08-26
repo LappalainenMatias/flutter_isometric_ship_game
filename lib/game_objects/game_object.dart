@@ -27,9 +27,7 @@ abstract class GameObject implements Comparable<GameObject> {
   /// because we do not need to update the region vertices.
   bool isDynamic();
 
-  CollisionBox? getCollisionBox() {
-    return null;
-  }
+  CollisionBox? getCollisionBox() => null;
 
   bool collision(GameObject other) {
     if (this == other) {
@@ -49,15 +47,15 @@ abstract class GameObject implements Comparable<GameObject> {
   /// [0] should always contain the game object type (Notice gameObjectFromList)
   List gameObjectToList();
 
-  static GameObject gameObjectFromList(List list) {
-    switch (list[0] as String) {
+  static GameObject gameObjectFromList(List gameObjects) {
+    switch (gameObjects[0] as String) {
       case 'NaturalItem':
         throw Exception("Implement");
       case 'Tile':
-        return Tile.fromList(list);
+        return Tile.fromList(gameObjects);
       case 'Player':
         throw Exception("Implement");
     }
-    throw Exception("Class did not implement gameObjectFromList method for $list");
+    throw Exception("Not implemented for $gameObjects");
   }
 }

@@ -1,16 +1,16 @@
 import 'package:anki/utils/iso_coordinate.dart';
 
 class CollisionBox {
-  IsoCoordinate startPoint;
+  IsoCoordinate point; // Bottom-center point in isometric coordinates.
   double width;
   double height;
 
-  CollisionBox(this.startPoint, this.width, this.height);
+  CollisionBox(this.point, this.width, this.height);
 
-  double get left => startPoint.isoX;
-  double get right => startPoint.isoX + width;
-  double get bottom => startPoint.isoY;
-  double get top => startPoint.isoY + height;
+  double get left => point.isoX - (width / 2);
+  double get right => point.isoX + (width / 2);
+  double get bottom => point.isoY - (height / 2);
+  double get top => point.isoY + (height / 2);
 
   bool overlaps(CollisionBox other) {
     if (right <= other.left || other.right <= left) {

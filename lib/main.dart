@@ -1,4 +1,3 @@
-import 'package:anki/shader_testing.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/slider.dart';
 import 'package:anki/widget/statistics.dart';
@@ -34,12 +33,12 @@ class IsometricMapApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Isometric map',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MainScreen(title: 'Isometric map'),
-        );
+      title: 'Isometric map',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MainScreen(title: 'Isometric map'),
+    );
   }
 }
 
@@ -164,6 +163,17 @@ class _GameScreenState extends State<GameScreen> {
                       child: Align(
                         alignment: Alignment.topLeft,
                         child: Statistics(),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Align(
+                        alignment: Alignment.bottomLeft,
+                        child: SwitchListTile(
+                          title: const Text("Player"),
+                          value: true,
+                          onChanged: (bool value) {},
+                        ),
                       ),
                     ),
                   ],

@@ -30,14 +30,6 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Top left: ${game.viewTopLeft.toString()}",
-              style: const TextStyle(color: Colors.white),
-            ),
-            Text(
-              "Bottom right: ${game.viewBottomRight.toString()}",
-              style: const TextStyle(color: Colors.white),
-            ),
-            Text(
               "Center: ${game.viewCenter.toString()}",
               style: const TextStyle(color: Colors.white),
             ),
@@ -50,7 +42,7 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Visible region size: ${game.amountOfVisibleRegions()}",
+              "Visible region amount: ${game.amountOfVisibleRegions()}",
               style: const TextStyle(color: Colors.white),
             ),
           ],

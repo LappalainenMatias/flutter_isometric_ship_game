@@ -5,7 +5,7 @@ import 'package:test/test.dart';
 
 void main() {
   test("Noise range of values", () {
-    NoiseCreator_open_simplex_2 noise = NoiseCreator_open_simplex_2(
+    NoiseCreator noise = NoiseCreator(
       FinlandCreationRules(),
       1,
     );
@@ -29,7 +29,7 @@ void main() {
   });
 
   test("Low LOD should have smaller noise than high LOD", () {
-    NoiseCreator_open_simplex_2 noise = NoiseCreator_open_simplex_2(
+    NoiseCreator noise = NoiseCreator(
       SvalbardCreationRules(),
       1,
     );
@@ -42,8 +42,8 @@ void main() {
   });
 
   test("Noise values should decrease 4x from 1x1 to 2x2 to 4x4", () {
-    NoiseCreator_open_simplex_2 creator =
-        NoiseCreator_open_simplex_2(SvalbardCreationRules(), 1);
+    NoiseCreator creator =
+        NoiseCreator(SvalbardCreationRules(), 1);
     var n1x1 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod1x1);
     var n2x2 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod2x2);
     var n4x4 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod4x4);

@@ -1,5 +1,4 @@
-/// In practice low level of detail causes the elevation and moisture noise to have less detail.
-/// Because of that we can draw larger tiles.
+/// Reduces detail of the map. For example, can make tiles large.
 /// From 1x1:
 /// [1, 2, 3, 4],
 /// [5, 6, 7, 8],

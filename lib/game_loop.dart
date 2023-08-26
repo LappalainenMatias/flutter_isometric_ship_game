@@ -6,9 +6,9 @@ import 'game.dart';
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;
   late final Game game;
-  /// Time in seconds since last frame
-  double deltaTime = 0.0;
+  double dt = 0.0;
   Duration _previous = Duration.zero;
+  double timePassed = 0.0;
 
   GameLoop(TickerProvider vsync, this.game) {
     _ticker = vsync.createTicker(_onTick)..start();
@@ -16,9 +16,10 @@ class GameLoop extends ChangeNotifier {
 
   void _onTick(Duration timestamp) {
     final durationDelta = timestamp - _previous;
-    deltaTime = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
+    dt = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
     _previous = timestamp;
-    update(deltaTime);
+
+    update(dt);
   }
 
   void update(var dt) {

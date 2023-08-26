@@ -1,4 +1,5 @@
 import 'package:anki/utils/iso_coordinate.dart';
+import '../game_objects/dynamic/player/player.dart';
 import 'camera_mover.dart';
 import 'level_of_detail.dart';
 
@@ -30,6 +31,10 @@ class Camera {
 
   double height() {
     return width() / _aspectRatio;
+  }
+
+  void centerToPlayer(Player player) {
+    center = player.isoCoordinate;
   }
 
   IsoCoordinate get bottomRight => IsoCoordinate.fromIso(
