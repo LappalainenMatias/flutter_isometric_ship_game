@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui' as ui;
-import 'package:anki/utils/map_dto.dart';
 import 'package:flutter/cupertino.dart';
+import 'dto/map_dto.dart';
 import 'game.dart';
 import 'game_loop.dart';
 
@@ -27,7 +27,6 @@ class GameMapPainter extends CustomPainter {
     _addWaterShader(_underWaterPaint);
     _addTexture(_landPaint);
     _isometricTransformation(canvas, size);
-    //_paintBackgroundWater(canvas, size);
     MapDTO vertices = game.getVerticesInView();
     for (var v in vertices.underWater) {
       canvas.drawVertices(v, BlendMode.dst, _landPaint);

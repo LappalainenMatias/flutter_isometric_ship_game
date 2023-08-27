@@ -1,18 +1,12 @@
-import 'package:anki/collision/collision_detector.dart';
-import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region_manager.dart';
-import 'package:anki/utils/map_dto.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
 import 'camera/level_of_detail.dart';
+import 'dto/map_dto.dart';
 import 'game_objects/dynamic/player/player.dart';
-import 'game_objects/static/ground/tile.dart';
-import 'game_objects/static/ground/tile_type.dart';
-import 'map/region/region.dart';
 
 class Game extends ChangeNotifier {
-  final Player _player = Player(const IsoCoordinate(0, 0), 0);
   final Camera _camera = Camera();
   late final RegionManager _regionManager = RegionManager(_camera);
   int _verticesCount = 0;
@@ -56,5 +50,9 @@ class Game extends ChangeNotifier {
 
   void updateVisibleRegions() {
     _regionManager.updateVisibleRegions();
+  }
+
+  void createNewRegion() {
+    _regionManager.createNewRegion();
   }
 }

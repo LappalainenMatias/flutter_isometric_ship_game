@@ -166,17 +166,6 @@ class _GameScreenState extends State<GameScreen> {
                         child: Statistics(),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Align(
-                        alignment: Alignment.bottomLeft,
-                        child: SwitchListTile(
-                          title: const Text("Player"),
-                          value: true,
-                          onChanged: (bool value) {},
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               );

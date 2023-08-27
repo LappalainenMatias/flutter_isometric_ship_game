@@ -5,9 +5,9 @@ import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 
 import '../collision/collision_box.dart';
+import '../dto/vertice_dto.dart';
 import '../utils/custom_color.dart';
 import '../utils/iso_coordinate.dart';
-import '../utils/vertice_dto.dart';
 import 'dynamic/player/player.dart';
 import 'game_object.dart';
 

@@ -1,7 +1,7 @@
 
 import 'package:anki/game_objects/static/ground/tile.dart';
 import '../collision/collision_box.dart';
-import '../../../utils/vertice_dto.dart';
+import '../dto/vertice_dto.dart';
 
 
 /// A game object is something that is drawn on the screen.

@@ -4,6 +4,7 @@ import 'package:anki/map/region/region_manager.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import '../../camera/camera.dart';
 import '../../camera/level_of_detail.dart';
+import '../../utils/coordinate_utils.dart';
 
 /// Managing and sorting regions every frame is slow when the camera is zoomed out.
 /// This class allows us to get visible regions faster. This class implements the following ideas:
@@ -12,10 +13,6 @@ import '../../camera/level_of_detail.dart';
 class VisibleRegions {
   final Camera _camera;
   final RegionManager _regionManager;
-
-  /// Some regions are so tall that they are visible even when they are not in
-  /// the camera view. This padding fixes that.
-  final double _visibleRegionPadding = 256;
 
   /// These regions should always be in correct order for drawing.
   List<Region> _sortedVisibleRegions = [];
@@ -33,7 +30,7 @@ class VisibleRegions {
     List<Region> filtered = [];
 
     for (var region in _sortedVisibleRegions) {
-      if (_isInView(region.bottomCoordinate)) {
+      if (isInView(region.bottomCoordinate, _camera)) {
         filtered.add(region);
       } else {
         _addedRegionCoordinates.remove(region.bottomCoordinate);
@@ -62,16 +59,6 @@ class VisibleRegions {
     _sortedVisibleRegions.insert(min, newRegion);
   }
 
-  bool _isInView(IsoCoordinate coordinate) {
-    /// We add some extra padding because some regions can be so tall that
-    /// they are visible even when they are not in the camera view.
-    IsoCoordinate topLeft = _camera.topLeft +
-        IsoCoordinate.fromIso(-_visibleRegionPadding, _visibleRegionPadding);
-    IsoCoordinate bottomRight = _camera.bottomRight +
-        IsoCoordinate.fromIso(_visibleRegionPadding, -_visibleRegionPadding);
-    return coordinate.isBetween(topLeft, bottomRight);
-  }
-
   void updateVisibleRegions() {
     /// Todo we could do this every 10 frame and it would still be unvisible. It takes about 1ms every frame.
     removeUnvisibleRegions();
@@ -84,7 +71,7 @@ class VisibleRegions {
     int checked = 0;
     while (_spiralIndex > 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
-      if (!_isInView(coordinate)) {
+      if (!isInView(coordinate, _camera)) {
         _spiralIndex = 0; // Stops the loop.
         break;
       }
@@ -99,76 +86,6 @@ class VisibleRegions {
       checked++;
       _spiralIndex--;
     }
-  }
-
-  /// Returns a list of coordinates which are between the two coordinates in spiral form.
-  /// We do this so that regions center of the screen are created first.
-  /// From:
-  /// [1, 2, 3]
-  /// [4, 5, 6]
-  /// [7, 8, 9]
-  /// to:
-  /// [1, 2, 3, 6, 9, 8, 7, 4, 5]
-  List getSpiralStartingFromCorner2(
-      IsoCoordinate topLeft, IsoCoordinate bottomRight, int step) {
-    int top = topLeft.isoY.round();
-    int bottom = bottomRight.isoY.round();
-    int left = topLeft.isoX.round();
-    int right = bottomRight.isoX.round();
-
-    var point1 = _regionManager.isoCoordinateToRegionPoint(topLeft);
-    var point2 = _regionManager.isoCoordinateToRegionPoint(bottomRight);
-
-    int width = right - left;
-    int height = top - bottom;
-
-    if (width <= 0 || height <= 0) {
-      throw Exception("Width and height must be >= 0");
-    }
-
-    int size = ((width / step).floor() + 1) * ((height / step).floor() + 1);
-    var spiral = List<IsoCoordinate?>.filled(size, null, growable: false);
-
-    int dir = 1;
-    int index = 0;
-
-    while (top >= bottom && left <= right) {
-      switch (dir) {
-        case 1:
-          for (int i = left; i <= right; i += step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(i.toDouble(), top.toDouble());
-          }
-          top -= step;
-          dir = 2;
-          break;
-        case 2:
-          for (int i = top; i >= bottom; i -= step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(right.toDouble(), i.toDouble());
-          }
-          right -= step;
-          dir = 3;
-          break;
-        case 3:
-          for (int i = right; i >= left; i -= step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(i.toDouble(), bottom.toDouble());
-          }
-          bottom += step;
-          dir = 4;
-          break;
-        case 4:
-          for (int i = bottom; i <= top; i += step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(left.toDouble(), i.toDouble());
-          }
-          left += step;
-          dir = 1;
-          break;
-      }
-    }
-    return spiral;
   }
 
   /// Returns a list of coordinates which are between the two coordinates in spiral form.

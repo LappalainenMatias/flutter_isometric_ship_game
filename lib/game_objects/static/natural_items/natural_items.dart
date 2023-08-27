@@ -1,8 +1,8 @@
-import 'package:anki/utils/vertice_dto.dart';
 import 'dart:math';
 import 'dart:convert';
 import '../../../collision/collision_box.dart';
 import '../../../../../utils/iso_coordinate.dart';
+import '../../../dto/vertice_dto.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 

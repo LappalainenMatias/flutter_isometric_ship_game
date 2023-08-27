@@ -1,3 +1,4 @@
+
 /// We use this because Color is part of dart:ui which cannot be used concurrently
 class CustomColor {
   final int a, r, g, b;
@@ -9,11 +10,15 @@ class CustomColor {
   }
 
   double get normalizedA => a / 255.0;
+
   double get normalizedR => r / 255.0;
+
   double get normalizedG => g / 255.0;
+
   double get normalizedB => b / 255.0;
 
-  static CustomColor fromNormalizedARGB(double a, double r, double g, double b) {
+  static CustomColor fromNormalizedARGB(
+      double a, double r, double g, double b) {
     return CustomColor.fromARGB(
       (a * 255).round(),
       (r * 255).round(),

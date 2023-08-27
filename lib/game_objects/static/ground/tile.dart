@@ -3,7 +3,7 @@ import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'dart:math';
 import '../../../collision/collision_box.dart';
-import '../../../../../utils/vertice_dto.dart';
+import '../../../dto/vertice_dto.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 

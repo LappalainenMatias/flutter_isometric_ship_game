@@ -18,12 +18,12 @@ class GameLoop extends ChangeNotifier {
     final durationDelta = timestamp - _previous;
     dt = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
     _previous = timestamp;
-
     update(dt);
   }
 
   void update(var dt) {
     game.updateVisibleRegions();
+    game.createNewRegion();
     notifyListeners();
   }
 

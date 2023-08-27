@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:anki/map/region/region_creation_stack.dart';
 import 'package:anki/map/region/visible_regions.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import 'package:anki/map/region/region.dart';
@@ -9,19 +10,22 @@ import 'package:isolated_worker/js_isolated_worker.dart';
 import '../../camera/camera.dart';
 import '../../camera/level_of_detail.dart';
 import '../../constants.dart';
+import '../../dto/map_dto.dart';
 import '../../game_objects/dynamic/player/player.dart';
 import '../../game_objects/game_object.dart';
-import '../../utils/map_dto.dart';
+import '../../utils/coordinate_utils.dart';
 
 class RegionManager {
   final RegionCreator regionCreator = RegionCreator();
   final Map<Point<int>, Region> _regions = {};
   late final VisibleRegions _visibleRegions;
-  final Set<Point> _creating = {};
+  late final RegionCreationQueue _regionCreationQueue;
+  bool _isCreatingRegion = false;
   Region? playerRegion;
 
   RegionManager(Camera camera) {
     _visibleRegions = VisibleRegions(camera, this);
+    _regionCreationQueue = RegionCreationQueue(camera);
   }
 
   void updatePlayerRegion(Player player) {
@@ -58,7 +62,7 @@ class RegionManager {
     );
   }
 
-  Region getRegion(IsoCoordinate coordinate, LevelOfDetail lod) {
+  Region getRegion(IsoCoordinate coordinate, LevelOfDetail minLOD) {
     Point<int> point = isoCoordinateToRegionPoint(coordinate);
     if (_regionDoesNotExist(point)) {
       if (_tooManyRegionsExist()) {
@@ -70,8 +74,12 @@ class RegionManager {
 
     Region region = _regions[point]!;
 
-    if (!region.hasLevelOfDetail(lod)) {
-      _addLevelOfDetailToRegion(region, lod);
+    if (!region.hasLevelOfDetail(minLOD)) {
+      RegionBuildRule rule = RegionBuildRule(
+        isoCoordinateToRegionPoint(region.bottomCoordinate),
+        minLOD,
+      );
+      _regionCreationQueue.add(rule);
     }
 
     return region;
@@ -85,29 +93,6 @@ class RegionManager {
     return _regions.length > maxRegionCount;
   }
 
-  /// Returns the region coordinate which the isoCoordinate is part of
-  Point<int> isoCoordinateToRegionPoint(IsoCoordinate isoCoordinate) {
-    Point isoPoint = isoCoordinate.toPoint();
-    int regionX = (isoPoint.x / regionSideWidth).floor();
-    int regionY = (isoPoint.y / regionSideWidth).floor();
-    return Point(regionX, regionY);
-  }
-
-  IsoCoordinate coordinateToRegionBottomCoordinate(
-      IsoCoordinate isoCoordinate) {
-    Point<int> regionPoint = isoCoordinateToRegionPoint(isoCoordinate);
-    return regionPointToIsoCoordinate(regionPoint);
-  }
-
-  /// Region coordinate to iso coordinate
-  IsoCoordinate regionPointToIsoCoordinate(Point<int> regionCoordinate) {
-    var isoCoordinate = IsoCoordinate(
-      regionCoordinate.x * regionSideWidth.toDouble(),
-      regionCoordinate.y * regionSideWidth.toDouble(),
-    );
-    return isoCoordinate;
-  }
-
   void _removeFarawayRegions(Point<int> point) {
     for (var key in _regions.keys.toList()) {
       if ((key.x - point.x).abs() > 60 || (key.y - point.y).abs() > 60) {
@@ -117,6 +102,7 @@ class RegionManager {
   }
 
   void _addLevelOfDetailToRegion(Region region, LevelOfDetail lod) {
+    _isCreatingRegion = true;
     if (kIsWeb) {
       _webAddGameObjects(region, lod);
     } else {
@@ -128,12 +114,6 @@ class RegionManager {
   void _webAddGameObjects(Region region, LevelOfDetail minLOD) async {
     Point<int> regionCoordinate =
         isoCoordinateToRegionPoint(region.bottomCoordinate);
-    if (_creating.length > 10|| _creating.contains(regionCoordinate)) {
-      /// Todo Should we allow large than 1 build queue?
-      return;
-    }
-    _creating.add(regionCoordinate);
-
     var result = await JsIsolatedWorker().run(
       functionName: 'jsregionworker',
       arguments: [
@@ -159,8 +139,7 @@ class RegionManager {
         region.addNewLevelOfDetail(gameObjectsByLOD[lod]!, lod);
       }
     }
-
-    _creating.remove(regionCoordinate);
+    _isCreatingRegion = false;
   }
 
   /// TODO Add concurrency support
@@ -182,6 +161,7 @@ class RegionManager {
         region.addNewLevelOfDetail(regionDTO.gameObjectsByLOD[lod]!, lod);
       }
     }
+    _isCreatingRegion = false;
   }
 
   int visibleRegionSize() {
@@ -190,5 +170,17 @@ class RegionManager {
 
   void updateVisibleRegions() {
     _visibleRegions.updateVisibleRegions();
+  }
+
+  void createNewRegion() {
+    if (_isCreatingRegion) return;
+
+    RegionBuildRule? rule = _regionCreationQueue.next();
+    if (rule == null) return;
+
+    _addLevelOfDetailToRegion(
+      _regions[rule.coordinate]!,
+      rule.lod,
+    );
   }
 }

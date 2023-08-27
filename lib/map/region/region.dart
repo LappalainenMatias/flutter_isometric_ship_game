@@ -3,9 +3,9 @@ import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/map/region/region_creator.dart';
 import 'package:anki/utils/iso_coordinate.dart';
 import '../../camera/level_of_detail.dart';
+import '../../dto/vertice_dto.dart';
 import '../../game_objects/game_object.dart';
-import '../../utils/list_binary_search.dart';
-import '../../utils/vertice_dto.dart';
+import '../../optimization/list_binary_search.dart';
 import 'dart:math';
 
 /// The region contains dynamic and static game objects. Because of zoom out
