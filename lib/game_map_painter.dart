@@ -27,11 +27,12 @@ class GameMapPainter extends CustomPainter {
     _addWaterShader(_underWaterPaint);
     _addTexture(_landPaint);
     _isometricTransformation(canvas, size);
-    _paintBackgroundWater(canvas, size);
+    //_paintBackgroundWater(canvas, size);
     MapDTO vertices = game.getVerticesInView();
     for (var v in vertices.underWater) {
-      canvas.drawVertices(v, BlendMode.srcOver, _underWaterPaint);
+      canvas.drawVertices(v, BlendMode.dst, _landPaint);
     }
+    _paintWaterPlane(canvas, size);
     for (var v in vertices.aboveWater) {
       canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
@@ -49,14 +50,7 @@ class GameMapPainter extends CustomPainter {
   /// Currently we do not create tiles which are
   /// deep under water. Because of this we have to paint the background with
   /// water so that it does not contain holes.
-  void _paintBackgroundWater(Canvas canvas, Size size) {
-    canvas.drawRect(
-      Rect.fromPoints(
-        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
-        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
-      ),
-      _backgroundWaterPaint,
-    );
+  void _paintWaterPlane(Canvas canvas, Size size) {
     canvas.drawRect(
       Rect.fromPoints(
         Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
@@ -83,6 +77,6 @@ class GameMapPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }

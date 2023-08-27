@@ -82,6 +82,8 @@ class SvalbardCreationRules extends MapCreationRules {
   @override
   List<TileRule> tileRules() {
     return [
+      TileRule(TileType.rock, 0.0, -0.2),
+      TileRule(TileType.deathGrass, 0.0, 0.0),
       TileRule(TileType.sand, 0.0, null),
       TileRule(TileType.rock, 6.0, -0.2),
       TileRule(TileType.deathGrass, 6.0, 0.4),
@@ -121,12 +123,12 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double peakToPeakAmplitude() {
-    return 40;
+    return 30;
   }
 
   @override
   double terrainSharpness() {
-    return 3;
+    return 2;
   }
 
   @override

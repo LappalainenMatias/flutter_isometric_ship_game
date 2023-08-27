@@ -128,7 +128,7 @@ class RegionManager {
   void _webAddGameObjects(Region region, LevelOfDetail minLOD) async {
     Point<int> regionCoordinate =
         isoCoordinateToRegionPoint(region.bottomCoordinate);
-    if (_creating.length > 1000 || _creating.contains(regionCoordinate)) {
+    if (_creating.length > 10|| _creating.contains(regionCoordinate)) {
       /// Todo Should we allow large than 1 build queue?
       return;
     }

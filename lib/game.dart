@@ -28,44 +28,6 @@ class Game extends ChangeNotifier {
     _camera.move(joyStickX, joyStickY);
   }
 
-  void movePlayer(double joyStickX, double joyStickY) {
-    IsoCoordinate initialIsoCoordinate = _player.isoCoordinate.copy();
-    _player.move(joyStickX, joyStickY);
-    _regionManager.updatePlayerRegion(_player);
-    _camera.centerToPlayer(_player);
-
-    if (!_isValidPlayerMove()) {
-      _resetPlayerPosition(initialIsoCoordinate);
-    }
-  }
-
-  bool _isValidPlayerMove() {
-    Region? playerRegion = _regionManager.playerRegion;
-
-    if (playerRegion == null) return false;
-
-    if (!playerRegion.hasLevelOfDetail(LevelOfDetail.lod1x1)) return false;
-
-    var collisions = findCollisions(
-        playerRegion.staticGameObjectsByLOD[LevelOfDetail.lod1x1]!, _player);
-
-    if (collisions.isNotEmpty) {
-      /// todo for testing
-      for (var collision in collisions) {
-        collision.getVertices().textures =
-            getTileTextureCoordinates(TileType.grass);
-      }
-      _player.elevation = (collisions.first as Tile).elevation + 1;
-    }
-    return true;
-  }
-
-  void _resetPlayerPosition(IsoCoordinate initialIsoCoordinate) {
-    _player.isoCoordinate = initialIsoCoordinate;
-    _camera.centerToPlayer(_player);
-    _regionManager.updatePlayerRegion(_player);
-  }
-
   int get verticesCount => _verticesCount;
 
   double get viewWidth => _camera.width();

@@ -7,7 +7,6 @@ import '../../game_objects/game_object.dart';
 import '../../game_objects/static/ground/tile.dart';
 import '../../game_objects/static/natural_items/natural_items.dart';
 import '../../noise/noise.dart';
-import '../../optimization/tile_map_simplifier.dart';
 
 /// This class and the classes that it uses should NOT use dart:ui so that
 /// we can create regions concurrently (dart:ui only runs in main thread).
@@ -40,7 +39,7 @@ class RegionCreator {
     return RegionDTO(regionBottom, gameObjectByLOD);
   }
 
-  List<Tile> _createTiles(int startX, int startY, List elevationNoise,
+  List<Tile> _createTiles(int startX, int startY, List<List<double>> elevationNoise,
       List moistureNoise, LevelOfDetail lod) {
     List<Tile> tiles = [];
     for (var x = 0; x < elevationNoise.length; x++) {

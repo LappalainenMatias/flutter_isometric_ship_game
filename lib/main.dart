@@ -76,6 +76,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ChangeNotifierProvider(create: (_) => gameLoop),
       ],
       child: const Material(
+        color: Colors.black,
         child: Stack(
           children: [
             GameScreen(),

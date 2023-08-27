@@ -32,14 +32,8 @@ class VisibleRegions {
     /// Todo moving objects to another list might not be optimal.
     List<Region> filtered = [];
 
-    /// We add some extra padding so that regions do not get created and then removed
-    IsoCoordinate topLeft = _camera.topLeft +
-        IsoCoordinate.fromIso(-_visibleRegionPadding, _visibleRegionPadding);
-    IsoCoordinate bottomRight = _camera.bottomRight +
-        IsoCoordinate.fromIso(_visibleRegionPadding, -_visibleRegionPadding);
-
     for (var region in _sortedVisibleRegions) {
-      if (region.bottomCoordinate.isBetween(topLeft, bottomRight)) {
+      if (_isInView(region.bottomCoordinate)) {
         filtered.add(region);
       } else {
         _addedRegionCoordinates.remove(region.bottomCoordinate);
@@ -68,6 +62,16 @@ class VisibleRegions {
     _sortedVisibleRegions.insert(min, newRegion);
   }
 
+  bool _isInView(IsoCoordinate coordinate) {
+    /// We add some extra padding because some regions can be so tall that
+    /// they are visible even when they are not in the camera view.
+    IsoCoordinate topLeft = _camera.topLeft +
+        IsoCoordinate.fromIso(-_visibleRegionPadding, _visibleRegionPadding);
+    IsoCoordinate bottomRight = _camera.bottomRight +
+        IsoCoordinate.fromIso(_visibleRegionPadding, -_visibleRegionPadding);
+    return coordinate.isBetween(topLeft, bottomRight);
+  }
+
   void updateVisibleRegions() {
     /// Todo we could do this every 10 frame and it would still be unvisible. It takes about 1ms every frame.
     removeUnvisibleRegions();
@@ -80,6 +84,10 @@ class VisibleRegions {
     int checked = 0;
     while (_spiralIndex > 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
+      if (!_isInView(coordinate)) {
+        _spiralIndex = 0; // Stops the loop.
+        break;
+      }
       Region region = _regionManager.getRegion(coordinate, lod);
       if (!_addedRegionCoordinates.contains(region.bottomCoordinate)) {
         addRegionInCorrectOrder(region);

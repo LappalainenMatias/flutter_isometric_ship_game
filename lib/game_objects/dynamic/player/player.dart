@@ -7,6 +7,8 @@ import '../../game_objects_to_vertices.dart';
 
 class Player extends GameObject {
   double elevation;
+
+  /// Notice that this not the screen coordinate because elevation affects it
   IsoCoordinate isoCoordinate;
   final playerMover = PlayerMover();
 
