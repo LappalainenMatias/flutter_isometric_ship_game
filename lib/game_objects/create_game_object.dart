@@ -3,7 +3,7 @@ import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 
 import '../map/map_creation_rules.dart';
-import '../utils/iso_coordinate.dart';
+import '../coordinates/iso_coordinate.dart';
 import 'dart:math';
 
 class TileCreator {

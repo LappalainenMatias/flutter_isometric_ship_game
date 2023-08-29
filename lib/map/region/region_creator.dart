@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/map/map_creation_rules.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../camera/level_of_detail.dart';
 import '../../game_objects/create_game_object.dart';
 import '../../game_objects/game_object.dart';

@@ -7,7 +7,7 @@ import 'package:anki/textures/texture_coordinates.dart';
 import '../collision/collision_box.dart';
 import '../dto/vertice_dto.dart';
 import '../utils/custom_color.dart';
-import '../utils/iso_coordinate.dart';
+import '../coordinates/iso_coordinate.dart';
 import 'dynamic/player/player.dart';
 import 'game_object.dart';
 
@@ -112,12 +112,16 @@ class SpruceToVertices {
 class TileToVertices {
   static VerticeDTO toVertices(Tile tile) {
     var textures = getTileTextureCoordinates(tile.type);
+    var heightScale = tile.width.toDouble();
+    if (heightScale >= 4) {
+      heightScale /= 2;
+    }
     return CubeVerticesCreator.toVertices(
       textures,
       tile.isoCoordinate,
       tile.elevation,
       widthScale: tile.width.toDouble(),
-      heightScale: tile.width.toDouble(),
+      heightScale: heightScale,
     );
   }
 }

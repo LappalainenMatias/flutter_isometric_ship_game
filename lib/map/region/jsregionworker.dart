@@ -1,5 +1,5 @@
 import 'package:anki/map/region/region_creator.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:js/js.dart';
 
 import '../../camera/level_of_detail.dart';

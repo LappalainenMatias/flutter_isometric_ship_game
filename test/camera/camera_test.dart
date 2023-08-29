@@ -1,6 +1,6 @@
 import 'package:anki/camera/camera.dart';
 import 'package:anki/camera/level_of_detail.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {

@@ -1,7 +1,7 @@
 import 'package:anki/camera/level_of_detail.dart';
+import 'package:anki/dto/map_dto.dart';
 import 'package:anki/game.dart';
-import 'package:anki/utils/iso_coordinate.dart';
-import 'package:anki/utils/map_dto.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -9,6 +9,7 @@ void main() {
     Game game = Game();
     game.setZoomLevel(0.1);
     game.updateVisibleRegions();
+    game.createNewRegion();
     MapDTO mapDTO = game.getVerticesInView();
     expect(mapDTO.aboveWater.isNotEmpty || mapDTO.underWater.isNotEmpty, true);
     expect(game.verticesCount > 0, true);
@@ -18,6 +19,9 @@ void main() {
     Game game = Game();
     game.setZoomLevel(0.2);
     game.updateVisibleRegions();
+    game.createNewRegion();
+    game.createNewRegion();
+    game.createNewRegion();
     MapDTO highDetail = game.getVerticesInView(LevelOfDetail.lod1x1);
     MapDTO lowDetail = game.getVerticesInView(LevelOfDetail.lod16x16);
     expect(highDetail.verticesCount > lowDetail.verticesCount * 2, true);

@@ -1,5 +1,5 @@
 import 'package:anki/map/region/region.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {

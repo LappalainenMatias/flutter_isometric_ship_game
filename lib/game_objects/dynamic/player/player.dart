@@ -1,4 +1,4 @@
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../../collision/collision_box.dart';
 import '../../game_object.dart';
 import 'dart:math';

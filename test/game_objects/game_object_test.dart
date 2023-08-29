@@ -1,9 +1,9 @@
+import 'package:anki/dto/vertice_dto.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/utils/iso_coordinate.dart';
-import 'package:anki/utils/vertice_dto.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

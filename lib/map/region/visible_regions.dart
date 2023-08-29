@@ -1,10 +1,10 @@
 import 'package:anki/constants.dart';
 import 'package:anki/map/region/region.dart';
 import 'package:anki/map/region/region_manager.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../camera/camera.dart';
 import '../../camera/level_of_detail.dart';
-import '../../utils/coordinate_utils.dart';
+import '../../coordinates/coordinate_utils.dart';
 
 /// Managing and sorting regions every frame is slow when the camera is zoomed out.
 /// This class allows us to get visible regions faster. This class implements the following ideas:
@@ -28,7 +28,6 @@ class VisibleRegions {
   void removeUnvisibleRegions() {
     /// Todo moving objects to another list might not be optimal.
     List<Region> filtered = [];
-
     for (var region in _sortedVisibleRegions) {
       if (isInView(region.bottomCoordinate, _camera)) {
         filtered.add(region);
@@ -60,14 +59,15 @@ class VisibleRegions {
   }
 
   void updateVisibleRegions() {
-    /// Todo we could do this every 10 frame and it would still be unvisible. It takes about 1ms every frame.
     removeUnvisibleRegions();
+
     LevelOfDetail lod = _camera.getLevelOfDetail();
     if (_spiralIndex == 0) {
       _coordinatesInSpiral = getSpiralStartingFromCorner(
           _camera.topLeft, _camera.bottomRight, regionSideWidth);
       _spiralIndex = _coordinatesInSpiral.length - 1;
     }
+
     int checked = 0;
     while (_spiralIndex > 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];

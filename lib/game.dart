@@ -1,4 +1,4 @@
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/map/region/region_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';

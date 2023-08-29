@@ -1,6 +1,6 @@
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/optimization/tile_map_simplifier.dart';
 import 'package:flutter_test/flutter_test.dart';
 

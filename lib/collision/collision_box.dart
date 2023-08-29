@@ -1,4 +1,4 @@
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 
 class CollisionBox {
   IsoCoordinate point; // Bottom-center point in isometric coordinates.

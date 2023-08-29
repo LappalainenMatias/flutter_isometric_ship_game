@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 import 'package:anki/map/region/region_creation_stack.dart';
 import 'package:anki/map/region/visible_regions.dart';
-import 'package:anki/utils/iso_coordinate.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/map/region/region.dart';
 import 'dart:math';
 import 'package:anki/map/region/region_creator.dart';
@@ -13,29 +13,18 @@ import '../../constants.dart';
 import '../../dto/map_dto.dart';
 import '../../game_objects/dynamic/player/player.dart';
 import '../../game_objects/game_object.dart';
-import '../../utils/coordinate_utils.dart';
+import '../../coordinates/coordinate_utils.dart';
 
 class RegionManager {
-  final RegionCreator regionCreator = RegionCreator();
+  final RegionCreator _regionCreator = RegionCreator();
   final Map<Point<int>, Region> _regions = {};
   late final VisibleRegions _visibleRegions;
   late final RegionCreationQueue _regionCreationQueue;
   bool _isCreatingRegion = false;
-  Region? playerRegion;
 
   RegionManager(Camera camera) {
     _visibleRegions = VisibleRegions(camera, this);
     _regionCreationQueue = RegionCreationQueue(camera);
-  }
-
-  void updatePlayerRegion(Player player) {
-    Region currentRegion =
-        getRegion(player.isoCoordinate, LevelOfDetail.lod1x1);
-    if (currentRegion != playerRegion) {
-      if (playerRegion != null) playerRegion!.removeGameObject(player);
-      playerRegion = currentRegion;
-      playerRegion!.addDynamicGameObject(player);
-    }
   }
 
   MapDTO getVerticesInView(LevelOfDetail lod) {
@@ -147,7 +136,7 @@ class RegionManager {
     Point<int> regionCoordinate =
         isoCoordinateToRegionPoint(region.bottomCoordinate);
 
-    RegionDTO regionDTO = regionCreator.create(
+    RegionDTO regionDTO = _regionCreator.create(
       region.bottomCoordinate,
       regionSideWidth,
       regionSideWidth,

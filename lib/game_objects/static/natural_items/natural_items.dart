@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'dart:convert';
 import '../../../collision/collision_box.dart';
-import '../../../../../utils/iso_coordinate.dart';
+import '../../../coordinates/iso_coordinate.dart';
 import '../../../dto/vertice_dto.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 
 /// Trees, rocks, etc. are natural items.
+/// TODO WIP
 class NaturalItem extends GameObject {
   final NaturalItemType type;
   final IsoCoordinate isoCoordinate;

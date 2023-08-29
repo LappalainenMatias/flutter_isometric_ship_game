@@ -2,8 +2,8 @@ import 'dart:math';
 import 'dart:collection';
 import 'package:anki/camera/camera.dart';
 import 'package:anki/camera/level_of_detail.dart';
-import 'package:anki/utils/iso_coordinate.dart';
-import '../../utils/coordinate_utils.dart';
+import 'package:anki/coordinates/iso_coordinate.dart';
+import '../../coordinates/coordinate_utils.dart';
 
 /// The idea of this class is to:
 /// 1. Have a stack of regions that we want to create
@@ -61,8 +61,9 @@ class RegionCreationQueue {
       return false;
     }
 
-    /// Do not create regions with unnecessary high level of detail
-    if (regionBuildRules.lod.tileMinWidth <
+    /// Do not create regions which have different level of detail than
+    /// the camera has
+    if (regionBuildRules.lod.tileMinWidth !=
         _camera.getLevelOfDetail().tileMinWidth) {
       return false;
     }

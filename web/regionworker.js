@@ -1387,6 +1387,9 @@ C:function C(a,b,c){this.c=a
 this.a=b
 this.b=c},
 bh:function bh(){},
+dC(a,b){return new A.al(a*2-2*b,a+b)},
+al:function al(a,b){this.a=a
+this.b=b},
 b6:function b6(a,b){this.a=a
 this.b=b},
 D:function D(){},
@@ -1412,9 +1415,6 @@ bF:function bF(a){this.b=a},
 bw:function bw(a){var _=this
 _.r=_.f=_.e=_.d=_.c=_.b=_.a=$
 _.w=a},
-dC(a,b){return new A.al(a*2-2*b,a+b)},
-al:function al(a,b){this.a=a
-this.b=b},
 cw(a,b,c){var t,s,r,q,p,o,n,m,l
 if(B.d.a8(a,"-")){t=1
 s=!0}else{t=0
@@ -1613,73 +1613,72 @@ u.Z.a(a)
 return A.dL(a,b,null)},
 eD(a,b){if(typeof a=="function")return a
 else return b.a(A.ef(a))},
-dQ(a,b,c,a0,a1){var t,s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d
-for(t=0;t<12;++t){s=a0[t]
+dQ(a,b,a0,a1,a2){var t,s,r,q,p,o,n,m,l,k,j,i,h,g,f,e,d,c
+for(t=0;t<12;++t){s=a1[t]
 r=s.b
 if(r==null||a<r){r=s.c
 r=r==null||b<r}else r=!1
 if(r){r=s.a
-q=c.a
-p=c.b
+q=a0.a
+p=a0.b
 o=q*2-2*p
 p=q+p
-q=new A.aw(r,new A.al(o,p),a,a1)
+q=new A.aw(r,new A.al(o,p),a,a2)
 q.f=new A.bh()
 n=A.eK(r)
+m=a2>=4?a2/2:a2
 r=o+(a*2-2*a)
 p+=a+a
-o=a1*2
-m=2*a1
-l=r+(o-m)
-k=p+(a1+a1)
-m=0-m
-j=r+m
-i=p+a1
-m=l+m
-h=k+a1
-o-=0
-g=r+o
-f=l+o
-o=m+o
-e=h+a1
-d=new Float32Array(36)
-d[0]=l
-d[1]=k
-d[2]=j
-d[3]=i
-d[4]=r
-d[5]=p
-d[6]=l
-d[7]=k
-d[8]=j
-d[9]=i
-d[10]=m
-d[11]=h
-d[12]=l
-d[13]=k
-d[14]=m
-d[15]=h
-d[16]=o
-d[17]=e
-d[18]=l
-d[19]=k
-d[20]=o
-d[21]=e
-d[22]=f
-d[23]=h
-d[24]=l
-d[25]=k
-d[26]=f
-d[27]=h
-d[28]=g
-d[29]=i
-d[30]=l
-d[31]=k
-d[32]=g
-d[33]=i
-d[34]=r
-d[35]=p
-r=new A.b6(d,n)
+o=r+(m*2-2*m)
+l=p+(m+m)
+k=0-2*a2
+j=r+k
+i=p+a2
+k=o+k
+h=l+a2
+g=a2*2-0
+f=r+g
+e=o+g
+g=k+g
+d=h+a2
+c=new Float32Array(36)
+c[0]=o
+c[1]=l
+c[2]=j
+c[3]=i
+c[4]=r
+c[5]=p
+c[6]=o
+c[7]=l
+c[8]=j
+c[9]=i
+c[10]=k
+c[11]=h
+c[12]=o
+c[13]=l
+c[14]=k
+c[15]=h
+c[16]=g
+c[17]=d
+c[18]=o
+c[19]=l
+c[20]=g
+c[21]=d
+c[22]=e
+c[23]=h
+c[24]=o
+c[25]=l
+c[26]=e
+c[27]=h
+c[28]=f
+c[29]=i
+c[30]=o
+c[31]=l
+c[32]=f
+c[33]=i
+c[34]=r
+c[35]=p
+r=new A.b6(c,n)
 q.d=u.D.a(r)
 return q}}throw A.b(new A.bO("No tile type found for elevation: "+A.j(a)+", moisture: "+A.j(b)+". Fix the rules!"))},
 eK(a){switch(a.a){case 0:return $.dh()
@@ -2336,6 +2335,12 @@ return r+((r&16383)<<15)&536870911}}
 A.C.prototype={
 Y(){return"LevelOfDetail."+this.b}}
 A.bh.prototype={}
+A.al.prototype={
+C(a,b){if(b==null)return!1
+if(this===b)return!0
+return b instanceof A.al&&b.a===this.a&&b.b===this.b},
+gl(a){return B.c.gl(this.a)^B.c.gl(this.b)},
+i(a){return""+B.c.p(this.a)+", "+B.c.p(this.b)}}
 A.b6.prototype={}
 A.D.prototype={
 I(a,b){u.k.a(b)
@@ -2447,12 +2452,6 @@ Z(a,b){var t,s,r,q,p=J.cz(a,u.v)
 for(t=u.i,s=0;s<a;++s){r=J.cz(b,t)
 for(q=0;q<b;++q)r[q]=0
 p[s]=r}return p}}
-A.al.prototype={
-C(a,b){if(b==null)return!1
-if(this===b)return!0
-return b instanceof A.al&&b.a===this.a&&b.b===this.b},
-gl(a){return B.c.gl(this.a)^B.c.gl(this.b)},
-i(a){return""+B.c.p(this.a)+", "+B.c.p(this.b)}}
 A.v.prototype={
 G(a,b){var t=A.bo(b),s=this.a+t.a,r=this.b+t.b+(s>>>22)
 return new A.v(s&4194303,r&4194303,this.c+t.c+(r>>>22)&1048575)},
@@ -2573,7 +2572,7 @@ A.b9.prototype={};(function aliases(){var t=J.T.prototype
 t.aa=t.i})();(function installTearOffs(){var t=hunkHelpers._static_2
 t(J,"d1","dE",7)})();(function inheritance(){var t=hunkHelpers.mixin,s=hunkHelpers.inherit,r=hunkHelpers.inheritMany
 s(A.m,null)
-r(A.m,[A.c6,J.aQ,J.aM,A.bk,A.n,A.aU,A.J,A.a9,A.a6,A.ah,A.aS,A.I,A.bQ,A.ap,A.bq,A.a5,A.z,A.b7,A.bR,A.B,A.aF,A.bM,A.bB,A.bO,A.bm,A.at,A.av,A.au,A.bh,A.b6,A.D,A.aW,A.q,A.bE,A.bF,A.bw,A.al,A.v,A.f,A.c,A.a,A.bx,A.V,A.b8,A.b9])
+r(A.m,[A.c6,J.aQ,J.aM,A.bk,A.n,A.aU,A.J,A.a9,A.a6,A.ah,A.aS,A.I,A.bQ,A.ap,A.bq,A.a5,A.z,A.b7,A.bR,A.B,A.aF,A.bM,A.bB,A.bO,A.bm,A.at,A.av,A.au,A.bh,A.al,A.b6,A.D,A.aW,A.q,A.bE,A.bF,A.bw,A.v,A.f,A.c,A.a,A.bx,A.V,A.b8,A.b9])
 r(J.aQ,[J.aR,J.an,J.p,J.a3,J.R])
 r(J.p,[J.T,J.h,A.aZ,A.bj])
 r(J.T,[J.b_,J.ab,J.K])
