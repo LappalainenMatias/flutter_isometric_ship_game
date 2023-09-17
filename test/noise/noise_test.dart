@@ -1,17 +1,31 @@
 import 'package:anki/camera/level_of_detail.dart';
-import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:test/test.dart';
+import '../test_utils/test_objects.dart';
 
 void main() {
-  test("Noise range of values", () {
-    NoiseCreator noise = NoiseCreator(
-      FinlandCreationRules(),
-      1,
+  test("Elevation and moisture noise should be same size", () {
+    NoiseCreator noise = NoiseCreator(TestMapCreationRules(), 0);
+    int width = 128;
+    int height = 256;
+    var (elevation, moisture) = noise.createComplexNoise(
+      width,
+      height,
+      0,
+      0,
+      LevelOfDetail.zoomlevel_0.tileMinWidth,
     );
-    var noises = noise.createComplexNoise(256, 256, 0, 0, LevelOfDetail.lod1x1);
-    var elevation = noises[0];
-    var moisture = noises[1];
+
+    expect(elevation.length, width);
+    expect(moisture.length, width);
+    expect(elevation[0].length, height);
+    expect(moisture[0].length, height);
+  });
+
+  test("Noise values should be in resonable limits", () {
+    NoiseCreator noise = NoiseCreator(TestMapCreationRules(), 1);
+    var (elevation, moisture) = noise.createComplexNoise(
+        256, 256, 0, 0, LevelOfDetail.zoomlevel_0.tileMinWidth);
     for (var column in elevation) {
       for (var val in column) {
         if (val < -100 || val > 100) {
@@ -26,30 +40,5 @@ void main() {
         }
       }
     }
-  });
-
-  test("Low LOD should have smaller noise than high LOD", () {
-    NoiseCreator noise = NoiseCreator(
-      SvalbardCreationRules(),
-      1,
-    );
-    var minimal =
-        noise.createComplexNoise(128, 128, 0, 0, LevelOfDetail.lod16x16);
-    var maximum =
-        noise.createComplexNoise(128, 128, 0, 0, LevelOfDetail.lod1x1);
-    expect(maximum[0][0].length, greaterThan(minimal[0][0].length));
-    expect(maximum[1][0].length, greaterThan(minimal[1][0].length));
-  });
-
-  test("Noise values should decrease 4x from 1x1 to 2x2 to 4x4", () {
-    NoiseCreator creator =
-        NoiseCreator(SvalbardCreationRules(), 1);
-    var n1x1 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod1x1);
-    var n2x2 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod2x2);
-    var n4x4 = creator.createComplexNoise(16, 16, 0, 0, LevelOfDetail.lod4x4);
-    expect(n1x1[0].expand((element) => element).toList().length,
-        n2x2[0].expand((element) => element).toList().length * 4);
-    expect(n2x2[1].expand((element) => element).toList().length,
-        n4x4[1].expand((element) => element).toList().length * 4);
   });
 }

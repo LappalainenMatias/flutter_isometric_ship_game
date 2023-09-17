@@ -1,5 +1,4 @@
 import 'package:open_simplex_2/open_simplex_2.dart';
-import '../camera/level_of_detail.dart';
 import '../map/map_creation_rules.dart';
 import 'dart:math';
 
@@ -23,23 +22,21 @@ class NoiseCreator {
     _moistureNoise3 = OpenSimplex2F(seed + 7);
   }
 
-  List<List<List<double>>> createComplexNoise(int width, int height, int startX,
-      int startY, LevelOfDetail levelOfDetail) {
-    int tileSize = levelOfDetail.tileMinWidth;
-    List<List<double>> elevationMap =
-        _fixedSizeList(width ~/ tileSize, height ~/ tileSize);
-    List<List<double>> moistureMap =
-        _fixedSizeList(width ~/ tileSize, height ~/ tileSize);
+  /// In lower levels of detail we skip noise values
+  (List<List<double>>, List<List<double>>) createComplexNoise(
+      int width, int height, int startX, int startY, int skip) {
+    List<List<double>> elevationMap = _fixedSizeList(width, height);
+    List<List<double>> moistureMap = _fixedSizeList(width, height);
 
     /// Increasing frequency adds details to the noise.
     double frequency1 = mapCreationRules.frequency();
     double frequency2 = mapCreationRules.frequency() * 4;
     double frequency3 = mapCreationRules.frequency() * 16;
     double frequency4 = mapCreationRules.frequency() * 64;
-    for (int x = 0; x < width ~/ tileSize; x++) {
-      for (int y = 0; y < width ~/ tileSize; y++) {
-        var i = (startX + x * tileSize).toDouble();
-        var j = (startY + y * tileSize).toDouble();
+    for (int x = 0; x < width; x++) {
+      for (int y = 0; y < width; y++) {
+        var i = (startX + x * skip).toDouble();
+        var j = (startY + y * skip).toDouble();
 
         // Here we add multiple noises together to add complexity
         double e = _elevationNoise1.noise2(i * frequency1, j * frequency1);
@@ -49,6 +46,8 @@ class NoiseCreator {
 
         // Normalize values to 0 - 1
         e = (e + 1) / 2;
+
+        //Makes terrain more interesting
         e = pow(e, mapCreationRules.terrainSharpness()).toDouble();
         e = e - mapCreationRules.amountOfWater();
         e = e * mapCreationRules.peakToPeakAmplitude();
@@ -61,7 +60,7 @@ class NoiseCreator {
         moistureMap[x][y] = m;
       }
     }
-    return [elevationMap, moistureMap];
+    return (elevationMap, moistureMap);
   }
 
   List<List<double>> _fixedSizeList(int width, int height) {

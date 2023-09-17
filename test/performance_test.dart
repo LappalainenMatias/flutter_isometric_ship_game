@@ -4,14 +4,16 @@ import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
+import 'package:anki/map/map.dart';
 import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/region.dart';
-import 'package:anki/map/region/region_manager.dart';
-import 'package:anki/map/region/visible_regions.dart';
+import 'package:anki/map/region/visible_regions_handler.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
+
+import 'test_utils/test_objects.dart';
 
 /// Here we tests the performance of different parts of the game
 /// These do NOT test anything
@@ -43,38 +45,14 @@ void main() {
     /// 3: 38, 40, 39 (Return the data in List<List> format and change that to gameobjects in the main thread)
   });
 
-  test("Create spiral of coordinates", () {
-    /// We use this for finding the regions that are visible to the camera
-    /// so it is run often.
-    Camera camera = Camera(center: const IsoCoordinate(0, 0));
-    VisibleRegions visibleRegion =
-        VisibleRegions(camera, RegionManager(camera));
-    Stopwatch stopwatch = Stopwatch()..start();
-    List coordinates = visibleRegion.getSpiralStartingFromCorner(
-        const IsoCoordinate.fromIso(-10000, 10000),
-        const IsoCoordinate.fromIso(10000, -10000),
-        32);
-    print("Creating sprial took ${stopwatch.elapsedMilliseconds} ms");
-
-    /// step:32 from:(-10000, 10000) to:(10000, -10000)
-    /// 1: 41, 41, 47, 40
-    /// 2: 17, 18, 17, 17
-    /// 3: 20, 18, 18, 24
-    /// 4: 14, 18, 12, 11 (Create the coordinates at the same time as we spiral the coordinates)
-  });
-
   test("Noise performance", () {
-    NoiseCreator first = NoiseCreator(SvalbardCreationRules(), 1);
-    NoiseCreator second =
-        NoiseCreator(SvalbardCreationRules(), 1);
+    NoiseCreator first = NoiseCreator(TestMapCreationRules(), 1);
     int width = 1024;
     Stopwatch stopwatch = Stopwatch()..start();
-    first.createComplexNoise(width, width, 0, 0, LevelOfDetail.lod1x1);
+    first.createComplexNoise(
+        width, width, 0, 0, LevelOfDetail.zoomlevel_0.tileMinWidth);
     print("OpenSimplexNoise took ${stopwatch.elapsedMilliseconds}ms");
     stopwatch.reset();
-    second.createComplexNoise(width, width, 0, 0, LevelOfDetail.lod1x1);
-    print(
-        "NoiseCreator_open_simplex_2 took ${stopwatch.elapsedMilliseconds}ms");
 
     /// NoiseCreator_open_simplex_2 also has better quality than OpenSimplexNoise in web
     /// OpenSimplexNoise: 585 ms
@@ -82,22 +60,20 @@ void main() {
   });
 
   test("Create region from game objects", () {
-    Map<LevelOfDetail, List<GameObject>> gameObjectsByLOD = {};
-    for (LevelOfDetail lod in LevelOfDetail.values) {
-      List<GameObject> gameObjects = [];
-      for (int i = 0; i < 62 * 62; i += lod.tileMinWidth) {
-        gameObjects.add(Tile(
-            TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1));
-      }
-      gameObjects.sort();
-      gameObjectsByLOD[lod] = gameObjects;
+    List<GameObject> gameObjects = [];
+    for (int i = 0; i < 62 * 62; i += 1) {
+      gameObjects.add(Tile(
+          TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1));
     }
+    gameObjects.sort();
     IsoCoordinate bottomCoordinate = const IsoCoordinate(0, 0);
 
     Stopwatch stopwatch = Stopwatch()..start();
-    Region region = Region(bottomCoordinate, gameObjectsByLOD);
+    Region region =
+        Region(bottomCoordinate, gameObjects, LevelOfDetail.zoomlevel_0);
     print("Creating region took ${stopwatch.elapsedMilliseconds} ms");
 
+    /// Create 62x62 gameobjects and make region out of them
     /// 1. 21, 22, 22
     /// 2. 16, 16, 16 (Removing sort from the region creation)
   });

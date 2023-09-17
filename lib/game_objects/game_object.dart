@@ -47,15 +47,15 @@ abstract class GameObject implements Comparable<GameObject> {
   /// [0] should always contain the game object type (Notice gameObjectFromList)
   List gameObjectToList();
 
-  static GameObject gameObjectFromList(List gameObjects) {
-    switch (gameObjects[0] as String) {
+  static GameObject gameObjectFromList(List gameObjectData) {
+    switch (gameObjectData[0] as String) {
       case 'NaturalItem':
         throw Exception("Implement");
       case 'Tile':
-        return Tile.fromList(gameObjects);
+        return Tile.fromList(gameObjectData);
       case 'Player':
         throw Exception("Implement");
     }
-    throw Exception("Not implemented for $gameObjects");
+    throw Exception("Not implemented for $gameObjectData");
   }
 }

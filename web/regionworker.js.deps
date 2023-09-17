@@ -27,7 +27,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/natural_items/natural_items.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/map_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/jsregionworker.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/region_creator.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/region_creation/region_creator.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_coordinates.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/custom_color.dart

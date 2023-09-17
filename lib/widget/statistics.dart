@@ -42,7 +42,11 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Visible region amount: ${game.amountOfVisibleRegions()}",
+              "Visible regions: ${game.amountOfVisibleRegions()}",
+              style: const TextStyle(color: Colors.white),
+            ),
+            Text(
+              "Region creation queue: ${game.regionCreationQueueStats()}",
               style: const TextStyle(color: Colors.white),
             ),
           ],

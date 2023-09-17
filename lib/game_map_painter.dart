@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:flutter/cupertino.dart';
 import 'dto/map_dto.dart';
 import 'game.dart';
@@ -10,9 +11,6 @@ class GameMapPainter extends CustomPainter {
   final Game game;
   final ui.FragmentShader _waterShader;
   final _landPaint = Paint()..style = PaintingStyle.fill;
-  final _backgroundWaterPaint = Paint()
-    ..style = PaintingStyle.fill
-    ..color = const Color(0xFF012E8F);
   final _underWaterPaint = Paint()..style = PaintingStyle.fill;
   double _timePassed = 0;
   ui.Image textureImage;
@@ -35,6 +33,15 @@ class GameMapPainter extends CustomPainter {
     for (var v in vertices.aboveWater) {
       canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
+    //List<IsoCoordinate> points = game.getSprilal();
+    //double width = game.viewWidth / 250;
+    //for (var p in points) {
+    //  canvas.drawCircle(
+    //    Offset(p.isoX, p.isoY),
+    //    width,
+    //    Paint()..color = Color(0xFFBD3838),
+    //  );
+    //}
   }
 
   void _addTexture(Paint myPaint) {

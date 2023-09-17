@@ -26,7 +26,6 @@ class Tile extends GameObject {
     return vertices;
   }
 
-  /// Todo write tests for these to make sure they work
   factory Tile.fromList(List list) {
     return Tile(
       TileType.values.byName(list[1]),

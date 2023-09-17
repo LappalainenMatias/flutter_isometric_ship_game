@@ -1,4 +1,3 @@
-import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/dto/map_dto.dart';
 import 'package:anki/game.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
@@ -13,18 +12,6 @@ void main() {
     MapDTO mapDTO = game.getVerticesInView();
     expect(mapDTO.aboveWater.isNotEmpty || mapDTO.underWater.isNotEmpty, true);
     expect(game.verticesCount > 0, true);
-  });
-
-  test("Map with low level of detail should have less vertices", () {
-    Game game = Game();
-    game.setZoomLevel(0.2);
-    game.updateVisibleRegions();
-    game.createNewRegion();
-    game.createNewRegion();
-    game.createNewRegion();
-    MapDTO highDetail = game.getVerticesInView(LevelOfDetail.lod1x1);
-    MapDTO lowDetail = game.getVerticesInView(LevelOfDetail.lod16x16);
-    expect(highDetail.verticesCount > lowDetail.verticesCount * 2, true);
   });
 
   test("With aspect ratio 1, width and height should match", () {

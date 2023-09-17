@@ -6,8 +6,8 @@ class Camera {
   IsoCoordinate center;
   final CameraMover _cameraMover = CameraMover();
   double zoomLevel = 0.05;
-  final double _minWidth = 32;
-  final double _maxWidth = 8192;
+  final double _minWidth = 60;
+  final double _maxWidth = 10000;
   double _aspectRatio = 1.0;
 
   Camera({this.center = const IsoCoordinate(0, 0)});
@@ -49,12 +49,12 @@ class Camera {
     }
   }
 
-  LevelOfDetail getLevelOfDetail() {
-    if (zoomLevel < 0.05) return LevelOfDetail.lod1x1;
-    if (zoomLevel < 0.10) return LevelOfDetail.lod2x2;
-    if (zoomLevel < 0.20) return LevelOfDetail.lod4x4;
-    if (zoomLevel < 0.40) return LevelOfDetail.lod8x8;
-    if (zoomLevel < 0.70) return LevelOfDetail.lod16x16;
-    return LevelOfDetail.lod32x32;
+  LevelOfDetail getLOD() {
+    if (zoomLevel < 0.04) return LevelOfDetail.zoomlevel_5;
+    if (zoomLevel < 0.08) return LevelOfDetail.zoomlevel_4;
+    if (zoomLevel < 0.15) return LevelOfDetail.zoomlevel_3;
+    if (zoomLevel < 0.35) return LevelOfDetail.zoomlevel_2;
+    if (zoomLevel < 0.70) return LevelOfDetail.zoomlevel_1;
+    return LevelOfDetail.zoomlevel_0;
   }
 }

@@ -1,21 +1,56 @@
+import 'dart:ui' as ui;
 import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/map/region/region_manager.dart';
+import 'package:anki/map/region/region_creation/concurrent_region_creator.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
 import 'camera/level_of_detail.dart';
 import 'dto/map_dto.dart';
-import 'game_objects/dynamic/player/player.dart';
+import 'map/map.dart';
+import 'map/region/region.dart';
+import 'map/region/region_creation_queue.dart';
+import 'map/region/visible_regions_handler.dart';
 
 class Game extends ChangeNotifier {
   final Camera _camera = Camera();
-  late final RegionManager _regionManager = RegionManager(_camera);
+  late final GameMap _map;
+  late final VisibleRegionsHandler _visibleRegions;
+  late final RegionCreationQueue _regionCreationQueue;
+  late final ConcurrentRegionCreator _concurrentRegionCreator;
   int _verticesCount = 0;
 
+  Game() {
+    _regionCreationQueue = RegionCreationQueueImpl();
+    _map = GameMap(_regionCreationQueue);
+    _visibleRegions = VisibleRegionsHandlerImpl(_camera, _map);
+    _concurrentRegionCreator = ConcurrentRegionCreator();
+  }
+
   MapDTO getVerticesInView([LevelOfDetail? levelOfDetail]) {
-    levelOfDetail ??= _camera.getLevelOfDetail();
-    MapDTO mapDTO = _regionManager.getVerticesInView(levelOfDetail);
-    _verticesCount = mapDTO.verticesCount;
-    return mapDTO;
+    List<Region> regions = _visibleRegions.getVisibleRegionsInDrawingOrder();
+    List<ui.Vertices> aboveWater = [];
+    List<ui.Vertices> underWater = [];
+    int verticesCount = 0;
+
+    /// Todo test how much time this adding takes because this is run every frame
+    for (Region region in regions) {
+      if (region.isEmpty()) {
+        continue;
+      }
+      var verticeData = region.getVertices();
+      if (verticeData["aboveWater"] != null) {
+        aboveWater.add(verticeData["aboveWater"]!);
+      }
+      if (verticeData["underWater"] != null) {
+        underWater.add(verticeData["underWater"]!);
+      }
+      verticesCount += region.getVerticesCount();
+    }
+    _verticesCount = verticesCount;
+    return MapDTO(
+      underWater: underWater,
+      aboveWater: aboveWater,
+      verticesCount: verticesCount,
+    );
   }
 
   void moveCamera(double joyStickX, double joyStickY) {
@@ -37,7 +72,7 @@ class Game extends ChangeNotifier {
   double get zoomLevel => _camera.zoomLevel;
 
   int amountOfVisibleRegions() {
-    return _regionManager.visibleRegionSize();
+    return _visibleRegions.visibleRegionSize();
   }
 
   void updateScreenAspectRatio(double ratio) {
@@ -49,10 +84,23 @@ class Game extends ChangeNotifier {
   }
 
   void updateVisibleRegions() {
-    _regionManager.updateVisibleRegions();
+    _visibleRegions.updateVisibleRegions();
+  }
+
+  String regionCreationQueueStats() {
+    return _regionCreationQueue.toString();
   }
 
   void createNewRegion() {
-    _regionManager.createNewRegion();
+    if (_concurrentRegionCreator.isRunning) return;
+    RegionBuildRule? rule = _regionCreationQueue.next();
+    if (rule != null) {
+      var region = _map.getRegionFromIsoCoordinate(rule.isoCoordinate, rule.lod);
+      _concurrentRegionCreator.create(region);
+    }
+  }
+
+  List<IsoCoordinate> getSprilal() {
+    return _visibleRegions.visualizeSpriral();
   }
 }

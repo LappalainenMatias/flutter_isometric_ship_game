@@ -3,29 +3,6 @@ import 'package:test/test.dart';
 import 'dart:math';
 
 void main() {
-  test('Find isoCoordinate center', () {
-    IsoCoordinate topLeft = const IsoCoordinate.fromIso(0, 0);
-    IsoCoordinate bottomRight = const IsoCoordinate.fromIso(128, 128);
-    IsoCoordinate center = topLeft.center(bottomRight);
-    expect(center.isoX, 64);
-    expect(center.isoY, 64);
-  });
-
-  test("Find isoCoordinate center", () {
-    IsoCoordinate topLeft = const IsoCoordinate.fromIso(-2000, -1000);
-    IsoCoordinate bottomRight = const IsoCoordinate.fromIso(1000, 3000);
-    IsoCoordinate center = topLeft.center(bottomRight);
-    expect(center.isoX, -500);
-    expect(center.isoY, 1000);
-  });
-
-  test("Manhattan distance", () {
-    IsoCoordinate topLeft = const IsoCoordinate.fromIso(-1, -1);
-    IsoCoordinate bottomRight = const IsoCoordinate.fromIso(3, 2);
-    double distance = topLeft.manhattanDistance(bottomRight);
-    expect(distance, 7.0);
-  });
-
   test("isoCoordinate sum", () {
     IsoCoordinate c1 = const IsoCoordinate.fromIso(-1, -1);
     IsoCoordinate c2 = const IsoCoordinate.fromIso(2, 3);

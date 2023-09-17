@@ -1,4 +1,4 @@
-/// Reduces detail of the map. For example, can make tiles large.
+/// Reduces the detail of the map.
 /// From 1x1:
 /// [1, 2, 3, 4],
 /// [5, 6, 7, 8],
@@ -10,14 +10,20 @@
 /// [9, 9, 11, 11],
 /// [9, 9, 11, 11]
 enum LevelOfDetail {
-  lod1x1(1, true),
-  lod2x2(2, false),
-  lod4x4(4, false),
-  lod8x8(8, false),
-  lod16x16(16, false),
-  lod32x32(32, false);
+  // Zoomed in
+  zoomlevel_5(1, true),
+  zoomlevel_4(2, false),
+  zoomlevel_3(4, false),
+  zoomlevel_2(8, false),
+  zoomlevel_1(16, false),
+  zoomlevel_0(32, false);
+  // Zoomed out
 
-  const LevelOfDetail(this.tileMinWidth, this.containsNaturalItems);
+  const LevelOfDetail(
+    this.tileMinWidth,
+    this.containsNaturalItems,
+  );
+
   final int tileMinWidth;
   final bool containsNaturalItems;
 }

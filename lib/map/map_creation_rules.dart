@@ -1,6 +1,8 @@
 import '../game_objects/static/ground/tile_type.dart';
 import '../game_objects/static/natural_items/natural_items.dart';
 
+
+/// Guides how to map should be created.
 abstract class MapCreationRules {
   /// return the tiletype of the first rule that matches.
   List<TileRule> tileRules();
@@ -9,7 +11,8 @@ abstract class MapCreationRules {
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities();
 
   /// 1 means 100% of water, 0 means 0% of water.
-  /// 0.5 does not mean 50% of water because other settings affect the amount of water.
+  /// 0.5 does not mean 50% of water because other map creation rules can
+  /// affect the amount of water the map has.
   double amountOfWater();
 
   /// Needs to be >= 0. Defines max height differences.
@@ -17,12 +20,12 @@ abstract class MapCreationRules {
   double peakToPeakAmplitude();
 
   /// Needs to be >= 0.
-  /// 0 means everything is high and flat,
   /// 1 means that there is no affect,
   /// 5 means that there is large height differences.
   double terrainSharpness();
 
   /// Needs to be >= 0.
+  /// This is the frequency used when creating noise.
   /// For example, 0.008 has more details than 0.004.
   double frequency();
 }

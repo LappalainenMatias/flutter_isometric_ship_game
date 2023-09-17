@@ -150,9 +150,6 @@ class PlayerToVertices {
 /// 6 triangles that make up the cube (two for each visible side).
 ///
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
-///
-/// Offset can be used to reduce symmetry by moving the cube slightly so that
-/// every tree and rock does not line up perfectly.
 class CubeVerticesCreator {
   static const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 
@@ -163,7 +160,7 @@ class CubeVerticesCreator {
     double heightScale = 1,
     double widthScale = 1,
   }) {
-    // Creates the 7 corners of the isometric cube
+    /// Creates the 7 corners of the isometric cube
     final cenBot = isoCoordinate + IsoCoordinate(z, z);
     final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
     final lefBot = cenBot + IsoCoordinate(0, widthScale);
@@ -172,8 +169,8 @@ class CubeVerticesCreator {
     final rigTop = cenCen + IsoCoordinate(widthScale, 0);
     final cenTop = lefTop + IsoCoordinate(widthScale, 0);
 
-    // Notice that the triangles are created in a counter clockwise order
-    // This is important for the textures
+    /// Notice that the triangles are created in a counter clockwise order
+    /// This is important for the textures to work
     Float32List positions = Float32List(36);
     positions[0] = cenCen.isoX;
     positions[1] = cenCen.isoY;
@@ -221,13 +218,13 @@ class CubeVerticesCreator {
 Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
   int aboveWaterPositionsSize = 0;
   int underWaterPositionsSize = 0;
-  gameObjects.forEach((gameObject) {
+  for (var gameObject in gameObjects) {
     if (gameObject.isUnderWater()) {
       underWaterPositionsSize += gameObject.getVertices().positions.length;
     } else {
       aboveWaterPositionsSize += gameObject.getVertices().positions.length;
     }
-  });
+  }
 
   /// Using Float32List.fromList() would be easier but updating the Float32List is faster.
   /// Color list is always half the size of positions list.

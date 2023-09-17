@@ -1,4 +1,4 @@
-import 'package:anki/map/region/region_creator.dart';
+import 'package:anki/map/region/region_creation/region_creator.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:js/js.dart';
 
@@ -11,8 +11,10 @@ import '../../camera/level_of_detail.dart';
 @JS('jsregionworker')
 external set jsregionworker(obj);
 
-/// Returns game objects by levels of details.
-/// So if [0][0] is high level of detail then [1][0] should have the game objects for high level of detail
+/// Here we create encoded game objects in a web worker.
+/// We encode the game objects to list because this seems to be fastest way to
+/// transfer the data because you cannot return complex objects. We use lists
+/// because they seem to be faster than any other data structure that I have tested.
 void main() {
   jsregionworker = allowInterop((args) {
     RegionCreator regionCreator = RegionCreator();
@@ -24,17 +26,10 @@ void main() {
     RegionDTO regionDTO = regionCreator.create(IsoCoordinate(pointX, pointY),
         width, height, pointX.toInt(), pointY.toInt(), minLOD);
 
-    List<List> encodedByGameObjects = [];
-    List LODs = [];
-
-    for (LevelOfDetail lod in regionDTO.gameObjectsByLOD.keys) {
-      List<List?> encoded = [];
-      for (var gameObject in regionDTO.gameObjectsByLOD[lod]!) {
-        encoded.add(gameObject.gameObjectToList());
-      }
-      LODs.add(lod.index);
-      encodedByGameObjects.add(encoded);
+    List<List?> encoded = [];
+    for (var gameObject in regionDTO.gameObjects) {
+      encoded.add(gameObject.gameObjectToList());
     }
-    return [LODs, encodedByGameObjects];
+    return encoded;
   });
 }

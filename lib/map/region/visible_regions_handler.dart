@@ -1,50 +1,61 @@
-import 'package:anki/constants.dart';
 import 'package:anki/map/region/region.dart';
-import 'package:anki/map/region/region_manager.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../camera/camera.dart';
-import '../../camera/level_of_detail.dart';
 import '../../coordinates/coordinate_utils.dart';
+import '../map.dart';
 
-/// Managing and sorting regions every frame is slow when the camera is zoomed out.
-/// This class allows us to get visible regions faster. This class implements the following ideas:
-/// 1. We do not need to update ALL visible regions list every frame.
-/// 2. When adding items use binary search for keeping the list always sorted.
-class VisibleRegions {
+abstract class VisibleRegionsHandler {
+  List<Region> getVisibleRegionsInDrawingOrder();
+
+  /// Updates the visible regions so that they are ready to be drawn.
+  void updateVisibleRegions();
+
+  int visibleRegionSize();
+
+  List<IsoCoordinate> visualizeSpriral();
+}
+
+/// This class keeps track of which regions are visible and that they are in
+/// correct order for drawing.
+class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   final Camera _camera;
-  final RegionManager _regionManager;
+  final GameMap _map;
 
   /// These regions should always be in correct order for drawing.
   List<Region> _sortedVisibleRegions = [];
 
-  final Set<IsoCoordinate> _addedRegionCoordinates = {};
+  Set<IsoCoordinate> _addedRegionCoordinates = {};
 
-  VisibleRegions(this._camera, this._regionManager);
+  VisibleRegionsHandlerImpl(this._camera, this._map);
 
   int _spiralIndex = 0;
 
-  List _coordinatesInSpiral = [];
+  List<IsoCoordinate> _coordinatesInSpiral = [];
 
-  void removeUnvisibleRegions() {
+  void _removeUnvisibleRegions() {
     /// Todo moving objects to another list might not be optimal.
     List<Region> filtered = [];
+    _addedRegionCoordinates = {};
+    var currentLod = _camera.getLOD();
     for (var region in _sortedVisibleRegions) {
-      if (isInView(region.bottomCoordinate, _camera)) {
+      if (region.lod == currentLod &&
+          isInView(region.bottomCoordinate, _camera)) {
         filtered.add(region);
-      } else {
-        _addedRegionCoordinates.remove(region.bottomCoordinate);
+        _addedRegionCoordinates.add(region.bottomCoordinate);
       }
     }
     _sortedVisibleRegions = filtered;
   }
 
+  @override
   List<Region> getVisibleRegionsInDrawingOrder() {
     return _sortedVisibleRegions;
   }
 
   /// Todo insert is O(n) so there is room for improvement.
   /// Uses binary search so that the list is always sorted.
-  void addRegionInCorrectOrder(Region newRegion) {
+  /// priorityqueue might be better.
+  void _addRegionInCorrectOrder(Region newRegion) {
     int min = 0;
     int max = _sortedVisibleRegions.length;
     while (min < max) {
@@ -58,32 +69,20 @@ class VisibleRegions {
     _sortedVisibleRegions.insert(min, newRegion);
   }
 
+  @override
   void updateVisibleRegions() {
-    removeUnvisibleRegions();
+    _removeUnvisibleRegions();
 
-    LevelOfDetail lod = _camera.getLevelOfDetail();
-    if (_spiralIndex == 0) {
-      _coordinatesInSpiral = getSpiralStartingFromCorner(
-          _camera.topLeft, _camera.bottomRight, regionSideWidth);
-      _spiralIndex = _coordinatesInSpiral.length - 1;
-    }
-
-    int checked = 0;
-    while (_spiralIndex > 0) {
+    _coordinatesInSpiral =
+        getSpiralStartingFromCorner(_camera.topLeft, _camera.bottomRight);
+    _spiralIndex = _coordinatesInSpiral.length - 1;
+    while (_spiralIndex >= 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
-      if (!isInView(coordinate, _camera)) {
-        _spiralIndex = 0; // Stops the loop.
-        break;
-      }
-      Region region = _regionManager.getRegion(coordinate, lod);
+      Region region = _map.getRegionFromIsoCoordinate(coordinate, _camera.getLOD());
       if (!_addedRegionCoordinates.contains(region.bottomCoordinate)) {
-        addRegionInCorrectOrder(region);
+        _addRegionInCorrectOrder(region);
         _addedRegionCoordinates.add(region.bottomCoordinate);
       }
-      if (checked > 100) {
-        break;
-      }
-      checked++;
       _spiralIndex--;
     }
   }
@@ -96,12 +95,13 @@ class VisibleRegions {
   /// [7, 8, 9]
   /// to:
   /// [1, 2, 3, 6, 9, 8, 7, 4, 5]
-  List getSpiralStartingFromCorner(
-      IsoCoordinate topLeft, IsoCoordinate bottomRight, int step) {
+  List<IsoCoordinate> getSpiralStartingFromCorner(
+      IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     int top = topLeft.isoY.round();
     int bottom = bottomRight.isoY.round();
     int left = topLeft.isoX.round();
     int right = bottomRight.isoX.round();
+    int step = ((top - bottom).abs()) ~/ 10;
 
     int width = right - left;
     int height = top - bottom;
@@ -152,10 +152,16 @@ class VisibleRegions {
           break;
       }
     }
-    return spiral;
+    return spiral.where((e) => e != null).cast<IsoCoordinate>().toList();
   }
 
+  @override
   int visibleRegionSize() {
     return _sortedVisibleRegions.length;
+  }
+
+  @override
+  List<IsoCoordinate> visualizeSpriral() {
+    return _coordinatesInSpiral;
   }
 }

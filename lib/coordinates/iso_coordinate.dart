@@ -13,21 +13,8 @@ class IsoCoordinate {
 
   const IsoCoordinate.fromIso(this.isoX, this.isoY);
 
-  IsoCoordinate center(IsoCoordinate other) {
-    return IsoCoordinate.fromIso(
-        (isoX + other.isoX) / 2, (isoY + other.isoY) / 2);
-  }
-
-  double manhattanDistance(IsoCoordinate other) {
-    return (isoX - other.isoX).abs() + (isoY - other.isoY).abs();
-  }
-
   IsoCoordinate operator +(IsoCoordinate other) {
     return IsoCoordinate.fromIso(isoX + other.isoX, isoY + other.isoY);
-  }
-
-  IsoCoordinate copy() {
-    return IsoCoordinate.fromIso(isoX, isoY);
   }
 
   Point<double> toPoint() {
