@@ -1,13 +1,9 @@
-import 'package:anki/camera/camera.dart';
 import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/map/map.dart';
-import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/map/region/region.dart';
-import 'package:anki/map/region/visible_regions_handler.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';

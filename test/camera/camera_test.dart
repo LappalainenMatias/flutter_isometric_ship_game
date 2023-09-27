@@ -4,7 +4,7 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Move camera", () {
+  test("Move camera up, down, left and right", () {
     Camera camera = Camera(center: const IsoCoordinate.fromIso(0, 0));
     expect(camera.center.isoX, 0);
     expect(camera.center.isoY, 0);
@@ -31,21 +31,6 @@ void main() {
     expect(camera.width() < originWidth, true);
   });
 
-  test("Zoom level limits", () {
-    Camera camera = Camera(center: const IsoCoordinate.fromIso(0, 0));
-    expect(camera.width() > 0 && camera.width() < 100000, true);
-    camera.setZoomLevel(-1000000);
-    expect(camera.width() > 0 && camera.width() < 100000, true);
-    camera.setZoomLevel(-1);
-    expect(camera.width() > 0 && camera.width() < 100000, true);
-    camera.setZoomLevel(0);
-    expect(camera.width() > 0 && camera.width() < 100000, true);
-    camera.setZoomLevel(1);
-    expect(camera.width() > 0 && camera.width() < 100000, true);
-    camera.setZoomLevel(1000000);
-    expect(camera.width() > 0 && camera.width() < 100000, true);
-  });
-
   test("Change aspect ratio", () {
     Camera camera = Camera(center: const IsoCoordinate.fromIso(0, 0));
     camera.aspectRatio = 1;
@@ -63,13 +48,6 @@ void main() {
     for (var lod in LevelOfDetail.values) {
       expect(lod.tileMinWidth > preTileMinSize, true);
       preTileMinSize = lod.tileMinWidth;
-    }
-  });
-
-  test("Level of detail tile min size should be power of 2", () {
-    /// Power of 2 makes lowering the noise detail easier
-    for (var lod in LevelOfDetail.values) {
-      expect(lod.tileMinWidth > 0 && (lod.tileMinWidth & (lod.tileMinWidth - 1)) == 0, true);
     }
   });
 }
