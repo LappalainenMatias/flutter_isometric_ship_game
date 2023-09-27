@@ -35,28 +35,34 @@ class _ZoomButtonsState extends State<ZoomButtons> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        GestureDetector(
-          onTapDown: (details) => {
-            _zoomDirection = ZoomDirection.zoomIn,
-            _startZooming(),
-          },
-          onTapUp: (details) => _stopZooming(),
-          onTapCancel: () => _stopZooming(),
-          child: ElevatedButton(
-            onPressed: () {},
-            child: const Text('Zoom in'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTapDown: (details) => {
+              _zoomDirection = ZoomDirection.zoomIn,
+              _startZooming(),
+            },
+            onTapUp: (details) => _stopZooming(),
+            onTapCancel: () => _stopZooming(),
+            child: ElevatedButton(
+              onPressed: () {},
+              child: const Text('Zoom in'),
+            ),
           ),
         ),
-        GestureDetector(
-          onTapDown: (details) => {
-            _zoomDirection = ZoomDirection.zoomOut,
-            _startZooming(),
-          },
-          onTapUp: (details) => _stopZooming(),
-          onTapCancel: () => _stopZooming(),
-          child: ElevatedButton(
-            onPressed: () {},
-            child: const Text('Zoom out'),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: GestureDetector(
+            onTapDown: (details) => {
+              _zoomDirection = ZoomDirection.zoomOut,
+              _startZooming(),
+            },
+            onTapUp: (details) => _stopZooming(),
+            onTapCancel: () => _stopZooming(),
+            child: ElevatedButton(
+              onPressed: () {},
+              child: const Text('Zoom out'),
+            ),
           ),
         ),
       ],
