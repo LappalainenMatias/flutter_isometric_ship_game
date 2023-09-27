@@ -41,12 +41,10 @@ class ConcurrentRegionCreator {
 
     /// This part is not concurrent and encodes the result, because we cannot
     /// return a list of GameObjects from the web worker.
-    Stopwatch stopwatch = Stopwatch()..start();
     List<GameObject> gameObjects = [];
     for (List encoded in result) {
       gameObjects.add(GameObject.gameObjectFromList(encoded));
     }
-    print('Decoding took: ${stopwatch.elapsedMicroseconds} ms');
 
     region.update(gameObjects);
     isRunning = false;

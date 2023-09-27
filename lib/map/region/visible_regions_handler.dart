@@ -12,6 +12,7 @@ abstract class VisibleRegionsHandler {
 
   int visibleRegionSize();
 
+  /// Used for debugging
   List<IsoCoordinate> visualizeSpriral();
 }
 

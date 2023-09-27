@@ -1,3 +1,4 @@
+import 'package:anki/game.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -38,11 +39,11 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Zoom: ${game.zoomLevel.toStringAsFixed(2)}",
+              "Zoom: ${game.zoomLevel.toStringAsFixed(10)}, Level: ${game.getLOD().index}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Visible regions: ${game.amountOfVisibleRegions()}",
+              "Total regions: ${game.getRegionCount()} Visible: ${game.amountOfVisibleRegions()}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(

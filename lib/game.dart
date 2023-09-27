@@ -10,6 +10,7 @@ import 'map/region/region.dart';
 import 'map/region/region_creation_queue.dart';
 import 'map/region/visible_regions_handler.dart';
 
+/// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {
   final Camera _camera = Camera();
   late final GameMap _map;
@@ -57,8 +58,6 @@ class Game extends ChangeNotifier {
     _camera.move(joyStickX, joyStickY);
   }
 
-  int get verticesCount => _verticesCount;
-
   double get viewWidth => _camera.width();
 
   double get viewHeight => _camera.height();
@@ -71,24 +70,29 @@ class Game extends ChangeNotifier {
 
   double get zoomLevel => _camera.zoomLevel;
 
-  int amountOfVisibleRegions() {
-    return _visibleRegions.visibleRegionSize();
+  LevelOfDetail getLOD() {
+    return _camera.getLOD();
   }
 
   void updateScreenAspectRatio(double ratio) {
     _camera.aspectRatio = ratio;
   }
 
+  /// 0 is zoomed in, 1 is zoomed out.
   void setZoomLevel(double level) {
     _camera.setZoomLevel(level);
   }
 
-  void updateVisibleRegions() {
-    _visibleRegions.updateVisibleRegions();
+  void zoomIn() {
+    _camera.zoomIn();
   }
 
-  String regionCreationQueueStats() {
-    return _regionCreationQueue.toString();
+  void zoomOut() {
+    _camera.zoomOut();
+  }
+
+  void updateVisibleRegions() {
+    _visibleRegions.updateVisibleRegions();
   }
 
   void createNewRegion() {
@@ -100,7 +104,21 @@ class Game extends ChangeNotifier {
     }
   }
 
-  List<IsoCoordinate> getSprilal() {
+  /// For debugging
+  List<IsoCoordinate> getSprilalOfSearchedRegions() {
     return _visibleRegions.visualizeSpriral();
   }
+}
+
+extension GameMapStatisticExtension on Game {
+  int getRegionCount() {
+    return _map.getRegionCount();
+  }
+  String regionCreationQueueStats() {
+    return _regionCreationQueue.toString();
+  }
+  int amountOfVisibleRegions() {
+    return _visibleRegions.visibleRegionSize();
+  }
+  int get verticesCount => _verticesCount;
 }

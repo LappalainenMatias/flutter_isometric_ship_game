@@ -46,4 +46,12 @@ class GameMap {
       }
     }
   }
+
+  int getRegionCount() {
+    int count = 0;
+    for (var map in _regionsBylod) {
+      count += map.length;
+    }
+    return count;
+  }
 }

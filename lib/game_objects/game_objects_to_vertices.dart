@@ -112,16 +112,12 @@ class SpruceToVertices {
 class TileToVertices {
   static VerticeDTO toVertices(Tile tile) {
     var textures = getTileTextureCoordinates(tile.type);
-    var heightScale = tile.width.toDouble();
-    if (heightScale >= 4) {
-      heightScale /= 2;
-    }
     return CubeVerticesCreator.toVertices(
       textures,
       tile.isoCoordinate,
       tile.elevation,
       widthScale: tile.width.toDouble(),
-      heightScale: heightScale,
+      heightScale: tile.width.toDouble(),
     );
   }
 }
