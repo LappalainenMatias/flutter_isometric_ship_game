@@ -1,4 +1,5 @@
-import 'package:anki/dto/map_dto.dart';
+import 'dart:ui';
+
 import 'package:anki/game.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
@@ -9,8 +10,10 @@ void main() {
     game.setZoomLevel(0.1);
     game.updateVisibleRegions();
     game.createNewRegion();
-    MapDTO mapDTO = game.getVerticesInView();
-    expect(mapDTO.aboveWater.isNotEmpty || mapDTO.underWater.isNotEmpty, true);
+    ({List<Vertices> underWater, List<Vertices> aboveWater}) vertices =
+        game.getVerticesInView();
+    expect(
+        vertices.aboveWater.isNotEmpty || vertices.underWater.isNotEmpty, true);
     expect(game.verticesCount > 0, true);
   });
 

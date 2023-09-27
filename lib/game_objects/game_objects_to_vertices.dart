@@ -211,7 +211,8 @@ class CubeVerticesCreator {
 
 /// We do not want to draw every game object individually (because it's slow).
 /// Here we combine all the the vertices of all the game objects into one.
-Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
+({VerticeDTO underWater, VerticeDTO aboveWater}) gameObjectsToVertices(
+    List<GameObject> gameObjects) {
   int aboveWaterPositionsSize = 0;
   int underWaterPositionsSize = 0;
   for (var gameObject in gameObjects) {
@@ -223,7 +224,7 @@ Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
   }
 
   /// Using Float32List.fromList() would be easier but updating the Float32List is faster.
-  /// Color list is always half the size of positions list.
+  /// Texture/Color list is always half the size of positions list.
   Float32List aboveWaterPositions = Float32List(aboveWaterPositionsSize);
   Float32List aboveWaterTextures = Float32List(aboveWaterPositionsSize);
   Float32List underWaterPositions = Float32List(underWaterPositionsSize);
@@ -245,8 +246,8 @@ Map<String, VerticeDTO> gameObjectsToVertices(List<GameObject> gameObjects) {
     }
   }
 
-  return {
-    'underWater': VerticeDTO(underWaterPositions, underWaterTextures),
-    'aboveWater': VerticeDTO(aboveWaterPositions, aboveWaterTextures)
-  };
+  return (
+    underWater: VerticeDTO(underWaterPositions, underWaterTextures),
+    aboveWater: VerticeDTO(aboveWaterPositions, aboveWaterTextures)
+  );
 }

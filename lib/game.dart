@@ -4,7 +4,6 @@ import 'package:anki/map/region/region_creation/concurrent_region_creator.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
 import 'camera/level_of_detail.dart';
-import 'dto/map_dto.dart';
 import 'map/map.dart';
 import 'map/region/region.dart';
 import 'map/region/region_creation_queue.dart';
@@ -26,7 +25,8 @@ class Game extends ChangeNotifier {
     _concurrentRegionCreator = ConcurrentRegionCreator();
   }
 
-  MapDTO getVerticesInView([LevelOfDetail? levelOfDetail]) {
+  ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater})
+      getVerticesInView([LevelOfDetail? levelOfDetail]) {
     List<Region> regions = _visibleRegions.getVisibleRegionsInDrawingOrder();
     List<ui.Vertices> aboveWater = [];
     List<ui.Vertices> underWater = [];
@@ -38,20 +38,16 @@ class Game extends ChangeNotifier {
         continue;
       }
       var verticeData = region.getVertices();
-      if (verticeData["aboveWater"] != null) {
-        aboveWater.add(verticeData["aboveWater"]!);
+      if (verticeData.aboveWater != null) {
+        aboveWater.add(verticeData.aboveWater!);
       }
-      if (verticeData["underWater"] != null) {
-        underWater.add(verticeData["underWater"]!);
+      if (verticeData.underWater != null) {
+        underWater.add(verticeData.underWater!);
       }
       verticesCount += region.getVerticesCount();
     }
     _verticesCount = verticesCount;
-    return MapDTO(
-      underWater: underWater,
-      aboveWater: aboveWater,
-      verticesCount: verticesCount,
-    );
+    return (underWater: underWater, aboveWater: aboveWater);
   }
 
   void moveCamera(double joyStickX, double joyStickY) {
@@ -99,7 +95,8 @@ class Game extends ChangeNotifier {
     if (_concurrentRegionCreator.isRunning) return;
     RegionBuildRule? rule = _regionCreationQueue.next();
     if (rule != null) {
-      var region = _map.getRegionFromIsoCoordinate(rule.isoCoordinate, rule.lod);
+      var region =
+          _map.getRegionFromIsoCoordinate(rule.isoCoordinate, rule.lod);
       _concurrentRegionCreator.create(region);
     }
   }
@@ -114,11 +111,14 @@ extension GameMapStatisticExtension on Game {
   int getRegionCount() {
     return _map.getRegionCount();
   }
+
   String regionCreationQueueStats() {
     return _regionCreationQueue.toString();
   }
+
   int amountOfVisibleRegions() {
     return _visibleRegions.visibleRegionSize();
   }
+
   int get verticesCount => _verticesCount;
 }

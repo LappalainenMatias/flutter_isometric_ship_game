@@ -15,8 +15,8 @@ class Region implements Comparable<Region> {
   late int _verticesCount;
   final List<GameObject> _dynamicGameObjects = [];
   List<GameObject> _staticGameObjects;
-  late ui.Vertices _aboveWaterVertices;
-  late ui.Vertices _underWaterVertices;
+  late ui.Vertices? _aboveWaterVertices;
+  late ui.Vertices? _underWaterVertices;
   LevelOfDetail lod;
 
   Region(this.bottomCoordinate, this._staticGameObjects, this.lod) {
@@ -31,14 +31,14 @@ class Region implements Comparable<Region> {
     return Region(bottomCoordinate, [], lod);
   }
 
-  Map<String, ui.Vertices?> getVertices() {
+  ({ui.Vertices? aboveWater, ui.Vertices? underWater}) getVertices() {
     if (_dynamicGameObjects.isNotEmpty) {
       _updateVertices();
     }
-    return {
-      "aboveWater": _aboveWaterVertices,
-      "underWater": _underWaterVertices
-    };
+    return (
+      aboveWater: _aboveWaterVertices,
+      underWater: _underWaterVertices
+    );
   }
 
   void _updateVertices() {
@@ -47,20 +47,19 @@ class Region implements Comparable<Region> {
       _dynamicGameObjects,
     );
 
-    Map<String, VerticeDTO> verticeDTOs = gameObjectsToVertices(allGameObjects);
-    int verticesCount = (verticeDTOs['aboveWater']!.positions.length +
-            verticeDTOs['underWater']!.positions.length) ~/
-        2;
+    var vertices = gameObjectsToVertices(allGameObjects);
+    int verticesCount = (vertices.aboveWater.positions.length +
+            vertices.underWater.positions.length) ~/ 2;
 
     var aboveWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
-      verticeDTOs['aboveWater']!.positions,
-      textureCoordinates: verticeDTOs['aboveWater']!.textures,
+      vertices.aboveWater.positions,
+      textureCoordinates: vertices.aboveWater.textures,
     );
     var underWater = ui.Vertices.raw(
       ui.VertexMode.triangles,
-      verticeDTOs['underWater']!.positions,
-      textureCoordinates: verticeDTOs['underWater']!.textures,
+      vertices.underWater.positions,
+      textureCoordinates: vertices.underWater.textures,
     );
 
     _aboveWaterVertices = aboveWater;
