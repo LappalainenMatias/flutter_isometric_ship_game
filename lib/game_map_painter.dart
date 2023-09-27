@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
+import 'coordinates/iso_coordinate.dart';
 import 'game.dart';
 import 'game_loop.dart';
 
@@ -14,15 +15,20 @@ class GameMapPainter extends CustomPainter {
   ui.Image textureImage;
 
   GameMapPainter(this._waterShader, this.gameLoop, this.game, this.textureImage)
-      : super(repaint: gameLoop);
+      : super(repaint: gameLoop) {
+    _addTexture(_landPaint);
+    _addWaterShader(_underWaterPaint);
+  }
 
   @override
   void paint(Canvas canvas, Size size) {
+    /// Updates water shader and creates the illusion of water movement
     _timePassed += gameLoop.dt;
-    // TODO: Do we have to do all of these every frame?
-    _addWaterShader(_underWaterPaint);
-    _addTexture(_landPaint);
-    _isometricTransformation(canvas, size);
+    _waterShader.setFloat(0, _timePassed);
+
+    _transformations(canvas, size);
+
+    /// Everything gets drawn here
     ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater}) vertices =
         game.getVerticesInView();
     for (var v in vertices.underWater) {
@@ -32,15 +38,6 @@ class GameMapPainter extends CustomPainter {
     for (var v in vertices.aboveWater) {
       canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
-    //List<IsoCoordinate> points = game.getSprilal();
-    //double width = game.viewWidth / 250;
-    //for (var p in points) {
-    //  canvas.drawCircle(
-    //    Offset(p.isoX, p.isoY),
-    //    width,
-    //    Paint()..color = Color(0xFFBD3838),
-    //  );
-    //}
   }
 
   void _addTexture(Paint myPaint) {
@@ -67,7 +64,7 @@ class GameMapPainter extends CustomPainter {
     myPaint.shader = _waterShader;
   }
 
-  void _isometricTransformation(Canvas canvas, Size size) {
+  void _transformations(Canvas canvas, Size size) {
     double scale =
         min(size.width / game.viewWidth, size.height / game.viewHeight);
     canvas.scale(scale, -scale);
@@ -75,6 +72,20 @@ class GameMapPainter extends CustomPainter {
       -game.viewCenter.isoX.toDouble() + size.width / scale / 2,
       -game.viewCenter.isoY.toDouble() - size.height / scale / 2,
     );
+  }
+
+  /// Used for debuging. Shows the coordinates where the visible region hangler
+  /// searched for regions.
+  void _showSearchedRegionCoordinates(Canvas canvas) {
+    List<IsoCoordinate> points = game.getSprilalOfSearchedRegions();
+    double width = game.viewWidth / 250;
+    for (var p in points) {
+      canvas.drawCircle(
+        Offset(p.isoX, p.isoY),
+        width,
+        Paint()..color = Color(0xFFBD3838),
+      );
+    }
   }
 
   @override
