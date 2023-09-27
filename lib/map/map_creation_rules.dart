@@ -1,7 +1,6 @@
 import '../game_objects/static/ground/tile_type.dart';
 import '../game_objects/static/natural_items/natural_items.dart';
 
-
 /// Guides how to map should be created.
 abstract class MapCreationRules {
   /// return the tiletype of the first rule that matches.
@@ -88,14 +87,14 @@ class SvalbardCreationRules extends MapCreationRules {
       TileRule(TileType.rock, 0.0, -0.2),
       TileRule(TileType.deathGrass, 0.0, 0.0),
       TileRule(TileType.sand, 0.0, null),
-      TileRule(TileType.rock, 6.0, -0.2),
-      TileRule(TileType.deathGrass, 6.0, 0.4),
-      TileRule(TileType.grass, 6.0, null),
-      TileRule(TileType.rock, 12.0, -0.2),
-      TileRule(TileType.deathGrass, 12.0, 0.4),
-      TileRule(TileType.grass, 12.0, null),
-      TileRule(TileType.rock, 20.0, 0.1),
-      TileRule(TileType.deathGrass, 20.0, 0.4),
+      TileRule(TileType.rock, 15.0, -0.2),
+      TileRule(TileType.deathGrass, 15.0, 0.4),
+      TileRule(TileType.grass, 15.0, null),
+      TileRule(TileType.rock, 30.0, -0.2),
+      TileRule(TileType.deathGrass, 30.0, 0.4),
+      TileRule(TileType.grass, 30.0, null),
+      TileRule(TileType.rock, 50.0, 0.1),
+      TileRule(TileType.deathGrass, 50.0, 0.4),
       TileRule(TileType.snow, null, null),
     ];
   }
@@ -121,12 +120,12 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.40;
+    return 0.71;
   }
 
   @override
   double peakToPeakAmplitude() {
-    return 30;
+    return 100;
   }
 
   @override
@@ -136,7 +135,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double frequency() {
-    return 0.0005;
+    return 0.0001;
   }
 }
 
