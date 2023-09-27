@@ -1,6 +1,7 @@
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/slider.dart';
 import 'package:anki/widget/statistics.dart';
+import 'package:anki/widget/zoom_buttons.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
@@ -87,7 +88,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 children: [
                   Padding(
                     padding: EdgeInsets.all(8.0),
-                    child: ZoomSlider(),
+                    child: ZoomButtons(),
                   ),
                   Padding(
                     padding: EdgeInsets.all(8.0),
@@ -150,8 +151,9 @@ class _GameScreenState extends State<GameScreen> {
                             CustomPerformanceOverlay(
                           child: CustomPaint(
                             size: screenSize,
+                            willChange: true,
                             painter: GameMapPainter(
-                                waterShader, gameloop, game, textureImage!),
+                                waterShader, gameloop, game, textureImage!, ),
                           ),
                         ),
                         child: const Center(

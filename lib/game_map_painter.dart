@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'dart:ui' as ui;
-import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:flutter/cupertino.dart';
 import 'dto/map_dto.dart';
 import 'game.dart';
@@ -53,9 +52,6 @@ class GameMapPainter extends CustomPainter {
     );
   }
 
-  /// Currently we do not create tiles which are
-  /// deep under water. Because of this we have to paint the background with
-  /// water so that it does not contain holes.
   void _paintWaterPlane(Canvas canvas, Size size) {
     canvas.drawRect(
       Rect.fromPoints(
