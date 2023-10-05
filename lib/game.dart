@@ -1,21 +1,25 @@
 import 'dart:ui' as ui;
+import 'package:anki/collision/collision_detector.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
+import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/map/region/region_creation/concurrent_region_creator.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
 import 'camera/level_of_detail.dart';
 import 'map/map.dart';
-import 'map/region/region.dart';
 import 'map/region/region_creation_queue.dart';
 import 'map/region/visible_regions_handler.dart';
 
 /// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {
   final Camera _camera = Camera();
+  final Player _player = Player(const IsoCoordinate(0, 0), 0);
   late final GameMap _map;
   late final VisibleRegionsHandler _visibleRegions;
   late final RegionCreationQueue _regionCreationQueue;
   late final ConcurrentRegionCreator _concurrentRegionCreator;
+  late final DynamicGameObjectManager _dynamicGameObjectManager;
   int _verticesCount = 0;
 
   Game() {
@@ -23,20 +27,20 @@ class Game extends ChangeNotifier {
     _map = GameMap(_regionCreationQueue);
     _visibleRegions = VisibleRegionsHandlerImpl(_camera, _map);
     _concurrentRegionCreator = ConcurrentRegionCreator();
+    _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
+    _dynamicGameObjectManager.addDynamicGameObject(_player);
   }
 
   ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater})
       getVerticesInView([LevelOfDetail? levelOfDetail]) {
-    List<Region> regions = _visibleRegions.getVisibleRegionsInDrawingOrder();
     List<ui.Vertices> aboveWater = [];
     List<ui.Vertices> underWater = [];
-    int verticesCount = 0;
+    _verticesCount = 0;
 
-    /// Todo test how much time this adding takes because this is run every frame
-    for (Region region in regions) {
-      if (region.isEmpty()) {
-        continue;
-      }
+    _visibleRegions
+        .getVisibleRegionsInDrawingOrder()
+        .where((region) => !region.isEmpty())
+        .forEach((region) {
       var verticeData = region.getVertices();
       if (verticeData.aboveWater != null) {
         aboveWater.add(verticeData.aboveWater!);
@@ -44,9 +48,9 @@ class Game extends ChangeNotifier {
       if (verticeData.underWater != null) {
         underWater.add(verticeData.underWater!);
       }
-      verticesCount += region.getVerticesCount();
-    }
-    _verticesCount = verticesCount;
+      _verticesCount += region.getVerticesCount();
+    });
+
     return (underWater: underWater, aboveWater: aboveWater);
   }
 
@@ -91,14 +95,27 @@ class Game extends ChangeNotifier {
     _visibleRegions.updateVisibleRegions();
   }
 
-  void createNewRegion() {
+  void addGameObjectsToRegion() {
     if (_concurrentRegionCreator.isRunning) return;
-    RegionBuildRule? rule = _regionCreationQueue.next();
-    if (rule != null) {
-      var region =
-          _map.getRegionFromIsoCoordinate(rule.isoCoordinate, rule.lod);
-      _concurrentRegionCreator.create(region);
+    AddGameObjectsTo? next = _regionCreationQueue.next();
+    if (next != null) {
+      var region = _map.getRegion(next.regionCoordinate, next.lod);
+      _concurrentRegionCreator.addGameObjects(region);
     }
+  }
+
+  void movePlayer(double joyStickX, double joyStickY) {
+    _player.move(joyStickX, joyStickY);
+    _camera.center = _player.getIsoCoordinate();
+    var isColliding = findCollisions(
+            _dynamicGameObjectManager.regionOf(_player).getAllGameObjects(),
+            _player)
+        .isNotEmpty;
+    _player.isColliding = isColliding;
+  }
+
+  void updateDynamicGameObjectRegions() {
+    _dynamicGameObjectManager.update();
   }
 
   /// For debugging
