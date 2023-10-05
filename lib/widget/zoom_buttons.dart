@@ -44,10 +44,10 @@ class _ZoomButtonsState extends State<ZoomButtons> {
             },
             onTapUp: (details) => _stopZooming(),
             onTapCancel: () => _stopZooming(),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Zoom in'),
-            ),
+            child: FloatingActionButton(
+                backgroundColor: Colors.red,
+                onPressed: () {},
+                child: const Icon(Icons.zoom_in)),
           ),
         ),
         Padding(
@@ -59,10 +59,10 @@ class _ZoomButtonsState extends State<ZoomButtons> {
             },
             onTapUp: (details) => _stopZooming(),
             onTapCancel: () => _stopZooming(),
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Zoom out'),
-            ),
+            child: FloatingActionButton(
+                backgroundColor: Colors.red,
+                onPressed: () {},
+                child: const Icon(Icons.zoom_out)),
           ),
         ),
       ],
