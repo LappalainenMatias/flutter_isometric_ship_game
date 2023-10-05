@@ -9,9 +9,9 @@ void main() {
     RegionCreationQueue creationQueue = RegionCreationQueueImpl();
 
     creationQueue.add(
-        RegionBuildRule(LevelOfDetail.zoomlevel_0, const IsoCoordinate(0, 0)));
+        AddGameObjectsTo(LevelOfDetail.zoomlevel_0, const IsoCoordinate(0, 0)));
     creationQueue.add(
-        RegionBuildRule(LevelOfDetail.zoomlevel_0, const IsoCoordinate(0, 0)));
+        AddGameObjectsTo(LevelOfDetail.zoomlevel_0, const IsoCoordinate(0, 0)));
 
     expect(creationQueue.next(), isNotNull);
     expect(creationQueue.next(), isNull);

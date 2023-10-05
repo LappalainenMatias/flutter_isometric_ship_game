@@ -8,10 +8,13 @@ void main() {
   test('Create region dto', () {
     int width = 32;
     RegionCreator regionCreator = RegionCreator();
-    RegionDTO dto = regionCreator.create(const IsoCoordinate(1, 1), width,
+    ({
+      IsoCoordinate regionBottomCoordinate,
+      List<GameObject> gameObjects
+    }) regionData = regionCreator.create(const IsoCoordinate(1, 1), width,
         width, 0, 0, LevelOfDetail.zoomlevel_0);
-    expect(dto.regionBottomCoordinate, const IsoCoordinate(1, 1));
-    expect(dto.gameObjects.length >= width, isTrue);
-    expect(dto.gameObjects.length <= width * width, isTrue);
+    expect(regionData.regionBottomCoordinate, const IsoCoordinate(1, 1));
+    expect(regionData.gameObjects.length >= width, isTrue);
+    expect(regionData.gameObjects.length <= width * width, isTrue);
   });
 }

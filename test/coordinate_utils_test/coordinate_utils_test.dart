@@ -8,22 +8,22 @@ import 'dart:math';
 void main() {
   test("Region point to isoCoordinate", () {
     var iso = regionPointToIsoCoordinate(
-        const Point(1, 1), LevelOfDetail.zoomlevel_5);
+        const Point(1, 1), LevelOfDetail.zoomlevel_19);
     expect(iso.isoX, 0);
     expect(iso.isoY, 2 * regionSideWidth);
 
     iso = regionPointToIsoCoordinate(
-        const Point(1, 1), LevelOfDetail.zoomlevel_4);
+        const Point(1, 1), LevelOfDetail.zoomlevel_18);
     expect(iso.isoX, 0);
     expect(iso.isoY, 0);
 
     iso = regionPointToIsoCoordinate(
-        const Point(3, 3), LevelOfDetail.zoomlevel_3);
+        const Point(3, 3), LevelOfDetail.zoomlevel_17);
     expect(iso.isoX, 0);
     expect(iso.isoY, 0);
 
     iso = regionPointToIsoCoordinate(
-        const Point(-3, -3), LevelOfDetail.zoomlevel_3);
+        const Point(-3, -3), LevelOfDetail.zoomlevel_17);
     expect(iso.isoX, 0);
     expect(iso.isoY, -256);
   });

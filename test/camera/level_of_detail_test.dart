@@ -8,4 +8,8 @@ void main() {
       expect(lod.tileMinWidth > 0 && (lod.tileMinWidth & (lod.tileMinWidth - 1)) == 0, true);
     }
   });
+
+  test("First level of detail should have 1x1 level of detail", () {
+    expect(LevelOfDetail.values.first.tileMinWidth, 1);
+  });
 }

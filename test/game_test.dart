@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:anki/game.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
@@ -7,9 +6,8 @@ import 'package:test/test.dart';
 void main() {
   test("Map should have vertices", () {
     Game game = Game();
-    game.setZoomLevel(0.1);
-    game.updateVisibleRegions();
-    game.createNewRegion();
+    game.updateVisibleRegions(); // Adds items to the build queue
+    game.addGameObjectsToRegion(); // Builds one visible region
     ({List<Vertices> underWater, List<Vertices> aboveWater}) vertices =
         game.getVerticesInView();
     expect(
@@ -53,7 +51,7 @@ void main() {
     expect(game.viewHeight > 0, true);
   });
 
-  test("Move game up, down, left and right", () {
+  test("Move game camera up, down, left and right", () {
     Game game = Game();
     game.setZoomLevel(0.1);
 

@@ -40,7 +40,7 @@ void main() {
     expect(isoCoordinate.isoY, expectedIsoY);
   });
 
-  test("IsoCoordinate is between two coordinates", () {
+  test("IsoCoordinate is between two iso coordinates", () {
     IsoCoordinate topLeft = const IsoCoordinate.fromIso(-1, 1);
     IsoCoordinate bottomRight = const IsoCoordinate.fromIso(3, -2);
     IsoCoordinate c1 = const IsoCoordinate.fromIso(-1, 1);
