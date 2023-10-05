@@ -2,7 +2,6 @@ import 'dart:ui' as ui;
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../camera/level_of_detail.dart';
-import '../../dto/vertice_dto.dart';
 import '../../game_objects/game_object.dart';
 import '../../optimization/list_binary_search.dart';
 import 'dart:math';
@@ -21,6 +20,10 @@ class Region implements Comparable<Region> {
 
   Region(this.bottomCoordinate, this._staticGameObjects, this.lod) {
     _updateVertices();
+  }
+
+  void addDynamicGameObject(GameObject gameObject) {
+    _dynamicGameObjects.add(gameObject);
   }
 
   bool isEmpty() {
@@ -87,5 +90,17 @@ class Region implements Comparable<Region> {
   void update(List<GameObject> staticGameObjects) {
     _staticGameObjects = staticGameObjects;
     _updateVertices();
+  }
+
+  void removeDynamicGameObject(GameObject gameObject) {
+    _dynamicGameObjects.remove(gameObject);
+    _updateVertices();
+  }
+
+  List<GameObject> getAllGameObjects() {
+    return [
+      ..._staticGameObjects,
+      ..._dynamicGameObjects,
+    ];
   }
 }
