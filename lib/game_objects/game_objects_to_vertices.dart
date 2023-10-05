@@ -8,7 +8,7 @@ import '../collision/collision_box.dart';
 import '../dto/vertice_dto.dart';
 import '../utils/custom_color.dart';
 import '../coordinates/iso_coordinate.dart';
-import 'dynamic/player/player.dart';
+import 'dynamic/player.dart';
 import 'game_object.dart';
 
 class BirchToVertices {
@@ -131,7 +131,14 @@ class CollisionBoxToVertices {
 }
 
 class PlayerToVertices {
-  static VerticeDTO toVertices(Player player) {
+  static VerticeDTO toVertices(Player player, [bool isColliding = false]) {
+    if (isColliding) {
+      return CubeVerticesCreator.toVertices(
+        getTileTextureCoordinates(TileType.ice),
+        player.isoCoordinate,
+        player.elevation,
+      );
+    }
     return CubeVerticesCreator.toVertices(
       getTileTextureCoordinates(TileType.deathGrass),
       player.isoCoordinate,
