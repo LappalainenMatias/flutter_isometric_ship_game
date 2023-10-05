@@ -1,22 +1,25 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
-import '../../../collision/collision_box.dart';
-import '../../game_object.dart';
+import '../../collision/collision_box.dart';
+import '../game_object.dart';
 import 'dart:math';
 
-import '../../game_objects_to_vertices.dart';
+import '../game_objects_to_vertices.dart';
 
 class Player extends GameObject {
-  double elevation;
-
   /// Notice that this not the screen coordinate because elevation affects it
   IsoCoordinate isoCoordinate;
   final playerMover = PlayerMover();
+  bool isColliding = false;
+  double elevation;
+  late CollisionBox collisionBox;
 
-  Player(this.isoCoordinate, this.elevation);
+  Player(this.isoCoordinate, this.elevation) {
+    collisionBox = CollisionBox(isoCoordinate, _getWidth(), _getWidth());
+  }
 
   @override
   getVertices() {
-    return PlayerToVertices.toVertices(this);
+    return PlayerToVertices.toVertices(this, isColliding);
   }
 
   @override
@@ -41,7 +44,8 @@ class Player extends GameObject {
 
   @override
   CollisionBox getCollisionBox() {
-    return CollisionBox(isoCoordinate, _getWidth(), _getWidth());
+    collisionBox.update(isoCoordinate, _getWidth(), 0.5);
+    return collisionBox;
   }
 
   double _getWidth() {
@@ -52,6 +56,11 @@ class Player extends GameObject {
   List gameObjectToList() {
     // TODO: implement
     throw UnimplementedError();
+  }
+
+  @override
+  IsoCoordinate getIsoCoordinate() {
+    return isoCoordinate;
   }
 }
 
