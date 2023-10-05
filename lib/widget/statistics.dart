@@ -31,11 +31,11 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Center: ${game.viewCenter.toString()}",
+              "Center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Size: ${game.viewWidth.toInt()} x ${game.viewHeight.toInt()}",
+              "Size: ${NumberFormat('###,###,###,###,###').format(game.viewWidth.toInt()).replaceAll(',', ' ')} x ${NumberFormat('###,###,###,###,###').format(game.viewHeight.toInt()).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(

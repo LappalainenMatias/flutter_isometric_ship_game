@@ -8,10 +8,10 @@ import '../../coordinates/coordinate_utils.dart';
 abstract class RegionCreationQueue {
   /// Returns the region we should create next
   /// Returns null if there is no region to create
-  RegionBuildRule? next();
+  AddGameObjectsTo? next();
 
   /// Adds a region to the queue if it is not already in the queue
-  void add(RegionBuildRule regionBuildRules);
+  void add(AddGameObjectsTo regionBuildRules);
 
   /// Returns the number of items in the queue
   int size();
@@ -20,7 +20,7 @@ abstract class RegionCreationQueue {
 /// The idea of this class is to return the region we want to create next.
 /// It uses queue and FIFO principle.
 class RegionCreationQueueImpl implements RegionCreationQueue {
-  final Queue<RegionBuildRule> _queue = Queue();
+  final Queue<AddGameObjectsTo> _queue = Queue();
 
   RegionCreationQueueImpl();
 
@@ -29,7 +29,7 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
   final Set<String> _identifier = {};
 
   @override
-  RegionBuildRule? next() {
+  AddGameObjectsTo? next() {
     if (_queue.isNotEmpty) {
       var next = _queue.removeFirst();
       _identifier.remove(next.identifier);
@@ -39,7 +39,7 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
   }
 
   @override
-  void add(RegionBuildRule regionBuildRules) {
+  void add(AddGameObjectsTo regionBuildRules) {
     if (_identifier.contains(regionBuildRules.identifier)) {
       return;
     }
@@ -58,13 +58,13 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
   }
 }
 
-class RegionBuildRule {
-  IsoCoordinate isoCoordinate;
+class AddGameObjectsTo {
+  IsoCoordinate regionCoordinate;
   LevelOfDetail lod;
 
-  RegionBuildRule(this.lod, this.isoCoordinate);
+  AddGameObjectsTo(this.lod, this.regionCoordinate);
 
   String get identifier {
-    return "${isoCoordinate.isoX.toInt()},${isoCoordinate.isoY.toInt()},${lod.index}";
+    return "${regionCoordinate.isoX.toInt()},${regionCoordinate.isoY.toInt()},${lod.index}";
   }
 }

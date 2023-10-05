@@ -4,17 +4,18 @@ import 'package:isolated_worker/js_isolated_worker.dart';
 import 'dart:math';
 import '../../../constants.dart';
 import '../../../coordinates/coordinate_utils.dart';
+import '../../../coordinates/iso_coordinate.dart';
 import '../../../game_objects/game_object.dart';
 import '../region.dart';
 
 class ConcurrentRegionCreator {
   /// This is used because we do not want to pile up regions to be created.
-  /// Regions are created concurrently but returning the result is not concurrent.
-  /// So it could cause jank.
+  /// Regions are created concurrently but encoding the results are not.
+  /// So it could cause lag.
   bool isRunning = false;
   final RegionCreator _regionCreator = RegionCreator();
 
-  void create(Region region) {
+  void addGameObjects(Region region) {
     isRunning = true;
     if (kIsWeb) {
       _webAddGameObjects(region);
@@ -54,7 +55,10 @@ class ConcurrentRegionCreator {
     /// TODO Add concurrency support
     Point<int> regionCoordinate =
         isoCoordinateToRegionPoint(region.bottomCoordinate);
-    RegionDTO regionDTO = _regionCreator.create(
+    ({
+      IsoCoordinate regionBottomCoordinate,
+      List<GameObject> gameObjects
+    }) regionData = _regionCreator.create(
       region.bottomCoordinate,
       regionSideWidth,
       regionSideWidth,
@@ -63,7 +67,7 @@ class ConcurrentRegionCreator {
       region.lod,
     );
 
-    region.update(regionDTO.gameObjects);
+    region.update(regionData.gameObjects);
     isRunning = false;
   }
 }

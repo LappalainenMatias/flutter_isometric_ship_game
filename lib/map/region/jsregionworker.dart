@@ -3,6 +3,7 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:js/js.dart';
 
 import '../../camera/level_of_detail.dart';
+import '../../game_objects/game_object.dart';
 
 /// Todo maybe we could add the dart compile to the build process
 /// Todo create own folder and file for concurrency
@@ -23,11 +24,15 @@ void main() {
     double pointX = args[2];
     double pointY = args[3];
     LevelOfDetail minLOD = LevelOfDetail.values[args[4]];
-    RegionDTO regionDTO = regionCreator.create(IsoCoordinate(pointX, pointY),
-        width, height, pointX.toInt(), pointY.toInt(), minLOD);
+
+    ({
+      IsoCoordinate regionBottomCoordinate,
+      List<GameObject> gameObjects
+    }) regionData = regionCreator.create(IsoCoordinate(pointX, pointY), width,
+        height, pointX.toInt(), pointY.toInt(), minLOD);
 
     List<List?> encoded = [];
-    for (var gameObject in regionDTO.gameObjects) {
+    for (var gameObject in regionData.gameObjects) {
       encoded.add(gameObject.gameObjectToList());
     }
     return encoded;

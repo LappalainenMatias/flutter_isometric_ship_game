@@ -46,7 +46,6 @@ class FinlandCreationRules extends MapCreationRules {
 
   @override
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
-    ///Todo these probabilities are not exactly correct because they are looped through in order.
     return {
       TileType.grass: [
         NaturalItemProbability(NaturalItemType.rock, 0.02),
@@ -101,7 +100,6 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
-    ///Todo these probabilities are not exactly correct because they are looped through in order.
     return {
       TileType.sand: [
         NaturalItemProbability(NaturalItemType.rock, 0.03),

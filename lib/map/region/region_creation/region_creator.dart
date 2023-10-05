@@ -15,21 +15,21 @@ class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator(_mapCreationRules);
 
-  RegionDTO create(IsoCoordinate regionBottom, int width, int height,
-      int startX, int startY, LevelOfDetail lod) {
+  ({IsoCoordinate regionBottomCoordinate, List<GameObject> gameObjects}) create(
+      IsoCoordinate regionBottom,
+      int width,
+      int height,
+      int startX,
+      int startY,
+      LevelOfDetail lod) {
     var (elevation, moisture) = noise.createComplexNoise(
         width, height, startX, startY, lod.tileMinWidth);
 
     List<Tile> tiles =
-        _createTiles(startX, startY, elevation, moisture, lod.tileMinWidth);
-    //tiles = removeDeepUnderWaterTiles(tiles);
-    tiles.sort();
+        _createTiles(startX, startY, elevation, moisture, lod.tileMinWidth)
+          ..sort();
 
-    var allObjects = [
-      //todo if (lod.containsNaturalItems) ..._createNaturalItems(tileMatrix)
-    ];
-
-    return RegionDTO(regionBottom, tiles);
+    return (regionBottomCoordinate: regionBottom, gameObjects: tiles);
   }
 
   List<Tile> _createTiles(
@@ -57,29 +57,20 @@ class RegionCreator {
     return tiles;
   }
 
-  List<NaturalItem> _createNaturalItems(List<List<Tile>> tileMatrix) {
+  List<NaturalItem> _createNaturalItems(List<Tile> tiles) {
     List<NaturalItem> naturalItems = [];
-    for (var x = 0; x < tileMatrix.length; x++) {
-      for (var y = 0; y < tileMatrix[0].length; y++) {
-        NaturalItem? naturalItem = NaturalItemCreator.create(
-          tileMatrix[x][y].type,
-          tileMatrix[x][y].isoCoordinate,
-          tileMatrix[x][y].elevation,
-          _mapCreationRules.naturalItemProbabilities(),
-        );
+    for (var tile in tiles) {
+      NaturalItem? naturalItem = NaturalItemCreator.create(
+        tile.type,
+        tile.isoCoordinate,
+        tile.elevation,
+        _mapCreationRules.naturalItemProbabilities(),
+      );
 
-        if (naturalItem != null) {
-          naturalItems.add(naturalItem);
-        }
+      if (naturalItem != null) {
+        naturalItems.add(naturalItem);
       }
     }
     return naturalItems;
   }
-}
-
-class RegionDTO {
-  final IsoCoordinate regionBottomCoordinate;
-  final List<GameObject> gameObjects;
-
-  RegionDTO(this.regionBottomCoordinate, this.gameObjects);
 }

@@ -5,9 +5,10 @@ import '../../coordinates/coordinate_utils.dart';
 import '../map.dart';
 
 abstract class VisibleRegionsHandler {
+  /// This list of regions has been sorted by the nearness value (Painter's algorithm).
   List<Region> getVisibleRegionsInDrawingOrder();
 
-  /// Updates the visible regions so that they are ready to be drawn.
+  /// Removes unvisible regions and adds new visible regions.
   void updateVisibleRegions();
 
   int visibleRegionSize();
@@ -16,14 +17,14 @@ abstract class VisibleRegionsHandler {
   List<IsoCoordinate> visualizeSpriral();
 }
 
-/// This class keeps track of which regions are visible and that they are in
-/// correct order for drawing.
+/// This class keeps track of which regions are visible and returns them in
+/// correct order for drawing (Painter's algorithm).
 class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   final Camera _camera;
   final GameMap _map;
 
   /// These regions should always be in correct order for drawing.
-  List<Region> _sortedVisibleRegions = [];
+  List<Region> _sortedVisibleRegionsCurrentLOD = [];
 
   Set<IsoCoordinate> _addedRegionCoordinates = {};
 
@@ -38,48 +39,50 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     List<Region> filtered = [];
     _addedRegionCoordinates = {};
     var currentLod = _camera.getLOD();
-    for (var region in _sortedVisibleRegions) {
+    for (var region in _sortedVisibleRegionsCurrentLOD) {
       if (region.lod == currentLod &&
           isInView(region.bottomCoordinate, _camera)) {
         filtered.add(region);
         _addedRegionCoordinates.add(region.bottomCoordinate);
       }
     }
-    _sortedVisibleRegions = filtered;
+    _sortedVisibleRegionsCurrentLOD = filtered;
   }
 
   @override
   List<Region> getVisibleRegionsInDrawingOrder() {
-    return _sortedVisibleRegions;
+    return _sortedVisibleRegionsCurrentLOD;
   }
 
-  /// Todo insert is O(n) so there is room for improvement.
+  /// Todo insert is O(n) so there is room for improvement. (priorityqueue might be better?)
   /// Uses binary search so that the list is always sorted.
-  /// priorityqueue might be better.
   void _addRegionInCorrectOrder(Region newRegion) {
     int min = 0;
-    int max = _sortedVisibleRegions.length;
+    int max = _sortedVisibleRegionsCurrentLOD.length;
     while (min < max) {
       int mid = min + ((max - min) >> 1);
-      if (newRegion.nearness() < _sortedVisibleRegions[mid].nearness()) {
+      if (newRegion.nearness() < _sortedVisibleRegionsCurrentLOD[mid].nearness()) {
         max = mid;
       } else {
         min = mid + 1;
       }
     }
-    _sortedVisibleRegions.insert(min, newRegion);
+    _sortedVisibleRegionsCurrentLOD.insert(min, newRegion);
   }
 
   @override
   void updateVisibleRegions() {
     _removeUnvisibleRegions();
+    _findNewVisibleRegions();
+  }
 
+  void _findNewVisibleRegions() {
     _coordinatesInSpiral =
-        getSpiralStartingFromCorner(_camera.topLeft, _camera.bottomRight);
+        _getSpiralStartingFromCorner(_camera.topLeft, _camera.bottomRight);
     _spiralIndex = _coordinatesInSpiral.length - 1;
     while (_spiralIndex >= 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
-      Region region = _map.getRegionFromIsoCoordinate(coordinate, _camera.getLOD());
+      Region region = _map.getRegion(coordinate, _camera.getLOD());
       if (!_addedRegionCoordinates.contains(region.bottomCoordinate)) {
         _addRegionInCorrectOrder(region);
         _addedRegionCoordinates.add(region.bottomCoordinate);
@@ -89,14 +92,14 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   }
 
   /// Returns a list of coordinates which are between the two coordinates in spiral form.
-  /// We do this so that regions center of the screen are created first.
+  /// We do this so that the regions at the center of the screen are created first.
   /// From:
   /// [1, 2, 3]
   /// [4, 5, 6]
   /// [7, 8, 9]
   /// to:
   /// [1, 2, 3, 6, 9, 8, 7, 4, 5]
-  List<IsoCoordinate> getSpiralStartingFromCorner(
+  List<IsoCoordinate> _getSpiralStartingFromCorner(
       IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     int top = topLeft.isoY.round();
     int bottom = bottomRight.isoY.round();
@@ -158,7 +161,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   @override
   int visibleRegionSize() {
-    return _sortedVisibleRegions.length;
+    return _sortedVisibleRegionsCurrentLOD.length;
   }
 
   @override
