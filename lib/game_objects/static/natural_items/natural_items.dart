@@ -82,6 +82,11 @@ class NaturalItem extends GameObject {
     // TODO: implement gameObjectToList
     throw UnimplementedError();
   }
+
+  @override
+  IsoCoordinate getIsoCoordinate() {
+    return isoCoordinate;
+  }
 }
 
 enum NaturalItemType {

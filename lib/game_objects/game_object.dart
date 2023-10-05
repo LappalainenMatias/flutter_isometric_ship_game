@@ -1,11 +1,11 @@
-
+import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import '../collision/collision_box.dart';
 import '../dto/vertice_dto.dart';
 
-
-/// A game object is something that is drawn on the screen.
 abstract class GameObject implements Comparable<GameObject> {
+  IsoCoordinate getIsoCoordinate();
+
   /// Returns the data that is needed for drawing the game object.
   VerticeDTO getVertices();
 
@@ -14,7 +14,6 @@ abstract class GameObject implements Comparable<GameObject> {
   /// the other game objects.
   double nearness();
 
-  /// If something is underwater, we draw it with water shader paint
   bool isUnderWater();
 
   @override

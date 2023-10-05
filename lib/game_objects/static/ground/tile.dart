@@ -11,7 +11,7 @@ class Tile extends GameObject {
   final TileType type;
   IsoCoordinate isoCoordinate;
   double elevation;
-  late VerticeDTO vertices;
+  late final VerticeDTO vertices;
   int width;
   late final CollisionBox collisionBox;
 
@@ -78,5 +78,10 @@ class Tile extends GameObject {
   @override
   CollisionBox getCollisionBox() {
     return collisionBox;
+  }
+
+  @override
+  IsoCoordinate getIsoCoordinate() {
+    return isoCoordinate;
   }
 }
