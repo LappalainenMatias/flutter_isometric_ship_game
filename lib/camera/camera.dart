@@ -7,12 +7,15 @@ import 'level_of_detail.dart';
 class Camera {
   IsoCoordinate center;
   final CameraMover _cameraMover = CameraMover();
-  double zoomLevel = 0.05;
+  double _zoomLevel = 0.0005;
   final double _minWidth = 60;
-  final double _maxWidth = 80000000000;
+  final double _maxWidth = 100000000;
   double _aspectRatio = 1.0;
+  LevelOfDetail _currentLOD = LevelOfDetail.zoomlevel_19;
 
-  Camera({this.center = const IsoCoordinate(0, 0)});
+  Camera({this.center = const IsoCoordinate(0, 0)}) {
+    _updateLOD();
+  }
 
   void move(double joyStickX, double joyStickY) {
     _cameraMover.joyStickIsometricMovement(joyStickX, joyStickY, this);
@@ -25,9 +28,9 @@ class Camera {
   double width() {
     if (_aspectRatio < 1) {
       // This limits the height and width
-      return (zoomLevel * _maxWidth + _minWidth) * _aspectRatio;
+      return (_zoomLevel * _maxWidth + _minWidth) * _aspectRatio;
     }
-    return zoomLevel * _maxWidth + _minWidth;
+    return _zoomLevel * _maxWidth + _minWidth;
   }
 
   double height() {
@@ -43,33 +46,37 @@ class Camera {
   /// 0 is zoomed in, 1 is zoomed out.
   void setZoomLevel(double newZoomLevel) {
     if (newZoomLevel < 0) {
-      zoomLevel = 0;
+      _zoomLevel = 0;
     } else if (newZoomLevel > 1) {
-      zoomLevel = 1;
+      _zoomLevel = 1;
     } else {
-      zoomLevel = newZoomLevel;
+      _zoomLevel = newZoomLevel;
     }
+    _updateLOD();
   }
 
   void zoomIn() {
-    setZoomLevel(zoomLevel - 0.0001 * zoomLevel * 200);
+    setZoomLevel(_zoomLevel - 0.02 * _zoomLevel);
   }
 
   void zoomOut() {
-    setZoomLevel(zoomLevel + 0.0001 * zoomLevel * 200);
+    setZoomLevel(_zoomLevel + 0.02 * _zoomLevel);
   }
 
-  LevelOfDetail getLOD() {
-    /// Todo refactor
+  LevelOfDetail getLOD() => _currentLOD;
 
+  double get zoomLevel => _zoomLevel;
+
+  void _updateLOD() {
     double maxSide = max(width(), height());
     int size = 400;
     for (LevelOfDetail lod in LevelOfDetail.values) {
       if (maxSide < size) {
-        return lod;
+        _currentLOD = lod;
+        return;
       }
       size *= 2;
     }
-    return LevelOfDetail.zoomlevel_m22;
+    _currentLOD = LevelOfDetail.values.last;
   }
 }
