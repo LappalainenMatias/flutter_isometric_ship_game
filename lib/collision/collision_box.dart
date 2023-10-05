@@ -22,4 +22,10 @@ class CollisionBox {
     }
     return true;
   }
+
+  void update(IsoCoordinate newPoint, double newWidth, double newHeight) {
+    point = newPoint;
+    width = newWidth;
+    height = newHeight;
+  }
 }
