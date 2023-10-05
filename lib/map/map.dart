@@ -14,10 +14,9 @@ class GameMap {
 
   GameMap(this._regionCreationQueue);
 
-  /// Always returns a region. If the region does not exist, we will return empty region
-  /// and add it to the creation queue.
-  Region getRegionFromIsoCoordinate(
-      IsoCoordinate isoCoordinate, LevelOfDetail lod) {
+  /// Finds the region the isoCoordinate is part of. If the region does not exist,
+  /// we will return empty region and add the region into the region creation queue.
+  Region getRegion(IsoCoordinate isoCoordinate, LevelOfDetail lod) {
     if (_tooManyRegionsExist()) {
       _removeFarawayRegions(isoCoordinate, lod);
     }
@@ -26,25 +25,25 @@ class GameMap {
     isoCoordinate = regionPointToIsoCoordinate(point, lod);
     point = isoCoordinateToRegionPoint(isoCoordinate);
     if (!_regionsBylod[lod.index].containsKey(point)) {
-      _regionsBylod[lod.index][point] =
-          Region.empty(regionPointToIsoCoordinate(point, lod), lod);
-      _regionCreationQueue.add(RegionBuildRule(lod, isoCoordinate));
+      /// Todo I think we should also add regions which are empty to the queue
+      /// It not problem now because we are not clearing the regions
+      _regionsBylod[lod.index][point] = Region.empty(isoCoordinate, lod);
+      _regionCreationQueue.add(AddGameObjectsTo(lod, isoCoordinate));
     }
 
     return _regionsBylod[lod.index][point]!;
   }
 
   bool _tooManyRegionsExist() {
-    return _regionsBylod.length > maxRegionCount;
+    int amountOfRegions = 0;
+    for (var map in _regionsBylod) {
+      amountOfRegions += map.length;
+    }
+    return amountOfRegions > maxRegionCount;
   }
 
   void _removeFarawayRegions(IsoCoordinate coordinate, LevelOfDetail lod) {
-    Point<int> point = isoCoordinateToRegionPoint(coordinate);
-    for (var key in _regionsBylod[lod.index].keys.toList()) {
-      if ((key.x - point.x).abs() > 60 || (key.y - point.y).abs() > 60) {
-        _regionsBylod[lod.index].remove(key);
-      }
-    }
+    /// Todo
   }
 
   int getRegionCount() {
