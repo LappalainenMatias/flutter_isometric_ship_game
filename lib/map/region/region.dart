@@ -1,14 +1,12 @@
 import 'dart:ui' as ui;
-import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/map/region/region_to_vertices.dart';
 import '../../camera/level_of_detail.dart';
 import '../../game_objects/game_object.dart';
-import '../../optimization/list_binary_search.dart';
 import 'dart:math';
 
-/// The region contains dynamic and static game objects. Because of zoom out
-/// we save static game objects in different levels of detail. The dynamic
-/// game objects are always visible.
+/// The region contains dynamic and static game objects. We update the vertices
+/// if region contains any dynamic game objects.
 class Region implements Comparable<Region> {
   IsoCoordinate bottomCoordinate;
   late int _verticesCount;
@@ -38,36 +36,15 @@ class Region implements Comparable<Region> {
     if (_dynamicGameObjects.isNotEmpty) {
       _updateVertices();
     }
-    return (
-      aboveWater: _aboveWaterVertices,
-      underWater: _underWaterVertices
-    );
+    return (aboveWater: _aboveWaterVertices, underWater: _underWaterVertices);
   }
 
   void _updateVertices() {
-    List<GameObject> allGameObjects = addDynamicObjectsToStaticGameObjects(
-      _staticGameObjects,
-      _dynamicGameObjects,
-    );
-
-    var vertices = gameObjectsToVertices(allGameObjects);
-    int verticesCount = (vertices.aboveWater.positions.length +
-            vertices.underWater.positions.length) ~/ 2;
-
-    var aboveWater = ui.Vertices.raw(
-      ui.VertexMode.triangles,
-      vertices.aboveWater.positions,
-      textureCoordinates: vertices.aboveWater.textures,
-    );
-    var underWater = ui.Vertices.raw(
-      ui.VertexMode.triangles,
-      vertices.underWater.positions,
-      textureCoordinates: vertices.underWater.textures,
-    );
-
-    _aboveWaterVertices = aboveWater;
-    _underWaterVertices = underWater;
-    _verticesCount = verticesCount;
+    final data =
+        RegionToVertices.toVertices(_staticGameObjects, _dynamicGameObjects);
+    _aboveWaterVertices = data.aboveWater;
+    _underWaterVertices = data.underWater;
+    _verticesCount = data.verticesCount;
   }
 
   int nearness() {

@@ -4,7 +4,6 @@ import 'package:isolated_worker/js_isolated_worker.dart';
 import 'dart:math';
 import '../../../constants.dart';
 import '../../../coordinates/coordinate_utils.dart';
-import '../../../coordinates/iso_coordinate.dart';
 import '../../../game_objects/game_object.dart';
 import '../region.dart';
 
@@ -55,11 +54,7 @@ class ConcurrentRegionCreator {
     /// TODO Add concurrency support
     Point<int> regionCoordinate =
         isoCoordinateToRegionPoint(region.bottomCoordinate);
-    ({
-      IsoCoordinate regionBottomCoordinate,
-      List<GameObject> gameObjects
-    }) regionData = _regionCreator.create(
-      region.bottomCoordinate,
+    var gameObjects = _regionCreator.create(
       regionSideWidth,
       regionSideWidth,
       regionCoordinate.x * regionSideWidth,
@@ -67,7 +62,7 @@ class ConcurrentRegionCreator {
       region.lod,
     );
 
-    region.update(regionData.gameObjects);
+    region.update(gameObjects);
     isRunning = false;
   }
 }

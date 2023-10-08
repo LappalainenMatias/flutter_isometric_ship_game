@@ -105,7 +105,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     int bottom = bottomRight.isoY.round();
     int left = topLeft.isoX.round();
     int right = bottomRight.isoX.round();
-    int step = ((top - bottom).abs()) ~/ 10;
+    int step = ((top - bottom).abs()) ~/ 20;
 
     int width = right - left;
     int height = top - bottom;

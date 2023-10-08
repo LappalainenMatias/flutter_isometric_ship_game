@@ -25,14 +25,11 @@ void main() {
     double pointY = args[3];
     LevelOfDetail minLOD = LevelOfDetail.values[args[4]];
 
-    ({
-      IsoCoordinate regionBottomCoordinate,
-      List<GameObject> gameObjects
-    }) regionData = regionCreator.create(IsoCoordinate(pointX, pointY), width,
+    var gameObjects = regionCreator.create(width,
         height, pointX.toInt(), pointY.toInt(), minLOD);
 
     List<List?> encoded = [];
-    for (var gameObject in regionData.gameObjects) {
+    for (var gameObject in gameObjects) {
       encoded.add(gameObject.gameObjectToList());
     }
     return encoded;

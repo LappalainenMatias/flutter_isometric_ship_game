@@ -51,16 +51,17 @@ class NoiseCreator {
 
         // Here we add multiple noises together to add complexity
         double e = _elevationNoise1.noise2(i * frequency1, j * frequency1);
-        e += 0.25 * _elevationNoise2.noise2(i * frequency2, j * frequency2);
-        e += 0.125 * _elevationNoise3.noise2(i * frequency3, j * frequency3);
-        e += 0.0625 * _elevationNoise4.noise2(i * frequency4, j * frequency4);
-        e += _elevationNoise5.noise2(i * frequency5, j * frequency5);
-        e += 0.5 * _elevationNoise6.noise2(i * frequency6, j * frequency6);
-        e += 0.25 * _elevationNoise7.noise2(i * frequency7, j * frequency7);
-        e += 0.125 * _elevationNoise8.noise2(i * frequency8, j * frequency8);
+        e += 0.5 * _elevationNoise2.noise2(i * frequency2, j * frequency2);
+        e += 0.25 * _elevationNoise3.noise2(i * frequency3, j * frequency3);
+        e += 0.125 * _elevationNoise4.noise2(i * frequency4, j * frequency4);
+
+        e += 0.25 * _elevationNoise5.noise2(i * frequency5, j * frequency5);
+        e += 0.125 * _elevationNoise6.noise2(i * frequency6, j * frequency6);
+        e += 0.0625 * _elevationNoise7.noise2(i * frequency7, j * frequency7);
+        e += 0.03125 * _elevationNoise8.noise2(i * frequency8, j * frequency8);
 
         // Normalize values to 0 - 1
-        e = (e + 1) / 4;
+        e = (e + 2) / 4;
 
         //Makes terrain more interesting
         //e = pow(e, mapCreationRules.terrainSharpness()).toDouble();

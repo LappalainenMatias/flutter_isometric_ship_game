@@ -133,7 +133,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double frequency() {
-    return 0.0001;
+    return 0.0004;
   }
 }
 
