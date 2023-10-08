@@ -18,22 +18,36 @@ abstract class RegionCreationQueue {
 }
 
 /// The idea of this class is to return the region we want to create next.
-/// It uses queue and FIFO principle.
+/// It prioritizes regions that have the same level of detail as the camera.
 class RegionCreationQueueImpl implements RegionCreationQueue {
-  final Queue<AddGameObjectsTo> _queue = Queue();
+  final List<AddGameObjectsTo> _queue = [];
 
-  RegionCreationQueueImpl();
+  late final Camera _camera;
 
-  /// We do not want to add the same region multiple times
-  /// Because of that we need to keep track of existing items.
+  RegionCreationQueueImpl(this._camera);
+
+  /// Tracks that the queue has each item only once
   final Set<String> _identifier = {};
 
   @override
   AddGameObjectsTo? next() {
+    /// First create regions with the current level of detail
+    var lod = _camera.getLOD();
+    for (int i = 0; i < _queue.length; i++) {
+      if (_queue[i].lod == lod) {
+        var buildNext = _queue[i];
+        _identifier.remove(buildNext.identifier);
+        _queue.removeAt(i);
+        return buildNext;
+      }
+    }
+
+    /// Create rergion with any level of detail
     if (_queue.isNotEmpty) {
-      var next = _queue.removeFirst();
-      _identifier.remove(next.identifier);
-      return next;
+      var buildNext = _queue[0];
+      _identifier.remove(buildNext.identifier);
+      _queue.removeAt(0);
+      return buildNext;
     }
     return null;
   }
