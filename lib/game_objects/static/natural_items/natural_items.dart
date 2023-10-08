@@ -14,6 +14,7 @@ class NaturalItem extends GameObject {
   final double elevation;
   late final CollisionBox collisionBox;
   late VerticeDTO vertices;
+  bool _isVisible = true;
 
   NaturalItem(this.type, this.isoCoordinate, this.elevation) {
     vertices = type.toVertices!(isoCoordinate, elevation);
@@ -41,9 +42,12 @@ class NaturalItem extends GameObject {
   }
 
   @override
-  double nearness() {
+  ({double distance, double elevation}) nearness() {
     Point point = isoCoordinate.toPoint();
-    return -1 * (point.x + point.y + 1 + _getWidth());
+    return (
+      distance: -1 * (point.x + point.y + 1).toDouble(),
+      elevation: elevation
+    );
   }
 
   @override
@@ -86,6 +90,16 @@ class NaturalItem extends GameObject {
   @override
   IsoCoordinate getIsoCoordinate() {
     return isoCoordinate;
+  }
+
+  @override
+  bool isVisible() {
+    return _isVisible;
+  }
+
+  @override
+  void setVisibility(bool visible) {
+    _isVisible = visible;
   }
 }
 

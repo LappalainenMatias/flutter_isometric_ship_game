@@ -1,31 +1,36 @@
+import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../collision/collision_box.dart';
 import '../game_object.dart';
 import 'dart:math';
-
 import '../game_objects_to_vertices.dart';
 
-class Player extends GameObject {
-  /// Notice that this not the screen coordinate because elevation affects it
+class Player extends Growable {
   IsoCoordinate isoCoordinate;
   final playerMover = PlayerMover();
   bool isColliding = false;
   double elevation;
   late CollisionBox collisionBox;
+  bool _isVisible = true;
+  CollisionAction? collisionAction;
+  double sideWidth = 1;
 
   Player(this.isoCoordinate, this.elevation) {
-    collisionBox = CollisionBox(isoCoordinate, _getWidth(), _getWidth());
+    collisionBox = CollisionBox(isoCoordinate, sideWidth, sideWidth);
   }
 
   @override
   getVertices() {
-    return PlayerToVertices.toVertices(this, isColliding);
+    return PlayerToVertices.toVertices(this);
   }
 
   @override
-  double nearness() {
+  ({double distance, double elevation}) nearness() {
     Point point = isoCoordinate.toPoint();
-    return -1 * (point.x + point.y + _getWidth() - elevation).toDouble();
+    return (
+      distance: -1 * (point.x + point.y + 1).toDouble(),
+      elevation: elevation
+    );
   }
 
   @override
@@ -33,8 +38,10 @@ class Player extends GameObject {
     return elevation < 0;
   }
 
-  void move(double joyStickX, double joyStickY) {
-    playerMover.joyStickIsometricMovement(joyStickX, joyStickY, this);
+  void move(double joyStickX, double joyStickY,
+      [double speedMultiplier = 1.0]) {
+    playerMover.joyStickIsometricMovement(
+        joyStickX, joyStickY, this, speedMultiplier);
   }
 
   @override
@@ -44,23 +51,41 @@ class Player extends GameObject {
 
   @override
   CollisionBox getCollisionBox() {
-    collisionBox.update(isoCoordinate, _getWidth(), 0.5);
+    collisionBox.update(isoCoordinate, sideWidth, sideWidth);
     return collisionBox;
-  }
-
-  double _getWidth() {
-    return 1.0;
   }
 
   @override
   List gameObjectToList() {
-    // TODO: implement
+    // TODO: if we implement this then the game becomes savable because we can save
+    // all the game objects as a list of values
     throw UnimplementedError();
   }
 
   @override
   IsoCoordinate getIsoCoordinate() {
     return isoCoordinate;
+  }
+
+  @override
+  bool isVisible() {
+    return _isVisible;
+  }
+
+  @override
+  void setVisibility(bool visible) {
+    _isVisible = visible;
+  }
+
+  void addCollisionAction(CollisionAction collisionAction) {
+    this.collisionAction = collisionAction;
+  }
+
+  @override
+  void addVolume(double volume) {
+    double currentVolume = sideWidth * sideWidth * sideWidth;
+    double newVolume = currentVolume + volume;
+    sideWidth = pow(newVolume, 1/3).toDouble();
   }
 }
 
@@ -73,9 +98,12 @@ class PlayerMover {
     double joyStickX,
     double joyStickY,
     Player player,
+    double speedMultiplier,
   ) {
     player.isoCoordinate = IsoCoordinate.fromIso(
-        player.isoCoordinate.isoX + joyStickX * _movementDistance,
-        player.isoCoordinate.isoY + joyStickY * _movementDistance);
+        player.isoCoordinate.isoX +
+            joyStickX * _movementDistance * speedMultiplier,
+        player.isoCoordinate.isoY +
+            joyStickY * _movementDistance * speedMultiplier);
   }
 }

@@ -9,16 +9,23 @@ abstract class GameObject implements Comparable<GameObject> {
   /// Returns the data that is needed for drawing the game object.
   VerticeDTO getVertices();
 
-  /// Used for sorting the game objects before drawing.
-  /// large nearness means that the object is drawn last because it is in front of
-  /// the other game objects.
-  double nearness();
+  /// Used for sorting the game objects (painter's algorithm).
+  /// If object has larger elevation it is drawn last because
+  /// it is on top of the other game objects.
+  /// If object has smaller distance it is drawn last because
+  /// it is closer to the camera.
+  ({double distance, double elevation}) nearness();
 
   bool isUnderWater();
 
   @override
   int compareTo(GameObject other) {
-    return nearness() > other.nearness() ? 1 : -1;
+    final nearness = this.nearness();
+    final otherNearness = other.nearness();
+    if (nearness.elevation != otherNearness.elevation) {
+      return nearness.elevation > otherNearness.elevation ? 1 : -1;
+    }
+    return nearness.distance > otherNearness.distance ? 1 : -1;
   }
 
   /// Dynamic means that the object can change (move, change color, ...) during the game.
@@ -57,4 +64,20 @@ abstract class GameObject implements Comparable<GameObject> {
     }
     throw Exception("Not implemented for $gameObjectData");
   }
+
+  /// If false then gameObject should not be drawn
+  bool isVisible();
+
+  /// set false to hide the gameObject
+  void setVisibility(bool visible);
+}
+
+abstract class Absortable extends GameObject {
+  double size();
+}
+
+abstract class Growable extends GameObject {
+  /// Makes game object large.
+  /// For example if you add volume of 1 m^3 to 1 m^3 object, it becomes 2 m^3
+  void addVolume(double volume);
 }

@@ -15,7 +15,7 @@ void _addGameObjectInCorrectOrder(List<GameObject> allGameObjects,
   int max = allGameObjects.length;
   while (min < max) {
     int mid = min + ((max - min) >> 1);
-    if (newGameObject.nearness() < allGameObjects[mid].nearness()) {
+    if (newGameObject.compareTo(allGameObjects[mid]) < 0) {
       max = mid;
     } else {
       min = mid + 1;

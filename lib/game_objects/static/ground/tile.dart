@@ -14,10 +14,11 @@ class Tile extends GameObject {
   late final VerticeDTO vertices;
   int width;
   late final CollisionBox collisionBox;
+  bool _isVisible = true;
 
   Tile(this.type, this.isoCoordinate, this.elevation, this.width,
       {VerticeDTO? vertices}) {
-    collisionBox = CollisionBox(isoCoordinate, width.toDouble(), elevation + 1);
+    collisionBox = CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
     this.vertices = vertices ?? TileToVertices.toVertices(this);
   }
 
@@ -60,9 +61,12 @@ class Tile extends GameObject {
   }
 
   @override
-  double nearness() {
+  ({double distance, double elevation}) nearness() {
     Point point = isoCoordinate.toPoint();
-    return -1 * (point.x + point.y + width).toDouble();
+    return (
+      distance: -1 * (point.x + point.y + width).toDouble(),
+      elevation: elevation
+    );
   }
 
   @override
@@ -76,12 +80,28 @@ class Tile extends GameObject {
   }
 
   @override
-  CollisionBox getCollisionBox() {
+  CollisionBox? getCollisionBox() {
+    if (isUnderWater()) {
+      /// Todo add collision detection to underwater tiles
+      /// currently there is a bug where the top of the underwater tile has collision
+      /// with the player in height 0
+      return null;
+    }
     return collisionBox;
   }
 
   @override
   IsoCoordinate getIsoCoordinate() {
     return isoCoordinate;
+  }
+
+  @override
+  bool isVisible() {
+    return _isVisible;
+  }
+
+  @override
+  void setVisibility(bool visible) {
+    _isVisible = visible;
   }
 }

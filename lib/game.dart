@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:anki/collision/collision_action.dart';
 import 'package:anki/collision/collision_detector.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
@@ -23,12 +24,14 @@ class Game extends ChangeNotifier {
   int _verticesCount = 0;
 
   Game() {
-    _regionCreationQueue = RegionCreationQueueImpl();
+    _regionCreationQueue = RegionCreationQueueImpl(_camera);
     _map = GameMap(_regionCreationQueue);
     _visibleRegions = VisibleRegionsHandlerImpl(_camera, _map);
     _concurrentRegionCreator = ConcurrentRegionCreator();
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(_player);
+    _player.collisionAction =
+        CollisionAction([CollisionActionType.absorve], _player);
   }
 
   ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater})
@@ -96,7 +99,7 @@ class Game extends ChangeNotifier {
   }
 
   void addGameObjectsToRegion() {
-    if (_concurrentRegionCreator.isRunning) return;
+    //if (_concurrentRegionCreator.isRunning) return;
     AddGameObjectsTo? next = _regionCreationQueue.next();
     if (next != null) {
       var region = _map.getRegion(next.regionCoordinate, next.lod);
@@ -105,13 +108,14 @@ class Game extends ChangeNotifier {
   }
 
   void movePlayer(double joyStickX, double joyStickY) {
-    _player.move(joyStickX, joyStickY);
+    _player.move(
+        joyStickX, joyStickY, _camera.getLOD().tileMinWidth.toDouble());
     _camera.center = _player.getIsoCoordinate();
-    var isColliding = findCollisions(
-            _dynamicGameObjectManager.regionOf(_player).getAllGameObjects(),
-            _player)
-        .isNotEmpty;
-    _player.isColliding = isColliding;
+    var collisions = findCollisions(
+        _dynamicGameObjectManager.regionOf(_player).getAllGameObjects(),
+        _player);
+    _player.collisionAction?.execute(collisions);
+    _player.isColliding = collisions.isNotEmpty;
   }
 
   void updateDynamicGameObjectRegions() {
