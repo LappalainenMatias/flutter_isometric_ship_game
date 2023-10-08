@@ -15,21 +15,12 @@ class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator(_mapCreationRules);
 
-  ({IsoCoordinate regionBottomCoordinate, List<GameObject> gameObjects}) create(
-      IsoCoordinate regionBottom,
-      int width,
-      int height,
-      int startX,
-      int startY,
-      LevelOfDetail lod) {
-    var (elevation, moisture) = noise.createComplexNoise(
-        width, height, startX, startY, lod.tileMinWidth);
-
-    List<Tile> tiles =
-        _createTiles(startX, startY, elevation, moisture, lod.tileMinWidth)
-          ..sort();
-
-    return (regionBottomCoordinate: regionBottom, gameObjects: tiles);
+  List<GameObject> create(int w, int h, int x, int y, LevelOfDetail lod) {
+    final (elevation, moisture) =
+        noise.createComplexNoise(w, h, x, y, lod.tileMinWidth);
+    final tiles = _createTiles(x, y, elevation, moisture, lod.tileMinWidth);
+    tiles.sort();
+    return tiles;
   }
 
   List<Tile> _createTiles(
@@ -44,14 +35,32 @@ class RegionCreator {
       var elevationRow = elevationNoise[x];
       var moistureRow = moistureNoise[x];
       for (var y = 0; y < elevationNoise[0].length; y++) {
-        tiles.add(TileCreator.create(
-          elevationRow[y],
-          moistureRow[y],
-          Point((startX + x * tileWidth).toDouble(),
-              (startY + y * tileWidth).toDouble()),
-          _mapCreationRules.tileRules(),
-          tileWidth,
-        ));
+        double height = elevationRow[y];
+        if (height <= 0) {
+          final elevation = (height / tileWidth).floor() * tileWidth.toDouble();
+          tiles.add(TileCreator.create(
+            elevation,
+            moistureRow[y],
+            Point((startX + x * tileWidth).toDouble(),
+                (startY + y * tileWidth).toDouble()),
+            _mapCreationRules.tileRules(),
+            tileWidth,
+          ));
+        } else {
+          while (height > 0) {
+            final elevation =
+                (height / tileWidth).floor() * tileWidth.toDouble();
+            tiles.add(TileCreator.create(
+              elevation,
+              moistureRow[y],
+              Point((startX + x * tileWidth).toDouble(),
+                  (startY + y * tileWidth).toDouble()),
+              _mapCreationRules.tileRules(),
+              tileWidth,
+            ));
+            height -= tileWidth;
+          }
+        }
       }
     }
     return tiles;

@@ -15,6 +15,7 @@ class DynamicGameObjectManager {
 
   DynamicGameObjectManager(this._map, this._camera);
 
+  /// Updates the regions of all dynamic game objects.
   void update() {
     for (GameObject gameObject in _gameObjectToRegion.keys) {
       var currentRegion = _gameObjectToRegion[gameObject]!;

@@ -131,18 +131,15 @@ class CollisionBoxToVertices {
 }
 
 class PlayerToVertices {
-  static VerticeDTO toVertices(Player player, [bool isColliding = false]) {
-    if (isColliding) {
-      return CubeVerticesCreator.toVertices(
-        getTileTextureCoordinates(TileType.ice),
-        player.isoCoordinate,
-        player.elevation,
-      );
-    }
+  static VerticeDTO toVertices(Player player) {
     return CubeVerticesCreator.toVertices(
-      getTileTextureCoordinates(TileType.deathGrass),
+      player.isColliding
+          ? getTileTextureCoordinates(TileType.ice)
+          : getTileTextureCoordinates(TileType.deathGrass),
       player.isoCoordinate,
       player.elevation,
+      widthScale: player.sideWidth,
+      heightScale: player.sideWidth,
     );
   }
 }
@@ -217,12 +214,13 @@ class CubeVerticesCreator {
 }
 
 /// We do not want to draw every game object individually (because it's slow).
-/// Here we combine all the the vertices of all the game objects into one.
-({VerticeDTO underWater, VerticeDTO aboveWater}) gameObjectsToVertices(
-    List<GameObject> gameObjects) {
+/// Here we combine all the the vertices of all the game objects into one.({VerticeDTO underWater, VerticeDTO aboveWater})
+
+gameObjectsToVertices(List<GameObject> gameObjects) {
   int aboveWaterPositionsSize = 0;
   int underWaterPositionsSize = 0;
   for (var gameObject in gameObjects) {
+    if (!gameObject.isVisible()) continue;
     if (gameObject.isUnderWater()) {
       underWaterPositionsSize += gameObject.getVertices().positions.length;
     } else {
@@ -240,6 +238,7 @@ class CubeVerticesCreator {
   int aboveWaterOffset = 0;
   int underWaterOffset = 0;
   for (var gameObject in gameObjects) {
+    if (!gameObject.isVisible()) continue;
     var vertices = gameObject.getVertices();
 
     if (gameObject.isUnderWater()) {

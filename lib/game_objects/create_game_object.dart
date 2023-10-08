@@ -11,6 +11,7 @@ class TileCreator {
       List<TileRule> rules, int width) {
     for (TileRule rule in rules) {
       if (rule.match(elevation, moisture)) {
+        elevation = (elevation / width).floor() * width.toDouble();
         return Tile(
             rule.type, IsoCoordinate(point.x, point.y), elevation, width);
       }
