@@ -7,11 +7,11 @@ import 'level_of_detail.dart';
 class Camera {
   IsoCoordinate center;
   final CameraMover _cameraMover = CameraMover();
-  double _zoomLevel = 0.0005;
+  double _zoomLevel = 0.00005;
   final double _minWidth = 60;
-  final double _maxWidth = 100000000;
+  final double _maxWidth = 1000000;
   double _aspectRatio = 1.0;
-  LevelOfDetail _currentLOD = LevelOfDetail.zoomlevel_19;
+  LevelOfDetail _LOD = LevelOfDetail.zoomlevel_19;
 
   Camera({this.center = const IsoCoordinate(0, 0)}) {
     _updateLOD();
@@ -45,8 +45,8 @@ class Camera {
 
   /// 0 is zoomed in, 1 is zoomed out.
   void setZoomLevel(double newZoomLevel) {
-    if (newZoomLevel < 0) {
-      _zoomLevel = 0;
+    if (newZoomLevel < 0.00001) {
+      _zoomLevel = 0.00001;
     } else if (newZoomLevel > 1) {
       _zoomLevel = 1;
     } else {
@@ -63,7 +63,7 @@ class Camera {
     setZoomLevel(_zoomLevel + 0.02 * _zoomLevel);
   }
 
-  LevelOfDetail getLOD() => _currentLOD;
+  LevelOfDetail getLOD() => _LOD;
 
   double get zoomLevel => _zoomLevel;
 
@@ -72,11 +72,11 @@ class Camera {
     int size = 400;
     for (LevelOfDetail lod in LevelOfDetail.values) {
       if (maxSide < size) {
-        _currentLOD = lod;
+        _LOD = lod;
         return;
       }
       size *= 2;
     }
-    _currentLOD = LevelOfDetail.values.last;
+    _LOD = LevelOfDetail.values.last;
   }
 }
