@@ -15,11 +15,12 @@ file:///Users/matiaslappalainen/Documents/flutter/bin/cache/dart-sdk/lib/_intern
 file:///Users/matiaslappalainen/Documents/flutter/bin/cache/dart-sdk/lib/libraries.json
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/.dart_tool/package_config.json
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/camera/level_of_detail.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/collision/collision_action.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/collision/collision_box.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/coordinates/iso_coordinate.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/dto/vertice_dto.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/create_game_object.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/dynamic/player/player.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/dynamic/player.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/game_object.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/game_objects_to_vertices.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/ground/tile.dart
