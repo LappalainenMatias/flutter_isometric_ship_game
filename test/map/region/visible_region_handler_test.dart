@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test("Should have regions after it gets updated", () {
     var camera = Camera();
-    var regionCreationQueue = RegionCreationQueueImpl();
+    var regionCreationQueue = RegionCreationQueueImpl(camera);
     var map = GameMap(regionCreationQueue);
     VisibleRegionsHandler visibleRegions =
         VisibleRegionsHandlerImpl(camera, map);
@@ -23,7 +23,7 @@ void main() {
 
   test("Should remove visible regions after update", () {
     var camera = Camera();
-    var regionCreationQueue = RegionCreationQueueImpl();
+    var regionCreationQueue = RegionCreationQueueImpl(camera);
     var map = GameMap(regionCreationQueue);
     VisibleRegionsHandler visibleRegions =
         VisibleRegionsHandlerImpl(camera, map);

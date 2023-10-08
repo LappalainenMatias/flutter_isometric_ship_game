@@ -25,7 +25,7 @@ void main() {
     iso = regionPointToIsoCoordinate(
         const Point(-3, -3), LevelOfDetail.zoomlevel_17);
     expect(iso.isoX, 0);
-    expect(iso.isoY, -256);
+    expect(iso.isoY, -8 * regionSideWidth);
   });
 
   test("IsoCoordinate to region point", () {

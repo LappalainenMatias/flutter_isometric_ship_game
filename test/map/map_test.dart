@@ -9,7 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Region should have the same level of detail", () {
-    RegionCreationQueue queue = RegionCreationQueueImpl();
+    Camera camera = Camera();
+    RegionCreationQueue queue = RegionCreationQueueImpl(camera);
     GameMap map = GameMap(queue);
     Region r1 = map.getRegion(
         const IsoCoordinate(0, 0), LevelOfDetail.zoomlevel_1);
@@ -17,7 +18,8 @@ void main() {
   });
 
   test("Coordinates close to each other should return same region", () {
-    RegionCreationQueue queue = RegionCreationQueueImpl();
+    Camera camera = Camera();
+    RegionCreationQueue queue = RegionCreationQueueImpl(camera);
     GameMap map = GameMap(queue);
 
     /// All of these coordinates are part of the same region

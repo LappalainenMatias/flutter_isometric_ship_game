@@ -6,7 +6,8 @@ import 'package:test/test.dart';
 
 void main() {
   test("Queue should not have same value twice", () {
-    RegionCreationQueue creationQueue = RegionCreationQueueImpl();
+    Camera camera = Camera();
+    RegionCreationQueue creationQueue = RegionCreationQueueImpl(camera);
 
     creationQueue.add(
         AddGameObjectsTo(LevelOfDetail.zoomlevel_0, const IsoCoordinate(0, 0)));
