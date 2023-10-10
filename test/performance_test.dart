@@ -5,6 +5,7 @@ import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/map/region/region.dart';
 import 'package:anki/noise/noise.dart';
+import 'package:anki/optimization/visibility_checker.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -118,5 +119,22 @@ void main() {
     /// 512*512 tiles
     /// 1: 65, 63, 65
     /// 2: 59, 71, 62 (Simplified list size calculation)
+  });
+
+  test('Visiblity checker', () {
+    var tiles = <Tile>[];
+    for (int i = 0; i < 128 * 128; i++) {
+      tiles.add(
+        Tile(TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1),
+      );
+    }
+    Stopwatch stopwatch = Stopwatch()..start();
+    visibilityChecker(tiles);
+    stopwatch.stop();
+    print('Visibility checker took ${stopwatch.elapsedMilliseconds} ms');
+    /// 128 * 128 tiles
+    /// 1: 1977, 1959, 1955
+    /// 2: 1260, 1243, 1265 (Changed set to hashset)
+    /// 3: 24, 24, 24 (Changed from custom Point3D class to String)
   });
 }

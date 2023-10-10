@@ -17,8 +17,9 @@ class Tile extends GameObject {
   bool _isVisible = true;
 
   Tile(this.type, this.isoCoordinate, this.elevation, this.width,
-      {VerticeDTO? vertices}) {
+      {VerticeDTO? vertices, isVisible = true}) {
     collisionBox = CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
+    _isVisible = isVisible;
     this.vertices = vertices ?? TileToVertices.toVertices(this);
   }
 
@@ -40,6 +41,7 @@ class Tile extends GameObject {
         (list[6][0] as Float32List),
         (list[6][1] as Float32List),
       ),
+      isVisible: list[7],
     );
   }
 
@@ -56,7 +58,8 @@ class Tile extends GameObject {
       [
         vertices.positions,
         vertices.textures,
-      ]
+      ],
+      _isVisible,
     ];
   }
 
