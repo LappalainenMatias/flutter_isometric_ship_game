@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
@@ -60,8 +58,15 @@ void main() {
   });
 
   test("Decode and encode 1x1 tile", () {
-    Tile tile =
-    Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 2, 1, isVisible: false);
+    Tile tile = Tile(
+      TileType.grass,
+      const IsoCoordinate.fromIso(2, 2),
+      2,
+      1,
+      leftSideIsVisible: false,
+      rightSideIsVisible: false,
+      topSideIsVisible: false,
+    );
     List encoded = tile.gameObjectToList();
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, 2);
@@ -72,7 +77,7 @@ void main() {
 
   test("Decode and encode 2x2 tile", () {
     Tile tile =
-    Tile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, 2);
+        Tile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, 2);
     List encoded = tile.gameObjectToList();
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, -1);

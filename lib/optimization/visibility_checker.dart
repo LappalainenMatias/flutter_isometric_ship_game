@@ -2,30 +2,32 @@ import 'dart:collection';
 
 import '../game_objects/static/ground/tile.dart';
 
+/// Goes through all tiles and sets their visibility.
+/// If there is a tile on the left side of the tile, we hide the left side of the tile
+/// We do this for the right and top side as well
+/// This also hides tiles that are completele invisible
+/// This optimization can reduce vertices even by 90% in some cases.
 void visibilityChecker(List<Tile> tiles) {
   HashSet<String> points = HashSet<String>();
-
-  // Populate the points set and set all tiles to visible
   for (var tile in tiles) {
-    tile.setVisibility(true);
     var point = tile.isoCoordinate.toPoint();
-    var pointStr = '${point.x.toInt()},${point.y.toInt()},${tile.elevation.toInt()}';
-    points.add(pointStr);
+    var elevation = tile.elevation.toInt();
+    points.add('${point.x.toInt()},${point.y.toInt()},$elevation');
   }
 
-  // Set tiles that are surrounded by three tiles to invisible
   for (var tile in tiles) {
     var point = tile.isoCoordinate.toPoint();
     var x = point.x.toInt();
     var y = point.y.toInt();
     var z = tile.elevation.toInt();
 
-    var left = '$x,${y - 1},$z';
-    var right = '${x - 1},$y,$z';
+    var right = '$x,${y - 1},$z';
+    var left = '${x - 1},$y,$z';
     var top = '$x,$y,${z + 1}';
 
-    if (points.contains(left) && points.contains(right) && points.contains(top)) {
-      tile.setVisibility(false);
-    }
+    tile.setVisibility(
+        leftIsVisible: !points.contains(left),
+        topIsVisible: !points.contains(top),
+        rightIsVisible: !points.contains(right));
   }
 }

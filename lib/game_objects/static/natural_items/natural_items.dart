@@ -14,7 +14,9 @@ class NaturalItem extends GameObject {
   final double elevation;
   late final CollisionBox collisionBox;
   late VerticeDTO vertices;
-  bool _isVisible = true;
+  bool _leftSideIsVisible = true;
+  bool _rightSideIsVisible = true;
+  bool _topSideIsVisible = true;
 
   NaturalItem(this.type, this.isoCoordinate, this.elevation) {
     vertices = type.toVertices!(isoCoordinate, elevation);
@@ -75,12 +77,6 @@ class NaturalItem extends GameObject {
     });
   }
 
-  /// This is used for sorting the drawing order
-  /// Currently all naturalItems are width 1 but this can be changed.
-  double _getWidth() {
-    return 1;
-  }
-
   @override
   List gameObjectToList() {
     // TODO: implement gameObjectToList
@@ -94,12 +90,17 @@ class NaturalItem extends GameObject {
 
   @override
   bool isVisible() {
-    return _isVisible;
+    return _leftSideIsVisible || _rightSideIsVisible || _topSideIsVisible;
   }
 
   @override
-  void setVisibility(bool visible) {
-    _isVisible = visible;
+  void setVisibility(
+      {required bool leftIsVisible,
+      required bool topIsVisible,
+      required bool rightIsVisible}) {
+    _leftSideIsVisible = leftIsVisible;
+    _topSideIsVisible = rightIsVisible;
+    _rightSideIsVisible = topIsVisible;
   }
 }
 

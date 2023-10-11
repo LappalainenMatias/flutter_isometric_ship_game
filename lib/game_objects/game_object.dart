@@ -68,8 +68,11 @@ abstract class GameObject implements Comparable<GameObject> {
   /// If false then gameObject should not be drawn
   bool isVisible();
 
-  /// set false to hide the gameObject
-  void setVisibility(bool visible);
+  /// set all sides to false to hide game object compeletely
+  /// todo make this more flexible because now the game object can only be a cube
+  void setVisibility({required bool leftIsVisible,
+    required bool topIsVisible,
+    required bool rightIsVisible});
 }
 
 abstract class Absortable extends GameObject {

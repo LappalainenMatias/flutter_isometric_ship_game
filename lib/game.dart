@@ -99,7 +99,7 @@ class Game extends ChangeNotifier {
   }
 
   void addGameObjectsToRegion() {
-    //if (_concurrentRegionCreator.isRunning) return;
+    if (_concurrentRegionCreator.isRunning) return;
     AddGameObjectsTo? next = _regionCreationQueue.next();
     if (next != null) {
       var region = _map.getRegion(next.regionCoordinate, next.lod);

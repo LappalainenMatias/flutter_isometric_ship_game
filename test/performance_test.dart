@@ -87,8 +87,7 @@ void main() {
     stopwatch.reset();
 
     for (int i = 0; i < isoCoordinates.length; i++) {
-      CubeVerticesCreator.toVertices(
-          getTileTextureCoordinates(TileType.ice), isoCoordinates[i], -1);
+      CubeVerticesCreator.toVertices(TileType.ice, isoCoordinates[i], -1);
     }
 
     stopwatch.stop();
@@ -98,6 +97,7 @@ void main() {
     /// 1: 56, 56, 50 (With under water tiles)
     /// 2: 50, 50, 48 (Without under water tiles)
     /// 3: 15, 16, 17 (Adding directly to FloatList32 or IntList32)
+    /// 4: 28, 28, 21 (You can now set left, right and top side visiblity)
   });
 
   test('GameObjects to vertices performance', () {
@@ -132,6 +132,7 @@ void main() {
     visibilityChecker(tiles);
     stopwatch.stop();
     print('Visibility checker took ${stopwatch.elapsedMilliseconds} ms');
+
     /// 128 * 128 tiles
     /// 1: 1977, 1959, 1955
     /// 2: 1260, 1243, 1265 (Changed set to hashset)

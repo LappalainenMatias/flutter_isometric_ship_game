@@ -33,7 +33,7 @@ class BirchToVertices {
   static VerticeDTO _birchFoliage(
       IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      Float32List(0),
+      TileType.deathGrass,
       isoCoordinate,
       elevation + 1.00,
       widthScale: 1.25,
@@ -43,7 +43,7 @@ class BirchToVertices {
 
   static VerticeDTO _birchTrunk(IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      Float32List(0),
+      TileType.deathGrass,
       isoCoordinate,
       elevation + 0.25,
       widthScale: 0.30,
@@ -55,7 +55,7 @@ class BirchToVertices {
 class RockToVertices {
   static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      Float32List(0),
+      TileType.deathGrass,
       isoCoordinate,
       elevation,
       widthScale: 0.6,
@@ -89,7 +89,7 @@ class SpruceToVertices {
   static VerticeDTO _spruceFoliage(
       IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      Float32List(0),
+      TileType.deathGrass,
       isoCoordinate,
       elevation + 1.00,
       widthScale: (Random().nextDouble() / 5 + 1.0),
@@ -100,7 +100,7 @@ class SpruceToVertices {
   static VerticeDTO _spruceTrunk(
       IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      Float32List(0),
+      TileType.deathGrass,
       isoCoordinate,
       elevation + 0.25,
       widthScale: 0.25,
@@ -111,31 +111,23 @@ class SpruceToVertices {
 
 class TileToVertices {
   static VerticeDTO toVertices(Tile tile) {
-    var textures = getTileTextureCoordinates(tile.type);
     return CubeVerticesCreator.toVertices(
-      textures,
+      tile.type,
       tile.isoCoordinate,
       tile.elevation,
       widthScale: tile.width.toDouble(),
       heightScale: tile.width.toDouble(),
+      leftSideVisible: tile.leftSideIsVisible,
+      topSideVisible: tile.topSideIsVisible,
+      rightSideVisible: tile.rightSideIsVisible,
     );
-  }
-}
-
-class CollisionBoxToVertices {
-  static VerticeDTO toVertices(CollisionBox box) {
-    return CubeVerticesCreator.toVertices(
-        getTileTextureCoordinates(TileType.rock), box.point, 0,
-        widthScale: box.width, heightScale: box.height);
   }
 }
 
 class PlayerToVertices {
   static VerticeDTO toVertices(Player player) {
     return CubeVerticesCreator.toVertices(
-      player.isColliding
-          ? getTileTextureCoordinates(TileType.ice)
-          : getTileTextureCoordinates(TileType.deathGrass),
+      player.isColliding ? TileType.ice : TileType.deathGrass,
       player.isoCoordinate,
       player.elevation,
       widthScale: player.sideWidth,
@@ -150,15 +142,19 @@ class PlayerToVertices {
 /// 6 triangles that make up the cube (two for each visible side).
 ///
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
+/// To optimize drawing we can set the three sides to be invisible.
 class CubeVerticesCreator {
   static const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
 
   static VerticeDTO toVertices(
-    Float32List textures,
-    IsoCoordinate isoCoordinate,
-    double z, {
-    double heightScale = 1,
-    double widthScale = 1,
+    TileType tileType,
+    final IsoCoordinate isoCoordinate,
+    final double z, {
+    final double heightScale = 1,
+    final double widthScale = 1,
+    final bool leftSideVisible = true,
+    final bool topSideVisible = true,
+    final bool rightSideVisible = true,
   }) {
     /// Creates the 7 corners of the isometric cube
     final cenBot = isoCoordinate + IsoCoordinate(z, z);
@@ -169,46 +165,98 @@ class CubeVerticesCreator {
     final rigTop = cenCen + IsoCoordinate(widthScale, 0);
     final cenTop = lefTop + IsoCoordinate(widthScale, 0);
 
+    int size = 0;
+    if (leftSideVisible) size += 12;
+    if (topSideVisible) size += 12;
+    if (rightSideVisible) size += 12;
+    final positions = Float32List(size);
+    final textures = Float32List(size);
+    final fullTexture = getTileTextureCoordinates(tileType);
+    int positionIndex = 0;
+    int textureIndex = 0;
+
     /// Notice that the triangles are created in a counter clockwise order
     /// This is important for the textures to work
-    Float32List positions = Float32List(36);
-    positions[0] = cenCen.isoX;
-    positions[1] = cenCen.isoY;
-    positions[2] = lefBot.isoX;
-    positions[3] = lefBot.isoY;
-    positions[4] = cenBot.isoX;
-    positions[5] = cenBot.isoY;
-    positions[6] = cenCen.isoX;
-    positions[7] = cenCen.isoY;
-    positions[8] = lefBot.isoX;
-    positions[9] = lefBot.isoY;
-    positions[10] = lefTop.isoX;
-    positions[11] = lefTop.isoY;
-    positions[12] = cenCen.isoX;
-    positions[13] = cenCen.isoY;
-    positions[14] = lefTop.isoX;
-    positions[15] = lefTop.isoY;
-    positions[16] = cenTop.isoX;
-    positions[17] = cenTop.isoY;
-    positions[18] = cenCen.isoX;
-    positions[19] = cenCen.isoY;
-    positions[20] = cenTop.isoX;
-    positions[21] = cenTop.isoY;
-    positions[22] = rigTop.isoX;
-    positions[23] = rigTop.isoY;
-    positions[24] = cenCen.isoX;
-    positions[25] = cenCen.isoY;
-    positions[26] = rigTop.isoX;
-    positions[27] = rigTop.isoY;
-    positions[28] = rigBot.isoX;
-    positions[29] = rigBot.isoY;
-    positions[30] = cenCen.isoX;
-    positions[31] = cenCen.isoY;
-    positions[32] = rigBot.isoX;
-    positions[33] = rigBot.isoY;
-    positions[34] = cenBot.isoX;
-    positions[35] = cenBot.isoY;
+    if (leftSideVisible) {
+      positions[positionIndex++] = cenCen.isoX;
+      positions[positionIndex++] = cenCen.isoY;
+      positions[positionIndex++] = lefBot.isoX;
+      positions[positionIndex++] = lefBot.isoY;
+      positions[positionIndex++] = cenBot.isoX;
+      positions[positionIndex++] = cenBot.isoY;
+      positions[positionIndex++] = cenCen.isoX;
+      positions[positionIndex++] = cenCen.isoY;
+      positions[positionIndex++] = lefBot.isoX;
+      positions[positionIndex++] = lefBot.isoY;
+      positions[positionIndex++] = lefTop.isoX;
+      positions[positionIndex++] = lefTop.isoY;
+      textures[textureIndex++] = fullTexture[0];
+      textures[textureIndex++] = fullTexture[1];
+      textures[textureIndex++] = fullTexture[2];
+      textures[textureIndex++] = fullTexture[3];
+      textures[textureIndex++] = fullTexture[4];
+      textures[textureIndex++] = fullTexture[5];
+      textures[textureIndex++] = fullTexture[6];
+      textures[textureIndex++] = fullTexture[7];
+      textures[textureIndex++] = fullTexture[8];
+      textures[textureIndex++] = fullTexture[9];
+      textures[textureIndex++] = fullTexture[10];
+      textures[textureIndex++] = fullTexture[11];
+    }
 
+    if (topSideVisible) {
+      positions[positionIndex++] = cenCen.isoX;
+      positions[positionIndex++] = cenCen.isoY;
+      positions[positionIndex++] = lefTop.isoX;
+      positions[positionIndex++] = lefTop.isoY;
+      positions[positionIndex++] = cenTop.isoX;
+      positions[positionIndex++] = cenTop.isoY;
+      positions[positionIndex++] = cenCen.isoX;
+      positions[positionIndex++] = cenCen.isoY;
+      positions[positionIndex++] = cenTop.isoX;
+      positions[positionIndex++] = cenTop.isoY;
+      positions[positionIndex++] = rigTop.isoX;
+      positions[positionIndex++] = rigTop.isoY;
+      textures[textureIndex++] = fullTexture[12];
+      textures[textureIndex++] = fullTexture[13];
+      textures[textureIndex++] = fullTexture[14];
+      textures[textureIndex++] = fullTexture[15];
+      textures[textureIndex++] = fullTexture[16];
+      textures[textureIndex++] = fullTexture[17];
+      textures[textureIndex++] = fullTexture[18];
+      textures[textureIndex++] = fullTexture[19];
+      textures[textureIndex++] = fullTexture[20];
+      textures[textureIndex++] = fullTexture[21];
+      textures[textureIndex++] = fullTexture[22];
+      textures[textureIndex++] = fullTexture[23];
+    }
+
+    if (rightSideVisible) {
+      positions[positionIndex++] = cenCen.isoX;
+      positions[positionIndex++] = cenCen.isoY;
+      positions[positionIndex++] = rigTop.isoX;
+      positions[positionIndex++] = rigTop.isoY;
+      positions[positionIndex++] = rigBot.isoX;
+      positions[positionIndex++] = rigBot.isoY;
+      positions[positionIndex++] = cenCen.isoX;
+      positions[positionIndex++] = cenCen.isoY;
+      positions[positionIndex++] = rigBot.isoX;
+      positions[positionIndex++] = rigBot.isoY;
+      positions[positionIndex++] = cenBot.isoX;
+      positions[positionIndex++] = cenBot.isoY;
+      textures[textureIndex++] = fullTexture[24];
+      textures[textureIndex++] = fullTexture[25];
+      textures[textureIndex++] = fullTexture[26];
+      textures[textureIndex++] = fullTexture[27];
+      textures[textureIndex++] = fullTexture[28];
+      textures[textureIndex++] = fullTexture[29];
+      textures[textureIndex++] = fullTexture[30];
+      textures[textureIndex++] = fullTexture[31];
+      textures[textureIndex++] = fullTexture[32];
+      textures[textureIndex++] = fullTexture[33];
+      textures[textureIndex++] = fullTexture[34];
+      textures[textureIndex++] = fullTexture[35];
+    }
     return VerticeDTO(positions, textures);
   }
 }

@@ -30,7 +30,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/jsregionworker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/region_creation/region_creator.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/occlusion_culling.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_coordinates.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/custom_color.dart
 org-dartlang-sdk:///lib/_http/crypto.dart

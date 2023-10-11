@@ -11,15 +11,20 @@ class Tile extends GameObject {
   final TileType type;
   IsoCoordinate isoCoordinate;
   double elevation;
-  late final VerticeDTO vertices;
+  late VerticeDTO vertices;
   int width;
   late final CollisionBox collisionBox;
-  bool _isVisible = true;
+  bool leftSideIsVisible = true;
+  bool rightSideIsVisible = true;
+  bool topSideIsVisible = true;
 
   Tile(this.type, this.isoCoordinate, this.elevation, this.width,
-      {VerticeDTO? vertices, isVisible = true}) {
-    collisionBox = CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
-    _isVisible = isVisible;
+      {VerticeDTO? vertices,
+      this.leftSideIsVisible = true,
+      this.rightSideIsVisible = true,
+      this.topSideIsVisible = true}) {
+    collisionBox =
+        CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
     this.vertices = vertices ?? TileToVertices.toVertices(this);
   }
 
@@ -41,7 +46,9 @@ class Tile extends GameObject {
         (list[6][0] as Float32List),
         (list[6][1] as Float32List),
       ),
-      isVisible: list[7],
+      leftSideIsVisible: list[7],
+      topSideIsVisible: list[8],
+      rightSideIsVisible: list[9],
     );
   }
 
@@ -59,7 +66,9 @@ class Tile extends GameObject {
         vertices.positions,
         vertices.textures,
       ],
-      _isVisible,
+      leftSideIsVisible,
+      topSideIsVisible,
+      rightSideIsVisible,
     ];
   }
 
@@ -100,11 +109,22 @@ class Tile extends GameObject {
 
   @override
   bool isVisible() {
-    return _isVisible;
+    return leftSideIsVisible || topSideIsVisible || rightSideIsVisible;
   }
 
   @override
-  void setVisibility(bool visible) {
-    _isVisible = visible;
+  void setVisibility(
+      {required bool leftIsVisible,
+      required bool topIsVisible,
+      required bool rightIsVisible}) {
+    if (leftIsVisible == leftSideIsVisible &&
+        rightIsVisible == rightSideIsVisible &&
+        topIsVisible == topSideIsVisible) {
+      return;
+    }
+    leftSideIsVisible = leftIsVisible;
+    topSideIsVisible = topIsVisible;
+    rightSideIsVisible = rightIsVisible;
+    vertices = TileToVertices.toVertices(this);
   }
 }

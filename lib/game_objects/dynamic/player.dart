@@ -11,9 +11,11 @@ class Player extends Growable {
   bool isColliding = false;
   double elevation;
   late CollisionBox collisionBox;
-  bool _isVisible = true;
   CollisionAction? collisionAction;
   double sideWidth = 1;
+  bool _leftSideIsVisible = true;
+  bool _rightSideIsVisible = true;
+  bool _topSideIsVisible = true;
 
   Player(this.isoCoordinate, this.elevation) {
     collisionBox = CollisionBox(isoCoordinate, sideWidth, sideWidth);
@@ -69,12 +71,17 @@ class Player extends Growable {
 
   @override
   bool isVisible() {
-    return _isVisible;
+    return _leftSideIsVisible || _rightSideIsVisible || _topSideIsVisible;
   }
 
   @override
-  void setVisibility(bool visible) {
-    _isVisible = visible;
+  void setVisibility(
+      {required bool leftIsVisible,
+      required bool topIsVisible,
+      required bool rightIsVisible}) {
+    _leftSideIsVisible = leftIsVisible;
+    _rightSideIsVisible = rightIsVisible;
+    _topSideIsVisible = topIsVisible;
   }
 
   void addCollisionAction(CollisionAction collisionAction) {
@@ -85,7 +92,7 @@ class Player extends Growable {
   void addVolume(double volume) {
     double currentVolume = sideWidth * sideWidth * sideWidth;
     double newVolume = currentVolume + volume;
-    sideWidth = pow(newVolume, 1/3).toDouble();
+    sideWidth = pow(newVolume, 1 / 3).toDouble();
   }
 }
 
