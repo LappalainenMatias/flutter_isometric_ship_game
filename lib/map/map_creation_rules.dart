@@ -86,14 +86,14 @@ class SvalbardCreationRules extends MapCreationRules {
       TileRule(TileType.rock, 0.0, -0.2),
       TileRule(TileType.deathGrass, 0.0, 0.0),
       TileRule(TileType.sand, 0.0, null),
+      TileRule(TileType.rock, 10.0, -0.2),
+      TileRule(TileType.grass, 10.0, 0.3),
+      TileRule(TileType.deathGrass, 10.0, null),
       TileRule(TileType.rock, 15.0, -0.2),
       TileRule(TileType.deathGrass, 15.0, 0.4),
       TileRule(TileType.grass, 15.0, null),
-      TileRule(TileType.rock, 30.0, -0.2),
-      TileRule(TileType.deathGrass, 30.0, 0.4),
-      TileRule(TileType.grass, 30.0, null),
-      TileRule(TileType.rock, 50.0, 0.1),
-      TileRule(TileType.deathGrass, 50.0, 0.4),
+      TileRule(TileType.rock, 20.0, 0.5),
+      TileRule(TileType.deathGrass, 20.0, 0.6),
       TileRule(TileType.snow, null, null),
     ];
   }
@@ -123,7 +123,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double peakToPeakAmplitude() {
-    return 100;
+    return 120;
   }
 
   @override

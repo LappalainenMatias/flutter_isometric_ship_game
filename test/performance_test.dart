@@ -129,7 +129,7 @@ void main() {
       );
     }
     Stopwatch stopwatch = Stopwatch()..start();
-    visibilityChecker(tiles);
+    visibilityChecker(tiles, 1);
     stopwatch.stop();
     print('Visibility checker took ${stopwatch.elapsedMilliseconds} ms');
 

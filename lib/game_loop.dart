@@ -19,13 +19,13 @@ class GameLoop extends ChangeNotifier {
     dt = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
     _previous = timestamp;
     update(dt);
+    notifyListeners(); // This causes game map rendering
   }
 
   void update(var dt) {
     game.updateVisibleRegions();
     game.addGameObjectsToRegion();
     game.updateDynamicGameObjectRegions();
-    notifyListeners();
   }
 
   @override

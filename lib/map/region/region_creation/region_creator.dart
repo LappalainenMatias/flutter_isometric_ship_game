@@ -1,6 +1,5 @@
 import 'dart:math';
 import 'package:anki/map/map_creation_rules.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/optimization/visibility_checker.dart';
 import '../../../camera/level_of_detail.dart';
 import '../../../game_objects/create_game_object.dart';
@@ -19,11 +18,11 @@ class RegionCreator {
   List<GameObject> create(int w, int h, int x, int y, LevelOfDetail lod) {
     final (elevation, moisture) =
         noise.createComplexNoise(w, h, x, y, lod.tileMinWidth);
-    final tiles = _createTiles(x, y, elevation, moisture, lod.tileMinWidth)..sort();
-    if (lod.runVisibilityChecker) {
-      visibilityChecker(tiles);
-    }
-    return tiles;
+    final tiles = _createTiles(x, y, elevation, moisture, lod.tileMinWidth);
+    visibilityChecker(tiles, lod.tileMinWidth);
+    /// Todo this removing might be something that we do not want to do in the future
+    tiles.removeWhere((element) => !element.isVisible());
+    return tiles..sort();
   }
 
   List<Tile> _createTiles(
@@ -50,6 +49,7 @@ class RegionCreator {
             tileWidth,
           ));
         } else {
+          /// Todo this need refactoring
           while (height > 0) {
             final elevation =
                 (height / tileWidth).floor() * tileWidth.toDouble();

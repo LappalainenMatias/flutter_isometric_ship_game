@@ -1,9 +1,6 @@
 import 'package:anki/map/region/region_creation/region_creator.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:js/js.dart';
-
 import '../../camera/level_of_detail.dart';
-import '../../game_objects/game_object.dart';
 
 /// Todo maybe we could add the dart compile to the build process
 /// Todo create own folder and file for concurrency

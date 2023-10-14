@@ -45,7 +45,6 @@ class ConcurrentRegionCreator {
     for (List encoded in result) {
       gameObjects.add(GameObject.gameObjectFromList(encoded));
     }
-
     region.update(gameObjects);
     isRunning = false;
   }

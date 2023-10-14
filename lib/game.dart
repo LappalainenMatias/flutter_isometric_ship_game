@@ -22,6 +22,7 @@ class Game extends ChangeNotifier {
   late final ConcurrentRegionCreator _concurrentRegionCreator;
   late final DynamicGameObjectManager _dynamicGameObjectManager;
   int _verticesCount = 0;
+  int _amountOfGameObjects = 0;
 
   Game() {
     _regionCreationQueue = RegionCreationQueueImpl(_camera);
@@ -39,7 +40,7 @@ class Game extends ChangeNotifier {
     List<ui.Vertices> aboveWater = [];
     List<ui.Vertices> underWater = [];
     _verticesCount = 0;
-
+    _amountOfGameObjects = 0;
     _visibleRegions
         .getVisibleRegionsInDrawingOrder()
         .where((region) => !region.isEmpty())
@@ -52,6 +53,7 @@ class Game extends ChangeNotifier {
         underWater.add(verticeData.underWater!);
       }
       _verticesCount += region.getVerticesCount();
+      _amountOfGameObjects += region.getAllGameObjects().length;
     });
 
     return (underWater: underWater, aboveWater: aboveWater);
@@ -142,4 +144,8 @@ extension GameMapStatisticExtension on Game {
   }
 
   int get verticesCount => _verticesCount;
+
+  int amountOfGameObjects() {
+    return _amountOfGameObjects;
+  }
 }

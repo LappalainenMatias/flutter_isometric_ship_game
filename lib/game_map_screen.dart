@@ -2,9 +2,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
-import 'package:performance/performance.dart';
 import 'package:provider/provider.dart';
-
 import 'game.dart';
 import 'game_loop.dart';
 import 'game_map_painter.dart';

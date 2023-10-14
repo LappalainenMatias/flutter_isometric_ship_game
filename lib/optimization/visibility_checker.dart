@@ -1,5 +1,4 @@
 import 'dart:collection';
-
 import '../game_objects/static/ground/tile.dart';
 
 /// Goes through all tiles and sets their visibility.
@@ -7,7 +6,7 @@ import '../game_objects/static/ground/tile.dart';
 /// We do this for the right and top side as well
 /// This also hides tiles that are completele invisible
 /// This optimization can reduce vertices even by 90% in some cases.
-void visibilityChecker(List<Tile> tiles) {
+void visibilityChecker(List<Tile> tiles, int tileWidth) {
   HashSet<String> points = HashSet<String>();
   for (var tile in tiles) {
     var point = tile.isoCoordinate.toPoint();
@@ -21,9 +20,9 @@ void visibilityChecker(List<Tile> tiles) {
     var y = point.y.toInt();
     var z = tile.elevation.toInt();
 
-    var right = '$x,${y - 1},$z';
-    var left = '${x - 1},$y,$z';
-    var top = '$x,$y,${z + 1}';
+    var right = '$x,${y - tileWidth},$z';
+    var left = '${x - tileWidth},$y,$z';
+    var top = '$x,$y,${z + tileWidth}';
 
     tile.setVisibility(
         leftIsVisible: !points.contains(left),
