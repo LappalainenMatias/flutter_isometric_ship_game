@@ -4,6 +4,7 @@ import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/map/region/region.dart';
+import 'package:anki/map/region/region_creation/region_creator.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/optimization/visibility_checker.dart';
 import 'package:anki/textures/texture_coordinates.dart';
@@ -119,6 +120,7 @@ void main() {
     /// 512*512 tiles
     /// 1: 65, 63, 65
     /// 2: 59, 71, 62 (Simplified list size calculation)
+    /// 3: 118, 121, 119 (Added support for hiding cube sides)
   });
 
   test('Visiblity checker', () {
@@ -137,5 +139,18 @@ void main() {
     /// 1: 1977, 1959, 1955
     /// 2: 1260, 1243, 1265 (Changed set to hashset)
     /// 3: 24, 24, 24 (Changed from custom Point3D class to String)
+  });
+
+  test('GetAllGameObjects', () {
+    Region region = Region(const IsoCoordinate(0, 0), [], LevelOfDetail.zoomlevel_0);
+    RegionCreator regionCreator = RegionCreator();
+    region.update(regionCreator.create(32, 32, 0, 0, LevelOfDetail.zoomlevel_19));
+    Stopwatch stopwatch = Stopwatch()..start();
+    for (int i = 0; i < 1000; i++) {
+     var list = region.getStaticGameObjects();
+     int l = list.length;
+    }
+    stopwatch.stop();
+    print('GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
   });
 }

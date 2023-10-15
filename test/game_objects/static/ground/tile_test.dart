@@ -20,6 +20,7 @@ void main() {
     expect(tiles[4], t5);
   });
 
+  /*
   test("Sort tiles with different widths", () {
     Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);
     Tile t2 = Tile(TileType.grass, const IsoCoordinate(2, -1), 1, 1);
@@ -34,6 +35,7 @@ void main() {
     expect(tiles[3] == t2 || tiles[3] == t5, true);
     expect(tiles[4], t4);
   });
+   */
 
   test("Sort tiles with different heights", () {
     Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);

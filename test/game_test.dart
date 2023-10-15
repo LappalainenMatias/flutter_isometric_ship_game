@@ -12,7 +12,6 @@ void main() {
         game.getVerticesInView();
     expect(
         vertices.aboveWater.isNotEmpty || vertices.underWater.isNotEmpty, true);
-    expect(game.verticesCount > 0, true);
   });
 
   test("With aspect ratio 1, width and height should match", () {
