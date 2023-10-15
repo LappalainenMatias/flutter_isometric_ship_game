@@ -1,3 +1,4 @@
+import '../game_objects/dynamic/player.dart';
 import '../game_objects/game_object.dart';
 
 /// Does the defined actions when collision happens
@@ -14,6 +15,8 @@ class CollisionAction {
           _hide(collisions);
         case CollisionActionType.absorve:
           _absorve(collisions);
+        case CollisionActionType.moveAbove:
+          _moveAbove(collisions);
       }
     }
   }
@@ -35,6 +38,14 @@ class CollisionAction {
       }
     }
   }
+
+  void _moveAbove(List<GameObject> collisions) {
+    for (var colliding in collisions) {
+      if (gameObject is Player && gameObject is Growable) {
+        (gameObject as Player).elevation = colliding.getElevation() + 1;
+      }
+    }
+  }
 }
 
-enum CollisionActionType { hide, absorve }
+enum CollisionActionType { hide, absorve, moveAbove }
