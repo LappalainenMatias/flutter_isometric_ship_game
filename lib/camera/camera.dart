@@ -9,7 +9,7 @@ class Camera {
   final CameraMover _cameraMover = CameraMover();
   double _zoomLevel = 0.00005;
   final double _minWidth = 60;
-  final double _maxWidth = 1000000;
+  final double _maxWidth = 80000;
   double _aspectRatio = 1.0;
   LevelOfDetail _LOD = LevelOfDetail.zoomlevel_19;
 
