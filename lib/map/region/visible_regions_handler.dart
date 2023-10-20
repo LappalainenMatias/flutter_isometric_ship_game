@@ -40,13 +40,25 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     _addedRegionCoordinates = {};
     var currentLod = _camera.getLOD();
     for (var region in _sortedVisibleRegionsCurrentLOD) {
-      if (region.lod == currentLod &&
-          isInView(region.bottomCoordinate, _camera)) {
+      if (region.lod != currentLod || region.borders == null) {
+        continue;
+      }
+      if (regionIsInView(region)) {
         filtered.add(region);
         _addedRegionCoordinates.add(region.bottomCoordinate);
       }
     }
     _sortedVisibleRegionsCurrentLOD = filtered;
+  }
+
+  bool regionIsInView(Region region) {
+    if (region.borders == null) {
+      return false;
+    }
+    return isInView(region.borders!.top, _camera) ||
+        isInView(region.borders!.bottom, _camera) ||
+        isInView(region.borders!.left, _camera) ||
+        isInView(region.borders!.right, _camera);
   }
 
   @override
@@ -61,7 +73,8 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     int max = _sortedVisibleRegionsCurrentLOD.length;
     while (min < max) {
       int mid = min + ((max - min) >> 1);
-      if (newRegion.nearness() < _sortedVisibleRegionsCurrentLOD[mid].nearness()) {
+      if (newRegion.nearness() <
+          _sortedVisibleRegionsCurrentLOD[mid].nearness()) {
         max = mid;
       } else {
         min = mid + 1;
@@ -83,7 +96,8 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     while (_spiralIndex >= 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
       Region region = _map.getRegion(coordinate, _camera.getLOD());
-      if (!_addedRegionCoordinates.contains(region.bottomCoordinate)) {
+      if (!_addedRegionCoordinates.contains(region.bottomCoordinate) &&
+          regionIsInView(region)) {
         _addRegionInCorrectOrder(region);
         _addedRegionCoordinates.add(region.bottomCoordinate);
       }
@@ -105,7 +119,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     int bottom = bottomRight.isoY.round();
     int left = topLeft.isoX.round();
     int right = bottomRight.isoX.round();
-    int step = ((top - bottom).abs()) ~/ 20;
+    int step = ((top - bottom).abs()) ~/ 10;
 
     int width = right - left;
     int height = top - bottom;

@@ -49,7 +49,6 @@ class FinlandCreationRules extends MapCreationRules {
     return {
       TileType.grass: [
         NaturalItemProbability(NaturalItemType.rock, 0.02),
-        NaturalItemProbability(NaturalItemType.spruce, 0.02),
         NaturalItemProbability(NaturalItemType.birch, 0.04),
       ],
       TileType.sand: [
@@ -101,24 +100,18 @@ class SvalbardCreationRules extends MapCreationRules {
   @override
   Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
     return {
-      TileType.sand: [
-        NaturalItemProbability(NaturalItemType.rock, 0.03),
+      TileType.grass: [
+        NaturalItemProbability(NaturalItemType.birch, 0.01),
       ],
       TileType.deathGrass: [
-        NaturalItemProbability(NaturalItemType.rock, 0.05),
-      ],
-      TileType.rock: [
-        NaturalItemProbability(NaturalItemType.rock, 0.08),
-      ],
-      TileType.snow: [
-        NaturalItemProbability(NaturalItemType.rock, 0.02),
+        NaturalItemProbability(NaturalItemType.birch, 0.005),
       ],
     };
   }
 
   @override
   double amountOfWater() {
-    return 0.71;
+    return 0.6;
   }
 
   @override

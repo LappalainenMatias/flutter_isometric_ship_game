@@ -32,7 +32,7 @@ class Game extends ChangeNotifier {
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(_player);
     _player.collisionAction =
-        CollisionAction([CollisionActionType.absorve], _player);
+        CollisionAction([CollisionActionType.moveAbove], _player);
   }
 
   ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater})
@@ -53,7 +53,7 @@ class Game extends ChangeNotifier {
         underWater.add(verticeData.underWater!);
       }
       _verticesCount += region.getVerticesCount();
-      _amountOfGameObjects += region.getAllGameObjects().length;
+      _amountOfGameObjects += region.gameObjectsLength();
     });
 
     return (underWater: underWater, aboveWater: aboveWater);
@@ -114,7 +114,7 @@ class Game extends ChangeNotifier {
         joyStickX, joyStickY, _camera.getLOD().tileMinWidth.toDouble());
     _camera.center = _player.getIsoCoordinate();
     var collisions = findCollisions(
-        _dynamicGameObjectManager.regionOf(_player).getAllGameObjects(),
+        _dynamicGameObjectManager.regionOf(_player).getStaticGameObjects(),
         _player);
     _player.collisionAction?.execute(collisions);
     _player.isColliding = collisions.isNotEmpty;

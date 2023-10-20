@@ -61,10 +61,11 @@ class NoiseCreator {
         e += 0.03125 * _elevationNoise8.noise2(i * frequency8, j * frequency8);
 
         // Normalize values to 0 - 1
-        e = (e + 2) / 4;
+        e = (e + 1.5) / 4;
 
         //Makes terrain more interesting
         //e = pow(e, mapCreationRules.terrainSharpness()).toDouble();
+        /// Todo e is no normalized
         e = e - mapCreationRules.amountOfWater();
         e = e * mapCreationRules.peakToPeakAmplitude();
         elevationMap[x][y] = e.roundToDouble();

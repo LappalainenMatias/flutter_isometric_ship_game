@@ -94,6 +94,11 @@ class Player extends Growable {
     double newVolume = currentVolume + volume;
     sideWidth = pow(newVolume, 1 / 3).toDouble();
   }
+
+  @override
+  double getElevation() {
+    return elevation;
+  }
 }
 
 /// Todo we now have two movers. CameraMover and PlayerMover which are the same

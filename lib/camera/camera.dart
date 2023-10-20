@@ -7,7 +7,7 @@ import 'level_of_detail.dart';
 class Camera {
   IsoCoordinate center;
   final CameraMover _cameraMover = CameraMover();
-  double _zoomLevel = 0.00005;
+  double _zoomLevel = 0.0005;
   final double _minWidth = 60;
   final double _maxWidth = 80000;
   double _aspectRatio = 1.0;

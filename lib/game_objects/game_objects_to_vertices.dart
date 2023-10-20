@@ -3,52 +3,19 @@ import 'dart:typed_data';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/textures/texture_coordinates.dart';
-
-import '../collision/collision_box.dart';
 import '../dto/vertice_dto.dart';
-import '../utils/custom_color.dart';
 import '../coordinates/iso_coordinate.dart';
 import 'dynamic/player.dart';
 import 'game_object.dart';
 
 class BirchToVertices {
-  static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
-    int random = Random().nextInt(100);
-    if (random < 95) {
-      return _birch(isoCoordinate, elevation);
-    } else {
-      return _birchTrunk(isoCoordinate, elevation);
-    }
-  }
-
-  static VerticeDTO _birch(IsoCoordinate isoCoordinate, double elevation) {
-    var birch = _birchTrunk(isoCoordinate, elevation);
-    var trunk = _birchFoliage(isoCoordinate, elevation);
-    var position = birch.positions.toList()..addAll(trunk.positions.toList());
-    var textures = birch.textures.toList()..addAll(trunk.textures.toList());
-    return VerticeDTO(
-        Float32List.fromList(position), Float32List.fromList(textures));
-  }
-
-  static VerticeDTO _birchFoliage(
-      IsoCoordinate isoCoordinate, double elevation) {
+  static VerticeDTO leavesToVertices(IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      TileType.deathGrass,
-      isoCoordinate,
-      elevation + 1.00,
-      widthScale: 1.25,
-      heightScale: 3.5 * (Random().nextDouble() + 0.5),
-    );
+        TileType.snow, isoCoordinate, elevation);
   }
-
-  static VerticeDTO _birchTrunk(IsoCoordinate isoCoordinate, double elevation) {
+  static VerticeDTO trunkToVertices(IsoCoordinate isoCoordinate, double elevation) {
     return CubeVerticesCreator.toVertices(
-      TileType.deathGrass,
-      isoCoordinate,
-      elevation + 0.25,
-      widthScale: 0.30,
-      heightScale: 2.00 * (Random().nextDouble() + 0.5),
-    );
+        TileType.ice, isoCoordinate, elevation + 0);
   }
 }
 
@@ -60,51 +27,6 @@ class RockToVertices {
       elevation,
       widthScale: 0.6,
       heightScale: 0.35,
-    );
-  }
-}
-
-class SpruceToVertices {
-  static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
-    /// Todo we have to remove all the random stuff because the trees might get relocated
-    int random = Random().nextInt(100);
-    if (random < 95) {
-      return _spruce(isoCoordinate, elevation);
-    } else {
-      return _spruceTrunk(isoCoordinate, elevation);
-    }
-  }
-
-  static VerticeDTO _spruce(IsoCoordinate isoCoordinate, double elevation) {
-    var spruce = _spruceTrunk(isoCoordinate, elevation);
-    var trunk = _spruceFoliage(isoCoordinate, elevation);
-
-    /// Todo create a better way to do this.
-    var position = spruce.positions.toList()..addAll(trunk.positions.toList());
-    var textures = spruce.textures.toList()..addAll(trunk.textures.toList());
-    return VerticeDTO(
-        Float32List.fromList(position), Float32List.fromList(textures));
-  }
-
-  static VerticeDTO _spruceFoliage(
-      IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticesCreator.toVertices(
-      TileType.deathGrass,
-      isoCoordinate,
-      elevation + 1.00,
-      widthScale: (Random().nextDouble() / 5 + 1.0),
-      heightScale: 3.5 * (Random().nextDouble() + 0.5),
-    );
-  }
-
-  static VerticeDTO _spruceTrunk(
-      IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticesCreator.toVertices(
-      TileType.deathGrass,
-      isoCoordinate,
-      elevation + 0.25,
-      widthScale: 0.25,
-      heightScale: 2.0 * (Random().nextDouble() + 0.5),
     );
   }
 }
@@ -144,8 +66,6 @@ class PlayerToVertices {
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
 /// To optimize drawing we can set the three sides to be invisible.
 class CubeVerticesCreator {
-  static const CustomColor blueColor = CustomColor.fromARGB(255, 1, 46, 143);
-
   static VerticeDTO toVertices(
     TileType tileType,
     final IsoCoordinate isoCoordinate,
@@ -262,7 +182,7 @@ class CubeVerticesCreator {
 }
 
 /// We do not want to draw every game object individually (because it's slow).
-/// Here we combine all the the vertices of all the game objects into one.({VerticeDTO underWater, VerticeDTO aboveWater})
+/// Here we combine all the the vertices.({VerticeDTO underWater, VerticeDTO aboveWater})
 
 gameObjectsToVertices(List<GameObject> gameObjects) {
   int aboveWaterPositionsSize = 0;

@@ -7,7 +7,7 @@ import '../../../dto/vertice_dto.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 
-class Tile extends GameObject {
+class Tile extends Absortable {
   final TileType type;
   IsoCoordinate isoCoordinate;
   double elevation;
@@ -126,5 +126,15 @@ class Tile extends GameObject {
     topSideIsVisible = topIsVisible;
     rightSideIsVisible = rightIsVisible;
     vertices = TileToVertices.toVertices(this);
+  }
+
+  @override
+  double getElevation() {
+    return elevation;
+  }
+
+  @override
+  double size() {
+    return width * width * width.toDouble();
   }
 }

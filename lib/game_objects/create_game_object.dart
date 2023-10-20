@@ -1,5 +1,6 @@
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
+import 'package:anki/game_objects/static/natural_items/create_natural_item.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 
 import '../map/map_creation_rules.dart';
@@ -22,7 +23,7 @@ class TileCreator {
 }
 
 class NaturalItemCreator {
-  static NaturalItem? create(
+  static List<NaturalItemCube> create(
     TileType type,
     IsoCoordinate isoCoordinate,
     double elevation,
@@ -33,10 +34,12 @@ class NaturalItemCreator {
       for (var naturalItem in probabilities) {
         if (Random().nextDouble() < naturalItem.percentage) {
           // NaturalItems are top of the ground cubes, so we add 1 to the elevation
-          return NaturalItem(naturalItem.type, isoCoordinate, elevation + 1);
+          createBirchTree(isoCoordinate, elevation + 1);
+          /// Todo manage that trees are not drawn underwater
+          return createBirchTree(isoCoordinate, elevation + 1);
         }
       }
     }
-    return null;
+    return [];
   }
 }

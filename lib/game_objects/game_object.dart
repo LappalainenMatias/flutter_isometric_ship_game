@@ -4,6 +4,12 @@ import '../collision/collision_box.dart';
 import '../dto/vertice_dto.dart';
 
 abstract class GameObject implements Comparable<GameObject> {
+  /// The z coordinate of the game object.
+  /// The screen coordinate is defined by the elevation and IsoCoordinate
+  double getElevation();
+
+  /// x and y coordinates of the game object. This is not the screen coordinate.
+  /// The screen coordinate is calculated from the IsoCoordinate and elevation.
   IsoCoordinate getIsoCoordinate();
 
   /// Returns the data that is needed for drawing the game object.
@@ -70,9 +76,10 @@ abstract class GameObject implements Comparable<GameObject> {
 
   /// set all sides to false to hide game object compeletely
   /// todo make this more flexible because now the game object can only be a cube
-  void setVisibility({required bool leftIsVisible,
-    required bool topIsVisible,
-    required bool rightIsVisible});
+  void setVisibility(
+      {required bool leftIsVisible,
+      required bool topIsVisible,
+      required bool rightIsVisible});
 }
 
 abstract class Absortable extends GameObject {

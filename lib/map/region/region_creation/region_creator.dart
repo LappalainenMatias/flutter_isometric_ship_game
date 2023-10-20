@@ -18,11 +18,16 @@ class RegionCreator {
   List<GameObject> create(int w, int h, int x, int y, LevelOfDetail lod) {
     final (elevation, moisture) =
         noise.createComplexNoise(w, h, x, y, lod.tileMinWidth);
-    final tiles = _createTiles(x, y, elevation, moisture, lod.tileMinWidth);
-    visibilityChecker(tiles, lod.tileMinWidth);
-    /// Todo this removing might be something that we do not want to do in the future
-    tiles.removeWhere((element) => !element.isVisible());
-    return tiles..sort();
+    List<Tile> tiles = _createTiles(x, y, elevation, moisture, lod.tileMinWidth);
+    var allGameObjects = List<GameObject>.from(tiles);
+    visibilityChecker(allGameObjects, lod.tileMinWidth);
+    if (lod.containsNaturalItems) {
+      final naturalItems = _createNaturalItems(tiles);
+      allGameObjects.addAll(naturalItems);
+    }
+    visibilityChecker(allGameObjects, lod.tileMinWidth);
+    allGameObjects.removeWhere((element) => !element.isVisible());
+    return allGameObjects..sort();
   }
 
   List<Tile> _createTiles(
@@ -69,20 +74,20 @@ class RegionCreator {
     return tiles;
   }
 
-  List<NaturalItem> _createNaturalItems(List<Tile> tiles) {
-    List<NaturalItem> naturalItems = [];
+  List<GameObject> _createNaturalItems(List<Tile> tiles) {
+    List<NaturalItemCube> allNaturalItems = [];
     for (var tile in tiles) {
-      NaturalItem? naturalItem = NaturalItemCreator.create(
+      List<NaturalItemCube> naturalItemCubes = NaturalItemCreator.create(
         tile.type,
         tile.isoCoordinate,
         tile.elevation,
         _mapCreationRules.naturalItemProbabilities(),
       );
 
-      if (naturalItem != null) {
-        naturalItems.add(naturalItem);
+      if (naturalItemCubes.isNotEmpty) {
+        allNaturalItems.addAll(naturalItemCubes);
       }
     }
-    return naturalItems;
+    return allNaturalItems;
   }
 }

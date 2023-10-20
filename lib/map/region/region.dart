@@ -1,4 +1,6 @@
+import 'dart:collection';
 import 'dart:ui' as ui;
+import 'package:anki/coordinates/borders.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/map/region/region_to_vertices.dart';
 import '../../camera/level_of_detail.dart';
@@ -15,9 +17,11 @@ class Region implements Comparable<Region> {
   late ui.Vertices? _aboveWaterVertices;
   late ui.Vertices? _underWaterVertices;
   LevelOfDetail lod;
+  Borders? borders;
 
   Region(this.bottomCoordinate, this._staticGameObjects, this.lod) {
     _updateVertices();
+    _updateBorders();
   }
 
   void addDynamicGameObject(GameObject gameObject) {
@@ -67,6 +71,13 @@ class Region implements Comparable<Region> {
   void update(List<GameObject> staticGameObjects) {
     _staticGameObjects = staticGameObjects;
     _updateVertices();
+    _updateBorders();
+  }
+
+  void _updateBorders() {
+    if (_staticGameObjects.isNotEmpty) {
+      borders = createBorders(_staticGameObjects);
+    }
   }
 
   void removeDynamicGameObject(GameObject gameObject) {
@@ -74,10 +85,11 @@ class Region implements Comparable<Region> {
     _updateVertices();
   }
 
-  List<GameObject> getAllGameObjects() {
-    return [
-      ..._staticGameObjects,
-      ..._dynamicGameObjects,
-    ];
+  List<GameObject> getStaticGameObjects() {
+    return _staticGameObjects;
+  }
+
+  int gameObjectsLength() {
+    return _staticGameObjects.length + _dynamicGameObjects.length;
   }
 }

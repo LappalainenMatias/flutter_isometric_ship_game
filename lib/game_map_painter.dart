@@ -38,6 +38,7 @@ class GameMapPainter extends CustomPainter {
     for (var v in vertices.aboveWater) {
       canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
+    //_showSearchedRegionCoordinates(canvas);
   }
 
   void _addTexture(Paint myPaint) {
@@ -78,7 +79,7 @@ class GameMapPainter extends CustomPainter {
   /// searched for regions.
   void _showSearchedRegionCoordinates(Canvas canvas) {
     List<IsoCoordinate> points = game.getSprilalOfSearchedRegions();
-    double width = game.viewWidth / 250;
+    double width = game.viewWidth / 150;
     for (var p in points) {
       canvas.drawCircle(
         Offset(p.isoX, p.isoY),

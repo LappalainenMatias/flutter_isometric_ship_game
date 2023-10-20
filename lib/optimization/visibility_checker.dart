@@ -1,4 +1,7 @@
 import 'dart:collection';
+import 'package:anki/game.dart';
+import 'package:anki/game_objects/game_object.dart';
+
 import '../game_objects/static/ground/tile.dart';
 
 /// Goes through all tiles and sets their visibility.
@@ -6,19 +9,19 @@ import '../game_objects/static/ground/tile.dart';
 /// We do this for the right and top side as well
 /// This also hides tiles that are completele invisible
 /// This optimization can reduce vertices even by 90% in some cases.
-void visibilityChecker(List<Tile> tiles, int tileWidth) {
+void visibilityChecker(List<GameObject> gameObjects, int tileWidth) {
   HashSet<String> points = HashSet<String>();
-  for (var tile in tiles) {
-    var point = tile.isoCoordinate.toPoint();
-    var elevation = tile.elevation.toInt();
+  for (var tile in gameObjects) {
+    var point = tile.getIsoCoordinate().toPoint();
+    var elevation = tile.getElevation().toInt();
     points.add('${point.x.toInt()},${point.y.toInt()},$elevation');
   }
 
-  for (var tile in tiles) {
-    var point = tile.isoCoordinate.toPoint();
+  for (var tile in gameObjects) {
+    var point = tile.getIsoCoordinate().toPoint();
     var x = point.x.toInt();
     var y = point.y.toInt();
-    var z = tile.elevation.toInt();
+    var z = tile.getElevation().toInt();
 
     var right = '$x,${y - tileWidth},$z';
     var left = '${x - tileWidth},$y,$z';
