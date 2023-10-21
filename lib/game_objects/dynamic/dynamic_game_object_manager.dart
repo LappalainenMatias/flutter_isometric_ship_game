@@ -1,6 +1,3 @@
-import 'package:anki/camera/level_of_detail.dart';
-import 'package:anki/game.dart';
-import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/map/map.dart';
 import '../../camera/camera.dart';
 import '../../map/region/region.dart';

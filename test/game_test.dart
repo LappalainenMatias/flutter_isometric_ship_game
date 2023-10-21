@@ -4,14 +4,12 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Map should have vertices", () {
+  test("Game screen should visible things", () {
     Game game = Game();
-    game.updateVisibleRegions(); // Adds items to the build queue
-    game.addGameObjectsToRegion(); // Builds one visible region
-    ({List<Vertices> underWater, List<Vertices> aboveWater}) vertices =
-        game.getVerticesInView();
-    expect(
-        vertices.aboveWater.isNotEmpty || vertices.underWater.isNotEmpty, true);
+    game.updateVisibleRegions();
+    game.addGameObjectsToRegion();
+    var data = game.getAtlasData();
+    expect(data.aboveWater.isNotEmpty || data.underWater.isNotEmpty, true);
   });
 
   test("With aspect ratio 1, width and height should match", () {

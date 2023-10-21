@@ -1,4 +1,3 @@
-import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
@@ -65,9 +64,7 @@ void main() {
       const IsoCoordinate.fromIso(2, 2),
       2,
       1,
-      leftSideIsVisible: false,
-      rightSideIsVisible: false,
-      topSideIsVisible: false,
+      isVisible: false,
     );
     List encoded = tile.gameObjectToList();
     Tile decoded = Tile.fromList(encoded);

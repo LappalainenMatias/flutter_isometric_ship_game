@@ -9,9 +9,9 @@ void main() {
   test("Create borders from game objects", () {
     var gameObjects = <GameObject>[
       Tile(TileType.grass, const IsoCoordinate.fromIso(5, 10), 1, 1),
-      Tile(TileType.grass, const IsoCoordinate.fromIso(10, 5), 0, 1),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(10, 5), -1, 1),
       Tile(TileType.grass, const IsoCoordinate.fromIso(5, -10), -1, 1),
-      Tile(TileType.grass, const IsoCoordinate.fromIso(-10, 5), 0, 1),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(-10, 5), 1, 1),
       Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 0, 1),
     ];
     var borders = createBorders(gameObjects);
@@ -23,7 +23,9 @@ void main() {
     /// bottom is - (1, 1) because of the elevation
     expect(borders.bottom,
         const IsoCoordinate.fromIso(5, -10) + const IsoCoordinate(-1, -1));
-    expect(borders.left, const IsoCoordinate.fromIso(-10, 5));
-    expect(borders.right, const IsoCoordinate.fromIso(10, 5));
+    expect(borders.left,
+        const IsoCoordinate.fromIso(-10, 5) + const IsoCoordinate(1, 1));
+    expect(borders.right,
+        const IsoCoordinate.fromIso(10, 5) + const IsoCoordinate(-1, -1));
   });
 }

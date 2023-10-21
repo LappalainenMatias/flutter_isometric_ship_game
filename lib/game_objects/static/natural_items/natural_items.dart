@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:convert';
+import 'dart:typed_data';
 import '../../../collision/collision_box.dart';
 import '../../../coordinates/iso_coordinate.dart';
 import '../../../dto/vertice_dto.dart';
@@ -14,28 +15,16 @@ class NaturalItemCube extends GameObject {
   final double elevation;
   late final CollisionBox collisionBox;
   late VerticeDTO vertices;
-  bool _leftSideIsVisible = true;
-  bool _rightSideIsVisible = true;
-  bool _topSideIsVisible = true;
+  bool _isVisible = true;
 
-  NaturalItemCube(this.type, this.isoCoordinate, this.elevation) {
-    vertices = type.toVertices!(isoCoordinate, elevation);
+  NaturalItemCube(this.type, this.isoCoordinate, this.elevation,
+      {VerticeDTO? vertices,
+      isVisible = true}) {
+    _isVisible = isVisible;
+    this.vertices = type.toVertices!(this);
 
     /// Todo fix the collision box size
     collisionBox = CollisionBox(isoCoordinate, 8, 8);
-  }
-
-  factory NaturalItemCube.fromList(String json) {
-    final data = jsonDecode(json);
-    List<String> point = data['isoCoordinate']!.split(',');
-    return NaturalItemCube(
-      NaturalItemPart.values.byName(data['type']),
-      IsoCoordinate.fromIso(
-        double.parse(point[0]),
-        double.parse(point[1]),
-      ),
-      data['elevation'] as double,
-    );
   }
 
   @override
@@ -67,20 +56,20 @@ class NaturalItemCube extends GameObject {
     return collisionBox;
   }
 
-  @override
-  String encode() {
-    return jsonEncode({
-      'gameObjectType': 'NaturalItem',
-      'type': type.name,
-      'isoCoordinate': '${isoCoordinate.isoX},${isoCoordinate.isoY}',
-      'elevation': elevation,
-    });
-  }
-
-  @override
-  List gameObjectToList() {
-    // TODO: implement gameObjectToList
-    throw UnimplementedError();
+  factory NaturalItemCube.fromList(List list) {
+    return NaturalItemCube(
+      NaturalItemPart.values.byName(list[1]),
+      IsoCoordinate.fromIso(
+        list[2],
+        list[3],
+      ),
+      list[4],
+      vertices: VerticeDTO(
+        (list[5][0] as Float32List),
+        (list[5][1] as Float32List),
+      ),
+      isVisible: list[6],
+    );
   }
 
   @override
@@ -90,22 +79,33 @@ class NaturalItemCube extends GameObject {
 
   @override
   bool isVisible() {
-    return _leftSideIsVisible || _rightSideIsVisible || _topSideIsVisible;
+    return _isVisible;
   }
 
   @override
-  void setVisibility(
-      {required bool leftIsVisible,
-      required bool topIsVisible,
-      required bool rightIsVisible}) {
-    _leftSideIsVisible = leftIsVisible;
-    _topSideIsVisible = rightIsVisible;
-    _rightSideIsVisible = topIsVisible;
+  void setVisibility(bool isVisible) {
+    _isVisible = isVisible;
   }
 
   @override
   double getElevation() {
     return elevation;
+  }
+
+  @override
+  List gameObjectToList() {
+    return [
+      "NaturalItem",
+      type.name,
+      isoCoordinate.isoX,
+      isoCoordinate.isoY,
+      elevation,
+      [
+        vertices.positions,
+        vertices.textures,
+      ],
+      _isVisible,
+    ];
   }
 }
 

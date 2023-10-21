@@ -14,15 +14,17 @@ class Tile extends Absortable {
   late VerticeDTO vertices;
   int width;
   late final CollisionBox collisionBox;
-  bool leftSideIsVisible = true;
-  bool rightSideIsVisible = true;
-  bool topSideIsVisible = true;
+  bool _isVisible = true;
 
-  Tile(this.type, this.isoCoordinate, this.elevation, this.width,
-      {VerticeDTO? vertices,
-      this.leftSideIsVisible = true,
-      this.rightSideIsVisible = true,
-      this.topSideIsVisible = true}) {
+  Tile(
+    this.type,
+    this.isoCoordinate,
+    this.elevation,
+    this.width, {
+    VerticeDTO? vertices,
+    bool isVisible = true,
+  }) {
+    _isVisible = isVisible;
     collisionBox =
         CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
     this.vertices = vertices ?? TileToVertices.toVertices(this);
@@ -46,9 +48,7 @@ class Tile extends Absortable {
         (list[6][0] as Float32List),
         (list[6][1] as Float32List),
       ),
-      leftSideIsVisible: list[7],
-      topSideIsVisible: list[8],
-      rightSideIsVisible: list[9],
+      isVisible: list[7],
     );
   }
 
@@ -66,9 +66,7 @@ class Tile extends Absortable {
         vertices.positions,
         vertices.textures,
       ],
-      leftSideIsVisible,
-      topSideIsVisible,
-      rightSideIsVisible,
+      _isVisible,
     ];
   }
 
@@ -109,22 +107,15 @@ class Tile extends Absortable {
 
   @override
   bool isVisible() {
-    return leftSideIsVisible || topSideIsVisible || rightSideIsVisible;
+    return _isVisible;
   }
 
   @override
-  void setVisibility(
-      {required bool leftIsVisible,
-      required bool topIsVisible,
-      required bool rightIsVisible}) {
-    if (leftIsVisible == leftSideIsVisible &&
-        rightIsVisible == rightSideIsVisible &&
-        topIsVisible == topSideIsVisible) {
+  void setVisibility(bool isVisible) {
+    if (_isVisible == isVisible) {
       return;
     }
-    leftSideIsVisible = leftIsVisible;
-    topSideIsVisible = topIsVisible;
-    rightSideIsVisible = rightIsVisible;
+    _isVisible = isVisible;
     vertices = TileToVertices.toVertices(this);
   }
 

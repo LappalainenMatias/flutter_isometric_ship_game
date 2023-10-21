@@ -7,7 +7,6 @@ import 'package:anki/map/region/region.dart';
 import 'package:anki/map/region/region_creation/region_creator.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/optimization/visibility_checker.dart';
-import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -67,8 +66,7 @@ void main() {
     IsoCoordinate bottomCoordinate = const IsoCoordinate(0, 0);
 
     Stopwatch stopwatch = Stopwatch()..start();
-    Region region =
-        Region(bottomCoordinate, gameObjects, LevelOfDetail.zoomlevel_0);
+    Region(bottomCoordinate, gameObjects, LevelOfDetail.zoomlevel_0);
     print("Creating region took ${stopwatch.elapsedMilliseconds} ms");
 
     /// Create 62x62 gameobjects and make region out of them
@@ -111,7 +109,7 @@ void main() {
 
     Stopwatch stopwatch = Stopwatch()..start();
 
-    var res = gameObjectsToVertices(gameObjects);
+    gameObjectsToVertices(gameObjects);
 
     stopwatch.stop();
 
@@ -147,8 +145,7 @@ void main() {
     region.update(regionCreator.create(32, 32, 0, 0, LevelOfDetail.zoomlevel_19));
     Stopwatch stopwatch = Stopwatch()..start();
     for (int i = 0; i < 1000; i++) {
-     var list = region.getStaticGameObjects();
-     int l = list.length;
+     region.getStaticGameObjects();
     }
     stopwatch.stop();
     print('GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');

@@ -28,7 +28,9 @@ class GameMap {
       /// Todo I think we should also add regions which are empty to the queue
       /// It not problem now because we are not clearing the regions
       _regionsBylod[lod.index][point] = Region.empty(isoCoordinate, lod);
-      _regionCreationQueue.add(AddGameObjectsTo(lod, isoCoordinate));
+      if (!_tooManyRegionsExist()) {
+        _regionCreationQueue.add(AddGameObjectsTo(lod, isoCoordinate));
+      }
     }
 
     return _regionsBylod[lod.index][point]!;

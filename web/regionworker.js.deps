@@ -25,6 +25,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/game_objects_to_vertices.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/ground/tile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/ground/tile_type.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/natural_items/create_natural_item.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/natural_items/natural_items.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/map_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/jsregionworker.dart
@@ -32,7 +33,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_coordinates.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/utils/custom_color.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_rects.dart
 org-dartlang-sdk:///lib/_http/crypto.dart
 org-dartlang-sdk:///lib/_http/embedder_config.dart
 org-dartlang-sdk:///lib/_http/http.dart

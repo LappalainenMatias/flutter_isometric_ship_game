@@ -23,8 +23,7 @@ class CollisionAction {
 
   void _hide(List<GameObject> collisions) {
     for (var colliding in collisions) {
-      colliding.setVisibility(
-          leftIsVisible: false, topIsVisible: false, rightIsVisible: false);
+      colliding.setVisibility(false);
     }
   }
 
@@ -33,8 +32,7 @@ class CollisionAction {
       if (colliding is Absortable && gameObject is Growable) {
         var volume = colliding.size();
         (gameObject as Growable).addVolume(volume);
-        colliding.setVisibility(
-            leftIsVisible: false, topIsVisible: false, rightIsVisible: false);
+        colliding.setVisibility(false);
       }
     }
   }

@@ -68,6 +68,8 @@ class Camera {
   double get zoomLevel => _zoomLevel;
 
   void _updateLOD() {
+    _LOD = LevelOfDetail.values.first;
+    return;
     double maxSide = max(width(), height());
     int size = 400;
     for (LevelOfDetail lod in LevelOfDetail.values) {

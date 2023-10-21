@@ -1,5 +1,6 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
+import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 import '../collision/collision_box.dart';
 import '../dto/vertice_dto.dart';
 
@@ -19,8 +20,9 @@ abstract class GameObject implements Comparable<GameObject> {
   /// If object has larger elevation it is drawn last because
   /// it is on top of the other game objects.
   /// If object has smaller distance it is drawn last because
-  /// it is closer to the camera.
-  ({double distance, double elevation}) nearness();
+  /// it is closer to the camera.({double distance, double elevation})
+
+  nearness();
 
   bool isUnderWater();
 
@@ -62,7 +64,7 @@ abstract class GameObject implements Comparable<GameObject> {
   static GameObject gameObjectFromList(List gameObjectData) {
     switch (gameObjectData[0] as String) {
       case 'NaturalItem':
-        throw Exception("Implement");
+        return NaturalItemCube.fromList(gameObjectData);
       case 'Tile':
         return Tile.fromList(gameObjectData);
       case 'Player':
@@ -74,12 +76,8 @@ abstract class GameObject implements Comparable<GameObject> {
   /// If false then gameObject should not be drawn
   bool isVisible();
 
-  /// set all sides to false to hide game object compeletely
-  /// todo make this more flexible because now the game object can only be a cube
-  void setVisibility(
-      {required bool leftIsVisible,
-      required bool topIsVisible,
-      required bool rightIsVisible});
+  /// If false then gameObject will not be drawn
+  void setVisibility(bool isVisible);
 }
 
 abstract class Absortable extends GameObject {

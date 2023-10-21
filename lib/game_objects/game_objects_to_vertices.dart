@@ -1,27 +1,31 @@
-import 'dart:math';
 import 'dart:typed_data';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
+import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 import 'package:anki/textures/texture_coordinates.dart';
+import 'package:anki/textures/texture_rects.dart';
 import '../dto/vertice_dto.dart';
 import '../coordinates/iso_coordinate.dart';
 import 'dynamic/player.dart';
 import 'game_object.dart';
 
 class BirchToVertices {
-  static VerticeDTO leavesToVertices(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticesCreator.toVertices(
-        TileType.snow, isoCoordinate, elevation);
+  static VerticeDTO leavesToVertices(NaturalItemCube naturalItemCube) {
+    return CubeVerticesCreator.toAtlas(
+        TileType.snow, naturalItemCube.isoCoordinate, naturalItemCube.elevation,
+        isVisible: naturalItemCube.isVisible());
   }
-  static VerticeDTO trunkToVertices(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticesCreator.toVertices(
-        TileType.ice, isoCoordinate, elevation + 0);
+
+  static VerticeDTO trunkToVertices(NaturalItemCube naturalItemCube) {
+    return CubeVerticesCreator.toAtlas(
+        TileType.ice, naturalItemCube.isoCoordinate, naturalItemCube.elevation,
+        isVisible: naturalItemCube.isVisible());
   }
 }
 
 class RockToVertices {
   static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticesCreator.toVertices(
+    return CubeVerticesCreator.toAtlas(
       TileType.deathGrass,
       isoCoordinate,
       elevation,
@@ -33,22 +37,20 @@ class RockToVertices {
 
 class TileToVertices {
   static VerticeDTO toVertices(Tile tile) {
-    return CubeVerticesCreator.toVertices(
+    return CubeVerticesCreator.toAtlas(
       tile.type,
       tile.isoCoordinate,
       tile.elevation,
       widthScale: tile.width.toDouble(),
       heightScale: tile.width.toDouble(),
-      leftSideVisible: tile.leftSideIsVisible,
-      topSideVisible: tile.topSideIsVisible,
-      rightSideVisible: tile.rightSideIsVisible,
+      isVisible: tile.isVisible(),
     );
   }
 }
 
 class PlayerToVertices {
   static VerticeDTO toVertices(Player player) {
-    return CubeVerticesCreator.toVertices(
+    return CubeVerticesCreator.toAtlas(
       player.isColliding ? TileType.ice : TileType.deathGrass,
       player.isoCoordinate,
       player.elevation,
@@ -66,6 +68,28 @@ class PlayerToVertices {
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
 /// To optimize drawing we can set the three sides to be invisible.
 class CubeVerticesCreator {
+  static VerticeDTO toAtlas(
+    TileType tileType,
+    final IsoCoordinate isoCoordinate,
+    final double z, {
+    final double heightScale = 1,
+    final double widthScale = 1,
+    final bool isVisible = true,
+  }) {
+    final cenBot = isoCoordinate + IsoCoordinate(z, z);
+    final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
+    final lefTop = cenCen + IsoCoordinate(0, widthScale);
+    final cenTop = lefTop + IsoCoordinate(widthScale, 0);
+    final topLeftCorner = IsoCoordinate.fromIso(lefTop.isoX, cenTop.isoY);
+    Float32List rstTransforms = Float32List(4);
+    rstTransforms[0] = -0.025; // scale
+    rstTransforms[1] = 0; // rotation
+    rstTransforms[2] = topLeftCorner.isoX;
+    rstTransforms[3] = topLeftCorner.isoY;
+    var rects = getTileTextureCoordinatesRect(tileType);
+    return VerticeDTO(rstTransforms, rects);
+  }
+
   static VerticeDTO toVertices(
     TileType tileType,
     final IsoCoordinate isoCoordinate,

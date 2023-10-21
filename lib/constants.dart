@@ -6,4 +6,4 @@
 const int regionSideWidth = 20;
 
 /// Amount of regions the game can have before it starts removing regions.
-const int maxRegionCount = 100;
+const int maxRegionCount = 10000000;

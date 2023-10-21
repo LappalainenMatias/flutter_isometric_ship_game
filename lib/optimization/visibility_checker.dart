@@ -1,8 +1,5 @@
 import 'dart:collection';
-import 'package:anki/game.dart';
 import 'package:anki/game_objects/game_object.dart';
-
-import '../game_objects/static/ground/tile.dart';
 
 /// Goes through all tiles and sets their visibility.
 /// If there is a tile on the left side of the tile, we hide the left side of the tile
@@ -27,9 +24,8 @@ void visibilityChecker(List<GameObject> gameObjects, int tileWidth) {
     var left = '${x - tileWidth},$y,$z';
     var top = '$x,$y,${z + tileWidth}';
 
-    tile.setVisibility(
-        leftIsVisible: !points.contains(left),
-        topIsVisible: !points.contains(top),
-        rightIsVisible: !points.contains(right));
+    tile.setVisibility(!(points.contains(left) &&
+        points.contains(top) &&
+        points.contains(right)));
   }
 }

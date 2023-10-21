@@ -24,8 +24,7 @@ class ConcurrentRegionCreator {
   }
 
   void _webAddGameObjects(Region region) async {
-    Point<int> regionCoordinate =
-        isoCoordinateToRegionPoint(region.bottomCoordinate);
+    var regionCoordinate = isoCoordinateToRegionPoint(region.bottomCoordinate);
 
     /// This part is concurrent
     var result = await JsIsolatedWorker().run(

@@ -1,4 +1,4 @@
-import 'dart:collection';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:anki/coordinates/borders.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
@@ -16,11 +16,16 @@ class Region implements Comparable<Region> {
   List<GameObject> _staticGameObjects;
   late ui.Vertices? _aboveWaterVertices;
   late ui.Vertices? _underWaterVertices;
+  late Float32List underWaterrstTransforms;
+  late Float32List underWaterRects;
+  late Float32List aboveWaterRstTransforms;
+  late Float32List aboveWaterRects;
   LevelOfDetail lod;
   Borders? borders;
 
   Region(this.bottomCoordinate, this._staticGameObjects, this.lod) {
-    _updateVertices();
+    //_updateVertices();
+    _updateRstTransforms();
     _updateBorders();
   }
 
@@ -36,11 +41,38 @@ class Region implements Comparable<Region> {
     return Region(bottomCoordinate, [], lod);
   }
 
+  ({
+    Float32List rstTransformsUnderWater,
+    Float32List rectsUnderWater,
+    Float32List rstTransformsAboveWater,
+    Float32List rectsAboveWater,
+  }) getRstTransformsAndRects() {
+    if (_dynamicGameObjects.isNotEmpty) {
+      _updateRstTransforms();
+    }
+    return (
+      rstTransformsUnderWater: underWaterrstTransforms,
+      rectsUnderWater: underWaterRects,
+      rstTransformsAboveWater: aboveWaterRstTransforms,
+      rectsAboveWater: aboveWaterRects
+    );
+  }
+
   ({ui.Vertices? aboveWater, ui.Vertices? underWater}) getVertices() {
     if (_dynamicGameObjects.isNotEmpty) {
       _updateVertices();
     }
     return (aboveWater: _aboveWaterVertices, underWater: _underWaterVertices);
+  }
+
+  void _updateRstTransforms() {
+    final data =
+        RegionToRstTransformsAndRects.toAtlasData(_staticGameObjects, _dynamicGameObjects);
+    underWaterrstTransforms = data.underWaterRstTransforms;
+    underWaterRects = data.underWaterRects;
+    aboveWaterRstTransforms = data.aboveWaterRstTransforms;
+    aboveWaterRects = data.aboveWaterRects;
+    _verticesCount = 0;
   }
 
   void _updateVertices() {
@@ -70,7 +102,8 @@ class Region implements Comparable<Region> {
 
   void update(List<GameObject> staticGameObjects) {
     _staticGameObjects = staticGameObjects;
-    _updateVertices();
+    _updateRstTransforms();
+    //_updateVertices();
     _updateBorders();
   }
 
@@ -82,7 +115,8 @@ class Region implements Comparable<Region> {
 
   void removeDynamicGameObject(GameObject gameObject) {
     _dynamicGameObjects.remove(gameObject);
-    _updateVertices();
+    //_updateVertices();
+    _updateRstTransforms();
   }
 
   List<GameObject> getStaticGameObjects() {

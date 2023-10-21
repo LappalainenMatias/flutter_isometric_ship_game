@@ -1,9 +1,6 @@
-import 'dart:collection';
 import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
-
 import '../../camera/camera.dart';
-import '../../coordinates/coordinate_utils.dart';
 
 abstract class RegionCreationQueue {
   /// Returns the region we should create next

@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'coordinates/iso_coordinate.dart';
 import 'game.dart';
 import 'game_loop.dart';
@@ -27,10 +27,10 @@ class GameMapPainter extends CustomPainter {
     _waterShader.setFloat(0, _timePassed);
 
     _transformations(canvas, size);
-
+    _drawAtlas(canvas, size);
+    return;
     /// Everything gets drawn here
-    ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater}) vertices =
-        game.getVerticesInView();
+    var vertices = game.getVerticesInView();
     for (var v in vertices.underWater) {
       canvas.drawVertices(v, BlendMode.dst, _landPaint);
     }
@@ -39,6 +39,35 @@ class GameMapPainter extends CustomPainter {
       canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
     }
     //_showSearchedRegionCoordinates(canvas);
+  }
+
+  void _drawAtlas(Canvas canvas, Size size) {
+    var atlasData = game.getAtlasData();
+    for (var data in atlasData.underWater) {
+      canvas.drawRawAtlas(
+        textureImage,
+        data.$1,
+        data.$2,
+        null,
+        null,
+        data.$3,
+        _underWaterPaint,
+      );
+    }
+    _paintWaterPlane(canvas, size);
+    for (var data in atlasData.aboveWater) {
+      canvas.drawRawAtlas(
+        textureImage,
+        data.$1,
+        data.$2,
+        null,
+        null,
+        data.$3,
+        _landPaint,
+      );
+      canvas.drawRect(data.$3, Paint()..color = Colors.red.withOpacity(0.2));
+    }
+    canvas.scale(1000, -1000);
   }
 
   void _addTexture(Paint myPaint) {
@@ -84,7 +113,7 @@ class GameMapPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(p.isoX, p.isoY),
         width,
-        Paint()..color = Color(0xFFBD3838),
+        Paint()..color = const Color(0xFFBD3838),
       );
     }
   }

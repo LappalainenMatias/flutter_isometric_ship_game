@@ -1,3 +1,4 @@
+import 'dart:ui';
 import '../game_objects/game_object.dart';
 import 'iso_coordinate.dart';
 
@@ -12,9 +13,13 @@ class Borders {
   IsoCoordinate right;
 
   Borders(this.top, this.bottom, this.left, this.right);
+  Rect getRect() {
+    return Rect.fromLTRB(left.isoX, top.isoY, right.isoX, bottom.isoY);
+  }
 }
 
 Borders createBorders(List<GameObject> gameObjects) {
+  assert(gameObjects.isNotEmpty);
   var elevation = IsoCoordinate(
       gameObjects[0].getElevation(), gameObjects[0].getElevation());
   var top = gameObjects[0].getIsoCoordinate() + elevation;

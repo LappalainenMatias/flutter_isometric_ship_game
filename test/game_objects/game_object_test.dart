@@ -44,14 +44,14 @@ void main() {
     expect(gameObjects[4], item5);
   });
 
-  test("Change game objects to vertices", () {
+  test("Change game objects to draw atlas data", () {
     List<GameObject> gameObjects = [
       Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1),
       Tile(TileType.grass, const IsoCoordinate(-1, -1), -1, 2),
     ];
     ({VerticeDTO aboveWater, VerticeDTO underWater}) vertices =
         gameObjectsToVertices(gameObjects);
-    expect(vertices.underWater.positions.length, 36);
-    expect(vertices.aboveWater.positions.length, 36);
+    expect(vertices.underWater.positions.length, 4);
+    expect(vertices.aboveWater.positions.length, 4);
   });
 }

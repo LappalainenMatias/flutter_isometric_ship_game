@@ -1,3 +1,4 @@
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/collision/collision_detector.dart';
@@ -33,6 +34,30 @@ class Game extends ChangeNotifier {
     _dynamicGameObjectManager.addDynamicGameObject(_player);
     _player.collisionAction =
         CollisionAction([CollisionActionType.moveAbove], _player);
+  }
+
+  ({List<(Float32List rstTransformsUnderWater, Float32List rectsUnderWater, Rect cullingRect)> underWater,
+  List<(Float32List rstTransformsAboveWater, Float32List rectsAboveWater, Rect cullingRect)> aboveWater})
+  getAtlasData([LevelOfDetail? levelOfDetail]) {
+    List<(Float32List rstTransformsUnderWater,
+        Float32List rectsUnderWater, Rect cullingRect)> underWater = [];
+    List<(Float32List rstTransformsUnderWater,
+        Float32List rectsUnderWater, Rect cullingRect)> aboveWater = [];
+    _verticesCount = 0;
+    _amountOfGameObjects = 0;
+    _visibleRegions
+        .getVisibleRegionsInDrawingOrder()
+        .where((region) => !region.isEmpty())
+        .forEach((region) {
+      var data = region.getRstTransformsAndRects();
+      Rect cullingRect = region.borders!.getRect();
+      underWater.add((data.rstTransformsUnderWater, data.rectsUnderWater, cullingRect));
+      aboveWater.add((data.rstTransformsAboveWater, data.rectsAboveWater, cullingRect));
+      _verticesCount += region.getVerticesCount();
+      _amountOfGameObjects += region.gameObjectsLength();
+    });
+
+    return (underWater: underWater, aboveWater: aboveWater);
   }
 
   ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater})
