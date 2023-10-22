@@ -9,15 +9,14 @@ class GameMapPainter extends CustomPainter {
   final GameLoop gameLoop;
   final Game game;
   final ui.FragmentShader _waterShader;
-  final _landPaint = Paint()..style = PaintingStyle.fill;
-  final _underWaterPaint = Paint()..style = PaintingStyle.fill;
+  final _paint = Paint()..style = PaintingStyle.fill;
+  final _paintWithWaterShader = Paint()..style = PaintingStyle.fill;
   double _timePassed = 0;
   ui.Image textureImage;
 
   GameMapPainter(this._waterShader, this.gameLoop, this.game, this.textureImage)
       : super(repaint: gameLoop) {
-    _addTexture(_landPaint);
-    _addWaterShader(_underWaterPaint);
+    _addWaterShader(_paintWithWaterShader);
   }
 
   @override
@@ -27,22 +26,10 @@ class GameMapPainter extends CustomPainter {
     _waterShader.setFloat(0, _timePassed);
 
     _transformations(canvas, size);
-    _drawAtlas(canvas, size);
-    return;
-    /// Everything gets drawn here
-    var vertices = game.getVerticesInView();
-    for (var v in vertices.underWater) {
-      canvas.drawVertices(v, BlendMode.dst, _landPaint);
-    }
-    _paintWaterPlane(canvas, size);
-    for (var v in vertices.aboveWater) {
-      canvas.drawVertices(v, BlendMode.srcOver, _landPaint);
-    }
-    //_showSearchedRegionCoordinates(canvas);
-  }
 
-  void _drawAtlas(Canvas canvas, Size size) {
     var atlasData = game.getAtlasData();
+
+    /// Draw under water things
     for (var data in atlasData.underWater) {
       canvas.drawRawAtlas(
         textureImage,
@@ -51,10 +38,20 @@ class GameMapPainter extends CustomPainter {
         null,
         null,
         data.$3,
-        _underWaterPaint,
+        _paint,
       );
     }
-    _paintWaterPlane(canvas, size);
+
+    /// Draw water plane
+    canvas.drawRect(
+      Rect.fromPoints(
+        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
+        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
+      ),
+      _paintWithWaterShader,
+    );
+
+    /// Draw above water things
     for (var data in atlasData.aboveWater) {
       canvas.drawRawAtlas(
         textureImage,
@@ -63,30 +60,9 @@ class GameMapPainter extends CustomPainter {
         null,
         null,
         data.$3,
-        _landPaint,
+        _paint,
       );
-      canvas.drawRect(data.$3, Paint()..color = Colors.red.withOpacity(0.2));
     }
-    canvas.scale(1000, -1000);
-  }
-
-  void _addTexture(Paint myPaint) {
-    myPaint.shader = ImageShader(
-      textureImage,
-      TileMode.clamp,
-      TileMode.clamp,
-      Matrix4.identity().storage,
-    );
-  }
-
-  void _paintWaterPlane(Canvas canvas, Size size) {
-    canvas.drawRect(
-      Rect.fromPoints(
-        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
-        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
-      ),
-      _underWaterPaint,
-    );
   }
 
   void _addWaterShader(Paint myPaint) {
