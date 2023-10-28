@@ -30,7 +30,7 @@ void main() {
     Region r1 = Region.empty(const IsoCoordinate(0, 0));
     expect(r1.getRstTransformsAndRects().rectsAboveWater.length, 0);
     expect(r1.getRstTransformsAndRects().rectsUnderWater.length, 0);
-    r1.update([TestData.tile1]);
+    r1.changeStaticGameObjects([TestData.tile1]);
     expect(
         r1.getRstTransformsAndRects().rectsAboveWater.isNotEmpty ||
             r1.getRstTransformsAndRects().rectsUnderWater.isNotEmpty,

@@ -1,15 +1,14 @@
 import 'dart:math';
-import 'dart:convert';
 import 'dart:typed_data';
 import '../../../collision/collision_box.dart';
 import '../../../coordinates/iso_coordinate.dart';
-import '../../../dto/vertice_dto.dart';
+import '../../../dto/drawing_dto.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 
 /// Trees, rocks, etc. are natural items.
 /// Trees are made up of multiple NaturalItemCubes.
-class NaturalItemCube extends GameObject {
+class NaturalItemCube extends StaticGameObject {
   final NaturalItemPart type;
   final IsoCoordinate isoCoordinate;
   final double elevation;

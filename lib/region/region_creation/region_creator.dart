@@ -14,10 +14,10 @@ class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator(_mapCreationRules);
 
-  List<GameObject> create(int w, int h, int x, int y) {
+  List<StaticGameObject> create(int w, int h, int x, int y) {
     final (elevation, moisture) = noise.createComplexNoise(w, h, x, y);
     List<Tile> tiles = _createTiles(x, y, elevation, moisture);
-    var allGameObjects = List<GameObject>.from(tiles);
+    var allGameObjects = List<StaticGameObject>.from(tiles);
     allGameObjects.addAll(_createNaturalItems(tiles));
     visibilityChecker(allGameObjects);
     return allGameObjects..sort();
@@ -62,7 +62,7 @@ class RegionCreator {
     return tiles;
   }
 
-  List<GameObject> _createNaturalItems(List<Tile> tiles) {
+  List<NaturalItemCube> _createNaturalItems(List<Tile> tiles) {
     List<NaturalItemCube> allNaturalItems = [];
     for (var tile in tiles) {
       List<NaturalItemCube> naturalItemCubes = NaturalItemCreator.create(

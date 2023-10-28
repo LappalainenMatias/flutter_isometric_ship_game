@@ -39,11 +39,12 @@ class ConcurrentRegionCreator {
 
     /// This part is not concurrent and encodes the result, because we cannot
     /// return a list of GameObjects from the web worker.
-    List<GameObject> gameObjects = [];
+    List<StaticGameObject> gameObjects = [];
     for (List encoded in result) {
-      gameObjects.add(GameObject.gameObjectFromList(encoded));
+      gameObjects
+          .add(GameObject.gameObjectFromList(encoded) as StaticGameObject);
     }
-    region.update(gameObjects);
+    region.changeStaticGameObjects(gameObjects);
     isRunning = false;
   }
 
@@ -58,7 +59,7 @@ class ConcurrentRegionCreator {
       regionCoordinate.y * regionSideWidth,
     );
 
-    region.update(gameObjects);
+    region.changeStaticGameObjects(gameObjects as List<StaticGameObject>);
     isRunning = false;
   }
 }

@@ -3,11 +3,11 @@ import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'dart:math';
 import '../../../collision/collision_box.dart';
-import '../../../dto/vertice_dto.dart';
+import '../../../dto/drawing_dto.dart';
 import '../../game_object.dart';
 import '../../game_objects_to_vertices.dart';
 
-class Tile extends Absortable {
+class Tile extends StaticGameObject {
   final TileType type;
   IsoCoordinate isoCoordinate;
   double elevation;
@@ -116,10 +116,5 @@ class Tile extends Absortable {
   @override
   double getElevation() {
     return elevation;
-  }
-
-  @override
-  double size() {
-    return width * width * width.toDouble();
   }
 }

@@ -55,16 +55,16 @@ void main() {
   });
 
   test("Create region from game objects", () {
-    List<GameObject> gameObjects = [];
+    List<StaticGameObject> staticGameObjects = [];
     for (int i = 0; i < 62 * 62; i += 1) {
-      gameObjects.add(Tile(
+      staticGameObjects.add(Tile(
           TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1));
     }
-    gameObjects.sort();
+    staticGameObjects.sort();
     IsoCoordinate bottomCoordinate = const IsoCoordinate(0, 0);
 
     Stopwatch stopwatch = Stopwatch()..start();
-    Region(bottomCoordinate, gameObjects);
+    Region(bottomCoordinate, staticGameObjects);
     print("Creating region took ${stopwatch.elapsedMilliseconds} ms");
 
     /// Create 62x62 gameobjects and make region out of them
@@ -118,7 +118,8 @@ void main() {
   test('GetAllGameObjects', () {
     Region region = Region(const IsoCoordinate(0, 0), []);
     var regionCreator = RegionCreator();
-    region.update(regionCreator.create(32, 32, 0, 0));
+    region.changeStaticGameObjects(
+        regionCreator.create(32, 32, 0, 0) as List<StaticGameObject>);
     Stopwatch stopwatch = Stopwatch()..start();
     for (int i = 0; i < 1000; i++) {
       region.getStaticGameObjects();

@@ -47,7 +47,7 @@ class MissileManager {
 
     /// This updates the visibility of the game objects
     visibilityChecker(region.getStaticGameObjects());
-    region.update(region.getStaticGameObjects());
+    region.changeStaticGameObjects(region.getStaticGameObjects());
   }
 
   ({

@@ -2,7 +2,7 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 import '../collision/collision_box.dart';
-import '../dto/vertice_dto.dart';
+import '../dto/drawing_dto.dart';
 
 abstract class GameObject implements Comparable<GameObject> {
   /// The z coordinate of the game object.
@@ -34,11 +34,6 @@ abstract class GameObject implements Comparable<GameObject> {
     }
     return nearness.distance > otherNearness.distance ? 1 : -1;
   }
-
-  /// Dynamic means that the object can change (move, change color, ...) during the game.
-  /// If region does not contain any dynamic game objects, we can optimize the drawing
-  /// because we do not need to update the region vertices.
-  bool isDynamic();
 
   CollisionBox? getCollisionBox() => null;
 
@@ -79,12 +74,10 @@ abstract class GameObject implements Comparable<GameObject> {
   void setVisibility(bool isVisible);
 }
 
-abstract class Absortable extends GameObject {
-  double size();
+abstract class StaticGameObject extends GameObject {
+
 }
 
-abstract class Growable extends GameObject {
-  /// Makes game object large.
-  /// For example if you add volume of 1 m^3 to 1 m^3 object, it becomes 2 m^3
-  void addVolume(double volume);
+abstract class DynamicGameObject extends GameObject {
+  void update();
 }

@@ -4,7 +4,7 @@ import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
-import '../dto/vertice_dto.dart';
+import '../dto/drawing_dto.dart';
 import '../coordinates/iso_coordinate.dart';
 import '../missile/missile.dart';
 import 'dynamic/player.dart';

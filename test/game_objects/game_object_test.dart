@@ -1,4 +1,4 @@
-import 'package:anki/dto/vertice_dto.dart';
+import 'package:anki/dto/drawing_dto.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';

@@ -1,19 +1,21 @@
 import 'package:anki/map/map.dart';
-import '../../camera/camera.dart';
 import '../../region/region.dart';
 import '../game_object.dart';
 
-/// Handles that dynamic game objects are in the correct region. This is
-/// important so that the painter's algorithm works.
+/// Handles that dynamic game objects are part of the correct region.
+/// Updates dynamic game object drawing data.
+/// This is important so that the painter's algorithm works.
 class DynamicGameObjectManager {
-  final Map<GameObject, Region> _gameObjectToRegion = {};
+  final Map<DynamicGameObject, Region> _gameObjectToRegion = {};
   final GameMap _map;
 
   DynamicGameObjectManager(this._map);
 
-  /// Updates the regions of all dynamic game objects.
+  /// Moves game objects to correct regions
+  /// Updates dynamic game object drawing data
   void update() {
-    for (GameObject gameObject in _gameObjectToRegion.keys) {
+    for (var gameObject in _gameObjectToRegion.keys) {
+      gameObject.update();
       var currentRegion = _gameObjectToRegion[gameObject]!;
       var newRegion = _map.getRegion(gameObject.getIsoCoordinate());
       if (currentRegion != newRegion) {
@@ -24,9 +26,8 @@ class DynamicGameObjectManager {
     }
   }
 
-  void addDynamicGameObject(GameObject gameObject) {
-    var region =
-        _map.getRegion(gameObject.getIsoCoordinate());
+  void addDynamicGameObject(DynamicGameObject gameObject) {
+    var region = _map.getRegion(gameObject.getIsoCoordinate());
     region.addDynamicGameObject(gameObject);
     _gameObjectToRegion[gameObject] = region;
   }

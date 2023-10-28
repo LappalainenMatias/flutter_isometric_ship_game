@@ -9,8 +9,8 @@ import 'dart:math';
 /// if region contains any dynamic game objects.
 class Region implements Comparable<Region> {
   IsoCoordinate bottomCoordinate;
-  final List<GameObject> _dynamicGameObjects = [];
-  List<GameObject> _staticGameObjects;
+  final List<DynamicGameObject> _dynamicGameObjects = [];
+  List<StaticGameObject> _staticGameObjects;
   late Float32List underWaterrstTransforms;
   late Float32List underWaterRects;
   late Float32List aboveWaterRstTransforms;
@@ -23,7 +23,7 @@ class Region implements Comparable<Region> {
     _updateBorders();
   }
 
-  void addDynamicGameObject(GameObject gameObject) {
+  void addDynamicGameObject(DynamicGameObject gameObject) {
     _dynamicGameObjects.add(gameObject);
   }
 
@@ -75,7 +75,7 @@ class Region implements Comparable<Region> {
     return -1;
   }
 
-  void update(List<GameObject> staticGameObjects) {
+  void changeStaticGameObjects(List<StaticGameObject> staticGameObjects) {
     _staticGameObjects = staticGameObjects;
     _updateRstTransforms();
     _updateBorders();
@@ -92,7 +92,7 @@ class Region implements Comparable<Region> {
     _updateRstTransforms();
   }
 
-  List<GameObject> getStaticGameObjects() {
+  List<StaticGameObject> getStaticGameObjects() {
     return _staticGameObjects;
   }
 

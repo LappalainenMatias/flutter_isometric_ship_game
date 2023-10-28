@@ -14,7 +14,6 @@ file:///Users/matiaslappalainen/.pub-cache/hosted/pub.dev/open_simplex_2-0.2.1/l
 file:///Users/matiaslappalainen/Documents/flutter/bin/cache/dart-sdk/lib/_internal/dart2js_platform.dill
 file:///Users/matiaslappalainen/Documents/flutter/bin/cache/dart-sdk/lib/libraries.json
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/.dart_tool/package_config.json
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/camera/level_of_detail.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/collision/collision_action.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/collision/collision_box.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/coordinates/iso_coordinate.dart
@@ -28,12 +27,12 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/natural_items/create_natural_item.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/static/natural_items/natural_items.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/map_creation_rules.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/jsregionworker.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/region_creation/region_creator.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/missile/missile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/missile/projectile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/jsregionworker.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/region_creation/region_creator.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_coordinates.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_rects.dart
 org-dartlang-sdk:///lib/_http/crypto.dart

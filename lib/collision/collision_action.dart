@@ -11,39 +11,19 @@ class CollisionAction {
   void execute(List<GameObject> collisions) {
     for (var type in actionTypes) {
       switch (type) {
-        case CollisionActionType.hide:
-          _hide(collisions);
-        case CollisionActionType.absorve:
-          _absorve(collisions);
         case CollisionActionType.moveAbove:
           _moveAbove(collisions);
       }
     }
   }
 
-  void _hide(List<GameObject> collisions) {
-    for (var colliding in collisions) {
-      colliding.setVisibility(false);
-    }
-  }
-
-  void _absorve(List<GameObject> collisions) {
-    for (var colliding in collisions) {
-      if (colliding is Absortable && gameObject is Growable) {
-        var volume = colliding.size();
-        (gameObject as Growable).addVolume(volume);
-        colliding.setVisibility(false);
-      }
-    }
-  }
-
   void _moveAbove(List<GameObject> collisions) {
     for (var colliding in collisions) {
-      if (gameObject is Player && gameObject is Growable) {
+      if (gameObject is Player) {
         (gameObject as Player).elevation = colliding.getElevation() + 1;
       }
     }
   }
 }
 
-enum CollisionActionType { hide, absorve, moveAbove }
+enum CollisionActionType { moveAbove }
