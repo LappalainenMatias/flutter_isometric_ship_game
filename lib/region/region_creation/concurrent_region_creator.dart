@@ -1,4 +1,4 @@
-import 'package:anki/map/region/region_creation/region_creator.dart';
+import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'dart:math';
@@ -34,7 +34,6 @@ class ConcurrentRegionCreator {
         regionSideWidth,
         regionCoordinate.x * regionSideWidth,
         regionCoordinate.y * regionSideWidth,
-        region.lod.index,
       ],
     );
 
@@ -57,7 +56,6 @@ class ConcurrentRegionCreator {
       regionSideWidth,
       regionCoordinate.x * regionSideWidth,
       regionCoordinate.y * regionSideWidth,
-      region.lod,
     );
 
     region.update(gameObjects);

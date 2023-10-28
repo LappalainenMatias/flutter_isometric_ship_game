@@ -21,15 +21,15 @@ void main() {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
     TileCreator.create(
-        0.0, 0.0, const Point(0, 0), SvalbardCreationRules().tileRules(), 1);
+        0.0, 0.0, const Point(0, 0), SvalbardCreationRules().tileRules());
     TileCreator.create(-1000000, -1000000, const Point(-1000000, -1000000),
-        SvalbardCreationRules().tileRules(), 1);
+        SvalbardCreationRules().tileRules());
     TileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
-        SvalbardCreationRules().tileRules(), 1);
+        SvalbardCreationRules().tileRules());
     TileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
-        SvalbardCreationRules().tileRules(), 1);
+        SvalbardCreationRules().tileRules());
     TileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
-        SvalbardCreationRules().tileRules(), 1);
+        SvalbardCreationRules().tileRules());
   });
 
   test("Create tile from elevation and moisture for finland creation rules",
@@ -37,20 +37,20 @@ void main() {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
     TileCreator.create(
-        0.0, 0.0, const Point(0, 0), FinlandCreationRules().tileRules(), 1);
+        0.0, 0.0, const Point(0, 0), FinlandCreationRules().tileRules());
     TileCreator.create(-1000000, -1000000, const Point(-1000000, -1000000),
-        FinlandCreationRules().tileRules(), 1);
+        FinlandCreationRules().tileRules());
     TileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
-        FinlandCreationRules().tileRules(), 1);
+        FinlandCreationRules().tileRules());
     TileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
-        FinlandCreationRules().tileRules(), 1);
+        FinlandCreationRules().tileRules());
     TileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
-        FinlandCreationRules().tileRules(), 1);
+        FinlandCreationRules().tileRules());
   });
 
   test("Check that elevation and coordinate stays the same", () {
     Tile tile = TileCreator.create(
-        1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules(), 1);
+        1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules());
     expect(tile.elevation, 1.0);
     expect(tile.isoCoordinate, const IsoCoordinate(1, 1));
   });

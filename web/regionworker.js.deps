@@ -30,6 +30,8 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/map_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/jsregionworker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/region/region_creation/region_creator.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/missile/missile.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/missile/projectile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_coordinates.dart

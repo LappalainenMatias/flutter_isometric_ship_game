@@ -31,7 +31,7 @@ class NoiseCreator {
 
   /// In lower levels of detail we skip noise values
   (List<List<double>>, List<List<double>>) createComplexNoise(
-      int width, int height, int startX, int startY, int skip) {
+      int width, int height, int startX, int startY) {
     List<List<double>> elevationMap = _fixedSizeList(width, height);
     List<List<double>> moistureMap = _fixedSizeList(width, height);
 
@@ -46,8 +46,8 @@ class NoiseCreator {
     double frequency8 = mapCreationRules.frequency() * 0.512;
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < width; y++) {
-        var i = (startX + x * skip).toDouble();
-        var j = (startY + y * skip).toDouble();
+        var i = (startX + x).toDouble();
+        var j = (startY + y).toDouble();
 
         // Here we add multiple noises together to add complexity
         double e = _elevationNoise1.noise2(i * frequency1, j * frequency1);

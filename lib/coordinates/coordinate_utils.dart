@@ -1,6 +1,4 @@
 import 'dart:math';
-import 'package:anki/camera/level_of_detail.dart';
-
 import '../camera/camera.dart';
 import '../constants.dart';
 import 'iso_coordinate.dart';
@@ -9,12 +7,11 @@ import 'iso_coordinate.dart';
 /// the camera view. This padding fixes that.
 const double _visibleRegionPadding = 128;
 
-IsoCoordinate regionPointToIsoCoordinate(
-    Point<int> regionCoordinate, LevelOfDetail lod) {
+IsoCoordinate regionPointToIsoCoordinate(Point<int> regionCoordinate) {
   double x = regionCoordinate.x * regionSideWidth.toDouble();
-  x = x - x % (lod.tileMinWidth * regionSideWidth);
+  x = x - x % regionSideWidth;
   double y = regionCoordinate.y * regionSideWidth.toDouble();
-  y = y - y % (lod.tileMinWidth * regionSideWidth);
+  y = y - y % regionSideWidth;
   var isoCoordinate = IsoCoordinate(x, y);
   return isoCoordinate;
 }

@@ -5,8 +5,9 @@ class CollisionBox {
   IsoCoordinate point;
   double width;
   double height;
+  double elevation;
 
-  CollisionBox(this.point, this.width, this.height);
+  CollisionBox(this.point, this.width, this.height, this.elevation);
 
   double get left => point.isoX - (width / 2);
   double get right => point.isoX + (width / 2);
@@ -20,12 +21,17 @@ class CollisionBox {
     if (top <= other.bottom || other.top <= bottom) {
       return false;
     }
+    var belowCollisionBox = other.elevation < elevation ? other : this;
+    if ((elevation - other.elevation).abs() > belowCollisionBox.height) {
+      return false;
+    }
     return true;
   }
 
-  void update(IsoCoordinate newPoint, double newWidth, double newHeight) {
+  void update(IsoCoordinate newPoint, double newWidth, double newHeight, double newElevation) {
     point = newPoint;
     width = newWidth;
     height = newHeight;
+    elevation = newElevation;
   }
 }

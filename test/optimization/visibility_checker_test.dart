@@ -11,7 +11,7 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
     var left = Tile(TileType.grass, const IsoCoordinate(-1, 0), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
-    visibilityChecker([hideThis, left, right, top], 1);
+    visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), false);
     expect(left.isVisible(), true);
     expect(right.isVisible(), true);
@@ -24,7 +24,7 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
     var left = Tile(TileType.grass, const IsoCoordinate(-1, -1), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
-    visibilityChecker([hideThis, left, right, top], 1);
+    visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), true);
     expect(left.isVisible(), true);
     expect(right.isVisible(), true);
@@ -37,7 +37,7 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
     var left = Tile(TileType.grass, const IsoCoordinate(-1, 0), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1);
-    visibilityChecker([hideThis, left, right, top], 1);
+    visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), true);
     expect(left.isVisible(), true);
     expect(right.isVisible(), true);
@@ -50,7 +50,7 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(-1, -1), 0, 1);
     var left = Tile(TileType.grass, const IsoCoordinate(-1, 0), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1);
-    visibilityChecker([hideThis, left, right, top], 1);
+    visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), true);
     expect(left.isVisible(), true);
     expect(right.isVisible(), true);

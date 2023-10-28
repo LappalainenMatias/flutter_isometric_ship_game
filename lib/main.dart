@@ -1,4 +1,5 @@
 import 'package:anki/widget/joystick.dart';
+import 'package:anki/widget/shoot_missile.dart';
 import 'package:anki/widget/statistics.dart';
 import 'package:anki/widget/zoom_buttons.dart';
 import 'package:flutter/foundation.dart';
@@ -98,6 +99,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                     child: JoyStick(),
                   )
                 ],
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: ShootMissile(),
               ),
             ),
           ],

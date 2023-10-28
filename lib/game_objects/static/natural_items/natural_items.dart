@@ -13,22 +13,23 @@ class NaturalItemCube extends GameObject {
   final NaturalItemPart type;
   final IsoCoordinate isoCoordinate;
   final double elevation;
+  final double width = 1;
   late final CollisionBox collisionBox;
-  late VerticeDTO vertices;
+  late DrawingDTO vertices;
   bool _isVisible = true;
 
   NaturalItemCube(this.type, this.isoCoordinate, this.elevation,
-      {VerticeDTO? vertices,
+      {DrawingDTO? vertices,
       isVisible = true}) {
     _isVisible = isVisible;
     this.vertices = type.toVertices!(this);
 
     /// Todo fix the collision box size
-    collisionBox = CollisionBox(isoCoordinate, 8, 8);
+    collisionBox = CollisionBox(isoCoordinate, width, width, elevation);
   }
 
   @override
-  getVertices() {
+  getDrawingData() {
     return vertices;
   }
 
@@ -64,7 +65,7 @@ class NaturalItemCube extends GameObject {
         list[3],
       ),
       list[4],
-      vertices: VerticeDTO(
+      vertices: DrawingDTO(
         (list[5][0] as Float32List),
         (list[5][1] as Float32List),
       ),
@@ -101,8 +102,8 @@ class NaturalItemCube extends GameObject {
       isoCoordinate.isoY,
       elevation,
       [
-        vertices.positions,
-        vertices.textures,
+        vertices.rstTransforms,
+        vertices.rects,
       ],
       _isVisible,
     ];
@@ -117,9 +118,9 @@ enum NaturalItemType {
 /// We have this separate enum so that we can create more complex natural items like the birch tree.
 /// A birch tree is made out of multiple cubes.
 enum NaturalItemPart {
-  rockCube(RockToVertices.toVertices, true),
-  birchTrunkCube(BirchToVertices.trunkToVertices, false),
-  birchLeavesCube(BirchToVertices.leavesToVertices, false);
+  rockCube(RockToDrawingDTO.create, true),
+  birchTrunkCube(BirchToDrawingDTO.trunk, false),
+  birchLeavesCube(BirchToDrawingDTO.leaves, false);
 
   const NaturalItemPart(this.toVertices, this.canBePlacedUnderWater);
 

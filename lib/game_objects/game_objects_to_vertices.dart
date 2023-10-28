@@ -6,60 +6,93 @@ import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../dto/vertice_dto.dart';
 import '../coordinates/iso_coordinate.dart';
+import '../missile/missile.dart';
 import 'dynamic/player.dart';
-import 'game_object.dart';
 
-class BirchToVertices {
-  static VerticeDTO leavesToVertices(NaturalItemCube naturalItemCube) {
-    return CubeVerticesCreator.toAtlas(
+class MissileToDrawingDTO {
+  static DrawingDTO create(Missile missile) {
+    return createDrawingDTO(
+      TileType.ice,
+      missile.getIsoCoordinate(),
+      missile.getElevation(),
+      scale: missile.width,
+    );
+  }
+}
+
+class BirchToDrawingDTO {
+  static DrawingDTO leaves(NaturalItemCube naturalItemCube) {
+    return createDrawingDTO(
         TileType.snow, naturalItemCube.isoCoordinate, naturalItemCube.elevation,
         isVisible: naturalItemCube.isVisible());
   }
 
-  static VerticeDTO trunkToVertices(NaturalItemCube naturalItemCube) {
-    return CubeVerticesCreator.toAtlas(
+  static DrawingDTO trunk(NaturalItemCube naturalItemCube) {
+    return createDrawingDTO(
         TileType.ice, naturalItemCube.isoCoordinate, naturalItemCube.elevation,
         isVisible: naturalItemCube.isVisible());
   }
 }
 
-class RockToVertices {
-  static VerticeDTO toVertices(IsoCoordinate isoCoordinate, double elevation) {
-    return CubeVerticesCreator.toAtlas(
+class RockToDrawingDTO {
+  static DrawingDTO create(NaturalItemCube naturalItemCube) {
+    return createDrawingDTO(
       TileType.deathGrass,
-      isoCoordinate,
-      elevation,
-      widthScale: 0.6,
-      heightScale: 0.35,
+      naturalItemCube.isoCoordinate,
+      naturalItemCube.elevation,
+      scale: 0.6,
     );
   }
 }
 
-class TileToVertices {
-  static VerticeDTO toVertices(Tile tile) {
-    return CubeVerticesCreator.toAtlas(
+class TileToDrawingDTO {
+  static DrawingDTO create(Tile tile) {
+    return createDrawingDTO(
       tile.type,
       tile.isoCoordinate,
       tile.elevation,
-      widthScale: tile.width.toDouble(),
-      heightScale: tile.width.toDouble(),
+      scale: tile.width.toDouble(),
       isVisible: tile.isVisible(),
     );
   }
 }
 
-class PlayerToVertices {
-  static VerticeDTO toVertices(Player player) {
-    return CubeVerticesCreator.toAtlas(
+class PlayerToDrawingDTO {
+  static DrawingDTO create(Player player) {
+    return createDrawingDTO(
       player.isColliding ? TileType.ice : TileType.deathGrass,
       player.isoCoordinate,
       player.elevation,
-      widthScale: player.sideWidth,
-      heightScale: player.sideWidth,
+      scale: player.sideWidth,
     );
   }
 }
 
+DrawingDTO createDrawingDTO(
+  TileType tileType,
+  final IsoCoordinate isoCoordinate,
+  final double z, {
+  final double scale = 1,
+  final bool isVisible = true,
+}) {
+  final cenBot = isoCoordinate + IsoCoordinate(z, z);
+  final cenCen = cenBot + IsoCoordinate(scale, scale);
+  final lefTop = cenCen + IsoCoordinate(0, scale);
+  final cenTop = lefTop + IsoCoordinate(scale, 0);
+  final topLeftCorner = IsoCoordinate.fromIso(lefTop.isoX, cenTop.isoY);
+  Float32List rstTransforms = Float32List(4);
+  rstTransforms[0] = -0.025 * scale; // scale
+  rstTransforms[1] = 0; // rotation
+  rstTransforms[2] = topLeftCorner.isoX;
+  rstTransforms[3] = topLeftCorner.isoY;
+  var rects = getTileTextureCoordinatesRect(tileType);
+  return DrawingDTO(rstTransforms, rects);
+}
+
+/// THIS IS THE OLD IMPLEMENTATION THAT CREATES VERTICES
+/// This can be used with canvas.drawVertices() but it is slower than
+/// canvas.drawAtlas() and because of that it is not used anymore.
+///
 /// Almost everything visible at the map uses this so performance is important.
 ///
 /// Isometric cube has 7 corners and 3 visible sides. From the 7 corners we create
@@ -67,185 +100,116 @@ class PlayerToVertices {
 ///
 /// The heightScale and widthScale makes the cubes thinner/wider/shorter/taller.
 /// To optimize drawing we can set the three sides to be invisible.
-class CubeVerticesCreator {
-  static VerticeDTO toAtlas(
-    TileType tileType,
-    final IsoCoordinate isoCoordinate,
-    final double z, {
-    final double heightScale = 1,
-    final double widthScale = 1,
-    final bool isVisible = true,
-  }) {
-    final cenBot = isoCoordinate + IsoCoordinate(z, z);
-    final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
-    final lefTop = cenCen + IsoCoordinate(0, widthScale);
-    final cenTop = lefTop + IsoCoordinate(widthScale, 0);
-    final topLeftCorner = IsoCoordinate.fromIso(lefTop.isoX, cenTop.isoY);
-    Float32List rstTransforms = Float32List(4);
-    rstTransforms[0] = -0.025; // scale
-    rstTransforms[1] = 0; // rotation
-    rstTransforms[2] = topLeftCorner.isoX;
-    rstTransforms[3] = topLeftCorner.isoY;
-    var rects = getTileTextureCoordinatesRect(tileType);
-    return VerticeDTO(rstTransforms, rects);
+DrawingDTO toVertices(
+  TileType tileType,
+  final IsoCoordinate isoCoordinate,
+  final double z, {
+  final double heightScale = 1,
+  final double widthScale = 1,
+  final bool leftSideVisible = true,
+  final bool topSideVisible = true,
+  final bool rightSideVisible = true,
+}) {
+  /// Creates the 7 corners of the isometric cube
+  final cenBot = isoCoordinate + IsoCoordinate(z, z);
+  final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
+  final lefBot = cenBot + IsoCoordinate(0, widthScale);
+  final lefTop = cenCen + IsoCoordinate(0, widthScale);
+  final rigBot = cenBot + IsoCoordinate(widthScale, 0);
+  final rigTop = cenCen + IsoCoordinate(widthScale, 0);
+  final cenTop = lefTop + IsoCoordinate(widthScale, 0);
+
+  int size = 0;
+  if (leftSideVisible) size += 12;
+  if (topSideVisible) size += 12;
+  if (rightSideVisible) size += 12;
+  final positions = Float32List(size);
+  final textures = Float32List(size);
+  final fullTexture = getTileTextureCoordinates(tileType);
+  int positionIndex = 0;
+  int textureIndex = 0;
+
+  /// Notice that the triangles are created in a counter clockwise order
+  /// This is important for the textures to work
+  if (leftSideVisible) {
+    positions[positionIndex++] = cenCen.isoX;
+    positions[positionIndex++] = cenCen.isoY;
+    positions[positionIndex++] = lefBot.isoX;
+    positions[positionIndex++] = lefBot.isoY;
+    positions[positionIndex++] = cenBot.isoX;
+    positions[positionIndex++] = cenBot.isoY;
+    positions[positionIndex++] = cenCen.isoX;
+    positions[positionIndex++] = cenCen.isoY;
+    positions[positionIndex++] = lefBot.isoX;
+    positions[positionIndex++] = lefBot.isoY;
+    positions[positionIndex++] = lefTop.isoX;
+    positions[positionIndex++] = lefTop.isoY;
+    textures[textureIndex++] = fullTexture[0];
+    textures[textureIndex++] = fullTexture[1];
+    textures[textureIndex++] = fullTexture[2];
+    textures[textureIndex++] = fullTexture[3];
+    textures[textureIndex++] = fullTexture[4];
+    textures[textureIndex++] = fullTexture[5];
+    textures[textureIndex++] = fullTexture[6];
+    textures[textureIndex++] = fullTexture[7];
+    textures[textureIndex++] = fullTexture[8];
+    textures[textureIndex++] = fullTexture[9];
+    textures[textureIndex++] = fullTexture[10];
+    textures[textureIndex++] = fullTexture[11];
   }
 
-  static VerticeDTO toVertices(
-    TileType tileType,
-    final IsoCoordinate isoCoordinate,
-    final double z, {
-    final double heightScale = 1,
-    final double widthScale = 1,
-    final bool leftSideVisible = true,
-    final bool topSideVisible = true,
-    final bool rightSideVisible = true,
-  }) {
-    /// Creates the 7 corners of the isometric cube
-    final cenBot = isoCoordinate + IsoCoordinate(z, z);
-    final cenCen = cenBot + IsoCoordinate(heightScale, heightScale);
-    final lefBot = cenBot + IsoCoordinate(0, widthScale);
-    final lefTop = cenCen + IsoCoordinate(0, widthScale);
-    final rigBot = cenBot + IsoCoordinate(widthScale, 0);
-    final rigTop = cenCen + IsoCoordinate(widthScale, 0);
-    final cenTop = lefTop + IsoCoordinate(widthScale, 0);
-
-    int size = 0;
-    if (leftSideVisible) size += 12;
-    if (topSideVisible) size += 12;
-    if (rightSideVisible) size += 12;
-    final positions = Float32List(size);
-    final textures = Float32List(size);
-    final fullTexture = getTileTextureCoordinates(tileType);
-    int positionIndex = 0;
-    int textureIndex = 0;
-
-    /// Notice that the triangles are created in a counter clockwise order
-    /// This is important for the textures to work
-    if (leftSideVisible) {
-      positions[positionIndex++] = cenCen.isoX;
-      positions[positionIndex++] = cenCen.isoY;
-      positions[positionIndex++] = lefBot.isoX;
-      positions[positionIndex++] = lefBot.isoY;
-      positions[positionIndex++] = cenBot.isoX;
-      positions[positionIndex++] = cenBot.isoY;
-      positions[positionIndex++] = cenCen.isoX;
-      positions[positionIndex++] = cenCen.isoY;
-      positions[positionIndex++] = lefBot.isoX;
-      positions[positionIndex++] = lefBot.isoY;
-      positions[positionIndex++] = lefTop.isoX;
-      positions[positionIndex++] = lefTop.isoY;
-      textures[textureIndex++] = fullTexture[0];
-      textures[textureIndex++] = fullTexture[1];
-      textures[textureIndex++] = fullTexture[2];
-      textures[textureIndex++] = fullTexture[3];
-      textures[textureIndex++] = fullTexture[4];
-      textures[textureIndex++] = fullTexture[5];
-      textures[textureIndex++] = fullTexture[6];
-      textures[textureIndex++] = fullTexture[7];
-      textures[textureIndex++] = fullTexture[8];
-      textures[textureIndex++] = fullTexture[9];
-      textures[textureIndex++] = fullTexture[10];
-      textures[textureIndex++] = fullTexture[11];
-    }
-
-    if (topSideVisible) {
-      positions[positionIndex++] = cenCen.isoX;
-      positions[positionIndex++] = cenCen.isoY;
-      positions[positionIndex++] = lefTop.isoX;
-      positions[positionIndex++] = lefTop.isoY;
-      positions[positionIndex++] = cenTop.isoX;
-      positions[positionIndex++] = cenTop.isoY;
-      positions[positionIndex++] = cenCen.isoX;
-      positions[positionIndex++] = cenCen.isoY;
-      positions[positionIndex++] = cenTop.isoX;
-      positions[positionIndex++] = cenTop.isoY;
-      positions[positionIndex++] = rigTop.isoX;
-      positions[positionIndex++] = rigTop.isoY;
-      textures[textureIndex++] = fullTexture[12];
-      textures[textureIndex++] = fullTexture[13];
-      textures[textureIndex++] = fullTexture[14];
-      textures[textureIndex++] = fullTexture[15];
-      textures[textureIndex++] = fullTexture[16];
-      textures[textureIndex++] = fullTexture[17];
-      textures[textureIndex++] = fullTexture[18];
-      textures[textureIndex++] = fullTexture[19];
-      textures[textureIndex++] = fullTexture[20];
-      textures[textureIndex++] = fullTexture[21];
-      textures[textureIndex++] = fullTexture[22];
-      textures[textureIndex++] = fullTexture[23];
-    }
-
-    if (rightSideVisible) {
-      positions[positionIndex++] = cenCen.isoX;
-      positions[positionIndex++] = cenCen.isoY;
-      positions[positionIndex++] = rigTop.isoX;
-      positions[positionIndex++] = rigTop.isoY;
-      positions[positionIndex++] = rigBot.isoX;
-      positions[positionIndex++] = rigBot.isoY;
-      positions[positionIndex++] = cenCen.isoX;
-      positions[positionIndex++] = cenCen.isoY;
-      positions[positionIndex++] = rigBot.isoX;
-      positions[positionIndex++] = rigBot.isoY;
-      positions[positionIndex++] = cenBot.isoX;
-      positions[positionIndex++] = cenBot.isoY;
-      textures[textureIndex++] = fullTexture[24];
-      textures[textureIndex++] = fullTexture[25];
-      textures[textureIndex++] = fullTexture[26];
-      textures[textureIndex++] = fullTexture[27];
-      textures[textureIndex++] = fullTexture[28];
-      textures[textureIndex++] = fullTexture[29];
-      textures[textureIndex++] = fullTexture[30];
-      textures[textureIndex++] = fullTexture[31];
-      textures[textureIndex++] = fullTexture[32];
-      textures[textureIndex++] = fullTexture[33];
-      textures[textureIndex++] = fullTexture[34];
-      textures[textureIndex++] = fullTexture[35];
-    }
-    return VerticeDTO(positions, textures);
-  }
-}
-
-/// We do not want to draw every game object individually (because it's slow).
-/// Here we combine all the the vertices.({VerticeDTO underWater, VerticeDTO aboveWater})
-
-gameObjectsToVertices(List<GameObject> gameObjects) {
-  int aboveWaterPositionsSize = 0;
-  int underWaterPositionsSize = 0;
-  for (var gameObject in gameObjects) {
-    if (!gameObject.isVisible()) continue;
-    if (gameObject.isUnderWater()) {
-      underWaterPositionsSize += gameObject.getVertices().positions.length;
-    } else {
-      aboveWaterPositionsSize += gameObject.getVertices().positions.length;
-    }
+  if (topSideVisible) {
+    positions[positionIndex++] = cenCen.isoX;
+    positions[positionIndex++] = cenCen.isoY;
+    positions[positionIndex++] = lefTop.isoX;
+    positions[positionIndex++] = lefTop.isoY;
+    positions[positionIndex++] = cenTop.isoX;
+    positions[positionIndex++] = cenTop.isoY;
+    positions[positionIndex++] = cenCen.isoX;
+    positions[positionIndex++] = cenCen.isoY;
+    positions[positionIndex++] = cenTop.isoX;
+    positions[positionIndex++] = cenTop.isoY;
+    positions[positionIndex++] = rigTop.isoX;
+    positions[positionIndex++] = rigTop.isoY;
+    textures[textureIndex++] = fullTexture[12];
+    textures[textureIndex++] = fullTexture[13];
+    textures[textureIndex++] = fullTexture[14];
+    textures[textureIndex++] = fullTexture[15];
+    textures[textureIndex++] = fullTexture[16];
+    textures[textureIndex++] = fullTexture[17];
+    textures[textureIndex++] = fullTexture[18];
+    textures[textureIndex++] = fullTexture[19];
+    textures[textureIndex++] = fullTexture[20];
+    textures[textureIndex++] = fullTexture[21];
+    textures[textureIndex++] = fullTexture[22];
+    textures[textureIndex++] = fullTexture[23];
   }
 
-  /// Using Float32List.fromList() would be easier but updating the Float32List is faster.
-  /// Texture/Color list is always half the size of positions list.
-  Float32List aboveWaterPositions = Float32List(aboveWaterPositionsSize);
-  Float32List aboveWaterTextures = Float32List(aboveWaterPositionsSize);
-  Float32List underWaterPositions = Float32List(underWaterPositionsSize);
-  Float32List underWaterTextures = Float32List(underWaterPositionsSize);
-
-  int aboveWaterOffset = 0;
-  int underWaterOffset = 0;
-  for (var gameObject in gameObjects) {
-    if (!gameObject.isVisible()) continue;
-    var vertices = gameObject.getVertices();
-
-    if (gameObject.isUnderWater()) {
-      underWaterPositions.setAll(underWaterOffset, vertices.positions);
-      underWaterTextures.setAll(underWaterOffset, vertices.textures);
-      underWaterOffset += vertices.positions.length;
-    } else {
-      aboveWaterPositions.setAll(aboveWaterOffset, vertices.positions);
-      aboveWaterTextures.setAll(aboveWaterOffset, vertices.textures);
-      aboveWaterOffset += vertices.positions.length;
-    }
+  if (rightSideVisible) {
+    positions[positionIndex++] = cenCen.isoX;
+    positions[positionIndex++] = cenCen.isoY;
+    positions[positionIndex++] = rigTop.isoX;
+    positions[positionIndex++] = rigTop.isoY;
+    positions[positionIndex++] = rigBot.isoX;
+    positions[positionIndex++] = rigBot.isoY;
+    positions[positionIndex++] = cenCen.isoX;
+    positions[positionIndex++] = cenCen.isoY;
+    positions[positionIndex++] = rigBot.isoX;
+    positions[positionIndex++] = rigBot.isoY;
+    positions[positionIndex++] = cenBot.isoX;
+    positions[positionIndex++] = cenBot.isoY;
+    textures[textureIndex++] = fullTexture[24];
+    textures[textureIndex++] = fullTexture[25];
+    textures[textureIndex++] = fullTexture[26];
+    textures[textureIndex++] = fullTexture[27];
+    textures[textureIndex++] = fullTexture[28];
+    textures[textureIndex++] = fullTexture[29];
+    textures[textureIndex++] = fullTexture[30];
+    textures[textureIndex++] = fullTexture[31];
+    textures[textureIndex++] = fullTexture[32];
+    textures[textureIndex++] = fullTexture[33];
+    textures[textureIndex++] = fullTexture[34];
+    textures[textureIndex++] = fullTexture[35];
   }
-
-  return (
-    underWater: VerticeDTO(underWaterPositions, underWaterTextures),
-    aboveWater: VerticeDTO(aboveWaterPositions, aboveWaterTextures)
-  );
+  return DrawingDTO(positions, textures);
 }

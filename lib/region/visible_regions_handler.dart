@@ -1,8 +1,8 @@
-import 'package:anki/map/region/region.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/region/region.dart';
 import '../../camera/camera.dart';
 import '../../coordinates/coordinate_utils.dart';
-import '../map.dart';
+import '../map/map.dart';
 
 abstract class VisibleRegionsHandler {
   /// This list of regions has been sorted by the nearness value (Painter's algorithm).
@@ -38,9 +38,8 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     /// Todo moving objects to another list might not be optimal.
     List<Region> filtered = [];
     _addedRegionCoordinates = {};
-    var currentLod = _camera.getLOD();
     for (var region in _sortedVisibleRegionsCurrentLOD) {
-      if (region.lod != currentLod || region.borders == null) {
+      if (region.borders == null) {
         continue;
       }
       if (regionIsInView(region)) {
@@ -95,7 +94,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     _spiralIndex = _coordinatesInSpiral.length - 1;
     while (_spiralIndex >= 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
-      Region region = _map.getRegion(coordinate, _camera.getLOD());
+      Region region = _map.getRegion(coordinate);
       if (!_addedRegionCoordinates.contains(region.bottomCoordinate) &&
           regionIsInView(region)) {
         _addRegionInCorrectOrder(region);

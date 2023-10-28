@@ -9,12 +9,11 @@ import 'dart:math';
 
 class TileCreator {
   static Tile create(double elevation, double moisture, Point<double> point,
-      List<TileRule> rules, int width) {
+      List<TileRule> rules) {
     for (TileRule rule in rules) {
       if (rule.match(elevation, moisture)) {
-        elevation = (elevation / width).floor() * width.toDouble();
-        return Tile(
-            rule.type, IsoCoordinate(point.x, point.y), elevation, width);
+        elevation = elevation.floor().toDouble();
+        return Tile(rule.type, IsoCoordinate(point.x, point.y), elevation, 1);
       }
     }
     throw Exception(
@@ -35,6 +34,7 @@ class NaturalItemCreator {
         if (Random().nextDouble() < naturalItem.percentage) {
           // NaturalItems are top of the ground cubes, so we add 1 to the elevation
           createBirchTree(isoCoordinate, elevation + 1);
+
           /// Todo manage that trees are not drawn underwater
           return createBirchTree(isoCoordinate, elevation + 1);
         }

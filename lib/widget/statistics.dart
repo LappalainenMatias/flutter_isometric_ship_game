@@ -27,7 +27,11 @@ class _StatisticsState extends State<Statistics> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Visible cubes: ${NumberFormat('###,###,###').format(game.amountOfGameObjects()).replaceAll(',', ' ')}",
+              "Cubes in screen: ${NumberFormat('###,###,###').format(game.amountOfGameObjects()).replaceAll(',', ' ')}",
+              style: const TextStyle(color: Colors.white),
+            ),
+            Text(
+              "Cubes rendered: ${NumberFormat('###,###,###').format(game.amountOfGameObjectsRendered()).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(
@@ -39,7 +43,7 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Zoom: ${game.zoomLevel.toStringAsFixed(6)}, Level: ${game.getLOD().index}",
+              "Zoom: ${game.zoomLevel.toStringAsFixed(6)}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(

@@ -1,8 +1,5 @@
-import 'dart:math';
-
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'camera_mover.dart';
-import 'level_of_detail.dart';
 
 class Camera {
   IsoCoordinate center;
@@ -11,11 +8,8 @@ class Camera {
   final double _minWidth = 60;
   final double _maxWidth = 80000;
   double _aspectRatio = 1.0;
-  LevelOfDetail _LOD = LevelOfDetail.zoomlevel_19;
 
-  Camera({this.center = const IsoCoordinate(0, 0)}) {
-    _updateLOD();
-  }
+  Camera({this.center = const IsoCoordinate(0, 0)});
 
   void move(double joyStickX, double joyStickY) {
     _cameraMover.joyStickIsometricMovement(joyStickX, joyStickY, this);
@@ -52,7 +46,6 @@ class Camera {
     } else {
       _zoomLevel = newZoomLevel;
     }
-    _updateLOD();
   }
 
   void zoomIn() {
@@ -63,22 +56,5 @@ class Camera {
     setZoomLevel(_zoomLevel + 0.02 * _zoomLevel);
   }
 
-  LevelOfDetail getLOD() => _LOD;
-
   double get zoomLevel => _zoomLevel;
-
-  void _updateLOD() {
-    _LOD = LevelOfDetail.values.first;
-    return;
-    double maxSide = max(width(), height());
-    int size = 400;
-    for (LevelOfDetail lod in LevelOfDetail.values) {
-      if (maxSide < size) {
-        _LOD = lod;
-        return;
-      }
-      size *= 2;
-    }
-    _LOD = LevelOfDetail.values.last;
-  }
 }

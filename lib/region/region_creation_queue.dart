@@ -1,4 +1,3 @@
-import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../camera/camera.dart';
 
@@ -29,14 +28,11 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
   @override
   AddGameObjectsTo? next() {
     /// First create regions with the current level of detail
-    var lod = _camera.getLOD();
     for (int i = 0; i < _queue.length; i++) {
-      if (_queue[i].lod == lod) {
-        var buildNext = _queue[i];
-        _identifier.remove(buildNext.identifier);
-        _queue.removeAt(i);
-        return buildNext;
-      }
+      var buildNext = _queue[i];
+      _identifier.remove(buildNext.identifier);
+      _queue.removeAt(i);
+      return buildNext;
     }
 
     /// Create rergion with any level of detail
@@ -71,11 +67,10 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
 
 class AddGameObjectsTo {
   IsoCoordinate regionCoordinate;
-  LevelOfDetail lod;
 
-  AddGameObjectsTo(this.lod, this.regionCoordinate);
+  AddGameObjectsTo(this.regionCoordinate);
 
   String get identifier {
-    return "${regionCoordinate.isoX.toInt()},${regionCoordinate.isoY.toInt()},${lod.index}";
+    return "${regionCoordinate.isoX.toInt()},${regionCoordinate.isoY.toInt()}";
   }
 }

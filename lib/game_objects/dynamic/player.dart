@@ -16,12 +16,12 @@ class Player extends Growable {
   bool _isVisible = true;
 
   Player(this.isoCoordinate, this.elevation) {
-    collisionBox = CollisionBox(isoCoordinate, sideWidth, sideWidth);
+    collisionBox = CollisionBox(isoCoordinate, sideWidth, sideWidth, elevation);
   }
 
   @override
-  getVertices() {
-    return PlayerToVertices.toVertices(this);
+  getDrawingData() {
+    return PlayerToDrawingDTO.create(this);
   }
 
   @override
@@ -51,7 +51,7 @@ class Player extends Growable {
 
   @override
   CollisionBox getCollisionBox() {
-    collisionBox.update(isoCoordinate, sideWidth, sideWidth);
+    collisionBox.update(isoCoordinate, sideWidth, sideWidth, elevation);
     return collisionBox;
   }
 

@@ -1,4 +1,3 @@
-import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:test/test.dart';
 import '../test_utils/test_objects.dart';
@@ -8,13 +7,7 @@ void main() {
     NoiseCreator noise = NoiseCreator(TestMapCreationRules(), 0);
     int width = 128;
     int height = 256;
-    var (elevation, moisture) = noise.createComplexNoise(
-      width,
-      height,
-      0,
-      0,
-      LevelOfDetail.zoomlevel_0.tileMinWidth,
-    );
+    var (elevation, moisture) = noise.createComplexNoise(width, height, 0, 0);
 
     expect(elevation.length, width);
     expect(moisture.length, width);
@@ -24,8 +17,7 @@ void main() {
 
   test("Noise values should be in resonable limits", () {
     NoiseCreator noise = NoiseCreator(TestMapCreationRules(), 1);
-    var (elevation, moisture) = noise.createComplexNoise(
-        256, 256, 0, 0, LevelOfDetail.zoomlevel_0.tileMinWidth);
+    var (elevation, moisture) = noise.createComplexNoise(256, 256, 0, 0);
     for (var column in elevation) {
       for (var val in column) {
         if (val < -100 || val > 100) {

@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 
-class VerticeDTO {
-  Float32List positions;
-  Float32List textures;
+class DrawingDTO {
+  Float32List rstTransforms;
+  Float32List rects;
 
-  VerticeDTO(this.positions, this.textures);
+  DrawingDTO(this.rstTransforms, this.rects);
 }

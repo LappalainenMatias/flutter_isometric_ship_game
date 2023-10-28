@@ -1,10 +1,9 @@
-import 'package:anki/map/region/region_creation/region_creator.dart';
+import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:js/js.dart';
-import '../../camera/level_of_detail.dart';
 
 /// Todo maybe we could add the dart compile to the build process
 /// Todo create own folder and file for concurrency
-/// Run dart compile js -O2 -o web/regionworker.js lib/map/region/jsregionworker.dart
+/// Run dart compile js -O2 -o web/regionworker.js lib/region/jsregionworker.dart
 /// when you change anything about the map because we need to update the web/regionworker.js
 @JS('jsregionworker')
 external set jsregionworker(obj);
@@ -20,10 +19,9 @@ void main() {
     int height = args[1];
     double pointX = args[2];
     double pointY = args[3];
-    LevelOfDetail minLOD = LevelOfDetail.values[args[4]];
 
     var gameObjects = regionCreator.create(width,
-        height, pointX.toInt(), pointY.toInt(), minLOD);
+        height, pointX.toInt(), pointY.toInt());
 
     List<List?> encoded = [];
     for (var gameObject in gameObjects) {

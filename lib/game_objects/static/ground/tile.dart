@@ -11,7 +11,7 @@ class Tile extends Absortable {
   final TileType type;
   IsoCoordinate isoCoordinate;
   double elevation;
-  late VerticeDTO vertices;
+  late DrawingDTO vertices;
   int width;
   late final CollisionBox collisionBox;
   bool _isVisible = true;
@@ -21,17 +21,17 @@ class Tile extends Absortable {
     this.isoCoordinate,
     this.elevation,
     this.width, {
-    VerticeDTO? vertices,
+    DrawingDTO? vertices,
     bool isVisible = true,
   }) {
     _isVisible = isVisible;
     collisionBox =
-        CollisionBox(isoCoordinate, width.toDouble(), width.toDouble());
-    this.vertices = vertices ?? TileToVertices.toVertices(this);
+        CollisionBox(isoCoordinate, width.toDouble(), width.toDouble(), elevation);
+    this.vertices = vertices ?? TileToDrawingDTO.create(this);
   }
 
   @override
-  getVertices() {
+  getDrawingData() {
     return vertices;
   }
 
@@ -44,7 +44,7 @@ class Tile extends Absortable {
       ),
       list[4],
       list[5],
-      vertices: VerticeDTO(
+      vertices: DrawingDTO(
         (list[6][0] as Float32List),
         (list[6][1] as Float32List),
       ),
@@ -63,8 +63,8 @@ class Tile extends Absortable {
       elevation,
       width,
       [
-        vertices.positions,
-        vertices.textures,
+        vertices.rstTransforms,
+        vertices.rects,
       ],
       _isVisible,
     ];
@@ -91,12 +91,6 @@ class Tile extends Absortable {
 
   @override
   CollisionBox? getCollisionBox() {
-    if (isUnderWater()) {
-      /// Todo add collision detection to underwater tiles
-      /// currently there is a bug where the top of the underwater tile has collision
-      /// with the player in height 0
-      return null;
-    }
     return collisionBox;
   }
 
@@ -116,7 +110,7 @@ class Tile extends Absortable {
       return;
     }
     _isVisible = isVisible;
-    vertices = TileToVertices.toVertices(this);
+    vertices = TileToDrawingDTO.create(this);
   }
 
   @override

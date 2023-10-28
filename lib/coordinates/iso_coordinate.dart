@@ -23,6 +23,10 @@ class IsoCoordinate {
     return Point(x, y);
   }
 
+  double manhattanDistanceTo(IsoCoordinate other) {
+    return (isoX - other.isoX).abs() + (isoY - other.isoY).abs();
+  }
+
   bool isBetween(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     return !(isoX < topLeft.isoX ||
         isoX > bottomRight.isoX ||

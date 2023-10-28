@@ -54,4 +54,13 @@ void main() {
     expect(c4.isBetween(topLeft, bottomRight), false);
     expect(c5.isBetween(topLeft, bottomRight), false);
   });
+
+  test("Isocoordinate distance to", (){
+    IsoCoordinate c1 = const IsoCoordinate.fromIso(0,0);
+    IsoCoordinate c2 = const IsoCoordinate.fromIso(0,1);
+    IsoCoordinate c3 = const IsoCoordinate.fromIso(-1, -1);
+    expect(c1.manhattanDistanceTo(c2), 1);
+    expect(c2.manhattanDistanceTo(c3), 3);
+
+  });
 }

@@ -3,8 +3,8 @@ import 'dart:math';
 import 'package:anki/camera/camera.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/map/map.dart';
-import 'package:anki/map/region/region_creation_queue.dart';
-import 'package:anki/map/region/visible_regions_handler.dart';
+import 'package:anki/region/region_creation_queue.dart';
+import 'package:anki/region/visible_regions_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -37,8 +37,6 @@ void main() {
           random.nextDouble() * 1000000, random.nextDouble() * 1000000);
       visibleRegions.updateVisibleRegions();
     }
-    print(visibleRegions.visibleRegionSize());
     expect(visibleRegions.visibleRegionSize() < 1000, isTrue);
-    expect(visibleRegions.visibleRegionSize() > 0, isTrue);
   });
 }

@@ -1,17 +1,17 @@
 import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/collision/collision_detector.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
 import 'package:anki/game_objects/dynamic/player.dart';
-import 'package:anki/map/region/region_creation/concurrent_region_creator.dart';
+import 'package:anki/missile/missile_manager.dart';
+import 'package:anki/region/region_creation/concurrent_region_creator.dart';
+import 'package:anki/region/region_creation_queue.dart';
+import 'package:anki/region/visible_regions_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
-import 'camera/level_of_detail.dart';
 import 'map/map.dart';
-import 'map/region/region_creation_queue.dart';
-import 'map/region/visible_regions_handler.dart';
+import 'missile/missile.dart';
 
 /// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {
@@ -22,29 +22,33 @@ class Game extends ChangeNotifier {
   late final RegionCreationQueue _regionCreationQueue;
   late final ConcurrentRegionCreator _concurrentRegionCreator;
   late final DynamicGameObjectManager _dynamicGameObjectManager;
-  int _verticesCount = 0;
+  late final MissileManager _missileManager;
   int _amountOfGameObjects = 0;
+  int _amountOfGameObjectsRendered = 0;
 
   Game() {
     _regionCreationQueue = RegionCreationQueueImpl(_camera);
     _map = GameMap(_regionCreationQueue);
     _visibleRegions = VisibleRegionsHandlerImpl(_camera, _map);
     _concurrentRegionCreator = ConcurrentRegionCreator();
-    _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
+    _dynamicGameObjectManager = DynamicGameObjectManager(_map);
     _dynamicGameObjectManager.addDynamicGameObject(_player);
     _player.collisionAction =
         CollisionAction([CollisionActionType.moveAbove], _player);
+    _missileManager = MissileManager(_map);
   }
 
   ({List<(Float32List rstTransformsUnderWater, Float32List rectsUnderWater, Rect cullingRect)> underWater,
   List<(Float32List rstTransformsAboveWater, Float32List rectsAboveWater, Rect cullingRect)> aboveWater})
-  getAtlasData([LevelOfDetail? levelOfDetail]) {
+  getAtlasData() {
     List<(Float32List rstTransformsUnderWater,
         Float32List rectsUnderWater, Rect cullingRect)> underWater = [];
     List<(Float32List rstTransformsUnderWater,
         Float32List rectsUnderWater, Rect cullingRect)> aboveWater = [];
-    _verticesCount = 0;
     _amountOfGameObjects = 0;
+    _amountOfGameObjectsRendered = 0;
+
+    /// Change regions to drawable format
     _visibleRegions
         .getVisibleRegionsInDrawingOrder()
         .where((region) => !region.isEmpty())
@@ -53,33 +57,15 @@ class Game extends ChangeNotifier {
       Rect cullingRect = region.borders!.getRect();
       underWater.add((data.rstTransformsUnderWater, data.rectsUnderWater, cullingRect));
       aboveWater.add((data.rstTransformsAboveWater, data.rectsAboveWater, cullingRect));
-      _verticesCount += region.getVerticesCount();
       _amountOfGameObjects += region.gameObjectsLength();
+      _amountOfGameObjectsRendered += region.gameObjectsVisibleLength();
     });
 
-    return (underWater: underWater, aboveWater: aboveWater);
-  }
-
-  ({List<ui.Vertices> underWater, List<ui.Vertices> aboveWater})
-      getVerticesInView([LevelOfDetail? levelOfDetail]) {
-    List<ui.Vertices> aboveWater = [];
-    List<ui.Vertices> underWater = [];
-    _verticesCount = 0;
-    _amountOfGameObjects = 0;
-    _visibleRegions
-        .getVisibleRegionsInDrawingOrder()
-        .where((region) => !region.isEmpty())
-        .forEach((region) {
-      var verticeData = region.getVertices();
-      if (verticeData.aboveWater != null) {
-        aboveWater.add(verticeData.aboveWater!);
-      }
-      if (verticeData.underWater != null) {
-        underWater.add(verticeData.underWater!);
-      }
-      _verticesCount += region.getVerticesCount();
-      _amountOfGameObjects += region.gameObjectsLength();
-    });
+    /// Change missile to drawable format. Currently missile are always top of everything.
+    /// Becaus of that we can just add them to the end. There is so few of them that culling is unnecessary.
+    var data = _missileManager.getRstTransformsAndRects();
+    underWater.add((data.rstTransformsUnderWater, data.rectsUnderWater, Rect.largest));
+    aboveWater.add((data.rstTransformsAboveWater, data.rectsAboveWater, Rect.largest));
 
     return (underWater: underWater, aboveWater: aboveWater);
   }
@@ -100,10 +86,7 @@ class Game extends ChangeNotifier {
 
   double get zoomLevel => _camera.zoomLevel;
 
-  LevelOfDetail getLOD() {
-    return _camera.getLOD();
-  }
-
+  /// When the screen size changes the aspect ratio of the camera needs to be updated.
   void updateScreenAspectRatio(double ratio) {
     _camera.aspectRatio = ratio;
   }
@@ -129,14 +112,13 @@ class Game extends ChangeNotifier {
     if (_concurrentRegionCreator.isRunning) return;
     AddGameObjectsTo? next = _regionCreationQueue.next();
     if (next != null) {
-      var region = _map.getRegion(next.regionCoordinate, next.lod);
+      var region = _map.getRegion(next.regionCoordinate);
       _concurrentRegionCreator.addGameObjects(region);
     }
   }
 
   void movePlayer(double joyStickX, double joyStickY) {
-    _player.move(
-        joyStickX, joyStickY, _camera.getLOD().tileMinWidth.toDouble());
+    _player.move(joyStickX, joyStickY);
     _camera.center = _player.getIsoCoordinate();
     var collisions = findCollisions(
         _dynamicGameObjectManager.regionOf(_player).getStaticGameObjects(),
@@ -153,6 +135,14 @@ class Game extends ChangeNotifier {
   List<IsoCoordinate> getSprilalOfSearchedRegions() {
     return _visibleRegions.visualizeSpriral();
   }
+
+  void updateMissiles() {
+    _missileManager.update();
+  }
+
+  void shootMissile() {
+    _missileManager.add(Missile(_camera.center, 100, 2));
+  }
 }
 
 extension GameMapStatisticExtension on Game {
@@ -168,9 +158,11 @@ extension GameMapStatisticExtension on Game {
     return _visibleRegions.visibleRegionSize();
   }
 
-  int get verticesCount => _verticesCount;
-
   int amountOfGameObjects() {
     return _amountOfGameObjects;
+  }
+
+  int amountOfGameObjectsRendered() {
+    return _amountOfGameObjectsRendered;
   }
 }

@@ -1,13 +1,12 @@
-import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/map/region/region.dart';
-import 'package:anki/map/region/region_creation/region_creator.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/optimization/visibility_checker.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/region/region.dart';
+import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'test_utils/test_objects.dart';
@@ -46,8 +45,7 @@ void main() {
     NoiseCreator first = NoiseCreator(TestMapCreationRules(), 1);
     int width = 1024;
     Stopwatch stopwatch = Stopwatch()..start();
-    first.createComplexNoise(
-        width, width, 0, 0, LevelOfDetail.zoomlevel_0.tileMinWidth);
+    first.createComplexNoise(width, width, 0, 0);
     print("OpenSimplexNoise took ${stopwatch.elapsedMilliseconds}ms");
     stopwatch.reset();
 
@@ -66,7 +64,7 @@ void main() {
     IsoCoordinate bottomCoordinate = const IsoCoordinate(0, 0);
 
     Stopwatch stopwatch = Stopwatch()..start();
-    Region(bottomCoordinate, gameObjects, LevelOfDetail.zoomlevel_0);
+    Region(bottomCoordinate, gameObjects);
     print("Creating region took ${stopwatch.elapsedMilliseconds} ms");
 
     /// Create 62x62 gameobjects and make region out of them
@@ -86,7 +84,7 @@ void main() {
     stopwatch.reset();
 
     for (int i = 0; i < isoCoordinates.length; i++) {
-      CubeVerticesCreator.toVertices(TileType.ice, isoCoordinates[i], -1);
+      toVertices(TileType.ice, isoCoordinates[i], -1);
     }
 
     stopwatch.stop();
@@ -99,28 +97,6 @@ void main() {
     /// 4: 28, 28, 21 (You can now set left, right and top side visiblity)
   });
 
-  test('GameObjects to vertices performance', () {
-    List<GameObject> gameObjects = [];
-    for (int i = 0; i < 512 * 512; i++) {
-      gameObjects.add(
-        Tile(TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1),
-      );
-    }
-
-    Stopwatch stopwatch = Stopwatch()..start();
-
-    gameObjectsToVertices(gameObjects);
-
-    stopwatch.stop();
-
-    print('GameObjectsToVertices took ${stopwatch.elapsedMilliseconds} ms');
-
-    /// 512*512 tiles
-    /// 1: 65, 63, 65
-    /// 2: 59, 71, 62 (Simplified list size calculation)
-    /// 3: 118, 121, 119 (Added support for hiding cube sides)
-  });
-
   test('Visiblity checker', () {
     var tiles = <Tile>[];
     for (int i = 0; i < 128 * 128; i++) {
@@ -129,7 +105,7 @@ void main() {
       );
     }
     Stopwatch stopwatch = Stopwatch()..start();
-    visibilityChecker(tiles, 1);
+    visibilityChecker(tiles);
     stopwatch.stop();
     print('Visibility checker took ${stopwatch.elapsedMilliseconds} ms');
 
@@ -140,14 +116,15 @@ void main() {
   });
 
   test('GetAllGameObjects', () {
-    Region region = Region(const IsoCoordinate(0, 0), [], LevelOfDetail.zoomlevel_0);
-    RegionCreator regionCreator = RegionCreator();
-    region.update(regionCreator.create(32, 32, 0, 0, LevelOfDetail.zoomlevel_19));
+    Region region = Region(const IsoCoordinate(0, 0), []);
+    var regionCreator = RegionCreator();
+    region.update(regionCreator.create(32, 32, 0, 0));
     Stopwatch stopwatch = Stopwatch()..start();
     for (int i = 0; i < 1000; i++) {
-     region.getStaticGameObjects();
+      region.getStaticGameObjects();
     }
     stopwatch.stop();
-    print('GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
+    print(
+        'GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
   });
 }

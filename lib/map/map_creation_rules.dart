@@ -111,7 +111,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.6;
+    return 0.4;
   }
 
   @override

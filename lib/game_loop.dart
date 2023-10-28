@@ -26,6 +26,7 @@ class GameLoop extends ChangeNotifier {
     game.updateVisibleRegions();
     game.addGameObjectsToRegion();
     game.updateDynamicGameObjectRegions();
+    game.updateMissiles();
   }
 
   @override

@@ -1,5 +1,4 @@
 import 'package:anki/camera/camera.dart';
-import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
@@ -39,15 +38,5 @@ void main() {
     expect(camera.width(), camera.height() * 2);
     camera.aspectRatio = 0.2;
     expect(camera.width() * 5, camera.height());
-  });
-
-  test("Level of detail should be in order from highest to lowest detail", () {
-    /// Add some parts of the code we are assuming that the LevelOfDetail.values are from the highest to the lowest detail (jsregionworker).
-    /// This test can be removed if that is changed.
-    int preTileMinSize = 0;
-    for (var lod in LevelOfDetail.values) {
-      expect(lod.tileMinWidth > preTileMinSize, true);
-      preTileMinSize = lod.tileMinWidth;
-    }
   });
 }

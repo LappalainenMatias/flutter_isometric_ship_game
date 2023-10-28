@@ -1,4 +1,3 @@
-import 'package:anki/camera/level_of_detail.dart';
 import 'package:anki/constants.dart';
 import 'package:anki/coordinates/coordinate_utils.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
@@ -7,25 +6,13 @@ import 'dart:math';
 
 void main() {
   test("Region point to isoCoordinate", () {
-    var iso = regionPointToIsoCoordinate(
-        const Point(1, 1), LevelOfDetail.zoomlevel_19);
+    var iso = regionPointToIsoCoordinate(const Point(1, 1));
     expect(iso.isoX, 0);
     expect(iso.isoY, 2 * regionSideWidth);
 
-    iso = regionPointToIsoCoordinate(
-        const Point(1, 1), LevelOfDetail.zoomlevel_18);
+    iso = regionPointToIsoCoordinate(const Point(-1, -1));
     expect(iso.isoX, 0);
-    expect(iso.isoY, 0);
-
-    iso = regionPointToIsoCoordinate(
-        const Point(3, 3), LevelOfDetail.zoomlevel_17);
-    expect(iso.isoX, 0);
-    expect(iso.isoY, 0);
-
-    iso = regionPointToIsoCoordinate(
-        const Point(-3, -3), LevelOfDetail.zoomlevel_17);
-    expect(iso.isoX, 0);
-    expect(iso.isoY, -8 * regionSideWidth);
+    expect(iso.isoY, -2 * regionSideWidth);
   });
 
   test("IsoCoordinate to region point", () {

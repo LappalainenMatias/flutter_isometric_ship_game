@@ -14,15 +14,14 @@ abstract class GameObject implements Comparable<GameObject> {
   IsoCoordinate getIsoCoordinate();
 
   /// Returns the data that is needed for drawing the game object.
-  VerticeDTO getVertices();
+  DrawingDTO getDrawingData();
 
   /// Used for sorting the game objects (painter's algorithm).
   /// If object has larger elevation it is drawn last because
   /// it is on top of the other game objects.
   /// If object has smaller distance it is drawn last because
-  /// it is closer to the camera.({double distance, double elevation})
-
-  nearness();
+  /// it is closer to the camera.
+  ({double distance, double elevation}) nearness();
 
   bool isUnderWater();
 
