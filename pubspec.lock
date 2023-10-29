@@ -170,7 +170,7 @@ packages:
     source: hosted
     version: "4.5.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: f092b211a4319e98e5ff58223576de6c2803db36221657b46c82574721240687
@@ -395,14 +395,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
-  matrix2d:
-    dependency: "direct main"
-    description:
-      name: matrix2d
-      sha256: "188718dd3bc2a31e372cfd0791b0f77f4f13ea76164147342cc378d9132949e7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.4"
   meta:
     dependency: transitive
     description:

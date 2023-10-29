@@ -1,8 +1,6 @@
 import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:js/js.dart';
 
-/// Todo maybe we could add the dart compile to the build process
-/// Todo create own folder and file for concurrency
 /// Run dart compile js -O2 -o web/regionworker.js lib/region/jsregionworker.dart
 /// when you change anything about the map because we need to update the web/regionworker.js
 @JS('jsregionworker')

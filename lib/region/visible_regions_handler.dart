@@ -1,5 +1,6 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/region/region.dart';
+import 'package:collection/collection.dart';
 import '../../camera/camera.dart';
 import '../../coordinates/coordinate_utils.dart';
 import '../map/map.dart';
@@ -24,9 +25,10 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   final GameMap _map;
 
   /// These regions should always be in correct order for drawing.
-  List<Region> _sortedVisibleRegionsCurrentLOD = [];
+  final HeapPriorityQueue<Region> _sortedVisibleRegions =
+      HeapPriorityQueue<Region>((a, b) => a.nearness().compareTo(b.nearness()));
 
-  Set<IsoCoordinate> _addedRegionCoordinates = {};
+  final Set<IsoCoordinate> _addedRegionCoordinates = {};
 
   VisibleRegionsHandlerImpl(this._camera, this._map);
 
@@ -35,19 +37,19 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   List<IsoCoordinate> _coordinatesInSpiral = [];
 
   void _removeUnvisibleRegions() {
-    /// Todo moving objects to another list might not be optimal.
-    List<Region> filtered = [];
-    _addedRegionCoordinates = {};
-    for (var region in _sortedVisibleRegionsCurrentLOD) {
+    var remove = [];
+    for (var region in _sortedVisibleRegions.unorderedElements) {
       if (region.borders == null) {
         continue;
       }
-      if (regionIsInView(region)) {
-        filtered.add(region);
-        _addedRegionCoordinates.add(region.bottomCoordinate);
+      if (!regionIsInView(region)) {
+        remove.add(region);
       }
     }
-    _sortedVisibleRegionsCurrentLOD = filtered;
+    for (var region in remove) {
+      _sortedVisibleRegions.remove(region);
+      _addedRegionCoordinates.remove(region.bottomCoordinate);
+    }
   }
 
   bool regionIsInView(Region region) {
@@ -62,24 +64,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   @override
   List<Region> getVisibleRegionsInDrawingOrder() {
-    return _sortedVisibleRegionsCurrentLOD;
-  }
-
-  /// Todo insert is O(n) so there is room for improvement. (priorityqueue might be better?)
-  /// Uses binary search so that the list is always sorted.
-  void _addRegionInCorrectOrder(Region newRegion) {
-    int min = 0;
-    int max = _sortedVisibleRegionsCurrentLOD.length;
-    while (min < max) {
-      int mid = min + ((max - min) >> 1);
-      if (newRegion.nearness() <
-          _sortedVisibleRegionsCurrentLOD[mid].nearness()) {
-        max = mid;
-      } else {
-        min = mid + 1;
-      }
-    }
-    _sortedVisibleRegionsCurrentLOD.insert(min, newRegion);
+    return _sortedVisibleRegions.toList();
   }
 
   @override
@@ -89,15 +74,17 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   }
 
   void _findNewVisibleRegions() {
+    Stopwatch stopwatch = Stopwatch()..start();
     _coordinatesInSpiral =
         _getSpiralStartingFromCorner(_camera.topLeft, _camera.bottomRight);
+    stopwatch.reset();
     _spiralIndex = _coordinatesInSpiral.length - 1;
     while (_spiralIndex >= 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
       Region region = _map.getRegion(coordinate);
       if (!_addedRegionCoordinates.contains(region.bottomCoordinate) &&
           regionIsInView(region)) {
-        _addRegionInCorrectOrder(region);
+        _sortedVisibleRegions.add(region);
         _addedRegionCoordinates.add(region.bottomCoordinate);
       }
       _spiralIndex--;
@@ -174,7 +161,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   @override
   int visibleRegionSize() {
-    return _sortedVisibleRegionsCurrentLOD.length;
+    return _sortedVisibleRegions.length;
   }
 
   @override

@@ -1,14 +1,19 @@
+import 'package:anki/camera/camera.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
+import 'package:anki/map/map.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/optimization/visibility_checker.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/region/region.dart';
 import 'package:anki/region/region_creation/region_creator.dart';
+import 'package:anki/region/region_creation_queue.dart';
+import 'package:anki/region/visible_regions_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'test_utils/region_creation_queue_mock.dart';
 import 'test_utils/test_objects.dart';
 
 /// Here we tests the performance of different parts of the game
@@ -127,5 +132,22 @@ void main() {
     stopwatch.stop();
     print(
         'GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
+  });
+
+  test('Region creation queue performance', () {
+    var camera = Camera(center: const IsoCoordinate(0, 0));
+    var regionCreationQueue = RegionCreationQueueImpl(camera);
+    var list = [];
+    for (int i = 0; i < 100 * 100; i++) {
+      list.add(AddGameObjectsTo(IsoCoordinate(i.toDouble(), i.toDouble())));
+    }
+    Stopwatch stopwatch = Stopwatch()..start();
+    for (var item in list) {
+      regionCreationQueue.add(item);
+      //regionCreationQueue.next();
+    }
+    stopwatch.stop();
+    print(
+        'Region creation queue took ${stopwatch.elapsedMilliseconds} milliseconds');
   });
 }

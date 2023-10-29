@@ -6,7 +6,7 @@ import '../region/region.dart';
 import '../region/region_creation_queue.dart';
 
 class GameMap {
-  final Map<Point<int>, Region> _regions = {};
+  final Map<Point<int>, Region> regions = {};
   final RegionCreationQueue _regionCreationQueue;
 
   GameMap(this._regionCreationQueue);
@@ -21,16 +21,14 @@ class GameMap {
     Point<int> point = isoCoordinateToRegionPoint(isoCoordinate);
     isoCoordinate = regionPointToIsoCoordinate(point);
     point = isoCoordinateToRegionPoint(isoCoordinate);
-    if (!_regions.containsKey(point)) {
-      /// Todo I think we should also add regions which are empty to the queue
-      /// It not problem now because we are not clearing the regions
-      _regions[point] = Region.empty(isoCoordinate);
-      if (!_tooManyRegionsExist()) {
-        _regionCreationQueue.add(AddGameObjectsTo(isoCoordinate));
-      }
+    if (!regions.containsKey(point)) {
+      regions[point] = Region.empty(isoCoordinate);
+    }
+    if (regions[point]!.isEmpty()) {
+      _regionCreationQueue.add(AddGameObjectsTo(isoCoordinate));
     }
 
-    return _regions[point]!;
+    return regions[point]!;
   }
 
   bool _tooManyRegionsExist() {
@@ -42,6 +40,6 @@ class GameMap {
   }
 
   int getRegionCount() {
-    return _regions.length;
+    return regions.length;
   }
 }

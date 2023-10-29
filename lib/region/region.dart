@@ -28,7 +28,7 @@ class Region implements Comparable<Region> {
   }
 
   bool isEmpty() {
-    return _dynamicGameObjects.isEmpty && _staticGameObjects.isEmpty;
+    return _staticGameObjects.isEmpty;
   }
 
   factory Region.empty(IsoCoordinate bottomCoordinate) {
