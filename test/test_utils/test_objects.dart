@@ -1,7 +1,18 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/map/map_creation_rules.dart';
+
+class TestDynamicObject extends Player {
+  bool wasUpdated = false;
+  TestDynamicObject(super.isoCoordinate, super.elevation);
+
+  @override
+  update() {
+    wasUpdated = true;
+  }
+}
 
 class TestData {
   static Tile tile1 = Tile(
@@ -51,5 +62,4 @@ class TestMapCreationRules implements MapCreationRules {
       TileRule(TileType.rock, null, null),
     ];
   }
-
 }
