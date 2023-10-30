@@ -20,7 +20,8 @@ class RegionCreator {
     var allGameObjects = List<StaticGameObject>.from(tiles);
     allGameObjects.addAll(_createNaturalItems(tiles));
     visibilityChecker(allGameObjects);
-    return allGameObjects..sort();
+    allGameObjects.sort();
+    return allGameObjects;
   }
 
   List<Tile> _createTiles(

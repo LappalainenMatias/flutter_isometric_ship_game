@@ -3,8 +3,8 @@ import 'dart:typed_data';
 import '../../game_objects/game_object.dart';
 import '../../optimization/list_binary_search.dart';
 
-/// Todo this class is unnecessary
-class RegionToRstTransformsAndRects {
+/// Todo Class is unncessary. Method is enough
+class GameObjectsToDrawingData {
   static ({
     Float32List underWaterRstTransforms,
     Float32List underWaterRects,

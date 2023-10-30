@@ -111,12 +111,12 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.4;
+    return 0.6;
   }
 
   @override
   double peakToPeakAmplitude() {
-    return 120;
+    return 30;
   }
 
   @override
@@ -126,7 +126,7 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double frequency() {
-    return 0.0004;
+    return 0.002;
   }
 }
 

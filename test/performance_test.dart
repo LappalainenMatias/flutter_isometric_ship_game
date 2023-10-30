@@ -3,17 +3,13 @@ import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/map/map.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:anki/optimization/visibility_checker.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/region/region.dart';
 import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:anki/region/region_creation_queue.dart';
-import 'package:anki/region/visible_regions_handler.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'test_utils/region_creation_queue_mock.dart';
 import 'test_utils/test_objects.dart';
 
 /// Here we tests the performance of different parts of the game
@@ -22,7 +18,6 @@ void main() {
   test("Returning data from webworkers", () {
     /// Trying to find best way to decode the data in the main thread because
     /// webworkers cannot return complex objects
-
     int width = 500;
     List<List> gameObjects = [];
     for (int i = 0; i < width; i++) {
@@ -75,6 +70,7 @@ void main() {
     /// Create 62x62 gameobjects and make region out of them
     /// 1. 21, 22, 22
     /// 2. 16, 16, 16 (Removing sort from the region creation)
+    /// 3. 6, 6, 6 (from vertices to atlas)
   });
 
   test('Create cube performance', () {
@@ -132,6 +128,16 @@ void main() {
     stopwatch.stop();
     print(
         'GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
+  });
+
+  test('Create region game objects', () {
+    RegionCreator regionCreator = RegionCreator();
+    Stopwatch stopwatch = Stopwatch()..start();
+    regionCreator.create(32, 32, 0, 0);
+    stopwatch.stop();
+    print('Create region ${stopwatch.elapsedMilliseconds} milliseconds');
+    /// 32 x 32
+    /// 1. 64, 62, 62
   });
 
   test('Region creation queue performance', () {

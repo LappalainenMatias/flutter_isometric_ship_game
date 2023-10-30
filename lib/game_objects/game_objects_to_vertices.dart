@@ -7,6 +7,7 @@ import 'package:anki/textures/texture_rects.dart';
 import '../dto/drawing_dto.dart';
 import '../coordinates/iso_coordinate.dart';
 import '../missile/missile.dart';
+import 'dynamic/bird.dart';
 import 'dynamic/player.dart';
 
 class MissileToDrawingDTO {
@@ -64,6 +65,17 @@ class PlayerToDrawingDTO {
       player.isoCoordinate,
       player.elevation,
       scale: player.sideWidth,
+    );
+  }
+}
+
+class BirdToDrawingDTO {
+  static DrawingDTO create(Bird bird) {
+    return createDrawingDTO(
+      TileType.snow,
+      bird.isoCoordinate,
+      bird.elevation,
+      scale: bird.sideWidth,
     );
   }
 }

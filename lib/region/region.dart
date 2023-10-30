@@ -54,7 +54,7 @@ class Region implements Comparable<Region> {
 
   void _updateRstTransforms() {
     final data =
-        RegionToRstTransformsAndRects.create(_staticGameObjects, _dynamicGameObjects);
+        GameObjectsToDrawingData.create(_staticGameObjects, _dynamicGameObjects);
     underWaterrstTransforms = data.underWaterRstTransforms;
     underWaterRects = data.underWaterRects;
     aboveWaterRstTransforms = data.aboveWaterRstTransforms;

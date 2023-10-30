@@ -10,6 +10,7 @@ import 'package:anki/region/region_creation_queue.dart';
 import 'package:anki/region/visible_regions_handler.dart';
 import 'package:flutter/cupertino.dart';
 import 'camera/camera.dart';
+import 'game_objects/dynamic/bird.dart';
 import 'map/map.dart';
 import 'missile/missile.dart';
 
@@ -31,20 +32,24 @@ class Game extends ChangeNotifier {
     _map = GameMap(_regionCreationQueue);
     _visibleRegions = VisibleRegionsHandlerImpl(_camera, _map);
     _concurrentRegionCreator = ConcurrentRegionCreator();
-    _dynamicGameObjectManager = DynamicGameObjectManager(_map);
+    _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(_player);
-    _player.collisionAction =
-        CollisionAction([CollisionActionType.moveAbove], _player);
     _missileManager = MissileManager(_map);
   }
 
-  ({List<(Float32List rstTransformsUnderWater, Float32List rectsUnderWater, Rect cullingRect)> underWater,
-  List<(Float32List rstTransformsAboveWater, Float32List rectsAboveWater, Rect cullingRect)> aboveWater})
   getAtlasData() {
-    List<(Float32List rstTransformsUnderWater,
-        Float32List rectsUnderWater, Rect cullingRect)> underWater = [];
-    List<(Float32List rstTransformsUnderWater,
-        Float32List rectsUnderWater, Rect cullingRect)> aboveWater = [];
+    List<
+        (
+          Float32List rstTransformsUnderWater,
+          Float32List rectsUnderWater,
+          Rect cullingRect,
+        )> underWater = [];
+    List<
+        (
+          Float32List rstTransformsUnderWater,
+          Float32List rectsUnderWater,
+          Rect cullingRect,
+        )> aboveWater = [];
     _amountOfGameObjects = 0;
     _amountOfGameObjectsRendered = 0;
 
@@ -55,8 +60,10 @@ class Game extends ChangeNotifier {
         .forEach((region) {
       var data = region.getRstTransformsAndRects();
       Rect cullingRect = region.borders!.getRect();
-      underWater.add((data.rstTransformsUnderWater, data.rectsUnderWater, cullingRect));
-      aboveWater.add((data.rstTransformsAboveWater, data.rectsAboveWater, cullingRect));
+      underWater.add(
+          (data.rstTransformsUnderWater, data.rectsUnderWater, cullingRect));
+      aboveWater.add(
+          (data.rstTransformsAboveWater, data.rectsAboveWater, cullingRect));
       _amountOfGameObjects += region.gameObjectsLength();
       _amountOfGameObjectsRendered += region.gameObjectsVisibleLength();
     });
@@ -64,8 +71,10 @@ class Game extends ChangeNotifier {
     /// Change missile to drawable format. Currently missile are always top of everything.
     /// Becaus of that we can just add them to the end. There is so few of them that culling is unnecessary.
     var data = _missileManager.getRstTransformsAndRects();
-    underWater.add((data.rstTransformsUnderWater, data.rectsUnderWater, Rect.largest));
-    aboveWater.add((data.rstTransformsAboveWater, data.rectsAboveWater, Rect.largest));
+    underWater.add(
+        (data.rstTransformsUnderWater, data.rectsUnderWater, Rect.largest));
+    aboveWater.add(
+        (data.rstTransformsAboveWater, data.rectsAboveWater, Rect.largest));
 
     return (underWater: underWater, aboveWater: aboveWater);
   }
@@ -143,6 +152,12 @@ class Game extends ChangeNotifier {
 
   void shootMissile() {
     _missileManager.add(Missile(_camera.center, 100, 2));
+  }
+
+  void addBird() {
+    var bird = Bird(_camera.center, 10,
+        Flying(const IsoCoordinate(50, 50), 10, 0.5));
+    _dynamicGameObjectManager.addDynamicGameObject(bird);
   }
 }
 
