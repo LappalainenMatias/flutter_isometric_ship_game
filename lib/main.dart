@@ -1,4 +1,5 @@
 import 'package:anki/widget/joystick.dart';
+import 'package:anki/widget/keyboard_movement.dart';
 import 'package:anki/widget/shoot_missile.dart';
 import 'package:anki/widget/statistics.dart';
 import 'package:anki/widget/zoom_buttons.dart';
@@ -62,7 +63,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    game = Game(isMultiplayer: true);
+    game = Game(isMultiplayer: false);
     gameLoop = GameLoop(this, game);
   }
 
@@ -79,42 +80,44 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ChangeNotifierProvider(create: (_) => game),
         ChangeNotifierProvider(create: (_) => gameLoop),
       ],
-      child: const Material(
-        color: Colors.black,
-        child: Stack(
-          children: [
-            GameScreen(),
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Statistics(),
+      child: KeyBoardMovement(
+        child: const Material(
+          color: Colors.black,
+          child: Stack(
+            children: [
+              GameScreen(),
+              Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Statistics(),
+                ),
               ),
-            ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: ZoomButtons(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: JoyStick(),
-                  )
-                ],
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: ZoomButtons(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: JoyStick(),
+                    )
+                  ],
+                ),
               ),
-            ),
-            //Align(
-            //  alignment: Alignment.bottomLeft,
-            //  child: Padding(
-            //    padding: EdgeInsets.all(8.0),
-            //    child: ShootMissile(),
-            //  ),
-            //),
-          ],
+              //Align(
+              //  alignment: Alignment.bottomLeft,
+              //  child: Padding(
+              //    padding: EdgeInsets.all(8.0),
+              //    child: ShootMissile(),
+              //  ),
+              //),
+            ],
+          ),
         ),
       ),
     );
