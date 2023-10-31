@@ -23,10 +23,8 @@ class GameLoop extends ChangeNotifier {
   }
 
   void update(var dt) {
-    game.updateVisibleRegions();
-    game.addGameObjectsToRegion();
-    game.updateDynamicGameObjectRegions();
-    game.updateMissiles();
+    game.updateMap();
+    game.updateDynamicGameObjects();
   }
 
   @override

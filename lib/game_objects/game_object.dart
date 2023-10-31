@@ -1,3 +1,4 @@
+import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
@@ -80,4 +81,5 @@ abstract class StaticGameObject extends GameObject {
 
 abstract class DynamicGameObject extends GameObject {
   void update();
+  List<CollisionAction> getCollisionActions();
 }

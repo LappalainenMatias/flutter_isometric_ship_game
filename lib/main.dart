@@ -10,8 +10,14 @@ import 'package:provider/provider.dart';
 import 'game_loop.dart';
 import 'package:flutter/services.dart';
 import 'game_map_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 void main() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
@@ -56,7 +62,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    game = Game();
+    game = Game(isMultiplayer: true);
     gameLoop = GameLoop(this, game);
   }
 
@@ -101,13 +107,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: ShootMissile(),
-              ),
-            ),
+            //Align(
+            //  alignment: Alignment.bottomLeft,
+            //  child: Padding(
+            //    padding: EdgeInsets.all(8.0),
+            //    child: ShootMissile(),
+            //  ),
+            //),
           ],
         ),
       ),

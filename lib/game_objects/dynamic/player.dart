@@ -9,10 +9,9 @@ import '../game_objects_to_vertices.dart';
 class Player extends DynamicGameObject {
   IsoCoordinate isoCoordinate;
   final playerMover = PlayerMover();
-  bool isColliding = false;
   double elevation;
   late CollisionBox collisionBox;
-  CollisionAction? collisionAction;
+  List<CollisionAction> collisionActions = [];
   double sideWidth = 1;
   bool _isVisible = true;
   late DrawingDTO dto;
@@ -76,7 +75,7 @@ class Player extends DynamicGameObject {
   }
 
   void addCollisionAction(CollisionAction collisionAction) {
-    this.collisionAction = collisionAction;
+    collisionActions.add(collisionAction);
   }
 
   @override
@@ -87,6 +86,11 @@ class Player extends DynamicGameObject {
   @override
   void update() {
     dto = PlayerToDrawingDTO.create(this);
+  }
+
+  @override
+  List<CollisionAction> getCollisionActions() {
+    return collisionActions;
   }
 }
 

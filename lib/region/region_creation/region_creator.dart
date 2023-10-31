@@ -18,7 +18,7 @@ class RegionCreator {
     final (elevation, moisture) = noise.createComplexNoise(w, h, x, y);
     List<Tile> tiles = _createTiles(x, y, elevation, moisture);
     var allGameObjects = List<StaticGameObject>.from(tiles);
-    allGameObjects.addAll(_createNaturalItems(tiles));
+    //allGameObjects.addAll(_createNaturalItems(tiles));
     visibilityChecker(allGameObjects);
     allGameObjects.sort();
     return allGameObjects;

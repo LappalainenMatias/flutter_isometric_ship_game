@@ -11,8 +11,7 @@ void main() {
   test("Dynamic objects in view should update", () {
     var camera = Camera(center: const IsoCoordinate(0, 0));
     camera.setZoomLevel(0.01);
-    var regionCreationQueue = RegionCreationQueueImpl(camera);
-    var map = GameMap(regionCreationQueue);
+    var map = GameMap(camera);
     var manager = DynamicGameObjectManager(map, camera);
     var inView = TestDynamicObject(const IsoCoordinate(0, 0), 1);
     var outOfView = TestDynamicObject(const IsoCoordinate(-10000, -10000), 1);

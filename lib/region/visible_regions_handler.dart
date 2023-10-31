@@ -10,7 +10,7 @@ abstract class VisibleRegionsHandler {
   List<Region> getVisibleRegionsInDrawingOrder();
 
   /// Removes unvisible regions and adds new visible regions.
-  void updateVisibleRegions();
+  void update();
 
   int visibleRegionSize();
 
@@ -68,16 +68,14 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   }
 
   @override
-  void updateVisibleRegions() {
+  void update() {
     _removeUnvisibleRegions();
     _findNewVisibleRegions();
   }
 
   void _findNewVisibleRegions() {
-    Stopwatch stopwatch = Stopwatch()..start();
     _coordinatesInSpiral =
         _getSpiralStartingFromCorner(_camera.topLeft, _camera.bottomRight);
-    stopwatch.reset();
     _spiralIndex = _coordinatesInSpiral.length - 1;
     while (_spiralIndex >= 0) {
       IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];

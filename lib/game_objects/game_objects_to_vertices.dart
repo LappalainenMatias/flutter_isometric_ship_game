@@ -6,8 +6,8 @@ import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../dto/drawing_dto.dart';
 import '../coordinates/iso_coordinate.dart';
-import '../missile/missile.dart';
 import 'dynamic/bird.dart';
+import 'dynamic/missile.dart';
 import 'dynamic/player.dart';
 
 class MissileToDrawingDTO {
@@ -61,7 +61,7 @@ class TileToDrawingDTO {
 class PlayerToDrawingDTO {
   static DrawingDTO create(Player player) {
     return createDrawingDTO(
-      player.isColliding ? TileType.ice : TileType.deathGrass,
+      TileType.ice,
       player.isoCoordinate,
       player.elevation,
       scale: player.sideWidth,

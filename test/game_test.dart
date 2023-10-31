@@ -1,29 +1,18 @@
-import 'dart:ui';
 import 'package:anki/game.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Game screen should visible things", () {
-    Game game = Game();
-    game.updateVisibleRegions();
-    game.addGameObjectsToRegion();
-    var data = game.getAtlasData();
-    expect(data.aboveWater.isNotEmpty || data.underWater.isNotEmpty, true);
-  });
-
   test("With aspect ratio 1, width and height should match", () {
     Game game = Game();
     game.updateScreenAspectRatio(1.0);
     expect(game.viewWidth, game.viewHeight);
   });
 
-  test("With other than 1 aspect ratio, width and height should NOT match", () {
+  test("With aspect ratio of 2 the width should be 2 times the height", () {
     Game game = Game();
-    game.updateScreenAspectRatio(0.5);
-    expect(game.viewWidth != game.viewHeight, true);
     game.updateScreenAspectRatio(2.0);
-    expect(game.viewWidth != game.viewHeight, true);
+    expect(game.viewWidth, game.viewHeight * 2);
   });
 
   test("Map width and height should always be positive", () {

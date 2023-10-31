@@ -7,6 +7,7 @@ void main() {
   test('Neighbouring regions', () {
     var camera = Camera();
     var regionCreationQueue = RegionCreationQueueImpl(camera);
-    final GameMap map = GameMap(regionCreationQueue);
+    final GameMap map = GameMap(camera);
+    /// todo
   });
 }

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "378812942192",
+    "firebase_url": "https://isometric-game-310f1-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "isometric-game-310f1",
+    "storage_bucket": "isometric-game-310f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:378812942192:android:21cef200887dd33d4871b5",
+        "android_client_info": {
+          "package_name": "com.example.anki"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLpo8tjPIjntEnIm8jq5VeuQ6vX9p5cWM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -82,17 +82,17 @@ class GameMapPainter extends CustomPainter {
 
   /// Used for debuging. Shows the coordinates where the visible region hangler
   /// searched for regions.
-  void _showSearchedRegionCoordinates(Canvas canvas) {
-    List<IsoCoordinate> points = game.getSprilalOfSearchedRegions();
-    double width = game.viewWidth / 150;
-    for (var p in points) {
-      canvas.drawCircle(
-        Offset(p.isoX, p.isoY),
-        width,
-        Paint()..color = const Color(0xFFBD3838),
-      );
-    }
-  }
+  //void _showSearchedRegionCoordinates(Canvas canvas) {
+  //  List<IsoCoordinate> points = game.getSprilalOfSearchedRegions();
+  //  double width = game.viewWidth / 150;
+  //  for (var p in points) {
+  //    canvas.drawCircle(
+  //      Offset(p.isoX, p.isoY),
+  //      width,
+  //      Paint()..color = const Color(0xFFBD3838),
+  //    );
+  //  }
+  //}
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {

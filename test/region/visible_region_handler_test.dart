@@ -10,21 +10,19 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   test("Should have regions after it gets updated", () {
     var camera = Camera();
-    var regionCreationQueue = RegionCreationQueueImpl(camera);
-    var map = GameMap(regionCreationQueue);
+    var map = GameMap(camera);
     VisibleRegionsHandler visibleRegions =
         VisibleRegionsHandlerImpl(camera, map);
 
     expect(visibleRegions.visibleRegionSize(), 0);
 
-    visibleRegions.updateVisibleRegions();
+    visibleRegions.update();
     expect(visibleRegions.visibleRegionSize() >= 0, isTrue);
   });
 
   test("Should remove visible regions after update", () {
     var camera = Camera();
-    var regionCreationQueue = RegionCreationQueueImpl(camera);
-    var map = GameMap(regionCreationQueue);
+    var map = GameMap(camera);
     VisibleRegionsHandler visibleRegions =
         VisibleRegionsHandlerImpl(camera, map);
 
@@ -35,7 +33,7 @@ void main() {
     for (int i = 0; i < 1000; i++) {
       camera.center = IsoCoordinate(
           random.nextDouble() * 1000000, random.nextDouble() * 1000000);
-      visibleRegions.updateVisibleRegions();
+      visibleRegions.update();
     }
     expect(visibleRegions.visibleRegionSize() < 1000, isTrue);
   });

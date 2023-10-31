@@ -1,22 +1,20 @@
 import 'dart:math';
+import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/dto/drawing_dto.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
-import 'package:anki/missile/projectile.dart';
+import '../../collision/collision_box.dart';
 
-import '../collision/collision_box.dart';
-
-class Missile extends GameObject {
+class Missile extends DynamicGameObject {
+  List<CollisionAction> collisionActions = [];
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   double elevation = 0.0;
   double width;
-  late Projectile projectile;
   bool isDestroyed = false;
   late CollisionBox collisionBox;
 
   Missile(this.isoCoordinate, this.elevation, this.width) {
-    projectile = Projectile(elevationDecreasePerFrame: 0.5, minSize: width);
     collisionBox = CollisionBox(isoCoordinate, width, width, elevation);
   }
 
@@ -41,13 +39,8 @@ class Missile extends GameObject {
     return MissileToDrawingDTO.create(this);
   }
 
-  void update() {
-    projectile.update(this);
-  }
-
   @override
-  bool isDynamic() {
-    return true;
+  void update() {
   }
 
   @override
@@ -79,5 +72,10 @@ class Missile extends GameObject {
     // We update collision box every frame because missiles move a lot.
     collisionBox.update(isoCoordinate, width, width, elevation);
     return collisionBox;
+  }
+
+  @override
+  List<CollisionAction> getCollisionActions() {
+    return collisionActions;
   }
 }
