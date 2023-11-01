@@ -25,6 +25,7 @@ class GameLoop extends ChangeNotifier {
   void update(var dt) {
     game.updateMap();
     game.updateDynamicGameObjects();
+    game.movePlayer(dt);
   }
 
   @override

@@ -8,7 +8,6 @@ import '../game_objects_to_vertices.dart';
 
 class Player extends DynamicGameObject {
   IsoCoordinate isoCoordinate;
-  final playerMover = PlayerMover();
   double elevation;
   late CollisionBox collisionBox;
   List<CollisionAction> collisionActions = [];
@@ -38,12 +37,6 @@ class Player extends DynamicGameObject {
   @override
   isUnderWater() {
     return elevation < 0;
-  }
-
-  void move(double joyStickX, double joyStickY,
-      [double speedMultiplier = 1.0]) {
-    playerMover.joyStickIsometricMovement(
-        joyStickX, joyStickY, this, speedMultiplier);
   }
 
   @override
@@ -91,20 +84,5 @@ class Player extends DynamicGameObject {
   @override
   List<CollisionAction> getCollisionActions() {
     return collisionActions;
-  }
-}
-
-/// Todo we now have two movers. CameraMover and PlayerMover which are the same
-class PlayerMover {
-  final double _movementDistance = 5.0;
-
-  /// (0, 1) = up, (-1, 0) = left.
-  void joyStickIsometricMovement(double joyStickX, double joyStickY,
-      Player player, double speedMultiplier) {
-    player.isoCoordinate = IsoCoordinate.fromIso(
-        player.isoCoordinate.isoX +
-            joyStickX * _movementDistance * speedMultiplier,
-        player.isoCoordinate.isoY +
-            joyStickY * _movementDistance * speedMultiplier);
   }
 }

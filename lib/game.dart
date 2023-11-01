@@ -1,18 +1,23 @@
 import 'dart:typed_data';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
+import 'package:anki/movement/joystick_player_mover.dart';
 import 'package:anki/online/multiplayer.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'camera/camera.dart';
 import 'game_objects/dynamic/bird.dart';
 import 'game_objects/dynamic/missile.dart';
 import 'map/map.dart';
+import 'movement/keyboard_player_mover.dart';
 
 /// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {
   final Camera _camera = Camera();
   late final GameMap _map;
   late final DynamicGameObjectManager _dynamicGameObjectManager;
+  late final KeyboardPlayerMover? _keyboardPlayerMover;
+  late final JoyStickPlayerMover? _joyStickPlayerMover;
   final _player = MultiplayerGameObject(1, const IsoCoordinate(0, 0), 0);
   int _amountOfGameObjects = 0;
   int _amountOfGameObjectsRendered = 0;
@@ -21,6 +26,8 @@ class Game extends ChangeNotifier {
     _map = GameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(_player);
+    _keyboardPlayerMover = KeyboardPlayerMover(_player);
+    _joyStickPlayerMover = JoyStickPlayerMover(_player);
     if (isMultiplayer) {
       _dynamicGameObjectManager.addMultiplayer(Multiplayer(_player));
     }
@@ -94,8 +101,9 @@ class Game extends ChangeNotifier {
     _map.update();
   }
 
-  void movePlayer(double joyStickX, double joyStickY) {
-    _player.move(joyStickX, joyStickY);
+  void movePlayer(double dt) {
+    _keyboardPlayerMover?.move(dt);
+    _joyStickPlayerMover?.move(dt);
     _camera.center = _player.getIsoCoordinate();
   }
 
@@ -111,6 +119,18 @@ class Game extends ChangeNotifier {
     var bird =
         Bird(_camera.center, 10, Flying(const IsoCoordinate(50, 50), 10, 0.5));
     _dynamicGameObjectManager.addDynamicGameObject(bird);
+  }
+
+  void keyDownEvent(LogicalKeyboardKey logicalKey) {
+    _keyboardPlayerMover?.pressed(logicalKey);
+  }
+
+  void keyUpEvent(LogicalKeyboardKey logicalKey) {
+    _keyboardPlayerMover?.unPressed(logicalKey);
+  }
+
+  void joystickEvent(double x, double y) {
+    _joyStickPlayerMover?.updateJoystick(x, y);
   }
 }
 
