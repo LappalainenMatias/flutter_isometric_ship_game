@@ -9,15 +9,13 @@ class GameMapPainter extends CustomPainter {
   final GameLoop gameLoop;
   final Game game;
   final ui.FragmentShader _waterShader;
-  final _paint = Paint()..style = PaintingStyle.fill;
-  final _paintWithWaterShader = Paint()..style = PaintingStyle.fill;
-  double _timePassed = 0;
+  final _landPaint = Paint();
+  // We start with 10 because there is a weird visual effect if you start with 0
+  double _timePassed = 10;
   ui.Image textureImage;
 
   GameMapPainter(this._waterShader, this.gameLoop, this.game, this.textureImage)
-      : super(repaint: gameLoop) {
-    _addWaterShader(_paintWithWaterShader);
-  }
+      : super(repaint: gameLoop);
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -31,6 +29,7 @@ class GameMapPainter extends CustomPainter {
 
     /// Draw under water things
     for (var data in atlasData.underWater) {
+      /// data is basically all the under water game objects of one region
       canvas.drawRawAtlas(
         textureImage,
         data.$1,
@@ -38,7 +37,7 @@ class GameMapPainter extends CustomPainter {
         null,
         null,
         data.$3,
-        _paint,
+        _landPaint,
       );
     }
 
@@ -48,7 +47,7 @@ class GameMapPainter extends CustomPainter {
         Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
         Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
       ),
-      _paintWithWaterShader,
+      Paint()..shader = _waterShader,
     );
 
     /// Draw above water things
@@ -60,14 +59,9 @@ class GameMapPainter extends CustomPainter {
         null,
         null,
         data.$3,
-        _paint,
+        _landPaint,
       );
     }
-  }
-
-  void _addWaterShader(Paint myPaint) {
-    _waterShader.setFloat(0, _timePassed);
-    myPaint.shader = _waterShader;
   }
 
   void _transformations(Canvas canvas, Size size) {
