@@ -55,12 +55,21 @@ void main() {
     expect(c5.isBetween(topLeft, bottomRight), false);
   });
 
-  test("Isocoordinate distance to", (){
-    IsoCoordinate c1 = const IsoCoordinate.fromIso(0,0);
-    IsoCoordinate c2 = const IsoCoordinate.fromIso(0,1);
+  test("Isocoordinate distance to", () {
+    IsoCoordinate c1 = const IsoCoordinate.fromIso(0, 0);
+    IsoCoordinate c2 = const IsoCoordinate.fromIso(0, 1);
     IsoCoordinate c3 = const IsoCoordinate.fromIso(-1, -1);
     expect(c1.manhattanDistanceTo(c2), 1);
     expect(c2.manhattanDistanceTo(c3), 3);
+  });
 
+  test("Multiple isoCoordinate", () {
+    IsoCoordinate c1 = const IsoCoordinate.fromIso(1, 1);
+    var c2 = c1 * 0.5;
+    var c3 = c1 * -2.0;
+    expect(c2.isoX, 0.5);
+    expect(c2.isoY, 0.5);
+    expect(c3.isoX, -2.0);
+    expect(c3.isoY, -2.0);
   });
 }

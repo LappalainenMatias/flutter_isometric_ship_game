@@ -1,4 +1,5 @@
 import 'package:anki/camera/camera.dart';
+import 'package:anki/dto/drawing_dto.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
@@ -136,6 +137,7 @@ void main() {
     regionCreator.create(32, 32, 0, 0);
     stopwatch.stop();
     print('Create region ${stopwatch.elapsedMilliseconds} milliseconds');
+
     /// 32 x 32
     /// 1. 64, 62, 62
   });
@@ -155,5 +157,22 @@ void main() {
     stopwatch.stop();
     print(
         'Region creation queue took ${stopwatch.elapsedMilliseconds} milliseconds');
+  });
+
+  test('Create cube drawing data', () {
+    List<IsoCoordinate> coordinates = [];
+    for (int i = 0; i < 1024 * 1024; i++) {
+      coordinates.add(IsoCoordinate(i.toDouble(), i.toDouble()));
+    }
+    Stopwatch stopwatch = Stopwatch()..start();
+    for (var coordinate in coordinates) {
+      createDrawingDTO(TileType.ice, coordinate, 1);
+    }
+    stopwatch.stop();
+    print(
+        'createDrawingDTO took ${stopwatch.elapsedMilliseconds} milliseconds');
+
+    /// 1024 * 1024, ms
+    /// 1: 63, 64, 67
   });
 }

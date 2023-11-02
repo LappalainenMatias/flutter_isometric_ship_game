@@ -20,7 +20,7 @@ void main() {
 
     expect(inView.wasUpdated, isFalse);
     expect(outOfView.wasUpdated, isFalse);
-    manager.update();
+    manager.update(1);
     expect(inView.wasUpdated, isTrue);
     expect(outOfView.wasUpdated, isFalse);
   });

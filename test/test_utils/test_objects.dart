@@ -9,7 +9,7 @@ class TestDynamicObject extends Player {
   TestDynamicObject(super.isoCoordinate, super.elevation);
 
   @override
-  update() {
+  update(double dt) {
     wasUpdated = true;
   }
 }
