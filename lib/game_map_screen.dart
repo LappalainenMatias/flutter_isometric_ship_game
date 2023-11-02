@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:anki/widget/canvas_click_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
@@ -50,14 +51,17 @@ class _GameScreenState extends State<GameScreen> {
                     Align(
                       child: ShaderBuilder(
                         assetKey: 'shaders/regtanglewater.frag',
-                        (context, waterShader, child) => CustomPaint(
-                          size: screenSize,
-                          willChange: true,
-                          painter: GameMapPainter(
-                            waterShader,
-                            gameloop,
-                            game,
-                            textureImage!,
+                        (context, waterShader, child) => ClickDetector(
+                          screenSize: screenSize,
+                          child: CustomPaint(
+                            size: screenSize,
+                            willChange: true,
+                            painter: GameMapPainter(
+                              waterShader,
+                              gameloop,
+                              game,
+                              textureImage!,
+                            ),
                           ),
                         ),
                         child: const Center(

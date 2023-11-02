@@ -72,4 +72,31 @@ void main() {
     expect(c3.isoX, -2.0);
     expect(c3.isoY, -2.0);
   });
+
+  test("Minus isoCoordinate", () {
+    IsoCoordinate c1 = const IsoCoordinate.fromIso(1, 1);
+    IsoCoordinate c2 = const IsoCoordinate.fromIso(2, 2);
+    IsoCoordinate c3 = const IsoCoordinate.fromIso(-1, -1);
+    var c4 = c2 - c1;
+    var c5 = c3 - c1;
+    expect(c4.isoX, 1.0);
+    expect(c4.isoY, 1.0);
+    expect(c5.isoX, -2.0);
+    expect(c5.isoY, -2.0);
+  });
+
+  test("Isocoordinate to unit vector", () {
+    var c1 = const IsoCoordinate.fromIso(1, 1);
+    var c2 = const IsoCoordinate.fromIso(0, 0);
+    var c3 = const IsoCoordinate.fromIso(-0.5, -1);
+    var c4 = c1.toUnitVector();
+    var c5 = c2.toUnitVector();
+    var c6 = c3.toUnitVector();
+    expect(c4.isoX - 0.707 < 0.01, isTrue);
+    expect(c4.isoY - 0.707 < 0.01, isTrue);
+    expect(c5.isoX, 1.0);
+    expect(c5.isoY, 0.0);
+    expect(c6.isoX + 0.224 < 0.01, isTrue);
+    expect(c6.isoY + 0.497 < 0.01, isTrue);
+  });
 }

@@ -34,12 +34,14 @@ class Game extends ChangeNotifier {
   }
 
   getAtlasData() {
-    List< (
+    List<
+        (
           Float32List rstTransformsUnderWater,
           Float32List rectsUnderWater,
           Rect cullingRect,
         )> underWater = [];
-    List< (
+    List<
+        (
           Float32List rstTransformsUnderWater,
           Float32List rectsUnderWater,
           Rect cullingRect,
@@ -48,7 +50,8 @@ class Game extends ChangeNotifier {
     _amountOfGameObjectsRendered = 0;
 
     /// Change regions to drawable format
-    _map.getVisibleRegionsInDrawingOrder()
+    _map
+        .getVisibleRegionsInDrawingOrder()
         .where((region) => !region.isEmpty())
         .forEach((region) {
       var data = region.getRstTransformsAndRects();
@@ -111,9 +114,11 @@ class Game extends ChangeNotifier {
     _dynamicGameObjectManager.update(dt);
   }
 
-  void shootMissile() {
+  void shootMissile(IsoCoordinate target) {
     var missile = Missile(_player.getIsoCoordinate(), _player.elevation, 0.5);
-    missile.addProjectile(Projectile(const IsoCoordinate(0.1, 0.1)));
+    var unitVectorFromPlayerToTarget =
+        (target - _player.isoCoordinate).toUnitVector();
+    missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));
     _dynamicGameObjectManager.addDynamicGameObject(missile);
   }
 
@@ -133,6 +138,13 @@ class Game extends ChangeNotifier {
 
   void joystickEvent(double x, double y) {
     _joyStickPlayerMover?.updateJoystick(x, y);
+  }
+
+  /// x = 0.5, y = 0.5 is the center of the screen
+  /// x = 0, y = 0 is the top left of the screen
+  IsoCoordinate getGameCoordinate(
+      double screenXPercentage, double screenYPercentage) {
+    return _camera.getGameCoordinate(screenXPercentage, screenYPercentage);
   }
 }
 

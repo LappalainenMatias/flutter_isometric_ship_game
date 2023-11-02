@@ -44,11 +44,22 @@ class IsoCoordinate {
     return IsoCoordinate.fromIso(isoX * dt, isoY * dt);
   }
 
+  IsoCoordinate operator -(IsoCoordinate other) {
+    return IsoCoordinate.fromIso(isoX - other.isoX, isoY - other.isoY);
+  }
+
   @override
   int get hashCode => isoX.hashCode ^ isoY.hashCode;
 
   @override
   String toString() {
     return "${isoX.toInt()}, ${isoY.toInt()}";
+  }
+
+  /// (0,0) returns (1,0) vector
+  IsoCoordinate toUnitVector() {
+    var res = sqrt(isoX * isoX + isoY * isoY);
+    if (res == 0) return const IsoCoordinate.fromIso(1, 0);
+    return this * (1 / res);
   }
 }

@@ -57,4 +57,10 @@ class Camera {
   }
 
   double get zoomLevel => _zoomLevel;
+
+  IsoCoordinate getGameCoordinate(double screenXPercentage, double screenYPercentage) {
+    return IsoCoordinate.fromIso(
+        topLeft.isoX + screenXPercentage * width(),
+        topLeft.isoY - screenYPercentage * height());
+  }
 }

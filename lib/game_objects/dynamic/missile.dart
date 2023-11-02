@@ -87,9 +87,11 @@ class Missile extends DynamicGameObject {
 }
 
 class Projectile {
-  IsoCoordinate vector;
-  Projectile(this.vector);
+  /// Missile moves to this direction
+  IsoCoordinate unitVector;
+  double speed;
+  Projectile(this.unitVector, [this.speed = 50]);
   void update(double dt, Missile missile) {
-    missile.isoCoordinate += vector * dt;
+    missile.isoCoordinate += unitVector * dt * speed;
   }
 }
