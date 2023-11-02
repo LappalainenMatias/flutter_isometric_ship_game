@@ -9,6 +9,7 @@ import '../../collision/collision_box.dart';
 class Missile extends DynamicGameObject {
   List<CollisionAction> collisionActions = [];
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
+  Projectile? projectile;
   double elevation = 0.0;
   double width;
   bool isDestroyed = false;
@@ -40,7 +41,12 @@ class Missile extends DynamicGameObject {
   }
 
   @override
-  void update() {
+  void update(double dt) {
+    projectile?.update(dt, this);
+  }
+
+  void addProjectile(Projectile projectile) {
+    this.projectile = projectile;
   }
 
   @override
@@ -77,5 +83,13 @@ class Missile extends DynamicGameObject {
   @override
   List<CollisionAction> getCollisionActions() {
     return collisionActions;
+  }
+}
+
+class Projectile {
+  IsoCoordinate vector;
+  Projectile(this.vector);
+  void update(double dt, Missile missile) {
+    missile.isoCoordinate += vector * dt;
   }
 }

@@ -40,6 +40,10 @@ class IsoCoordinate {
     return other is IsoCoordinate && other.isoX == isoX && other.isoY == isoY;
   }
 
+  IsoCoordinate operator *(double dt) {
+    return IsoCoordinate.fromIso(isoX * dt, isoY * dt);
+  }
+
   @override
   int get hashCode => isoX.hashCode ^ isoY.hashCode;
 

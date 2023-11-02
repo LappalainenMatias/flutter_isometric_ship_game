@@ -72,7 +72,7 @@ class Bird extends DynamicGameObject {
   }
 
   @override
-  void update() {
+  void update(double dt) {
     dto = BirdToDrawingDTO.create(this);
     _flyingTo.fly(this);
   }

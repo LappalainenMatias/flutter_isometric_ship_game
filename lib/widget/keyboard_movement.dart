@@ -1,12 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
 import '../game.dart';
 
 class KeyBoardMovement extends StatelessWidget {
   final Widget child;
-  KeyBoardMovement({super.key, required this.child});
+  const KeyBoardMovement({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {

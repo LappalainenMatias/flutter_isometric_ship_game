@@ -1,9 +1,7 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/dto/drawing_dto.dart';
-
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import 'package:firebase_database/firebase_database.dart';
-
 import '../game_objects/dynamic/player.dart';
 
 class Multiplayer {
@@ -87,13 +85,8 @@ class MultiplayerGameObject extends Player {
       : super(isoCoordinate, elevation);
 
   @override
-  void update() {
-    super.dto = PlayerToDrawingDTO.create(this);
-  }
-
-  @override
   DrawingDTO getDrawingData() {
-    return super.dto;
+    return PlayerToDrawingDTO.create(this);
   }
 
   @override

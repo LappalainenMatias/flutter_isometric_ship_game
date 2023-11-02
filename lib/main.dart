@@ -80,8 +80,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         ChangeNotifierProvider(create: (_) => game),
         ChangeNotifierProvider(create: (_) => gameLoop),
       ],
-      child: KeyBoardMovement(
-        child: const Material(
+      child: const KeyBoardMovement(
+        child: Material(
           color: Colors.black,
           child: Stack(
             children: [
@@ -109,13 +109,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              //Align(
-              //  alignment: Alignment.bottomLeft,
-              //  child: Padding(
-              //    padding: EdgeInsets.all(8.0),
-              //    child: ShootMissile(),
-              //  ),
-              //),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ShootMissile(),
+                ),
+              ),
             ],
           ),
         ),

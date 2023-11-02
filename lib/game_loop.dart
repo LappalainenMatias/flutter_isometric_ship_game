@@ -8,7 +8,6 @@ class GameLoop extends ChangeNotifier {
   late final Game game;
   double dt = 0.0;
   Duration _previous = Duration.zero;
-  double timePassed = 0.0;
 
   GameLoop(TickerProvider vsync, this.game) {
     _ticker = vsync.createTicker(_onTick)..start();
@@ -19,12 +18,12 @@ class GameLoop extends ChangeNotifier {
     dt = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
     _previous = timestamp;
     update(dt);
-    notifyListeners(); // This causes game map rendering
+    notifyListeners(); // Render()
   }
 
   void update(var dt) {
     game.updateMap();
-    game.updateDynamicGameObjects();
+    game.updateDynamicGameObjects(dt);
     game.movePlayer(dt);
   }
 

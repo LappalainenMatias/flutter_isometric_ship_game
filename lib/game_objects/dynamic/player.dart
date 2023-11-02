@@ -77,7 +77,7 @@ class Player extends DynamicGameObject {
   }
 
   @override
-  void update() {
+  void update(double dt) {
     dto = PlayerToDrawingDTO.create(this);
   }
 

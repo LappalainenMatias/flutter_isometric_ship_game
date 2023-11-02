@@ -11,7 +11,7 @@ class ShootMissile extends StatelessWidget {
     var game = Provider.of<Game>(context, listen: false);
     return ElevatedButton(
       onPressed: () {
-        game.addBird();
+        game.shootMissile();
       },
       child: const Text("Shoot Missile"),
     );

@@ -2,6 +2,7 @@ import '../game_objects/dynamic/player.dart';
 import '../game_objects/game_object.dart';
 
 /// Does the defined actions when collision happens
+/// Todo refactor this. Could we use mixin?
 class CollisionAction {
   final List<CollisionActionType> actionTypes;
   final GameObject gameObject;
@@ -13,6 +14,8 @@ class CollisionAction {
       switch (type) {
         case CollisionActionType.moveAbove:
           _moveAbove(collisions);
+          break;
+        case CollisionActionType.destroyItself:
       }
     }
   }
@@ -24,6 +27,10 @@ class CollisionAction {
       }
     }
   }
+
+  void _destroyItself() {
+
+  }
 }
 
-enum CollisionActionType { moveAbove }
+enum CollisionActionType { moveAbove, destroyItself }

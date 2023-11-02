@@ -23,15 +23,13 @@ class MissileToDrawingDTO {
 
 class BirchToDrawingDTO {
   static DrawingDTO leaves(NaturalItemCube naturalItemCube) {
-    return createDrawingDTO(
-        TileType.snow, naturalItemCube.isoCoordinate, naturalItemCube.elevation,
-        isVisible: naturalItemCube.isVisible());
+    return createDrawingDTO(TileType.snow, naturalItemCube.isoCoordinate,
+        naturalItemCube.elevation);
   }
 
   static DrawingDTO trunk(NaturalItemCube naturalItemCube) {
     return createDrawingDTO(
-        TileType.ice, naturalItemCube.isoCoordinate, naturalItemCube.elevation,
-        isVisible: naturalItemCube.isVisible());
+        TileType.ice, naturalItemCube.isoCoordinate, naturalItemCube.elevation);
   }
 }
 
@@ -53,7 +51,6 @@ class TileToDrawingDTO {
       tile.isoCoordinate,
       tile.elevation,
       scale: tile.width.toDouble(),
-      isVisible: tile.isVisible(),
     );
   }
 }
@@ -61,7 +58,7 @@ class TileToDrawingDTO {
 class PlayerToDrawingDTO {
   static DrawingDTO create(Player player) {
     return createDrawingDTO(
-      TileType.ice,
+      TileType.deathGrass,
       player.isoCoordinate,
       player.elevation,
       scale: player.sideWidth,
@@ -83,11 +80,10 @@ class BirdToDrawingDTO {
 DrawingDTO createDrawingDTO(
   TileType tileType,
   final IsoCoordinate isoCoordinate,
-  final double z, {
+  final double elevation, {
   final double scale = 1,
-  final bool isVisible = true,
 }) {
-  final cenBot = isoCoordinate + IsoCoordinate(z, z);
+  final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation);
   final cenCen = cenBot + IsoCoordinate(scale, scale);
   final lefTop = cenCen + IsoCoordinate(0, scale);
   final cenTop = lefTop + IsoCoordinate(scale, 0);

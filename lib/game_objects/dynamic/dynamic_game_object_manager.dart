@@ -25,22 +25,22 @@ class DynamicGameObjectManager {
   /// 1. Moves game objects to correct regions
   /// 2. Updates game objects
   /// 3. Checks if collisions exist and executes collision actions
-  void update() {
+  void update(double dt) {
     if (_multiplayer != null) {
       _multiplayer!.update();
       _findNewMultiplayerGameObjects();
     }
     _updateRegions();
-    _updateGameObjects();
+    _updateGameObjects(dt);
     _checkCollisions();
   }
 
-  void _updateGameObjects() {
+  void _updateGameObjects(double dt) {
     for (var gameObject in _gameObjectToRegion.keys) {
       if (!isInView(gameObject.getIsoCoordinate(), _camera)) {
         continue;
       }
-      gameObject.update();
+      gameObject.update(dt);
     }
   }
 
@@ -61,6 +61,9 @@ class DynamicGameObjectManager {
 
   void _checkCollisions() {
     for (var dynamicGameObject in _gameObjectToRegion.keys) {
+      if (dynamicGameObject.getCollisionActions().isEmpty) {
+        continue;
+      }
       if (!isInView(dynamicGameObject.getIsoCoordinate(), _camera)) {
         continue;
       }

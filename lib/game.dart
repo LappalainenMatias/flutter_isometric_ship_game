@@ -107,12 +107,14 @@ class Game extends ChangeNotifier {
     _camera.center = _player.getIsoCoordinate();
   }
 
-  void updateDynamicGameObjects() {
-    _dynamicGameObjectManager.update();
+  void updateDynamicGameObjects(double dt) {
+    _dynamicGameObjectManager.update(dt);
   }
 
   void shootMissile() {
-    _dynamicGameObjectManager.addDynamicGameObject(Missile(_camera.center, 100, 2));
+    var missile = Missile(_player.getIsoCoordinate(), _player.elevation, 0.5);
+    missile.addProjectile(Projectile(const IsoCoordinate(0.1, 0.1)));
+    _dynamicGameObjectManager.addDynamicGameObject(missile);
   }
 
   void addBird() {
