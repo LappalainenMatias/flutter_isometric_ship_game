@@ -7,7 +7,7 @@ import 'dart:math';
 import '../game_objects_to_vertices.dart';
 
 class Bird extends DynamicGameObject {
-  List<CollisionAction> collisionActions = [];
+  CollisionAction? collisionAction;
   IsoCoordinate isoCoordinate;
   bool isColliding = false;
   double elevation;
@@ -78,8 +78,8 @@ class Bird extends DynamicGameObject {
   }
 
   @override
-  List<CollisionAction> getCollisionActions() {
-    return collisionActions;
+  CollisionAction? getCollisionAction() {
+    return collisionAction;
   }
 }
 

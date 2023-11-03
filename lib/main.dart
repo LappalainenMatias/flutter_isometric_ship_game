@@ -1,6 +1,5 @@
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/keyboard_movement.dart';
-import 'package:anki/widget/shoot_missile.dart';
 import 'package:anki/widget/statistics.dart';
 import 'package:anki/widget/zoom_buttons.dart';
 import 'package:flutter/foundation.dart';

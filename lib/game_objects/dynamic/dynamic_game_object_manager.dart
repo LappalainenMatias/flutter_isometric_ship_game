@@ -25,14 +25,26 @@ class DynamicGameObjectManager {
   /// 1. Moves game objects to correct regions
   /// 2. Updates game objects
   /// 3. Checks if collisions exist and executes collision actions
+  /// 4. Removes destroyed game objects
   void update(double dt) {
     if (_multiplayer != null) {
       _multiplayer!.update();
       _findNewMultiplayerGameObjects();
     }
+    _removeDestroyedGameObjects();
     _updateRegions();
     _updateGameObjects(dt);
     _checkCollisions();
+  }
+
+  void _removeDestroyedGameObjects() {
+   for (var gameObject in _gameObjectToRegion.keys) {
+      if (gameObject.destroy) {
+        var region = _gameObjectToRegion[gameObject]!;
+        region.removeDynamicGameObject(gameObject);
+      }
+    }
+    _gameObjectToRegion.removeWhere((gameObject, value) => gameObject.destroy);
   }
 
   void _updateGameObjects(double dt) {
@@ -61,19 +73,14 @@ class DynamicGameObjectManager {
 
   void _checkCollisions() {
     for (var dynamicGameObject in _gameObjectToRegion.keys) {
-      if (dynamicGameObject.getCollisionActions().isEmpty) {
-        continue;
-      }
-      if (!isInView(dynamicGameObject.getIsoCoordinate(), _camera)) {
+      if (dynamicGameObject.getCollisionAction() == null) {
         continue;
       }
       var collisions = findCollisions(
           _gameObjectToRegion[dynamicGameObject]!.getStaticGameObjects(),
           dynamicGameObject);
       if (collisions.isNotEmpty) {
-        for (var collisionAction in dynamicGameObject.getCollisionActions()) {
-          collisionAction.execute(collisions);
-        }
+        dynamicGameObject.getCollisionAction()?.execute(collisions);
       }
     }
   }

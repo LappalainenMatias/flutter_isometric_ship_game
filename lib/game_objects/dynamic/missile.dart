@@ -7,15 +7,16 @@ import 'package:anki/game_objects/game_objects_to_vertices.dart';
 import '../../collision/collision_box.dart';
 
 class Missile extends DynamicGameObject {
-  List<CollisionAction> collisionActions = [];
+  late final CollisionAction collisionAction;
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile? projectile;
   double elevation = 0.0;
   double width;
-  bool isDestroyed = false;
   late CollisionBox collisionBox;
 
   Missile(this.isoCoordinate, this.elevation, this.width) {
+    collisionAction = CollisionAction(
+        [CollisionActionType.destroyItself], this);
     collisionBox = CollisionBox(isoCoordinate, width, width, elevation);
   }
 
@@ -60,11 +61,12 @@ class Missile extends DynamicGameObject {
   }
 
   @override
-  ({double distance, double elevation}) nearness() {
+    ({double distance, double elevation}) nearness() {
     Point point = isoCoordinate.toPoint();
     return (
-      distance: -1 * (point.x + point.y + width).toDouble(),
-      elevation: elevation
+        distance: -1 * (point.x + point.y + width).toDouble(),elevation
+    :
+    elevation
     );
   }
 
@@ -81,8 +83,8 @@ class Missile extends DynamicGameObject {
   }
 
   @override
-  List<CollisionAction> getCollisionActions() {
-    return collisionActions;
+  CollisionAction getCollisionAction() {
+    return collisionAction;
   }
 }
 
@@ -90,8 +92,17 @@ class Projectile {
   /// Missile moves to this direction
   IsoCoordinate unitVector;
   double speed;
-  Projectile(this.unitVector, [this.speed = 50]);
+  /// Makes sure that missiles don't fly forever
+  double flyingTime = 5;
+
+  Projectile(this.unitVector, [this.speed = 80]);
+
   void update(double dt, Missile missile) {
+    if (flyingTime <= 0) {
+      missile.destroy = true;
+      return;
+    }
+    flyingTime -= dt;
     missile.isoCoordinate += unitVector * dt * speed;
   }
 }

@@ -5,7 +5,7 @@ import '../game_objects/game_object.dart';
 /// Todo refactor this. Could we use mixin?
 class CollisionAction {
   final List<CollisionActionType> actionTypes;
-  final GameObject gameObject;
+  final DynamicGameObject gameObject;
 
   CollisionAction(this.actionTypes, this.gameObject);
 
@@ -16,6 +16,8 @@ class CollisionAction {
           _moveAbove(collisions);
           break;
         case CollisionActionType.destroyItself:
+          _destroyItself();
+          break;
       }
     }
   }
@@ -29,7 +31,7 @@ class CollisionAction {
   }
 
   void _destroyItself() {
-
+    gameObject.destroy = true;
   }
 }
 

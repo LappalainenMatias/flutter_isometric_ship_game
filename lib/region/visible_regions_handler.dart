@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import '../../camera/camera.dart';
 import '../../coordinates/coordinate_utils.dart';
 import '../map/map.dart';
+import 'dart:math';
 
 abstract class VisibleRegionsHandler {
   /// This list of regions has been sorted by the nearness value (Painter's algorithm).
@@ -69,8 +70,12 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   @override
   void update() {
+    Stopwatch stopwatch = Stopwatch()..start();
     _removeUnvisibleRegions();
+    print("Unvisible regions update took: ${stopwatch.elapsedMicroseconds}");
+    stopwatch.reset();
     _findNewVisibleRegions();
+    print("Visible regions update took: ${stopwatch.elapsedMicroseconds}");
   }
 
   void _findNewVisibleRegions() {
@@ -99,11 +104,16 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   /// [1, 2, 3, 6, 9, 8, 7, 4, 5]
   List<IsoCoordinate> _getSpiralStartingFromCorner(
       IsoCoordinate topLeft, IsoCoordinate bottomRight) {
+    /// We add some random padding so that all regions in the screen are found
+    var xPadding = Random().nextInt(100).toDouble();
+    var yPadding = Random().nextInt(100).toDouble();
+    topLeft += IsoCoordinate.fromIso(-xPadding, yPadding);
+    bottomRight += IsoCoordinate.fromIso(xPadding, -yPadding);
     int top = topLeft.isoY.round();
     int bottom = bottomRight.isoY.round();
     int left = topLeft.isoX.round();
     int right = bottomRight.isoX.round();
-    int step = ((top - bottom).abs()) ~/ 20;
+    int step = ((top - bottom).abs()) ~/ 5;
 
     int width = right - left;
     int height = top - bottom;

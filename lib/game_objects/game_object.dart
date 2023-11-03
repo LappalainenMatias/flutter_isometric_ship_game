@@ -81,5 +81,6 @@ abstract class StaticGameObject extends GameObject {
 
 abstract class DynamicGameObject extends GameObject {
   void update(double dt);
-  List<CollisionAction> getCollisionActions();
+  CollisionAction? getCollisionAction();
+  bool destroy = false;
 }
