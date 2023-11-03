@@ -38,7 +38,7 @@ class DynamicGameObjectManager {
   }
 
   void _removeDestroyedGameObjects() {
-   for (var gameObject in _gameObjectToRegion.keys) {
+    for (var gameObject in _gameObjectToRegion.keys) {
       if (gameObject.destroy) {
         var region = _gameObjectToRegion[gameObject]!;
         region.removeDynamicGameObject(gameObject);
@@ -73,14 +73,16 @@ class DynamicGameObjectManager {
 
   void _checkCollisions() {
     for (var dynamicGameObject in _gameObjectToRegion.keys) {
-      if (dynamicGameObject.getCollisionAction() == null) {
+      var collisionAction = dynamicGameObject.getCollisionAction();
+      if (collisionAction == null) {
         continue;
       }
       var collisions = findCollisions(
-          _gameObjectToRegion[dynamicGameObject]!.getStaticGameObjects(),
-          dynamicGameObject);
+          _gameObjectToRegion[dynamicGameObject]!.getAllGameObjects(),
+          dynamicGameObject,
+          collisionAction.skip);
       if (collisions.isNotEmpty) {
-        dynamicGameObject.getCollisionAction()?.execute(collisions);
+        collisionAction.execute(collisions);
       }
     }
   }

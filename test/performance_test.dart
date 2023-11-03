@@ -124,7 +124,7 @@ void main() {
         regionCreator.create(32, 32, 0, 0) as List<StaticGameObject>);
     Stopwatch stopwatch = Stopwatch()..start();
     for (int i = 0; i < 1000; i++) {
-      region.getStaticGameObjects();
+      region.getAllGameObjects();
     }
     stopwatch.stop();
     print(

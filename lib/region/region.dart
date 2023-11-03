@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 import 'package:anki/coordinates/borders.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/game.dart';
 import 'package:anki/region/region_to_vertices.dart';
 import '../../game_objects/game_object.dart';
 import 'dart:math';
@@ -92,8 +93,8 @@ class Region implements Comparable<Region> {
     _updateRstTransforms();
   }
 
-  List<StaticGameObject> getStaticGameObjects() {
-    return _staticGameObjects;
+  List<GameObject> getAllGameObjects() {
+    return [..._staticGameObjects, ..._dynamicGameObjects];
   }
 
   int gameObjectsLength() {

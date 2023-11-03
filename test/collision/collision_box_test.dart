@@ -1,5 +1,7 @@
 import 'package:anki/collision/collision_box.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/game_objects/static/ground/tile.dart';
+import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -24,10 +26,10 @@ void main() {
     expect(box1.overlaps(box2), false);
   });
 
-  test('should detect no overlap when boxes touch but do not overlap', () {
-    var box1 = CollisionBox(const IsoCoordinate.fromIso(5, 5), 10, 10, 1);
+  test('Small overlap', () {
+    var box1 = CollisionBox(const IsoCoordinate.fromIso(5, 5), 10.01, 10.01, 1);
     var box2 = CollisionBox(const IsoCoordinate.fromIso(15, 15), 10, 10, 1);
-    expect(box1.overlaps(box2), false);
+    expect(box1.overlaps(box2), true);
   });
 
   test('should not overlap because elevation difference is too large', () {
@@ -36,9 +38,21 @@ void main() {
     expect(box1.overlaps(box2), false);
   });
 
-  test('should overlap because elevation difference equals height', () {
-    var box1 = CollisionBox(const IsoCoordinate.fromIso(15, 15), 10, 10, 5);
-    var box2 = CollisionBox(const IsoCoordinate.fromIso(15, 15), 10, 10, -5);
-    expect(box1.overlaps(box2), true);
+  test('tiles next to each other should not collide', () {
+    var center = Tile(TileType.ice, const IsoCoordinate(0, 0), 0, 1);
+    /// These have different elevation
+    var top = Tile(TileType.ice, const IsoCoordinate.fromIso(0, 0), 1, 1);
+    var below = Tile(TileType.ice, const IsoCoordinate.fromIso(0, 0), -1, 1);
+    /// These have same elevation
+    var leftUp = Tile(TileType.ice, const IsoCoordinate(1, 0), 0, 1);
+    var leftDown = Tile(TileType.ice, const IsoCoordinate(0, -1), 0, 1);
+    var rightUp = Tile(TileType.ice, const IsoCoordinate(0, 1), 0, 1);
+    var rightDown = Tile(TileType.ice, const IsoCoordinate(-1, 0), 0, 1);
+    expect(center.collisionBox.overlaps(top.collisionBox), false);
+    expect(center.collisionBox.overlaps(below.collisionBox), false);
+    expect(center.collisionBox.overlaps(leftUp.collisionBox), false);
+    expect(center.collisionBox.overlaps(leftDown.collisionBox), false);
+    expect(center.collisionBox.overlaps(rightUp.collisionBox), false);
+    expect(center.collisionBox.overlaps(rightDown.collisionBox), false);
   });
 }

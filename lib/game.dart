@@ -1,4 +1,6 @@
+import 'dart:collection';
 import 'dart:typed_data';
+import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
 import 'package:anki/movement/joystick_player_mover.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'camera/camera.dart';
 import 'game_objects/dynamic/bird.dart';
 import 'game_objects/dynamic/missile.dart';
+import 'game_objects/game_object.dart';
 import 'map/map.dart';
 import 'movement/keyboard_player_mover.dart';
 
@@ -115,7 +118,11 @@ class Game extends ChangeNotifier {
   }
 
   void shootMissile(IsoCoordinate target) {
+    var shooter = _player;
     var missile = Missile(_player.getIsoCoordinate(), _player.elevation, 0.5);
+    var skipCollisions = HashSet<GameObject>()..add(shooter);
+    missile.collisionAction = CollisionAction(
+        [CollisionActionType.destroyItself], missile, skipCollisions);
     var unitVectorFromPlayerToTarget =
         (target - _player.isoCoordinate).toUnitVector();
     missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));

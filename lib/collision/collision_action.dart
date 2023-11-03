@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import '../game_objects/dynamic/player.dart';
 import '../game_objects/game_object.dart';
 
@@ -7,7 +9,15 @@ class CollisionAction {
   final List<CollisionActionType> actionTypes;
   final DynamicGameObject gameObject;
 
-  CollisionAction(this.actionTypes, this.gameObject);
+  /// Skip collision detection with these game objects
+  HashSet<GameObject> skip = HashSet<GameObject>();
+
+  CollisionAction(this.actionTypes, this.gameObject,
+      [HashSet<GameObject>? skip]) {
+    if (skip != null) {
+      this.skip = skip;
+    }
+  }
 
   void execute(List<GameObject> collisions) {
     for (var type in actionTypes) {

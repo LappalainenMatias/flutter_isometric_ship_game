@@ -15,14 +15,14 @@ class CollisionBox {
   double get top => point.isoY + (height / 2);
 
   bool overlaps(CollisionBox other) {
-    if (right <= other.left || other.right <= left) {
+    if (right < other.left || other.right < left) {
       return false;
     }
-    if (top <= other.bottom || other.top <= bottom) {
+    if (top < other.bottom || other.top < bottom) {
       return false;
     }
     var belowCollisionBox = other.elevation < elevation ? other : this;
-    if ((elevation - other.elevation).abs() > belowCollisionBox.height) {
+    if ((elevation - other.elevation).abs() >= belowCollisionBox.height) {
       return false;
     }
     return true;
