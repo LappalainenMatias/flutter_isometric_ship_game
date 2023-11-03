@@ -70,12 +70,8 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   @override
   void update() {
-    Stopwatch stopwatch = Stopwatch()..start();
     _removeUnvisibleRegions();
-    print("Unvisible regions update took: ${stopwatch.elapsedMicroseconds}");
-    stopwatch.reset();
     _findNewVisibleRegions();
-    print("Visible regions update took: ${stopwatch.elapsedMicroseconds}");
   }
 
   void _findNewVisibleRegions() {

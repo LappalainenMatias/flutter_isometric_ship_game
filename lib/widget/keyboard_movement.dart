@@ -10,12 +10,12 @@ class KeyBoardMovement extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var game = Provider.of<Game>(context, listen: true);
-    return KeyboardListener(
+    return RawKeyboardListener(
       autofocus: true,
-      onKeyEvent: (event) {
-        if (event is KeyDownEvent) {
+      onKey: (event) {
+        if (event is RawKeyDownEvent) {
           game.keyDownEvent(event.logicalKey);
-        } else if (event is KeyUpEvent) {
+        } else if (event is RawKeyUpEvent) {
           game.keyUpEvent(event.logicalKey);
         }
       },
