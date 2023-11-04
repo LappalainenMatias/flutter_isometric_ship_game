@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
+import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/movement/joystick_player_mover.dart';
 import 'package:anki/online/multiplayer.dart';
 import 'package:flutter/cupertino.dart';
@@ -108,12 +109,14 @@ class Game extends ChangeNotifier {
   }
 
   void movePlayer(double dt) {
-    print(dt);
+    /// Todo refactor
     if (_keyboardPlayerMover == null) return;
     var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
     var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
-    var canMoveFullStep = _dynamicGameObjectManager.canMove(_player, nextCoordinate);
-    var canMoveHalfStep = _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
+    var canMoveFullStep =
+        _dynamicGameObjectManager.canMove(_player, nextCoordinate);
+    var canMoveHalfStep =
+        _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
     if (canMoveFullStep && canMoveHalfStep) {
       _keyboardPlayerMover?.move(dt);
       _joyStickPlayerMover?.move(dt);
@@ -127,10 +130,12 @@ class Game extends ChangeNotifier {
 
   void shootMissile(IsoCoordinate target) {
     var shooter = _player;
-    var missile = Missile(_player.getIsoCoordinate(), _player.elevation, 0.5);
+    var missile = Missile(_player.getIsoCoordinate(), _player.elevation, 1);
     var skipCollisions = HashSet<GameObject>()..add(shooter);
     missile.collisionAction = CollisionAction(
-        [CollisionActionType.destroyItself], missile, skipCollisions);
+        [CollisionActionType.destroyItself, CollisionActionType.causeDamage],
+        missile,
+        skipCollisions);
     var unitVectorFromPlayerToTarget =
         (target - _player.isoCoordinate).toUnitVector();
     missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));
@@ -160,6 +165,13 @@ class Game extends ChangeNotifier {
   IsoCoordinate getGameCoordinate(
       double screenXPercentage, double screenYPercentage) {
     return _camera.getGameCoordinate(screenXPercentage, screenYPercentage);
+  }
+
+  void addOpponent() {
+    var coordinate = _camera.center + const IsoCoordinate(50, 50);
+    var opponent = Player(coordinate, 0);
+    opponent.heal(5);
+    _dynamicGameObjectManager.addDynamicGameObject(opponent);
   }
 }
 

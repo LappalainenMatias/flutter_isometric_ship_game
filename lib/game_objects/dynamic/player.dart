@@ -1,12 +1,13 @@
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/mixin/health.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
 import '../game_object.dart';
 import 'dart:math';
 import '../game_objects_to_vertices.dart';
 
-class Player extends DynamicGameObject {
+class Player extends DynamicGameObject with Health {
   CollisionAction? collisionAction;
   IsoCoordinate isoCoordinate;
   double elevation;
@@ -81,6 +82,9 @@ class Player extends DynamicGameObject {
   @override
   void update(double dt) {
     dto = PlayerToDrawingDTO.create(this);
+    if (health <= 0) {
+      destroy = true;
+    }
   }
 
   @override

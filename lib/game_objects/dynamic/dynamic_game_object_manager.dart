@@ -99,8 +99,7 @@ class DynamicGameObjectManager {
       }
       var collisions = findCollisions(
           _gameObjectToRegion[dynamicGameObject]!.getAllGameObjects(),
-          dynamicGameObject,
-          collisionAction.skip);
+          dynamicGameObject);
       if (collisions.isNotEmpty) {
         collisionAction.execute(collisions);
       }

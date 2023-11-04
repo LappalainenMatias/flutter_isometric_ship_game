@@ -3,17 +3,17 @@ import 'package:provider/provider.dart';
 
 import '../game.dart';
 
-class ShootMissile extends StatelessWidget {
-  const ShootMissile({Key? key}) : super(key: key);
+class AddOpponent extends StatelessWidget {
+  const AddOpponent({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var game = Provider.of<Game>(context, listen: false);
     return ElevatedButton(
       onPressed: () {
-        //game.shootMissile();
+        game.addOpponent();
       },
-      child: const Text("Shoot Missile"),
+      child: const Text("Add opponent"),
     );
   }
 }

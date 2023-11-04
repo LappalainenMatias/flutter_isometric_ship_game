@@ -4,9 +4,10 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/dto/drawing_dto.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_objects_to_vertices.dart';
+import 'package:anki/mixin/damage.dart';
 import '../../collision/collision_box.dart';
 
-class Missile extends DynamicGameObject {
+class Missile extends DynamicGameObject with Damage {
   late final CollisionAction? collisionAction;
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile? projectile;

@@ -1,3 +1,4 @@
+import 'package:anki/widget/add_opponent.dart';
 import 'package:anki/widget/joystick.dart';
 import 'package:anki/widget/keyboard_movement.dart';
 import 'package:anki/widget/statistics.dart';
@@ -106,6 +107,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       child: JoyStick(),
                     )
                   ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: AddOpponent(),
                 ),
               ),
             ],
