@@ -2491,7 +2491,7 @@ for(l=m.length,k=a+o,j=n.length,i=0;i<c[0].length;++i){if(!(i<j))return A.e(n,i)
 h=n[i]
 if(h<=0){g=B.c.G(h)
 if(!(i<l))return A.e(m,i)
-B.b.l(t,A.cW(g,m[i],new A.Y(k,b+i,r),q.ac()))}else for(f=b+i;h>0;){g=B.c.G(h)
+B.b.l(t,A.cW(g,m[i],new A.Y(k,b+i,r),q.ac()))}else for(f=b+i;h>=0;){g=B.c.G(h)
 if(!(i<l))return A.e(m,i)
 B.b.l(t,A.cW(g,m[i],new A.Y(k,f,r),q.ac()));--h}}}return t}}
 A.v.prototype={

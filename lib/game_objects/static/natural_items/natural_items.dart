@@ -24,7 +24,7 @@ class NaturalItemCube extends StaticGameObject {
     this.vertices = type.toVertices!(this);
 
     /// Todo fix the collision box size
-    collisionBox = CollisionBox(isoCoordinate, width, width, elevation);
+    collisionBox = CollisionBox(isoCoordinate, width, elevation);
   }
 
   @override

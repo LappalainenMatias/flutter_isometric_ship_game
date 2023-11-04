@@ -12,12 +12,12 @@ class Player extends DynamicGameObject {
   double elevation;
   late CollisionBox collisionBox;
   CollisionAction? collisionActions;
-  double sideWidth = 1;
+  double width = 1.0;
   bool _isVisible = true;
   late DrawingDTO dto;
 
   Player(this.isoCoordinate, this.elevation) {
-    collisionBox = CollisionBox(isoCoordinate, sideWidth, sideWidth, elevation);
+    collisionBox = CollisionBox(isoCoordinate, width, elevation);
     dto = PlayerToDrawingDTO.create(this);
   }
 
@@ -42,7 +42,7 @@ class Player extends DynamicGameObject {
 
   @override
   CollisionBox getCollisionBox() {
-    collisionBox.update(isoCoordinate, sideWidth, sideWidth, elevation);
+    collisionBox.update(isoCoordinate, width, elevation);
     return collisionBox;
   }
 

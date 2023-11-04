@@ -54,6 +54,8 @@ class _StatisticsState extends State<Statistics> {
               "Region creation queue: ${game.regionCreationQueueStats()}",
               style: const TextStyle(color: Colors.white),
             ),
+            Text("Missed frames: ${gameLoop.missedFrames}",
+                style: const TextStyle(color: Colors.white)),
           ],
         ),
       ),

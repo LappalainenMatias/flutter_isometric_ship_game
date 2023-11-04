@@ -15,7 +15,7 @@ class Missile extends DynamicGameObject {
   late CollisionBox collisionBox;
 
   Missile(this.isoCoordinate, this.elevation, this.width) {
-    collisionBox = CollisionBox(isoCoordinate, width, width, elevation);
+    collisionBox = CollisionBox(isoCoordinate, width, elevation);
   }
 
   @override
@@ -75,7 +75,7 @@ class Missile extends DynamicGameObject {
   @override
   CollisionBox getCollisionBox() {
     // We update collision box every frame because missiles move a lot.
-    collisionBox.update(isoCoordinate, width, width, elevation);
+    collisionBox.update(isoCoordinate, width, elevation);
     return collisionBox;
   }
 

@@ -8,6 +8,7 @@ class GameLoop extends ChangeNotifier {
   late final Game game;
   double dt = 0.0;
   Duration _previous = Duration.zero;
+  int missedFrames = 0;
 
   GameLoop(TickerProvider vsync, this.game) {
     _ticker = vsync.createTicker(_onTick)..start();
@@ -16,6 +17,9 @@ class GameLoop extends ChangeNotifier {
   void _onTick(Duration timestamp) {
     final durationDelta = timestamp - _previous;
     dt = durationDelta.inMilliseconds / Duration.millisecondsPerSecond;
+    if (dt > 0.017) {
+      missedFrames++;
+    }
     _previous = timestamp;
     update(dt);
     notifyListeners(); // Render()

@@ -62,4 +62,8 @@ class IsoCoordinate {
     if (res == 0) return const IsoCoordinate.fromIso(1, 0);
     return this * (1 / res);
   }
+
+  IsoCoordinate copy() {
+    return IsoCoordinate.fromIso(isoX, isoY);
+  }
 }

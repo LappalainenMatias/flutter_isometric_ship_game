@@ -1,37 +1,47 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'dart:math';
 
 class CollisionBox {
-  /// Bottom-center point in isometric coordinates.
-  IsoCoordinate point;
-  double width;
-  double height;
-  double elevation;
+  /// Bottom left point of the collision box
+  late Point<double> _point;
+  double _sideWidth;
+  double _elevation;
 
-  CollisionBox(this.point, this.width, this.height, this.elevation);
+  // These are 2d coordinates (x, y)
+  late double leftX;
+  late double rightX;
+  late double bottomY;
+  late double topY;
+  late double bottomZ;
+  late double topZ;
 
-  double get left => point.isoX - (width / 2);
-  double get right => point.isoX + (width / 2);
-  double get bottom => point.isoY - (height / 2);
-  double get top => point.isoY + (height / 2);
-
-  bool overlaps(CollisionBox other) {
-    if (right < other.left || other.right < left) {
-      return false;
-    }
-    if (top < other.bottom || other.top < bottom) {
-      return false;
-    }
-    var belowCollisionBox = other.elevation < elevation ? other : this;
-    if ((elevation - other.elevation).abs() >= belowCollisionBox.height) {
-      return false;
-    }
-    return true;
+  CollisionBox(IsoCoordinate isoCoordinate, this._sideWidth, this._elevation) {
+    _point = isoCoordinate.toPoint();
+    leftX = _point.x;
+    rightX = _point.x + _sideWidth;
+    bottomY = _point.y;
+    topY = _point.y + _sideWidth;
+    bottomZ = _elevation;
+    topZ = _elevation + _sideWidth;
   }
 
-  void update(IsoCoordinate newPoint, double newWidth, double newHeight, double newElevation) {
-    point = newPoint;
-    width = newWidth;
-    height = newHeight;
-    elevation = newElevation;
+  bool overlaps(CollisionBox other) {
+    bool xOverlap = (leftX < other.rightX) && (other.leftX < rightX);
+    bool yOverlap = (bottomY < other.topY) && (other.bottomY < topY);
+    bool zOverlap = (bottomZ < other.topZ) && (other.bottomZ < topZ);
+    return xOverlap && yOverlap && zOverlap;
+  }
+
+  void update(
+      IsoCoordinate newIsoCoordinate, double newWidth, double newElevation) {
+    _point = newIsoCoordinate.toPoint();
+    _sideWidth = newWidth;
+    _elevation = newElevation;
+    leftX = _point.x;
+    rightX = _point.x + _sideWidth;
+    bottomY = _point.y;
+    topY = _point.y + _sideWidth;
+    bottomZ = _elevation;
+    topZ = _elevation + _sideWidth;
   }
 }

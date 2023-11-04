@@ -1,3 +1,5 @@
+import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/map/map.dart';
 import '../../camera/camera.dart';
 import '../../collision/collision_detector.dart';
@@ -16,6 +18,20 @@ class DynamicGameObjectManager {
   final Camera _camera;
 
   DynamicGameObjectManager(this._map, this._camera);
+
+  bool canMove(Player player, IsoCoordinate newIsoCoordinate) {
+    /// Move player to new coordinate
+    var old = player.isoCoordinate.copy();
+    player.isoCoordinate = newIsoCoordinate;
+    _updateRegion(player);
+    /// Check collisions
+    var region = regionOf(player);
+    var collisions = findCollisions(region.getAllGameObjects(), player);
+    /// Move player back to old coordinate
+    player.isoCoordinate = old;
+    _updateRegion(player);
+    return collisions.isEmpty;
+  }
 
   void addMultiplayer(Multiplayer multiplayer) {
     _multiplayer = multiplayer;
@@ -61,13 +77,17 @@ class DynamicGameObjectManager {
       if (!isInView(gameObject.getIsoCoordinate(), _camera)) {
         continue;
       }
-      var currentRegion = _gameObjectToRegion[gameObject]!;
-      var newRegion = _map.getRegion(gameObject.getIsoCoordinate());
-      if (currentRegion != newRegion) {
-        currentRegion.removeDynamicGameObject(gameObject);
-        newRegion.addDynamicGameObject(gameObject);
-        _gameObjectToRegion[gameObject] = newRegion;
-      }
+      _updateRegion(gameObject);
+    }
+  }
+
+  void _updateRegion(DynamicGameObject gameObject) {
+    var currentRegion = _gameObjectToRegion[gameObject]!;
+    var newRegion = _map.getRegion(gameObject.getIsoCoordinate());
+    if (currentRegion != newRegion) {
+      currentRegion.removeDynamicGameObject(gameObject);
+      newRegion.addDynamicGameObject(gameObject);
+      _gameObjectToRegion[gameObject] = newRegion;
     }
   }
 

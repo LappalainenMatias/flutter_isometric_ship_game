@@ -26,7 +26,7 @@ class Tile extends StaticGameObject {
   }) {
     _isVisible = isVisible;
     collisionBox =
-        CollisionBox(isoCoordinate, width.toDouble(), width.toDouble(), elevation);
+        CollisionBox(isoCoordinate, width.toDouble(), elevation);
     this.vertices = vertices ?? TileToDrawingDTO.create(this);
   }
 

@@ -61,7 +61,7 @@ class PlayerToDrawingDTO {
       TileType.deathGrass,
       player.isoCoordinate,
       player.elevation,
-      scale: player.sideWidth,
+      scale: player.width,
     );
   }
 }

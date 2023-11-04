@@ -99,4 +99,11 @@ void main() {
     expect(c6.isoX + 0.224 < 0.01, isTrue);
     expect(c6.isoY + 0.497 < 0.01, isTrue);
   });
+
+  test("IsoCoordinate copy", () {
+    var c1 = const IsoCoordinate.fromIso(1, -2);
+    var c2 = c1.copy();
+    expect(c1.isoX, c2.isoX);
+    expect(c1.isoY, c2.isoY);
+  });
 }

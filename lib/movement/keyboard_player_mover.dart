@@ -64,4 +64,25 @@ class KeyboardPlayerMover {
           IsoCoordinate.fromIso(_movementDistance * speedMultiplier * dt, 0);
     }
   }
+
+  IsoCoordinate nextCoordinate(double dt) {
+    var nextPosition = player.isoCoordinate;
+    if (_movingUp) {
+      nextPosition +=
+          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
+    }
+    if (_movingDown) {
+      nextPosition +=
+          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
+    }
+    if (_movingLeft) {
+      nextPosition +=
+          IsoCoordinate.fromIso(-_movementDistance * speedMultiplier * dt, 0);
+    }
+    if (_movingRight) {
+      nextPosition +=
+          IsoCoordinate.fromIso(_movementDistance * speedMultiplier * dt, 0);
+    }
+    return nextPosition;
+  }
 }

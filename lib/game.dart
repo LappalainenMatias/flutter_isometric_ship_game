@@ -108,9 +108,17 @@ class Game extends ChangeNotifier {
   }
 
   void movePlayer(double dt) {
-    _keyboardPlayerMover?.move(dt);
-    _joyStickPlayerMover?.move(dt);
-    _camera.center = _player.getIsoCoordinate();
+    print(dt);
+    if (_keyboardPlayerMover == null) return;
+    var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
+    var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
+    var canMoveFullStep = _dynamicGameObjectManager.canMove(_player, nextCoordinate);
+    var canMoveHalfStep = _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
+    if (canMoveFullStep && canMoveHalfStep) {
+      _keyboardPlayerMover?.move(dt);
+      _joyStickPlayerMover?.move(dt);
+      _camera.center = _player.getIsoCoordinate();
+    }
   }
 
   void updateDynamicGameObjects(double dt) {

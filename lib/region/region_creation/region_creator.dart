@@ -47,7 +47,7 @@ class RegionCreator {
           ));
         } else {
           /// Todo this need refactoring
-          while (height > 0) {
+          while (height >= 0) {
             final elevation = height.floor().toDouble();
             tiles.add(TileCreator.create(
               elevation,
