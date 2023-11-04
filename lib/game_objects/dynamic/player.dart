@@ -5,7 +5,7 @@ import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
 import '../game_object.dart';
 import 'dart:math';
-import '../game_objects_to_vertices.dart';
+import '../game_object_to_drawing_data.dart';
 
 class Player extends DynamicGameObject with Health {
   CollisionAction? collisionAction;

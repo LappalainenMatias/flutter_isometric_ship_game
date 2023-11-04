@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
-import 'coordinates/iso_coordinate.dart';
 import 'game.dart';
 import 'game_loop.dart';
 
@@ -10,6 +9,7 @@ class GameMapPainter extends CustomPainter {
   final Game game;
   final ui.FragmentShader _waterShader;
   final _landPaint = Paint();
+
   // We start with 10 because there is a weird visual effect if you start with 0
   double _timePassed = 10;
   ui.Image textureImage;
@@ -62,6 +62,10 @@ class GameMapPainter extends CustomPainter {
         _landPaint,
       );
     }
+    canvas.drawCircle(
+        Offset(game.player.isoCoordinate.isoX, game.player.isoCoordinate.isoY),
+        0.5,
+        _landPaint);
   }
 
   void _transformations(Canvas canvas, Size size) {

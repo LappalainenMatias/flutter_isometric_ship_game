@@ -9,6 +9,7 @@ import '../coordinates/iso_coordinate.dart';
 import 'dynamic/bird.dart';
 import 'dynamic/missile.dart';
 import 'dynamic/player.dart';
+import 'dart:math';
 
 class MissileToDrawingDTO {
   static DrawingDTO create(Missile missile) {
@@ -81,18 +82,34 @@ DrawingDTO createDrawingDTO(
   TileType tileType,
   final IsoCoordinate isoCoordinate,
   final double elevation, {
-  final double scale = 1,
+  double scale = 1,
 }) {
   final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation);
   final cenCen = cenBot + IsoCoordinate(scale, scale);
+  final rightTop = cenCen + IsoCoordinate(scale, 0);
   final lefTop = cenCen + IsoCoordinate(0, scale);
   final cenTop = lefTop + IsoCoordinate(scale, 0);
-  final topLeftCorner = IsoCoordinate.fromIso(lefTop.isoX, cenTop.isoY);
+  final topRightCorner = IsoCoordinate.fromIso(rightTop.isoX, cenTop.isoY);
+
+  //final double scos = math.cos(rotation) * scale;
+  //final double ssin = math.sin(rotation) * scale;
+  //final double tx = translateX + -scos * anchorX + ssin * anchorY;
+  //final double ty = translateY + -ssin * anchorX - scos * anchorY;
+  //return RSTransform(scos, ssin, tx, ty);
+
+  const assestWidth = 161;
+  const halfAssetWidth = assestWidth / 2;
+  scale = 0.02515625;
+  final double scos = cos(pi) * scale;
+  final double ssin = sin(pi) * scale;
+  final tx = cenCen.isoX + -scos * halfAssetWidth + ssin * halfAssetWidth;
+  final ty = cenCen.isoY -ssin * halfAssetWidth - scos * halfAssetWidth;
+
   Float32List rstTransforms = Float32List(4);
-  rstTransforms[0] = -0.025 * scale; // scale
-  rstTransforms[1] = 0; // rotation
-  rstTransforms[2] = topLeftCorner.isoX;
-  rstTransforms[3] = topLeftCorner.isoY;
+  rstTransforms[0] = scos;
+  rstTransforms[1] = ssin;
+  rstTransforms[2] = tx;
+  rstTransforms[3] = ty;
   var rects = getTileTextureCoordinatesRect(tileType);
   return DrawingDTO(rstTransforms, rects);
 }

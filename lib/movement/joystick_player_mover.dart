@@ -4,7 +4,7 @@ import '../game_objects/dynamic/player.dart';
 class JoyStickPlayerMover {
   final Player player;
   final double _movementDistance = 5.0;
-  final double speedMultiplier = 10.0;
+  final double speedMultiplier = 30.0;
   double joystickX = 0;
   double joystickY = 0;
 

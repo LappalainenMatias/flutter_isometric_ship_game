@@ -19,14 +19,27 @@ class DynamicGameObjectManager {
 
   DynamicGameObjectManager(this._map, this._camera);
 
+  /// Todo refactor
   bool canMove(Player player, IsoCoordinate newIsoCoordinate) {
-    /// Move player to new coordinate
+    /// Save old coordinate and move player
     var old = player.isoCoordinate.copy();
     player.isoCoordinate = newIsoCoordinate;
     _updateRegion(player);
+
+    /// Find all possible collisions regions
+    var center = regionOf(player);
+    var below = _map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(0, 5));
+    var above = _map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(0, 5));
+    var left = _map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(5, 0));
+    var right = _map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(5, 0));
+
     /// Check collisions
-    var region = regionOf(player);
-    var collisions = findCollisions(region.getAllGameObjects(), player);
+    var collisions = findCollisions(center.getAllGameObjects(), player);
+    collisions.addAll(findCollisions(below.getAllGameObjects(), player));
+    collisions.addAll(findCollisions(above.getAllGameObjects(), player));
+    collisions.addAll(findCollisions(left.getAllGameObjects(), player));
+    collisions.addAll(findCollisions(right.getAllGameObjects(), player));
+
     /// Move player back to old coordinate
     player.isoCoordinate = old;
     _updateRegion(player);

@@ -5,7 +5,7 @@ class Camera {
   IsoCoordinate center;
   final CameraMover _cameraMover = CameraMover();
   double _zoomLevel = 0.0005;
-  final double _minWidth = 60;
+  final double _minWidth = 30;
   final double _maxWidth = 80000;
   double _aspectRatio = 1.0;
 
@@ -58,9 +58,9 @@ class Camera {
 
   double get zoomLevel => _zoomLevel;
 
-  IsoCoordinate getGameCoordinate(double screenXPercentage, double screenYPercentage) {
-    return IsoCoordinate.fromIso(
-        topLeft.isoX + screenXPercentage * width(),
+  IsoCoordinate getGameCoordinate(
+      double screenXPercentage, double screenYPercentage) {
+    return IsoCoordinate.fromIso(topLeft.isoX + screenXPercentage * width(),
         topLeft.isoY - screenYPercentage * height());
   }
 }

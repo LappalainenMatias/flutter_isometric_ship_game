@@ -22,18 +22,18 @@ class Game extends ChangeNotifier {
   late final DynamicGameObjectManager _dynamicGameObjectManager;
   late final KeyboardPlayerMover? _keyboardPlayerMover;
   late final JoyStickPlayerMover? _joyStickPlayerMover;
-  final _player = MultiplayerGameObject(1, const IsoCoordinate(0, 0), 0);
+  final player = MultiplayerGameObject(1, const IsoCoordinate(0, 0), 0);
   int _amountOfGameObjects = 0;
   int _amountOfGameObjectsRendered = 0;
 
   Game({bool isMultiplayer = false}) {
     _map = GameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
-    _dynamicGameObjectManager.addDynamicGameObject(_player);
-    _keyboardPlayerMover = KeyboardPlayerMover(_player);
-    _joyStickPlayerMover = JoyStickPlayerMover(_player);
+    _dynamicGameObjectManager.addDynamicGameObject(player);
+    _keyboardPlayerMover = KeyboardPlayerMover(player);
+    _joyStickPlayerMover = JoyStickPlayerMover(player);
     if (isMultiplayer) {
-      _dynamicGameObjectManager.addMultiplayer(Multiplayer(_player));
+      _dynamicGameObjectManager.addMultiplayer(Multiplayer(player));
     }
   }
 
@@ -114,13 +114,13 @@ class Game extends ChangeNotifier {
     var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
     var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
     var canMoveFullStep =
-        _dynamicGameObjectManager.canMove(_player, nextCoordinate);
+        _dynamicGameObjectManager.canMove(player, nextCoordinate);
     var canMoveHalfStep =
-        _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
+        _dynamicGameObjectManager.canMove(player, halfNextCoordinate);
     if (canMoveFullStep && canMoveHalfStep) {
       _keyboardPlayerMover?.move(dt);
       _joyStickPlayerMover?.move(dt);
-      _camera.center = _player.getIsoCoordinate();
+      _camera.center = player.getIsoCoordinate();
     }
   }
 
@@ -129,15 +129,19 @@ class Game extends ChangeNotifier {
   }
 
   void shootMissile(IsoCoordinate target) {
-    var shooter = _player;
-    var missile = Missile(_player.getIsoCoordinate(), _player.elevation, 1);
+    var shooter = player;
+    var missile = Missile(player.getIsoCoordinate(), player.elevation, 1);
     var skipCollisions = HashSet<GameObject>()..add(shooter);
     missile.collisionAction = CollisionAction(
         [CollisionActionType.destroyItself, CollisionActionType.causeDamage],
         missile,
         skipCollisions);
     var unitVectorFromPlayerToTarget =
-        (target - _player.isoCoordinate).toUnitVector();
+        (target - player.isoCoordinate).toUnitVector();
+    print("--------------");
+    print("target: " + target.toString());
+    print("player: " + player.isoCoordinate.toString());
+    print("unit: " + unitVectorFromPlayerToTarget.toString());
     missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));
     _dynamicGameObjectManager.addDynamicGameObject(missile);
   }

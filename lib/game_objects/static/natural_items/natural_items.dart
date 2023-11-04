@@ -4,7 +4,7 @@ import '../../../collision/collision_box.dart';
 import '../../../coordinates/iso_coordinate.dart';
 import '../../../dto/drawing_dto.dart';
 import '../../game_object.dart';
-import '../../game_objects_to_vertices.dart';
+import '../../game_object_to_drawing_data.dart';
 
 /// Trees, rocks, etc. are natural items.
 /// Trees are made up of multiple NaturalItemCubes.

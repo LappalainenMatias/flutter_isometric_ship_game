@@ -53,7 +53,7 @@ class IsoCoordinate {
 
   @override
   String toString() {
-    return "${isoX.toInt()}, ${isoY.toInt()}";
+    return "${isoX}, ${isoY}";
   }
 
   /// (0,0) returns (1,0) vector
