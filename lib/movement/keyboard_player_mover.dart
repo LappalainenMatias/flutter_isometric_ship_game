@@ -10,7 +10,7 @@ class KeyboardPlayerMover {
   bool _movingLeft = false;
   bool _movingRight = false;
   final Player player;
-  final double _movementDistance = 5.0;
+  final double _movementDistance = 100.0;
   final double speedMultiplier = 1;
 
   KeyboardPlayerMover(this.player);

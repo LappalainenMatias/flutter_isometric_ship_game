@@ -86,20 +86,10 @@ DrawingDTO createDrawingDTO(
 }) {
   final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation);
   final cenCen = cenBot + IsoCoordinate(scale, scale);
-  final rightTop = cenCen + IsoCoordinate(scale, 0);
-  final lefTop = cenCen + IsoCoordinate(0, scale);
-  final cenTop = lefTop + IsoCoordinate(scale, 0);
-  final topRightCorner = IsoCoordinate.fromIso(rightTop.isoX, cenTop.isoY);
 
-  //final double scos = math.cos(rotation) * scale;
-  //final double ssin = math.sin(rotation) * scale;
-  //final double tx = translateX + -scos * anchorX + ssin * anchorY;
-  //final double ty = translateY + -ssin * anchorX - scos * anchorY;
-  //return RSTransform(scos, ssin, tx, ty);
-
-  const assestWidth = 161;
+  const assestWidth = textureHeight;
   const halfAssetWidth = assestWidth / 2;
-  scale = 0.02515625;
+  scale *= 0.02515625;
   final double scos = cos(pi) * scale;
   final double ssin = sin(pi) * scale;
   final tx = cenCen.isoX + -scos * halfAssetWidth + ssin * halfAssetWidth;

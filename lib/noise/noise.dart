@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:open_simplex_2/open_simplex_2.dart';
 import '../map/map_creation_rules.dart';
 
@@ -29,8 +31,9 @@ class NoiseCreator {
     double frequency2 = mapCreationRules.frequency() * 4;
     double frequency3 = mapCreationRules.frequency() * 16;
 
-    double amountOfWater = mapCreationRules.amountOfWater();
-    double peakToPeakAmplitude = mapCreationRules.peakToPeakAmplitude();
+    var amountOfWater = mapCreationRules.amountOfWater();
+    var peakToPeakAmplitude = mapCreationRules.peakToPeakAmplitude();
+    var terrainSharpness = mapCreationRules.terrainSharpness();
     for (int x = 0; x < width; x++) {
       var i = (startX + x).toDouble();
       for (int y = 0; y < width; y++) {
@@ -45,7 +48,7 @@ class NoiseCreator {
         e = e / 1.75;
 
         // Makes terrain more interesting
-        // e = pow(e, mapCreationRules.terrainSharpness()).toDouble();
+        e = pow(e, terrainSharpness).toDouble();
         e = e - amountOfWater;
         e = e * peakToPeakAmplitude;
         elevationMap[x][y] = e.roundToDouble();

@@ -20,40 +20,40 @@ Float32List getTileTextureCoordinatesRect(TileType type) {
   }
 }
 
-const double _textureHeight = 161;
+const double textureHeight = 161;
 
 const int deathGrassIndex = 0;
 final Float32List deathGrassTexture = Float32List.fromList([
-  0, _textureHeight * deathGrassIndex,
-  161, 161 + _textureHeight * deathGrassIndex,
+  0, textureHeight * deathGrassIndex,
+  161, 161 + textureHeight * deathGrassIndex,
 ]);
 
 const int grassIndex = 1;
 final Float32List grassTexture = Float32List.fromList([
-  0, _textureHeight * grassIndex,
-  161, 161 + _textureHeight * grassIndex,
+  0, textureHeight * grassIndex,
+  161, 161 + textureHeight * grassIndex,
 ]);
 
 const int rockIndex = 2;
 final Float32List rockTexture = Float32List.fromList([
-  0, _textureHeight * rockIndex,
-  161, 161 + _textureHeight * rockIndex,
+  0, textureHeight * rockIndex,
+  161, 161 + textureHeight * rockIndex,
 ]);
 
 const int snowIndex = 3;
 final Float32List snowTexture = Float32List.fromList([
-  0,0 + _textureHeight * snowIndex,
-  161, 161 + _textureHeight * snowIndex,
+  0,0 + textureHeight * snowIndex,
+  161, 161 + textureHeight * snowIndex,
 ]);
 
 const int iceIndex = 4;
 final Float32List iceTexture = Float32List.fromList([
-  0, _textureHeight * iceIndex,
-  161, 161 + _textureHeight * iceIndex,
+  0, textureHeight * iceIndex,
+  161, 161 + textureHeight * iceIndex,
 ]);
 
 const int sandIndex = 5;
 final Float32List sandTexture = Float32List.fromList([
-  0, _textureHeight * sandIndex,
-  161, 161+ _textureHeight * sandIndex,
+  0, textureHeight * sandIndex,
+  161, 161+ textureHeight * sandIndex,
 ]);

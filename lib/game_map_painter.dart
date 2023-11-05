@@ -25,7 +25,7 @@ class GameMapPainter extends CustomPainter {
 
     _transformations(canvas, size);
 
-    var atlasData = game.getAtlasData();
+    var atlasData = game.getDrawingData();
 
     /// Draw under water things
     for (var data in atlasData.underWater) {
@@ -62,10 +62,6 @@ class GameMapPainter extends CustomPainter {
         _landPaint,
       );
     }
-    canvas.drawCircle(
-        Offset(game.player.isoCoordinate.isoX, game.player.isoCoordinate.isoY),
-        0.5,
-        _landPaint);
   }
 
   void _transformations(Canvas canvas, Size size) {

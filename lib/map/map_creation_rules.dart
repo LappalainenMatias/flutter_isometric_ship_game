@@ -29,55 +29,6 @@ abstract class MapCreationRules {
   double frequency();
 }
 
-class FinlandCreationRules extends MapCreationRules {
-  @override
-  List<TileRule> tileRules() {
-    return [
-      TileRule(TileType.sand, 0.0, null),
-      TileRule(TileType.deathGrass, 2.0, -0.20),
-      TileRule(TileType.sand, 2.0, 0.35),
-      TileRule(TileType.grass, 2.0, null),
-      TileRule(TileType.deathGrass, 4.0, -0.20),
-      TileRule(TileType.grass, 4.0, null),
-      TileRule(TileType.deathGrass, 10.0, -0.20),
-      TileRule(TileType.rock, null, null),
-    ];
-  }
-
-  @override
-  Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
-    return {
-      TileType.grass: [
-        NaturalItemProbability(NaturalItemType.rock, 0.02),
-        NaturalItemProbability(NaturalItemType.birch, 0.04),
-      ],
-      TileType.sand: [
-        NaturalItemProbability(NaturalItemType.rock, 0.10),
-      ],
-    };
-  }
-
-  @override
-  double amountOfWater() {
-    return 0.5;
-  }
-
-  @override
-  double peakToPeakAmplitude() {
-    return 30;
-  }
-
-  @override
-  double terrainSharpness() {
-    return 3;
-  }
-
-  @override
-  double frequency() {
-    return 0.002;
-  }
-}
-
 class SvalbardCreationRules extends MapCreationRules {
   @override
   List<TileRule> tileRules() {
@@ -111,22 +62,22 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.6;
+    return 0.2;
   }
 
   @override
   double peakToPeakAmplitude() {
-    return 30;
+    return 50;
   }
 
   @override
   double terrainSharpness() {
-    return 2;
+    return 5;
   }
 
   @override
   double frequency() {
-    return 0.002;
+    return 0.003;
   }
 }
 

@@ -37,7 +37,7 @@ class Game extends ChangeNotifier {
     }
   }
 
-  getAtlasData() {
+  getDrawingData() {
     List<
         (
           Float32List rstTransformsUnderWater,
@@ -130,7 +130,7 @@ class Game extends ChangeNotifier {
 
   void shootMissile(IsoCoordinate target) {
     var shooter = player;
-    var missile = Missile(player.getIsoCoordinate(), player.elevation, 1);
+    var missile = Missile(player.getIsoCoordinate(), player.elevation, 0.5);
     var skipCollisions = HashSet<GameObject>()..add(shooter);
     missile.collisionAction = CollisionAction(
         [CollisionActionType.destroyItself, CollisionActionType.causeDamage],
@@ -138,10 +138,6 @@ class Game extends ChangeNotifier {
         skipCollisions);
     var unitVectorFromPlayerToTarget =
         (target - player.isoCoordinate).toUnitVector();
-    print("--------------");
-    print("target: " + target.toString());
-    print("player: " + player.isoCoordinate.toString());
-    print("unit: " + unitVectorFromPlayerToTarget.toString());
     missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));
     _dynamicGameObjectManager.addDynamicGameObject(missile);
   }
