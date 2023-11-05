@@ -1,25 +1,25 @@
+import 'package:anki/animation/animation.dart';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/mixin/health.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
+import '../../mixin/health.dart';
 import '../game_object.dart';
 import 'dart:math';
 import '../game_object_to_drawing_data.dart';
 
-class Player extends DynamicGameObject with Health {
+class GoldCoin extends DynamicGameObject with Animation, Health {
   CollisionAction? collisionAction;
   IsoCoordinate isoCoordinate;
   double elevation;
   late CollisionBox collisionBox;
-  CollisionAction? collisionActions;
   double width = 1.0;
   bool _isVisible = true;
   late DrawingDTO dto;
 
-  Player(this.isoCoordinate, this.elevation) {
+  GoldCoin(this.isoCoordinate, this.elevation) {
     collisionBox = CollisionBox(isoCoordinate, width, elevation);
-    dto = PlayerToDrawingDTO.create(this);
+    dto = GoldCoinToDrawingDTO.create(this);
   }
 
   @override
@@ -43,14 +43,12 @@ class Player extends DynamicGameObject with Health {
 
   @override
   CollisionBox getCollisionBox() {
-    collisionBox.update(isoCoordinate, width, elevation);
+    // Not updating because coins don't move
     return collisionBox;
   }
 
   @override
   List gameObjectToList() {
-    // TODO: if we implement this then the game becomes savable because we can save
-    // all the game objects as a list of values
     throw UnimplementedError();
   }
 
@@ -81,16 +79,17 @@ class Player extends DynamicGameObject with Health {
 
   @override
   void update(double dt) {
-    dto = PlayerToDrawingDTO.create(this);
-  }
-
-  @override
-  CollisionAction? getCollisionAction() {
-    return collisionAction;
+    updateAnimation(dt);
+    dto = GoldCoinToDrawingDTO.create(this);
   }
 
   @override
   void destroyItself() {
     destroy = true;
+  }
+
+  @override
+  CollisionAction? getCollisionAction() {
+    return collisionAction;
   }
 }

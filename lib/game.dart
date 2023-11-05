@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
-import 'package:anki/game_objects/dynamic/player.dart';
+import 'package:anki/game_objects/dynamic/gold_coin.dart';
 import 'package:anki/movement/joystick_player_mover.dart';
 import 'package:anki/online/multiplayer.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,6 +27,7 @@ class Game extends ChangeNotifier {
   int _amountOfGameObjectsRendered = 0;
 
   Game({bool isMultiplayer = false}) {
+    player.addCollisionAction(CollisionActionType.collectGoldCoin);
     _map = GameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(player);
@@ -169,9 +170,8 @@ class Game extends ChangeNotifier {
 
   void addOpponent() {
     var coordinate = _camera.center + const IsoCoordinate(50, 50);
-    var opponent = Player(coordinate, 0);
-    opponent.heal(5);
-    _dynamicGameObjectManager.addDynamicGameObject(opponent);
+    var coin = GoldCoin(coordinate, 0);
+    _dynamicGameObjectManager.addDynamicGameObject(coin);
   }
 }
 

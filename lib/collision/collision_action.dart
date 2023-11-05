@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import '../game_objects/dynamic/gold_coin.dart';
 import '../game_objects/dynamic/player.dart';
 import '../game_objects/game_object.dart';
 import '../mixin/damage.dart';
@@ -39,6 +40,9 @@ class CollisionAction {
         case CollisionActionType.causeDamage:
           _causeDamage(collisions);
           break;
+        case CollisionActionType.collectGoldCoin:
+          _collectGoldCoin(collisions);
+          break;
       }
     }
   }
@@ -62,6 +66,19 @@ class CollisionAction {
       }
     }
   }
+
+  void _collectGoldCoin(List collisions) {
+    for (var colliding in collisions) {
+      if (colliding is GoldCoin) {
+        colliding.destroy;
+      }
+    }
+  }
 }
 
-enum CollisionActionType { moveAbove, destroyItself, causeDamage }
+enum CollisionActionType {
+  moveAbove,
+  destroyItself,
+  causeDamage,
+  collectGoldCoin
+}

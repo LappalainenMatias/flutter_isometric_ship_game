@@ -14,12 +14,14 @@ file:///Users/matiaslappalainen/.pub-cache/hosted/pub.dev/open_simplex_2-0.2.1/l
 file:///Users/matiaslappalainen/Documents/flutter/bin/cache/dart-sdk/lib/_internal/dart2js_platform.dill
 file:///Users/matiaslappalainen/Documents/flutter/bin/cache/dart-sdk/lib/libraries.json
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/.dart_tool/package_config.json
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/animation/animation.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/collision/collision_action.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/collision/collision_box.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/coordinates/iso_coordinate.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/dto/drawing_dto.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/create_game_object.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/dynamic/bird.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/dynamic/gold_coin.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/dynamic/missile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/dynamic/player.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_objects/game_object.dart

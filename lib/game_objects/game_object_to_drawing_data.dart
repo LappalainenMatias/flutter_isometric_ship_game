@@ -1,4 +1,5 @@
 import 'dart:typed_data';
+import 'package:anki/game_objects/dynamic/gold_coin.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
@@ -13,8 +14,9 @@ import 'dart:math';
 
 class MissileToDrawingDTO {
   static DrawingDTO create(Missile missile) {
+    var texture = getTileTextureCoordinatesRect(TileType.ice);
     return createDrawingDTO(
-      TileType.ice,
+      texture,
       missile.getIsoCoordinate(),
       missile.getElevation(),
       scale: missile.width,
@@ -24,20 +26,29 @@ class MissileToDrawingDTO {
 
 class BirchToDrawingDTO {
   static DrawingDTO leaves(NaturalItemCube naturalItemCube) {
-    return createDrawingDTO(TileType.snow, naturalItemCube.isoCoordinate,
-        naturalItemCube.elevation);
+    var texture = getTileTextureCoordinatesRect(TileType.snow);
+    return createDrawingDTO(
+      texture,
+      naturalItemCube.isoCoordinate,
+      naturalItemCube.elevation,
+    );
   }
 
   static DrawingDTO trunk(NaturalItemCube naturalItemCube) {
+    var texture = getTileTextureCoordinatesRect(TileType.ice);
     return createDrawingDTO(
-        TileType.ice, naturalItemCube.isoCoordinate, naturalItemCube.elevation);
+      texture,
+      naturalItemCube.isoCoordinate,
+      naturalItemCube.elevation,
+    );
   }
 }
 
 class RockToDrawingDTO {
   static DrawingDTO create(NaturalItemCube naturalItemCube) {
+    var texture = getTileTextureCoordinatesRect(TileType.deathGrass);
     return createDrawingDTO(
-      TileType.deathGrass,
+      texture,
       naturalItemCube.isoCoordinate,
       naturalItemCube.elevation,
       scale: 0.6,
@@ -47,8 +58,9 @@ class RockToDrawingDTO {
 
 class TileToDrawingDTO {
   static DrawingDTO create(Tile tile) {
+    var texture = getTileTextureCoordinatesRect(tile.type);
     return createDrawingDTO(
-      tile.type,
+      texture,
       tile.isoCoordinate,
       tile.elevation,
       scale: tile.width.toDouble(),
@@ -58,8 +70,9 @@ class TileToDrawingDTO {
 
 class PlayerToDrawingDTO {
   static DrawingDTO create(Player player) {
+    var texture = getTileTextureCoordinatesRect(TileType.deathGrass);
     return createDrawingDTO(
-      TileType.deathGrass,
+      texture,
       player.isoCoordinate,
       player.elevation,
       scale: player.width,
@@ -67,10 +80,23 @@ class PlayerToDrawingDTO {
   }
 }
 
+class GoldCoinToDrawingDTO {
+  static DrawingDTO create(GoldCoin coin) {
+    var type = coin.getTexture();
+    return createDrawingDTO(
+      type,
+      coin.isoCoordinate,
+      coin.elevation,
+      scale: coin.width,
+    );
+  }
+}
+
 class BirdToDrawingDTO {
   static DrawingDTO create(Bird bird) {
+    var texture = getTileTextureCoordinatesRect(TileType.snow);
     return createDrawingDTO(
-      TileType.snow,
+      texture,
       bird.isoCoordinate,
       bird.elevation,
       scale: bird.sideWidth,
@@ -79,7 +105,7 @@ class BirdToDrawingDTO {
 }
 
 DrawingDTO createDrawingDTO(
-  TileType tileType,
+  Float32List textureRects,
   final IsoCoordinate isoCoordinate,
   final double elevation, {
   double scale = 1,
@@ -93,15 +119,14 @@ DrawingDTO createDrawingDTO(
   final double scos = cos(pi) * scale;
   final double ssin = sin(pi) * scale;
   final tx = cenCen.isoX + -scos * halfAssetWidth + ssin * halfAssetWidth;
-  final ty = cenCen.isoY -ssin * halfAssetWidth - scos * halfAssetWidth;
+  final ty = cenCen.isoY - ssin * halfAssetWidth - scos * halfAssetWidth;
 
   Float32List rstTransforms = Float32List(4);
   rstTransforms[0] = scos;
   rstTransforms[1] = ssin;
   rstTransforms[2] = tx;
   rstTransforms[3] = ty;
-  var rects = getTileTextureCoordinatesRect(tileType);
-  return DrawingDTO(rstTransforms, rects);
+  return DrawingDTO(rstTransforms, textureRects);
 }
 
 /// THIS IS THE OLD IMPLEMENTATION THAT CREATES VERTICES
@@ -140,7 +165,7 @@ DrawingDTO toVertices(
   if (rightSideVisible) size += 12;
   final positions = Float32List(size);
   final textures = Float32List(size);
-  final fullTexture = getTileTextureCoordinates(tileType);
+  final fullTexture = OLD_IMPLEMENTATION_getTileTextureCoordinates(tileType);
   int positionIndex = 0;
   int textureIndex = 0;
 

@@ -1629,17 +1629,17 @@ n=new A.bs(1,q)
 n.saj(u.X.a(o.J()))
 n.a===$&&A.a0()
 p.f=n
-r=A.eS(r,o,q,1)
+r=A.eS(A.dk(r),o,q,1)
 p.d=r
 return p}}throw A.b(new A.bY("No tile type found for elevation: "+A.m(a)+", moisture: "+A.m(b)+". Fix the rules!"))},
-e5(a){var t,s=a.c,r=a.e,q=a.b.t(0,A.bA(s,s)).t(0,A.bA(r,r)),p=r*0.02515625,o=Math.cos(3.141592653589793)*p,n=Math.sin(3.141592653589793)*p
-r=n*80.5
+e5(a){var t,s=A.dk(a.a),r=a.c,q=a.e,p=a.b.t(0,A.bA(r,r)).t(0,A.bA(q,q)),o=q*0.02515625,n=Math.cos(3.141592653589793)*o,m=Math.sin(3.141592653589793)*o
+q=m*80.5
 t=new Float32Array(4)
-t[0]=o
-t[1]=n
-t[2]=q.a+-o*80.5+r
-t[3]=q.b-r-o*80.5
-return new A.aZ(t,A.dk(a.a))},
+t[0]=n
+t[1]=m
+t[2]=p.a+-n*80.5+q
+t[3]=p.b-q-n*80.5
+return new A.aZ(t,s)},
 eS(a,b,c,d){var t,s,r,q,p=b.t(0,A.bA(c,c)).t(0,A.bA(d,d))
 d*=0.02515625
 t=Math.cos(3.141592653589793)*d
@@ -1650,7 +1650,7 @@ q[0]=t
 q[1]=s
 q[2]=p.a+-t*80.5+r
 q[3]=p.b-r-t*80.5
-return new A.aZ(q,A.dk(a))},
+return new A.aZ(q,a)},
 fb(a){var t,s,r,q,p,o,n,m,l,k,j,i=A.dN(u.N)
 for(t=a.length,s=0;r=a.length,s<r;a.length===t||(0,A.ak)(a),++s){q=a[s]
 p=q.b.J()

@@ -7,6 +7,7 @@ mixin Health {
     _health -= damage.amount;
     if (_health < 0) {
       _health = 0;
+      destroyItself();
     }
   }
 
@@ -15,4 +16,6 @@ mixin Health {
   }
 
   int get health => _health;
+
+  void destroyItself();
 }
