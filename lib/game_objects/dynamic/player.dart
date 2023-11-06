@@ -1,19 +1,21 @@
+import 'package:anki/animation/animation.dart';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/mixin/health.dart';
+import 'package:anki/textures/texture_rects.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
 import '../game_object.dart';
 import 'dart:math';
 import '../game_object_to_drawing_data.dart';
 
-class Player extends DynamicGameObject with Health {
+class Player extends DynamicGameObject with Health, Animation {
   CollisionAction? collisionAction;
   IsoCoordinate isoCoordinate;
   double elevation;
   late CollisionBox collisionBox;
-  CollisionAction? collisionActions;
-  double width = 1.0;
+  List<SpriteSheetItem> animation = [];
+  double width = 1;
   bool _isVisible = true;
   late DrawingDTO dto;
 
@@ -82,6 +84,7 @@ class Player extends DynamicGameObject with Health {
   @override
   void update(double dt) {
     dto = PlayerToDrawingDTO.create(this);
+    updateAnimation(dt);
   }
 
   @override
@@ -92,5 +95,10 @@ class Player extends DynamicGameObject with Health {
   @override
   void destroyItself() {
     destroy = true;
+  }
+
+  @override
+  List<SpriteSheetItem> currentAnimation() {
+    return animation;
   }
 }

@@ -131,7 +131,7 @@ class Game extends ChangeNotifier {
 
   void shootMissile(IsoCoordinate target) {
     var shooter = player;
-    var missile = Missile(player.getIsoCoordinate(), player.elevation, 0.5);
+    var missile = Missile(player.getIsoCoordinate(), player.elevation, 0.4);
     var skipCollisions = HashSet<GameObject>()..add(shooter);
     missile.collisionAction = CollisionAction(
         [CollisionActionType.destroyItself, CollisionActionType.causeDamage],

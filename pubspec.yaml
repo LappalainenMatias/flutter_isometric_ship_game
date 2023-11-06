@@ -34,6 +34,6 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/sprite_sheet.png
+    - assets/spritesheet.png
   shaders:
     - shaders/regtanglewater.frag

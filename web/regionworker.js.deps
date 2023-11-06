@@ -33,6 +33,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/map_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/mixin/damage.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/mixin/health.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/movement/moving_direction.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/jsregionworker.dart

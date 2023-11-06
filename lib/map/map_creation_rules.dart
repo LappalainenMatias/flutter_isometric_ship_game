@@ -62,17 +62,17 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.2;
+    return 0.4;
   }
 
   @override
   double peakToPeakAmplitude() {
-    return 50;
+    return 30;
   }
 
   @override
   double terrainSharpness() {
-    return 5;
+    return 1;
   }
 
   @override

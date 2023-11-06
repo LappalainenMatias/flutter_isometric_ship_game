@@ -3,6 +3,7 @@ import 'package:anki/game_objects/dynamic/gold_coin.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
+import 'package:anki/movement/moving_direction.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../dto/drawing_dto.dart';
@@ -14,7 +15,7 @@ import 'dart:math';
 
 class MissileToDrawingDTO {
   static DrawingDTO create(Missile missile) {
-    var texture = getTileTextureCoordinatesRect(TileType.ice);
+    var texture = getTileTextureCoordinatesRect(SpriteSheetItem.tileRed);
     return createDrawingDTO(
       texture,
       missile.getIsoCoordinate(),
@@ -26,7 +27,7 @@ class MissileToDrawingDTO {
 
 class BirchToDrawingDTO {
   static DrawingDTO leaves(NaturalItemCube naturalItemCube) {
-    var texture = getTileTextureCoordinatesRect(TileType.snow);
+    var texture = getTileTextureCoordinatesRect(TileType.snow.spriteSheet);
     return createDrawingDTO(
       texture,
       naturalItemCube.isoCoordinate,
@@ -35,7 +36,7 @@ class BirchToDrawingDTO {
   }
 
   static DrawingDTO trunk(NaturalItemCube naturalItemCube) {
-    var texture = getTileTextureCoordinatesRect(TileType.ice);
+    var texture = getTileTextureCoordinatesRect(TileType.ice.spriteSheet);
     return createDrawingDTO(
       texture,
       naturalItemCube.isoCoordinate,
@@ -46,7 +47,8 @@ class BirchToDrawingDTO {
 
 class RockToDrawingDTO {
   static DrawingDTO create(NaturalItemCube naturalItemCube) {
-    var texture = getTileTextureCoordinatesRect(TileType.deathGrass);
+    var texture =
+        getTileTextureCoordinatesRect(TileType.deathGrass.spriteSheet);
     return createDrawingDTO(
       texture,
       naturalItemCube.isoCoordinate,
@@ -58,7 +60,7 @@ class RockToDrawingDTO {
 
 class TileToDrawingDTO {
   static DrawingDTO create(Tile tile) {
-    var texture = getTileTextureCoordinatesRect(tile.type);
+    var texture = getTileTextureCoordinatesRect(tile.type.spriteSheet);
     return createDrawingDTO(
       texture,
       tile.isoCoordinate,
@@ -70,12 +72,11 @@ class TileToDrawingDTO {
 
 class PlayerToDrawingDTO {
   static DrawingDTO create(Player player) {
-    var texture = getTileTextureCoordinatesRect(TileType.deathGrass);
     return createDrawingDTO(
-      texture,
+      player.getTexture(),
       player.isoCoordinate,
       player.elevation,
-      scale: player.width,
+      scale: player.width * 1.5,
     );
   }
 }
@@ -94,7 +95,7 @@ class GoldCoinToDrawingDTO {
 
 class BirdToDrawingDTO {
   static DrawingDTO create(Bird bird) {
-    var texture = getTileTextureCoordinatesRect(TileType.snow);
+    var texture = getTileTextureCoordinatesRect(TileType.snow.spriteSheet);
     return createDrawingDTO(
       texture,
       bird.isoCoordinate,
@@ -105,21 +106,22 @@ class BirdToDrawingDTO {
 }
 
 DrawingDTO createDrawingDTO(
-  Float32List textureRects,
-  final IsoCoordinate isoCoordinate,
-  final double elevation, {
-  double scale = 1,
-}) {
+    Float32List textureRects,
+    final IsoCoordinate isoCoordinate,
+    final double elevation, {
+      double scale = 1,
+    }) {
   final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation);
   final cenCen = cenBot + IsoCoordinate(scale, scale);
 
-  const assestWidth = textureHeight;
-  const halfAssetWidth = assestWidth / 2;
-  scale *= 0.02515625;
-  final double scos = cos(pi) * scale;
-  final double ssin = sin(pi) * scale;
-  final tx = cenCen.isoX + -scos * halfAssetWidth + ssin * halfAssetWidth;
-  final ty = cenCen.isoY - ssin * halfAssetWidth - scos * halfAssetWidth;
+  const assetWidth = textureWidth;
+  const halfAssetWidth = assetWidth / 2;
+  scale *= 0.12656738281;
+  var rotation = 0; // No rotation, just flip
+  final double scos = cos(rotation) * -scale; // Flip horizontally
+  final double ssin = sin(rotation); // No vertical flip, so sine remains unaffected
+  final tx = cenCen.isoX - scos * halfAssetWidth; // Adjusts for flipped width
+  final ty = cenCen.isoY; // Remains the same, no vertical flip
 
   Float32List rstTransforms = Float32List(4);
   rstTransforms[0] = scos;
@@ -128,6 +130,8 @@ DrawingDTO createDrawingDTO(
   rstTransforms[3] = ty;
   return DrawingDTO(rstTransforms, textureRects);
 }
+
+
 
 /// THIS IS THE OLD IMPLEMENTATION THAT CREATES VERTICES
 /// This can be used with canvas.drawVertices() but it is slower than

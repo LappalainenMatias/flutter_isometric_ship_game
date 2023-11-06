@@ -6,6 +6,8 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 import 'dart:math';
 
+import '../test_utils/test_objects.dart';
+
 void main() {
   test("Tile rule limits", () {
     expect(TileRule(TileType.grass, -1, 0).match(-1.1, -0.1), true);
@@ -37,15 +39,15 @@ void main() {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
     TileCreator.create(
-        0.0, 0.0, const Point(0, 0), FinlandCreationRules().tileRules());
+        0.0, 0.0, const Point(0, 0), TestMapCreationRules().tileRules());
     TileCreator.create(-1000000, -1000000, const Point(-1000000, -1000000),
-        FinlandCreationRules().tileRules());
+        TestMapCreationRules().tileRules());
     TileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
-        FinlandCreationRules().tileRules());
+        TestMapCreationRules().tileRules());
     TileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
-        FinlandCreationRules().tileRules());
+        TestMapCreationRules().tileRules());
     TileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
-        FinlandCreationRules().tileRules());
+        TestMapCreationRules().tileRules());
   });
 
   test("Check that elevation and coordinate stays the same", () {

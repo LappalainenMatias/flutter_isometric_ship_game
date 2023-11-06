@@ -1,72 +1,52 @@
 import 'dart:typed_data';
 import '../game_objects/static/ground/tile_type.dart';
 
-/// Contains the hard coded texture coordinate for each tile type.
-/// The values are coordinates of the sprite_sheet.png file.
-Float32List getTileTextureCoordinatesRect(
-    TileType type) {
-  switch (type) {
-    case TileType.ice:
-      return iceTexture;
-    case TileType.grass:
-      return grassTexture;
-    case TileType.deathGrass:
-      return deathGrassTexture;
-    case TileType.rock:
-      return rockTexture;
-    case TileType.snow:
-      return snowTexture;
-    case TileType.sand:
-      return sandTexture;
-  }
+/// Sprite was created with https://codeshack.io/images-sprite-sheet-generator/
+/// The A1, A2,... are animation frames.
+enum SpriteSheetItem {
+  tileGreen(0, 19),
+  tileRed(0, 20),
+  tileGrey(0, 18),
+  shipRedDownA1(0, 0),
+  shipRedDownA2(0, 1),
+  shipRedDownA3(0, 2),
+  shipRedLeftA1(1, 0),
+  shipRedLeftA2(1, 1),
+  shipRedLeftA3(1, 2),
+  shipRedRightA1(2, 0),
+  shipRedRightA2(2, 1),
+  shipRedRightA3(2, 2),
+  shipRedUpA1(3, 0),
+  shipRedUpA2(3, 1),
+  shipRedUpA3(3, 2),
+  shipRedDownLeftA1(0, 3),
+  shipRedDownLeftA2(0, 4),
+  shipRedDownLeftA3(0, 5),
+  shipRedDownRightA1(1, 3),
+  shipRedDownRightA2(1, 4),
+  shipRedDownRightA3(1, 5),
+  shipRedUpLeftA1(2, 3),
+  shipRedUpLeftA2(2, 4),
+  shipRedUpLeftA3(2, 5),
+  shipRedUpRightA1(3, 3),
+  shipRedUpRightA2(3, 4),
+  shipRedUpRightA3(3, 5);
+
+  /// Defines sprite sheet item with row and column.
+  const SpriteSheetItem(this.row, this.column);
+
+  final int row;
+  final int column;
 }
 
-const double textureHeight = 161;
+const double textureWidth = 32;
 
-const int deathGrassIndex = 0;
-final Float32List deathGrassTexture = Float32List.fromList([
-  0,
-  textureHeight * deathGrassIndex,
-  161,
-  161 + textureHeight * deathGrassIndex,
-]);
-
-const int grassIndex = 1;
-final Float32List grassTexture = Float32List.fromList([
-  0,
-  textureHeight * grassIndex,
-  161,
-  161 + textureHeight * grassIndex,
-]);
-
-const int rockIndex = 2;
-final Float32List rockTexture = Float32List.fromList([
-  0,
-  textureHeight * rockIndex,
-  161,
-  161 + textureHeight * rockIndex,
-]);
-
-const int snowIndex = 3;
-final Float32List snowTexture = Float32List.fromList([
-  0,
-  0 + textureHeight * snowIndex,
-  161,
-  161 + textureHeight * snowIndex,
-]);
-
-const int iceIndex = 4;
-final Float32List iceTexture = Float32List.fromList([
-  0,
-  textureHeight * iceIndex,
-  161,
-  161 + textureHeight * iceIndex,
-]);
-
-const int sandIndex = 5;
-final Float32List sandTexture = Float32List.fromList([
-  0,
-  textureHeight * sandIndex,
-  161,
-  161 + textureHeight * sandIndex,
-]);
+Float32List getTileTextureCoordinatesRect(SpriteSheetItem type) {
+  // These are and (left, top, right, bottom)
+  return Float32List.fromList([
+    textureWidth * (type.column + 0),
+    textureWidth * (type.row + 1),
+    textureWidth * (type.column + 1),
+    textureWidth * (type.row + 0)
+  ]);
+}

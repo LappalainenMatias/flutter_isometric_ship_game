@@ -1,6 +1,7 @@
 import 'package:anki/animation/animation.dart';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/textures/texture_rects.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
 import '../../mixin/health.dart';
@@ -91,5 +92,10 @@ class GoldCoin extends DynamicGameObject with Animation, Health {
   @override
   CollisionAction? getCollisionAction() {
     return collisionAction;
+  }
+
+  @override
+  List<SpriteSheetItem> currentAnimation() {
+    return redShipDown;
   }
 }

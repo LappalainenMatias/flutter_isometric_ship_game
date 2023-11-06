@@ -10,6 +10,7 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/region/region.dart';
 import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:anki/region/region_creation_queue.dart';
+import 'package:anki/textures/texture_rects.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'test_utils/test_objects.dart';
 
@@ -166,7 +167,7 @@ void main() {
     }
     Stopwatch stopwatch = Stopwatch()..start();
     for (var coordinate in coordinates) {
-      createDrawingDTO(TileType.ice, coordinate, 1);
+      createDrawingDTO(getTileTextureCoordinatesRect(TileType.ice), coordinate, 1);
     }
     stopwatch.stop();
     print(

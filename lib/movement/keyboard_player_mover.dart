@@ -1,3 +1,4 @@
+import 'package:anki/animation/animation.dart';
 import 'package:flutter/services.dart';
 
 import '../coordinates/iso_coordinate.dart';
@@ -10,7 +11,7 @@ class KeyboardPlayerMover {
   bool _movingLeft = false;
   bool _movingRight = false;
   final Player player;
-  final double _movementDistance = 100.0;
+  final double _movementDistance = 50.0;
   final double speedMultiplier = 1;
 
   KeyboardPlayerMover(this.player);
@@ -47,6 +48,7 @@ class KeyboardPlayerMover {
 
   /// (0, 1) = up, (-1, 0) = left.
   void move(double dt) {
+    _updateAnimation();
     if (_movingUp) {
       player.isoCoordinate +=
           IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
@@ -62,6 +64,31 @@ class KeyboardPlayerMover {
     if (_movingRight) {
       player.isoCoordinate +=
           IsoCoordinate.fromIso(_movementDistance * speedMultiplier * dt, 0);
+    }
+  }
+
+  void _updateAnimation() {
+    if (!_movingUp && !_movingDown && !_movingLeft && !_movingRight) {
+      return;
+    }
+    if (_movingUp && _movingRight) {
+      player.animation = redShipUpRight;
+    } else if (_movingUp && _movingLeft) {
+      player.animation = redShipUpLeft;
+    } else if (_movingDown && _movingRight) {
+      player.animation = redShipDownRight;
+    } else if (_movingDown && _movingLeft) {
+      player.animation = redShipDownLeft;
+    } else if (_movingUp) {
+      player.animation = redShipUp;
+    } else if (_movingDown) {
+      player.animation = redShipDown;
+    } else if (_movingLeft) {
+      player.animation = redShipLeft;
+    } else if (_movingRight) {
+      player.animation = redShipRight;
+    } else {
+      player.animation = redShipUp;
     }
   }
 
