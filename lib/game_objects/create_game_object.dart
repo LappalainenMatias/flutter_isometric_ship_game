@@ -8,9 +8,13 @@ import '../coordinates/iso_coordinate.dart';
 import 'dart:math';
 
 class TileCreator {
-  static Tile create(double elevation, double moisture, Point<double> point,
-      List<TileRule> rules) {
-    for (TileRule rule in rules) {
+  static Tile create(
+    double elevation,
+    double moisture,
+    Point<double> point,
+    List<TileRule> rules,
+  ) {
+    for (var rule in rules) {
       if (rule.match(elevation, moisture)) {
         elevation = elevation.floor().toDouble();
         return Tile(rule.type, IsoCoordinate(point.x, point.y), elevation, 1);

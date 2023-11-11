@@ -1,11 +1,11 @@
 import 'damage.dart';
 
 mixin Health {
-  int _health = 5;
+  int _health = 1;
 
   void takeDamage(Damage damage) {
     _health -= damage.amount;
-    if (_health < 0) {
+    if (_health <= 0) {
       _health = 0;
       destroyItself();
     }

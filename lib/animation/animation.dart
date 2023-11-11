@@ -4,9 +4,11 @@ import 'package:anki/textures/texture_rects.dart';
 mixin Animation {
   /// Seconds
   final double animationLength = 1;
-  int _frameIndex = 0;
+  /// Seconds
   double _timeSinceLastFrame = 0;
+  int _frameIndex = 0;
 
+  /// Updates the SpriteSheetItem to be drawn
   void updateAnimation(double dt) {
     if (currentAnimation().isEmpty) {
       return;
@@ -21,7 +23,7 @@ mixin Animation {
     }
   }
 
-  Float32List getTexture() {
+  Float32List getSpriteSheetRect() {
     if (_frameIndex > currentAnimation().length) {
       _frameIndex = 0;
     }

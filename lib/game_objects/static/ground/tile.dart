@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
-import 'dart:math';
 import '../../../collision/collision_box.dart';
 import '../../../dto/drawing_dto.dart';
 import '../../game_object.dart';
@@ -25,8 +24,7 @@ class Tile extends StaticGameObject {
     bool isVisible = true,
   }) {
     _isVisible = isVisible;
-    collisionBox =
-        CollisionBox(isoCoordinate, width.toDouble(), elevation);
+    collisionBox = CollisionBox(isoCoordinate, width.toDouble(), elevation);
     this.vertices = vertices ?? TileToDrawingDTO.create(this);
   }
 
@@ -63,7 +61,7 @@ class Tile extends StaticGameObject {
       elevation,
       width,
       [
-        vertices.rstTransforms,
+        vertices.rSTransforms,
         vertices.rects,
       ],
       _isVisible,
@@ -72,9 +70,9 @@ class Tile extends StaticGameObject {
 
   @override
   ({double distance, double elevation}) nearness() {
-    Point point = isoCoordinate.toPoint();
+    /// Todo this could be defined in consctructor
     return (
-      distance: -1 * (point.x + point.y + width).toDouble(),
+      distance: isoCoordinate.isoY,
       elevation: elevation
     );
   }
@@ -82,11 +80,6 @@ class Tile extends StaticGameObject {
   @override
   bool isUnderWater() {
     return elevation < 0;
-  }
-
-  @override
-  bool isDynamic() {
-    return false;
   }
 
   @override
@@ -106,11 +99,7 @@ class Tile extends StaticGameObject {
 
   @override
   void setVisibility(bool isVisible) {
-    if (_isVisible == isVisible) {
-      return;
-    }
     _isVisible = isVisible;
-    vertices = TileToDrawingDTO.create(this);
   }
 
   @override

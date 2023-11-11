@@ -101,7 +101,7 @@ class NaturalItemCube extends StaticGameObject {
       isoCoordinate.isoY,
       elevation,
       [
-        vertices.rstTransforms,
+        vertices.rSTransforms,
         vertices.rects,
       ],
       _isVisible,

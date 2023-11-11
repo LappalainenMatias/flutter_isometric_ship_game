@@ -1,7 +1,9 @@
 import 'dart:typed_data';
 import '../game_objects/static/ground/tile_type.dart';
 
-/// Sprite was created with https://codeshack.io/images-sprite-sheet-generator/
+
+/// Tells where the graphics are located in the sprite sheet
+/// Useful tool https://codeshack.io/images-sprite-sheet-generator/
 /// The A1, A2,... are animation frames.
 enum SpriteSheetItem {
   tileGreen(0, 19),
@@ -32,7 +34,6 @@ enum SpriteSheetItem {
   shipRedUpRightA2(3, 4),
   shipRedUpRightA3(3, 5);
 
-  /// Defines sprite sheet item with row and column.
   const SpriteSheetItem(this.row, this.column);
 
   final int row;
@@ -40,13 +41,14 @@ enum SpriteSheetItem {
 }
 
 const double textureWidth = 32;
+const double cutOff = 0.4; // Used for trimming the borders
 
 Float32List getTileTextureCoordinatesRect(SpriteSheetItem type) {
-  // These are and (left, top, right, bottom)
+  // left, top, right, bottom
   return Float32List.fromList([
-    textureWidth * (type.column + 0),
-    textureWidth * (type.row + 1),
-    textureWidth * (type.column + 1),
-    textureWidth * (type.row + 0)
+    textureWidth * (type.column) + cutOff,
+    textureWidth * (type.row) + cutOff,
+    textureWidth * (type.column + 1) - cutOff,
+    textureWidth * (type.row + 1) - cutOff,
   ]);
 }

@@ -3,8 +3,8 @@ import 'dart:collection';
 import '../game_objects/dynamic/gold_coin.dart';
 import '../game_objects/dynamic/player.dart';
 import '../game_objects/game_object.dart';
-import '../mixin/damage.dart';
-import '../mixin/health.dart';
+import '../health_and_damage/damage.dart';
+import '../health_and_damage/health.dart';
 
 /// Does the defined actions when collision happens
 /// Todo refactor this. Could we use mixin?

@@ -1,5 +1,4 @@
 import 'package:anki/camera/camera.dart';
-import 'package:anki/dto/drawing_dto.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_object_to_drawing_data.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
@@ -167,7 +166,7 @@ void main() {
     }
     Stopwatch stopwatch = Stopwatch()..start();
     for (var coordinate in coordinates) {
-      createDrawingDTO(getTileTextureCoordinatesRect(TileType.ice), coordinate, 1);
+      createDrawingDTO(getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1), coordinate, 1);
     }
     stopwatch.stop();
     print(

@@ -41,7 +41,7 @@ class TestMapCreationRules implements MapCreationRules {
 
   @override
   double peakToPeakAmplitude() {
-    return 10;
+    return 30;
   }
 
   @override

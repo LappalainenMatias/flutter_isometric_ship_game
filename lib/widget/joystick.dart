@@ -33,7 +33,7 @@ class _JoyStickState extends State<JoyStick> {
         period: const Duration(milliseconds: 16),
         mode: JoystickMode.all,
         listener: (details) {
-          game.joystickEvent(details.x, -1 * details.y);
+          game.joystickEvent(details.x, details.y);
         },
         onStickDragEnd: () {
           game.joystickEvent(0, 0);

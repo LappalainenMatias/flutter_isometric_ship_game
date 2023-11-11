@@ -169,7 +169,7 @@ class Game extends ChangeNotifier {
   }
 
   void addOpponent() {
-    var coordinate = _camera.center + const IsoCoordinate(50, 50);
+    var coordinate = _camera.center + const IsoCoordinate(20, 20);
     var coin = GoldCoin(coordinate, 0);
     _dynamicGameObjectManager.addDynamicGameObject(coin);
   }

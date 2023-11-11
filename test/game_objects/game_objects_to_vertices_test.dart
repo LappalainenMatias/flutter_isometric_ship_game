@@ -6,10 +6,10 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';
 
 void main() {
-  test("Create tile draw atlas data", () {
+  test("Check rects and rsTransforms size", () {
     Tile tile = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
-    DrawingDTO verticeDTO = TileToDrawingDTO.create(tile);
-    expect(verticeDTO.rstTransforms.length, 4);
-    expect(verticeDTO.rects.length, 4);
+    DrawingDTO dto = TileToDrawingDTO.create(tile);
+    expect(dto.rSTransforms.length, 4);
+    expect(dto.rects.length, 4);
   });
 }

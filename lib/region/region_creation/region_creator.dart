@@ -9,7 +9,6 @@ import '../../../noise/noise.dart';
 
 /// This class and the classes that it uses should NOT use dart:ui so that
 /// we can create regions concurrently (dart:ui only runs in the main thread).
-/// Because of this we cannot create Vertices or use dart:ui Colors.
 class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator(_mapCreationRules);
@@ -25,10 +24,10 @@ class RegionCreator {
   }
 
   List<Tile> _createTiles(
-    int startX,
-    int startY,
+    int topLeftX,
+    int topLeftY,
     List<List<double>> elevationNoise,
-    List moistureNoise,
+    List<List<double>> moistureNoise,
   ) {
     List<Tile> tiles = [];
     for (var x = 0; x < elevationNoise.length; x++) {
@@ -41,8 +40,7 @@ class RegionCreator {
           tiles.add(TileCreator.create(
             elevation,
             moistureRow[y],
-            Point((startX + x).toDouble(),
-                (startY + y).toDouble()),
+            Point((topLeftX + x).toDouble(), (topLeftY + y).toDouble()),
             _mapCreationRules.tileRules(),
           ));
         } else {
@@ -50,11 +48,10 @@ class RegionCreator {
           while (height >= 0) {
             final elevation = height.floor().toDouble();
             tiles.add(TileCreator.create(
-              elevation,
-              moistureRow[y],
-              Point((startX + x).toDouble(), (startY + y).toDouble()),
-              _mapCreationRules.tileRules()
-            ));
+                elevation,
+                moistureRow[y],
+                Point((topLeftX + x).toDouble(), (topLeftY + y).toDouble()),
+                _mapCreationRules.tileRules()));
             height -= 1;
           }
         }

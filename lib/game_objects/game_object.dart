@@ -6,28 +6,31 @@ import '../collision/collision_box.dart';
 import '../dto/drawing_dto.dart';
 
 abstract class GameObject implements Comparable<GameObject> {
-  /// The z coordinate of the game object.
-  /// The screen coordinate is defined by the elevation and IsoCoordinate
+  /// The z-coordinate of the game object.
+  /// The screen coordinate is defined by the elevation + IsoCoordinate
   double getElevation();
 
   /// x and y coordinates of the game object. This is not the screen coordinate.
-  /// The screen coordinate is calculated from the IsoCoordinate and elevation.
+  /// The screen coordinate is calculated from the IsoCoordinate + elevation.
   IsoCoordinate getIsoCoordinate();
 
   /// Returns the data that is needed for drawing the game object.
   DrawingDTO getDrawingData();
 
   /// Used for sorting the game objects (painter's algorithm).
-  /// If object has larger elevation it is drawn last because
+  /// If game object has larger elevation, it is drawn last because
   /// it is on top of the other game objects.
-  /// If object has smaller distance it is drawn last because
+  /// If game object has smaller distance it is drawn last because
   /// it is closer to the camera.
   ({double distance, double elevation}) nearness();
 
+  /// If true the game object is drawn under the water plane
   bool isUnderWater();
 
   @override
   int compareTo(GameObject other) {
+    // we use this to sort game objects in a way that the last game object
+    // is bottom most item in the screen. (Painter's algorithm)
     final nearness = this.nearness();
     final otherNearness = other.nearness();
     if (nearness.elevation != otherNearness.elevation) {
@@ -68,19 +71,24 @@ abstract class GameObject implements Comparable<GameObject> {
     throw Exception("Not implemented for $gameObjectData");
   }
 
-  /// If false then gameObject should not be drawn
+  /// If false, the gameObject should not be drawn
   bool isVisible();
 
-  /// If false then gameObject will not be drawn
+  /// If false, the gameObject will not be drawn
   void setVisibility(bool isVisible);
 }
 
-abstract class StaticGameObject extends GameObject {
+/// Static game objects cannot change. This allows faster rendering and other
+/// optimizations.
+abstract class StaticGameObject extends GameObject {}
 
-}
-
+/// Dynamic game objects can change. This allows for example moving game objects.
 abstract class DynamicGameObject extends GameObject {
   void update(double dt);
+
+  /// null if no action happens on collision
   CollisionAction? getCollisionAction();
+
+  /// When changed to true the game object will be removed from the game.
   bool destroy = false;
 }

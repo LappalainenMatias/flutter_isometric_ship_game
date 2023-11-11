@@ -22,7 +22,7 @@ class NoiseCreator {
   }
 
   (List<List<double>>, List<List<double>>) createComplexNoise(
-      int width, int height, int startX, int startY) {
+      int width, int height, int bottomLeftX, int bottomRightY) {
     List<List<double>> elevationMap = _fixedSizeList(width, height);
     List<List<double>> moistureMap = _fixedSizeList(width, height);
 
@@ -35,9 +35,9 @@ class NoiseCreator {
     var peakToPeakAmplitude = mapCreationRules.peakToPeakAmplitude();
     var terrainSharpness = mapCreationRules.terrainSharpness();
     for (int x = 0; x < width; x++) {
-      var i = (startX + x).toDouble();
+      var i = (bottomLeftX + x).toDouble();
       for (int y = 0; y < width; y++) {
-        var j = (startY + y).toDouble();
+        var j = (bottomRightY + y).toDouble();
 
         // Here we add multiple noises together to add complexity
         double e = _elevationNoise1.noise2(i * frequency1, j * frequency1);

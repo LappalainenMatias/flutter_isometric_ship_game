@@ -1,3 +1,4 @@
+import 'package:anki/map/map_creation_rules.dart';
 import 'package:anki/noise/noise.dart';
 import 'package:test/test.dart';
 import '../test_utils/test_objects.dart';
@@ -32,5 +33,19 @@ void main() {
         }
       }
     }
+  });
+
+  test("4 small part should have same values as 1 large", () {
+    // This checks that y-coordinates are increasing towards south in noise creation
+    NoiseCreator noise = NoiseCreator(SvalbardCreationRules(), 10);
+    var (large, moisture) = noise.createComplexNoise(2, 2, 0, 0);
+    var (part1, moisture2) = noise.createComplexNoise(1, 1, 0, 0);
+    var (part2, moisture3) = noise.createComplexNoise(1, 1, 1, 0);
+    var (part3, moisture4) = noise.createComplexNoise(1, 1, 0, 1);
+    var (part4, moisture5) = noise.createComplexNoise(1, 1, 1, 1);
+    expect(large[0][0], part1[0][0]);
+    expect(large[1][0], part2[0][0]);
+    expect(large[0][1], part3[0][0]);
+    expect(large[1][1], part4[0][0]);
   });
 }

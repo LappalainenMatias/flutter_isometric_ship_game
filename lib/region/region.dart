@@ -1,10 +1,8 @@
 import 'dart:typed_data';
 import 'package:anki/coordinates/borders.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/game.dart';
 import 'package:anki/region/region_to_vertices.dart';
 import '../../game_objects/game_object.dart';
-import 'dart:math';
 
 /// The region contains dynamic and static game objects. We update the vertices
 /// if region contains any dynamic game objects.
@@ -64,8 +62,7 @@ class Region implements Comparable<Region> {
   }
 
   int nearness() {
-    Point bottom = bottomCoordinate.toPoint();
-    return -1 * (bottom.x + bottom.y).toInt();
+    return bottomCoordinate.isoY.toInt();
   }
 
   @override

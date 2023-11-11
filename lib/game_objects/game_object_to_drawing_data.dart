@@ -3,7 +3,6 @@ import 'package:anki/game_objects/dynamic/gold_coin.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
-import 'package:anki/movement/moving_direction.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../dto/drawing_dto.dart';
@@ -73,17 +72,17 @@ class TileToDrawingDTO {
 class PlayerToDrawingDTO {
   static DrawingDTO create(Player player) {
     return createDrawingDTO(
-      player.getTexture(),
+      player.getSpriteSheetRect(),
       player.isoCoordinate,
       player.elevation,
-      scale: player.width * 1.5,
+      scale: player.width,
     );
   }
 }
 
 class GoldCoinToDrawingDTO {
   static DrawingDTO create(GoldCoin coin) {
-    var type = coin.getTexture();
+    var type = coin.getSpriteSheetRect();
     return createDrawingDTO(
       type,
       coin.isoCoordinate,
@@ -106,32 +105,32 @@ class BirdToDrawingDTO {
 }
 
 DrawingDTO createDrawingDTO(
-    Float32List textureRects,
-    final IsoCoordinate isoCoordinate,
-    final double elevation, {
-      double scale = 1,
-    }) {
-  final cenBot = isoCoordinate + IsoCoordinate(elevation, elevation);
-  final cenCen = cenBot + IsoCoordinate(scale, scale);
+  Float32List rect,
+  final IsoCoordinate isoCoordinate,
+  final double elevation, {
+  double scale = 1,
+}) {
+  // This is the center corner in isometric cube
+  final center = isoCoordinate -
+      IsoCoordinate(elevation, elevation) +
+      IsoCoordinate(scale, scale);
 
-  const assetWidth = textureWidth;
-  const halfAssetWidth = assetWidth / 2;
-  scale *= 0.12656738281;
-  var rotation = 0; // No rotation, just flip
-  final double scos = cos(rotation) * -scale; // Flip horizontally
-  final double ssin = sin(rotation); // No vertical flip, so sine remains unaffected
-  final tx = cenCen.isoX - scos * halfAssetWidth; // Adjusts for flipped width
-  final ty = cenCen.isoY; // Remains the same, no vertical flip
+  // Copy of the RSTransform from dart:ui because dart:ui cannot be run concurrently in web
+  const halfAssetWidth = textureWidth / 2;
+  scale *= 0.12656738281; // This number works for 32x32 pixel sprite items
+  var rotation = 0;
+  final double scos = cos(rotation) * scale;
+  final double ssin = sin(rotation) * scale;
+  final tx = center.isoX + -scos * halfAssetWidth + ssin * halfAssetWidth;
+  final ty = center.isoY - ssin * halfAssetWidth - scos * halfAssetWidth;
 
-  Float32List rstTransforms = Float32List(4);
-  rstTransforms[0] = scos;
-  rstTransforms[1] = ssin;
-  rstTransforms[2] = tx;
-  rstTransforms[3] = ty;
-  return DrawingDTO(rstTransforms, textureRects);
+  Float32List rSTransforms = Float32List(4);
+  rSTransforms[0] = scos;
+  rSTransforms[1] = ssin;
+  rSTransforms[2] = tx;
+  rSTransforms[3] = ty;
+  return DrawingDTO(rSTransforms, rect);
 }
-
-
 
 /// THIS IS THE OLD IMPLEMENTATION THAT CREATES VERTICES
 /// This can be used with canvas.drawVertices() but it is slower than

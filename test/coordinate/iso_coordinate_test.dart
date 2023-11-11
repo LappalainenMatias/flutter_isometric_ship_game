@@ -41,8 +41,8 @@ void main() {
   });
 
   test("IsoCoordinate is between two iso coordinates", () {
-    IsoCoordinate topLeft = const IsoCoordinate.fromIso(-1, 1);
-    IsoCoordinate bottomRight = const IsoCoordinate.fromIso(3, -2);
+    IsoCoordinate topLeft = const IsoCoordinate.fromIso(-1, -2);
+    IsoCoordinate bottomRight = const IsoCoordinate.fromIso(3, 1);
     IsoCoordinate c1 = const IsoCoordinate.fromIso(-1, 1);
     IsoCoordinate c2 = const IsoCoordinate.fromIso(3, -2);
     IsoCoordinate c3 = const IsoCoordinate.fromIso(1, -1);
@@ -105,5 +105,13 @@ void main() {
     var c2 = c1.copy();
     expect(c1.isoX, c2.isoX);
     expect(c1.isoY, c2.isoY);
+  });
+
+  test("Iso y increases towards bottom left and x increases towards bottom right", () {
+    var c1 = const IsoCoordinate(0, 0);
+    var c2 = const IsoCoordinate(0, 1);
+    var c3 = const IsoCoordinate(-1, 0);
+    expect(c1.isoY < c2.isoY, isTrue);
+    expect(c1.isoX > c3.isoX, isTrue);
   });
 }

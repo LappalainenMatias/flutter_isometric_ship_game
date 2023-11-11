@@ -7,7 +7,6 @@ class CollisionBox {
   double _sideWidth;
   double _elevation;
 
-  // These are 2d coordinates (x, y)
   late double leftX;
   late double rightX;
   late double bottomY;

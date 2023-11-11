@@ -6,10 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test('Tile should not be visible', () {
-    /// This tile should be hidden because there is a tile on the left, right and top of it
+    // This tile should be hidden because there is a tile on the left, right and top of it
     var hideThis = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1);
-    var right = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
-    var left = Tile(TileType.grass, const IsoCoordinate(-1, 0), 0, 1);
+    var right = Tile(TileType.grass, const IsoCoordinate(0, 1), 0, 1);
+    var left = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
     visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), false);
@@ -21,8 +21,8 @@ void main() {
   test('Tile should be visible', () {
     /// No tile on the left side
     var hideThis = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1);
-    var right = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
-    var left = Tile(TileType.grass, const IsoCoordinate(-1, -1), 0, 1);
+    var right = Tile(TileType.grass, const IsoCoordinate(0, 1), 0, 1);
+    var left = Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
     visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), true);
@@ -34,8 +34,8 @@ void main() {
   test('Tile should be visible', () {
     /// No tile on top
     var hideThis = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1);
-    var right = Tile(TileType.grass, const IsoCoordinate(0, -1), 0, 1);
-    var left = Tile(TileType.grass, const IsoCoordinate(-1, 0), 0, 1);
+    var right = Tile(TileType.grass, const IsoCoordinate(0, 1), 0, 1);
+    var left = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1);
     visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), true);
@@ -47,8 +47,8 @@ void main() {
   test('Tile should be visible', () {
     /// No tile on right side
     var hideThis = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1);
-    var right = Tile(TileType.grass, const IsoCoordinate(-1, -1), 0, 1);
-    var left = Tile(TileType.grass, const IsoCoordinate(-1, 0), 0, 1);
+    var right = Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1);
+    var left = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1);
     visibilityChecker([hideThis, left, right, top]);
     expect(hideThis.isVisible(), true);

@@ -32,10 +32,10 @@ class Camera {
   }
 
   IsoCoordinate get bottomRight => IsoCoordinate.fromIso(
-      center.isoX + width() / 2, center.isoY - height() / 2);
+      center.isoX + width() / 2, center.isoY + height() / 2);
 
   IsoCoordinate get topLeft => IsoCoordinate.fromIso(
-      center.isoX - width() / 2, center.isoY + height() / 2);
+      center.isoX - width() / 2, center.isoY - height() / 2);
 
   /// 0 is zoomed in, 1 is zoomed out.
   void setZoomLevel(double newZoomLevel) {
@@ -61,6 +61,6 @@ class Camera {
   IsoCoordinate getGameCoordinate(
       double screenXPercentage, double screenYPercentage) {
     return IsoCoordinate.fromIso(topLeft.isoX + screenXPercentage * width(),
-        topLeft.isoY - screenYPercentage * height());
+        topLeft.isoY + screenYPercentage * height());
   }
 }

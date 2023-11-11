@@ -1,8 +1,8 @@
 import 'dart:math';
 
 /// Used for changing between isometric and cartesian coordinates
-/// isoX-coordinate increases towards the top left
-/// isoY-coordinate increases towards the top right
+/// isoX-coordinate increases towards bottom right
+/// isoY-coordinate increases towards bottom left
 class IsoCoordinate {
   final double isoX;
   final double isoY;
@@ -30,8 +30,8 @@ class IsoCoordinate {
   bool isBetween(IsoCoordinate topLeft, IsoCoordinate bottomRight) {
     return !(isoX < topLeft.isoX ||
         isoX > bottomRight.isoX ||
-        isoY < bottomRight.isoY ||
-        isoY > topLeft.isoY);
+        isoY > bottomRight.isoY ||
+        isoY < topLeft.isoY);
   }
 
   @override
@@ -53,7 +53,7 @@ class IsoCoordinate {
 
   @override
   String toString() {
-    return "${isoX}, ${isoY}";
+    return "$isoX, $isoY";
   }
 
   /// (0,0) returns (1,0) vector

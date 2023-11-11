@@ -26,12 +26,12 @@ Point<int> isoCoordinateToRegionPoint(IsoCoordinate isoCoordinate) {
 
 bool isInView(IsoCoordinate coordinate, Camera camera) {
   /// We add some extra padding because some regions can be so tall (tiles have
-  /// large elevation) that they are visible even when they are not in the camera view.
+  /// large elevation) that they are visible even when their bottom iso coordinate is not in view.
   IsoCoordinate topLeft = camera.topLeft +
       const IsoCoordinate.fromIso(
-          -_visibleRegionPadding, _visibleRegionPadding);
+          -_visibleRegionPadding, -_visibleRegionPadding);
   IsoCoordinate bottomRight = camera.bottomRight +
       const IsoCoordinate.fromIso(
-          _visibleRegionPadding, -_visibleRegionPadding);
+          _visibleRegionPadding, _visibleRegionPadding);
   return coordinate.isBetween(topLeft, bottomRight);
 }

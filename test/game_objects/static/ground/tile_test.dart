@@ -12,11 +12,11 @@ void main() {
     Tile t5 = Tile(TileType.grass, const IsoCoordinate(-1, -1), 1, 1);
     List<Tile> tiles = [t4, t5, t3, t1, t2];
     tiles.sort();
-    expect(tiles[0], t1);
-    expect(tiles[1], t2);
+    expect(tiles[0], t5);
+    expect(tiles[1], t4);
     expect(tiles[2], t3);
-    expect(tiles[3], t4);
-    expect(tiles[4], t5);
+    expect(tiles[3], t2);
+    expect(tiles[4], t1);
   });
 
   /*

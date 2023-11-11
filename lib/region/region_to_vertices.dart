@@ -42,20 +42,20 @@ class GameObjectsToDrawingData {
       var vertices = gameObject.getDrawingData();
       if (!gameObject.isVisible()) continue;
       if (gameObject.isUnderWater()) {
-        underRst[underIndex] = vertices.rstTransforms[0];
-        underRst[underIndex + 1] = vertices.rstTransforms[1];
-        underRst[underIndex + 2] = vertices.rstTransforms[2];
-        underRst[underIndex + 3] = vertices.rstTransforms[3];
+        underRst[underIndex] = vertices.rSTransforms[0];
+        underRst[underIndex + 1] = vertices.rSTransforms[1];
+        underRst[underIndex + 2] = vertices.rSTransforms[2];
+        underRst[underIndex + 3] = vertices.rSTransforms[3];
         underRects[underIndex] = vertices.rects[0];
         underRects[underIndex + 1] = vertices.rects[1];
         underRects[underIndex + 2] = vertices.rects[2];
         underRects[underIndex + 3] = vertices.rects[3];
         underIndex += 4;
       } else {
-        aboveRst[aboveIndex] = vertices.rstTransforms[0];
-        aboveRst[aboveIndex + 1] = vertices.rstTransforms[1];
-        aboveRst[aboveIndex + 2] = vertices.rstTransforms[2];
-        aboveRst[aboveIndex + 3] = vertices.rstTransforms[3];
+        aboveRst[aboveIndex] = vertices.rSTransforms[0];
+        aboveRst[aboveIndex + 1] = vertices.rSTransforms[1];
+        aboveRst[aboveIndex + 2] = vertices.rSTransforms[2];
+        aboveRst[aboveIndex + 3] = vertices.rSTransforms[3];
         aboveRects[aboveIndex] = vertices.rects[0];
         aboveRects[aboveIndex + 1] = vertices.rects[1];
         aboveRects[aboveIndex + 2] = vertices.rects[2];

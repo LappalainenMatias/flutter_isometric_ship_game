@@ -4,7 +4,7 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
-import '../../mixin/health.dart';
+import '../../health_and_damage/health.dart';
 import '../game_object.dart';
 import 'dart:math';
 import '../game_object_to_drawing_data.dart';

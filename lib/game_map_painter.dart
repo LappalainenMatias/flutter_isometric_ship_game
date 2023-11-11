@@ -27,7 +27,6 @@ class GameMapPainter extends CustomPainter {
 
     var atlasData = game.getDrawingData();
 
-
     /// Draw under water things
     for (var data in atlasData.underWater) {
       /// data is basically all the under water game objects of one region
@@ -42,14 +41,14 @@ class GameMapPainter extends CustomPainter {
       );
     }
 
-    /// Draw water plane
-    canvas.drawRect(
-      Rect.fromPoints(
-        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
-        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
-      ),
-      Paint()..color = const Color(0xF21468D7),
-    );
+   /// Draw water plane
+   canvas.drawRect(
+     Rect.fromPoints(
+       Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
+       Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
+     ),
+     Paint()..color = const Color(0xF21468D7),
+   );
 
     /// Draw above water things
     for (var data in atlasData.aboveWater) {
@@ -68,10 +67,10 @@ class GameMapPainter extends CustomPainter {
   void _transformations(Canvas canvas, Size size) {
     double scale =
         min(size.width / game.viewWidth, size.height / game.viewHeight);
-    canvas.scale(scale, -scale);
+    canvas.scale(scale, scale);
     canvas.translate(
       -game.viewCenter.isoX.toDouble() + size.width / scale / 2,
-      -game.viewCenter.isoY.toDouble() - size.height / scale / 2,
+      -game.viewCenter.isoY.toDouble() + size.height / scale / 2,
     );
   }
 

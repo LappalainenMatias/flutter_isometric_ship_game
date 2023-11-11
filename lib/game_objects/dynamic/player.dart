@@ -1,7 +1,7 @@
 import 'package:anki/animation/animation.dart';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/mixin/health.dart';
+import '../../health_and_damage/health.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
@@ -14,7 +14,7 @@ class Player extends DynamicGameObject with Health, Animation {
   IsoCoordinate isoCoordinate;
   double elevation;
   late CollisionBox collisionBox;
-  List<SpriteSheetItem> animation = [];
+  List<SpriteSheetItem> animation = redShipDownLeft;
   double width = 1;
   bool _isVisible = true;
   late DrawingDTO dto;
@@ -31,9 +31,8 @@ class Player extends DynamicGameObject with Health, Animation {
 
   @override
   ({double distance, double elevation}) nearness() {
-    Point point = isoCoordinate.toPoint();
     return (
-      distance: -1 * (point.x + point.y + 1).toDouble(),
+      distance: isoCoordinate.isoY,
       elevation: elevation
     );
   }

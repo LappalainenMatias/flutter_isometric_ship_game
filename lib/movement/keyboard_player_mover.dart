@@ -51,11 +51,11 @@ class KeyboardPlayerMover {
     _updateAnimation();
     if (_movingUp) {
       player.isoCoordinate +=
-          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
+          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
     }
     if (_movingDown) {
       player.isoCoordinate +=
-          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
+          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
     }
     if (_movingLeft) {
       player.isoCoordinate +=
@@ -68,6 +68,7 @@ class KeyboardPlayerMover {
   }
 
   void _updateAnimation() {
+    /// Todo the coordinate system is weird and flipped in the y axis.
     if (!_movingUp && !_movingDown && !_movingLeft && !_movingRight) {
       return;
     }
@@ -96,11 +97,11 @@ class KeyboardPlayerMover {
     var nextPosition = player.isoCoordinate;
     if (_movingUp) {
       nextPosition +=
-          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
+          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
     }
     if (_movingDown) {
       nextPosition +=
-          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
+          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
     }
     if (_movingLeft) {
       nextPosition +=

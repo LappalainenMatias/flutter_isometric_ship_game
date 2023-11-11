@@ -103,10 +103,10 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     /// We add some random padding so that all regions in the screen are found
     var xPadding = Random().nextInt(100).toDouble();
     var yPadding = Random().nextInt(100).toDouble();
-    topLeft += IsoCoordinate.fromIso(-xPadding, yPadding);
-    bottomRight += IsoCoordinate.fromIso(xPadding, -yPadding);
-    int top = topLeft.isoY.round();
-    int bottom = bottomRight.isoY.round();
+    topLeft += IsoCoordinate.fromIso(-xPadding, -yPadding);
+    bottomRight += IsoCoordinate.fromIso(xPadding, yPadding);
+    int top = bottomRight.isoY.round();
+    int bottom = topLeft.isoY.round();
     int left = topLeft.isoX.round();
     int right = bottomRight.isoX.round();
     int step = ((top - bottom).abs()) ~/ 5;

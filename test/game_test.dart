@@ -57,12 +57,12 @@ void main() {
     game.moveCamera(1, -1);
     postTopLeft = game.viewTopLeft;
     expect(preTopLeft.isoX < postTopLeft.isoX, true);
-    expect(preTopLeft.isoY > postTopLeft.isoY, true);
+    expect(preTopLeft.isoY < postTopLeft.isoY, true);
 
     preTopLeft = game.viewTopLeft;
     game.moveCamera(-1, 1);
     postTopLeft = game.viewTopLeft;
     expect(preTopLeft.isoX > postTopLeft.isoX, true);
-    expect(preTopLeft.isoY < postTopLeft.isoY, true);
+    expect(preTopLeft.isoY > postTopLeft.isoY, true);
   });
 }
