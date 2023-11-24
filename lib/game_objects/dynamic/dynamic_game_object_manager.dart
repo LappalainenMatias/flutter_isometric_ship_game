@@ -1,10 +1,10 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/map/map.dart';
+import 'package:anki/online/multiplayer.dart';
 import '../../camera/camera.dart';
 import '../../collision/collision_detector.dart';
 import '../../coordinates/coordinate_utils.dart';
-import '../../online/multiplayer.dart';
 import '../../region/region.dart';
 import '../game_object.dart';
 
@@ -12,7 +12,7 @@ import '../game_object.dart';
 /// Updates dynamic game object which are in the camera's view.
 /// Adds multip
 class DynamicGameObjectManager {
-  Multiplayer? _multiplayer;
+  //Multiplayer? _multiplayer;
   final Map<DynamicGameObject, Region> _gameObjectToRegion = {};
   final GameMap _map;
   final Camera _camera;
@@ -46,9 +46,9 @@ class DynamicGameObjectManager {
     return collisions.isEmpty;
   }
 
-  void addMultiplayer(Multiplayer multiplayer) {
-    _multiplayer = multiplayer;
-  }
+  //void addMultiplayer(Multiplayer multiplayer) {
+  //  _multiplayer = multiplayer;
+  //}
 
   /// Does the following:
   /// 1. Moves game objects to correct regions
@@ -56,10 +56,6 @@ class DynamicGameObjectManager {
   /// 3. Checks if collisions exist and executes collision actions
   /// 4. Removes destroyed game objects
   void update(double dt) {
-    if (_multiplayer != null) {
-      _multiplayer!.update();
-      _findNewMultiplayerGameObjects();
-    }
     _removeDestroyedGameObjects();
     _updateRegions();
     _updateGameObjects(dt);
@@ -119,10 +115,14 @@ class DynamicGameObjectManager {
     }
   }
 
-  void _findNewMultiplayerGameObjects() {
-    for (var gameObject in _multiplayer!.getMultiplayerGameObjects()) {
-      addDynamicGameObject(gameObject);
+  void addMultiplayerGameObjects(MultiplayerGameObject newMP) {
+    for (var go in _gameObjectToRegion.keys) {
+      if (go is MultiplayerGameObject && go.id == newMP.id) {
+        go.isoCoordinate = newMP.isoCoordinate;
+        return;
+      }
     }
+    addDynamicGameObject(newMP);
   }
 
   void addDynamicGameObject(DynamicGameObject gameObject) {

@@ -2,15 +2,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'game.dart';
+import 'online/multiplayer.dart';
 
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;
   late final Game game;
+  late final Online online;
   double dt = 0.0;
   Duration _previous = Duration.zero;
   int missedFrames = 0;
 
-  GameLoop(TickerProvider vsync, this.game) {
+  GameLoop(TickerProvider vsync, this.game, this.online) {
     _ticker = vsync.createTicker(_onTick)..start();
   }
 
@@ -22,13 +24,15 @@ class GameLoop extends ChangeNotifier {
     }
     _previous = timestamp;
     update(dt);
-    notifyListeners(); // Render()
+    notifyListeners(); // This is Render()
   }
 
   void update(var dt) {
     game.updateMap();
     game.updateDynamicGameObjects(dt);
     game.movePlayer(dt);
+    game.updateMultiplayerGameObjects(online.getOpponents());
+    online.update(game.player.getState());
   }
 
   @override

@@ -1,88 +1,100 @@
+import 'dart:convert';
+import 'dart:math';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/dto/drawing_dto.dart';
 import 'package:anki/game_objects/game_object_to_drawing_data.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:flutter/foundation.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import '../game_objects/dynamic/player.dart';
 
-class Multiplayer {
-  double preIsoX = 0;
-  double preIsoY = 0;
-  double preElevation = 0;
-  final MultiplayerGameObject _ourPlayer;
-  final MultiplayerGameObject _otherPlayer = MultiplayerGameObject(2, const IsoCoordinate(0, 0), 0);
-  late final DatabaseReference ref;
-  final _multiplayerGameObjects = <int, MultiplayerGameObject>{};
+class Online extends ChangeNotifier {
+  late WebSocketChannel _channel;
+  List<MultiplayerGameObject> _opponents = [];
+  String connectionStatus = 'disconnected';
 
-  Multiplayer(this._ourPlayer) {
-    ref = FirebaseDatabase.instance.ref("users/${_ourPlayer.id}");
-    DatabaseReference otherPlayer = FirebaseDatabase.instance.ref('users/${_otherPlayer.id}');
-    _multiplayerGameObjects[_otherPlayer.id] = _otherPlayer;
-    otherPlayer.onValue.listen((DatabaseEvent event) {
-      final data = event.snapshot.value as Map<dynamic, dynamic>;
-      _otherPlayer.id = data['id'];
-      _otherPlayer.isoCoordinate = IsoCoordinate.fromIso(data['isoX'], data['isoY']);
-      _otherPlayer.elevation = data['elevation'];
-    });
-  }
-
-  void update() {
-    _sendOurPlayerState();
-    _findNewMultiplayerGameObjects();
-    _updateMultiplayerStates();
-  }
-
-  void _findNewMultiplayerGameObjects() {
-
-  }
-
-  void _sendOurPlayerState() {
-    if (_ourPlayer.isoCoordinate.isoX == preIsoX &&
-        _ourPlayer.isoCoordinate.isoY == preIsoY &&
-        _ourPlayer.elevation == preElevation) {
-      /// Player has not moved so do not update
-      return;
-    } else {
-      preIsoX = _ourPlayer.isoCoordinate.isoX;
-      preIsoY = _ourPlayer.isoCoordinate.isoY;
-      preElevation = _ourPlayer.elevation;
-      ref.set({
-        'id': _ourPlayer.id,
-        'isoX': _ourPlayer.isoCoordinate.isoX,
-        'isoY': _ourPlayer.isoCoordinate.isoY,
-        'elevation': _ourPlayer.elevation,
-      });
+  Online() {
+    if (kDebugMode) {
+      print('Connecting to server');
     }
+    final uri = Uri.parse('ws://localhost:8080/ws');
+    _channel = WebSocketChannel.connect(uri);
+
+    _channel.stream.listen(
+      (message) {
+        try {
+          print("Received message: $message");
+          _opponents = _decodePlayerList(message as String);
+        } catch (e) {
+          print('Error parsing game objects: $e');
+        }
+        connectionStatus = "connected";
+        notifyListeners();
+      },
+      onDone: () {
+        connectionStatus = 'disconnected';
+        notifyListeners();
+      },
+      onError: (error) {
+        connectionStatus = 'error';
+        notifyListeners();
+      },
+    );
   }
 
-  List<MultiplayerGameObject> getMultiplayerGameObjects() {
-    return _multiplayerGameObjects.values.toList();
-  }
-
-  void _updateMultiplayerStates() {
-    var states = <MultiplayerState>[];
-    for (var state in states) {
-      if (_multiplayerGameObjects.containsKey(state.id)) {
-        var gameObject = _multiplayerGameObjects[state.id]!;
-        gameObject.isoCoordinate = state.isoCoordinate;
-        gameObject.elevation = state.elevation;
-      }
+  List<MultiplayerGameObject> _decodePlayerList(String jsonString) {
+    List<dynamic> jsonList = jsonDecode(jsonString);
+    var states = jsonList.map((json) => MultiplayerState.fromJson(json)).toList();
+    List<MultiplayerGameObject> multiplayerGameObjects = [];
+    for (MultiplayerState state in states) {
+      multiplayerGameObjects.add(MultiplayerGameObject.fromState(state));
     }
+    return multiplayerGameObjects;
+  }
+
+  void disconnect() {
+    _channel.sink.close();
+  }
+
+  void update(MultiplayerState ourPlayer) {
+    _channel.sink.add(
+        '__updatePlayer__:${ourPlayer.id}:${ourPlayer.isoX}:${ourPlayer.isoY}:${ourPlayer.elevation}');
+  }
+
+  List<MultiplayerGameObject> getOpponents() {
+    return _opponents;
   }
 }
 
 class MultiplayerState {
+  MultiplayerState(this.id, this.isoY, this.isoX, this.elevation);
+
   int id;
-  IsoCoordinate isoCoordinate;
+  double isoX;
+  double isoY;
   double elevation;
 
-  MultiplayerState(this.id, this.isoCoordinate, this.elevation);
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'isoX': isoX,
+      'isoY': isoY,
+      'elevation': elevation,
+    };
+  }
+
+  static fromJson(obj) {
+    return MultiplayerState(
+        obj['id'], obj['isoX'], obj['isoY'], obj['elevation']);
+  }
 }
 
 class MultiplayerGameObject extends Player {
-  int id;
+  late int id;
 
-  MultiplayerGameObject(this.id, IsoCoordinate isoCoordinate, double elevation)
-      : super(isoCoordinate, elevation);
+  MultiplayerGameObject(IsoCoordinate isoCoordinate, double elevation)
+      : super(isoCoordinate, elevation) {
+    id = Random().nextInt(10000000);
+  }
 
   @override
   DrawingDTO getDrawingData() {
@@ -98,4 +110,14 @@ class MultiplayerGameObject extends Player {
   void setVisibility(bool isVisible) {
     // Is always visible
   }
+
+  /// This is the data shared between the server and the client
+  MultiplayerState getState() {
+    return MultiplayerState(
+        id, isoCoordinate.isoX, isoCoordinate.isoY, elevation);
+  }
+
+  MultiplayerGameObject.fromState(MultiplayerState state)
+      : id = state.id,
+        super(IsoCoordinate.fromIso(state.isoX, state.isoY), state.elevation);
 }

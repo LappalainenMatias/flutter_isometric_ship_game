@@ -22,8 +22,7 @@ dependencies:
   open_simplex_2: ^0.2.1
   fast_noise: ^2.0.0
   collection: ^1.15.0
-  firebase_core: ^2.20.0
-  firebase_database: ^10.3.2
+  web_socket_channel: ^2.4.0
 
 dev_dependencies:
   flutter_test:

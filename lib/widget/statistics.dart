@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../game_loop.dart';
+import '../online/multiplayer.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
@@ -18,6 +19,7 @@ class _StatisticsState extends State<Statistics> {
   Widget build(BuildContext context) {
     var gameLoop = Provider.of<GameLoop>(context, listen: true);
     var game = gameLoop.game;
+    var online = Provider.of<Online>(context, listen: true);
     return Container(
       color: Colors.black.withOpacity(0.6),
       child: Padding(
@@ -55,6 +57,8 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text("Missed frames: ${gameLoop.missedFrames}",
+                style: const TextStyle(color: Colors.white)),
+            Text("Connection: ${online.connectionStatus}",
                 style: const TextStyle(color: Colors.white)),
           ],
         ),

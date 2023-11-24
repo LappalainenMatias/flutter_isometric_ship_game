@@ -11,14 +11,9 @@ import 'package:provider/provider.dart';
 import 'game_loop.dart';
 import 'package:flutter/services.dart';
 import 'game_map_screen.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'online/multiplayer.dart';
 
 void main() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations(
     [DeviceOrientation.portraitUp],
@@ -59,12 +54,14 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late final GameLoop gameLoop;
   late final Game game;
+  late final Online online;
 
   @override
   void initState() {
     super.initState();
     game = Game(isMultiplayer: false);
-    gameLoop = GameLoop(this, game);
+    online = Online();
+    gameLoop = GameLoop(this, game, online);
   }
 
   @override
@@ -79,6 +76,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       providers: [
         ChangeNotifierProvider(create: (_) => game),
         ChangeNotifierProvider(create: (_) => gameLoop),
+        ChangeNotifierProvider(create: (_) => online),
       ],
       child: const KeyBoardMovement(
         child: Material(

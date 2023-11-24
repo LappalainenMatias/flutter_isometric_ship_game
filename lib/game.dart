@@ -22,7 +22,7 @@ class Game extends ChangeNotifier {
   late final DynamicGameObjectManager _dynamicGameObjectManager;
   late final KeyboardPlayerMover? _keyboardPlayerMover;
   late final JoyStickPlayerMover? _joyStickPlayerMover;
-  final player = MultiplayerGameObject(1, const IsoCoordinate(0, 0), 0);
+  final player = MultiplayerGameObject(const IsoCoordinate(0, 0), 0);
   int _amountOfGameObjects = 0;
   int _amountOfGameObjectsRendered = 0;
 
@@ -33,9 +33,9 @@ class Game extends ChangeNotifier {
     _dynamicGameObjectManager.addDynamicGameObject(player);
     _keyboardPlayerMover = KeyboardPlayerMover(player);
     _joyStickPlayerMover = JoyStickPlayerMover(player);
-    if (isMultiplayer) {
-      _dynamicGameObjectManager.addMultiplayer(Multiplayer(player));
-    }
+    //if (isMultiplayer) {
+    //  _dynamicGameObjectManager.addMultiplayer(Multiplayer(player));
+    //}
   }
 
   getDrawingData() {
@@ -172,6 +172,13 @@ class Game extends ChangeNotifier {
     var coordinate = _camera.center + const IsoCoordinate(20, 20);
     var coin = GoldCoin(coordinate, 0);
     _dynamicGameObjectManager.addDynamicGameObject(coin);
+  }
+
+  void updateMultiplayerGameObjects(List<MultiplayerGameObject> gameObjects) {
+    for (var gameObject in gameObjects) {
+      if (gameObject.id == player.id) continue;
+      _dynamicGameObjectManager.addMultiplayerGameObjects(gameObject);
+    }
   }
 }
 
