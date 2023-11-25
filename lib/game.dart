@@ -33,9 +33,6 @@ class Game extends ChangeNotifier {
     _dynamicGameObjectManager.addDynamicGameObject(player);
     _keyboardPlayerMover = KeyboardPlayerMover(player);
     _joyStickPlayerMover = JoyStickPlayerMover(player);
-    //if (isMultiplayer) {
-    //  _dynamicGameObjectManager.addMultiplayer(Multiplayer(player));
-    //}
   }
 
   getDrawingData() {
