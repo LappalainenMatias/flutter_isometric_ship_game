@@ -1,10 +1,11 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/map/map.dart';
-import 'package:anki/online/multiplayer.dart';
+import 'package:anki/online/online.dart';
 import '../../camera/camera.dart';
 import '../../collision/collision_detector.dart';
 import '../../coordinates/coordinate_utils.dart';
+import '../../online/multiplayer.dart';
 import '../../region/region.dart';
 import '../game_object.dart';
 

@@ -5,7 +5,6 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
 import 'package:anki/game_objects/dynamic/gold_coin.dart';
 import 'package:anki/movement/joystick_player_mover.dart';
-import 'package:anki/online/multiplayer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'camera/camera.dart';
@@ -14,6 +13,7 @@ import 'game_objects/dynamic/missile.dart';
 import 'game_objects/game_object.dart';
 import 'map/map.dart';
 import 'movement/keyboard_player_mover.dart';
+import 'online/multiplayer.dart';
 
 /// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {

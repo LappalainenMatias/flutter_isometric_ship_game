@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'game_loop.dart';
 import 'package:flutter/services.dart';
 import 'game_map_screen.dart';
-import 'online/multiplayer.dart';
+import 'online/online.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

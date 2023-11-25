@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/scheduler.dart';
 
 import 'game.dart';
-import 'online/multiplayer.dart';
+import 'online/online.dart';
 
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;

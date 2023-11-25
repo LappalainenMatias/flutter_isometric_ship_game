@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../game_loop.dart';
-import '../online/multiplayer.dart';
+import '../online/online.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
