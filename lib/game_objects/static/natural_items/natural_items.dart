@@ -16,8 +16,9 @@ class NaturalItemCube extends StaticGameObject {
   late final CollisionBox collisionBox;
   late DrawingDTO vertices;
   bool _isVisible = true;
+  int _id ;
 
-  NaturalItemCube(this.type, this.isoCoordinate, this.elevation,
+  NaturalItemCube(this.type, this.isoCoordinate, this.elevation, this._id,
       {DrawingDTO? vertices,
       isVisible = true}) {
     _isVisible = isVisible;
@@ -64,11 +65,12 @@ class NaturalItemCube extends StaticGameObject {
         list[3],
       ),
       list[4],
+      list[5],
       vertices: DrawingDTO(
-        (list[5][0] as Float32List),
-        (list[5][1] as Float32List),
+        (list[6][0] as Float32List),
+        (list[6][1] as Float32List),
       ),
-      isVisible: list[6],
+      isVisible: list[7],
     );
   }
 
@@ -100,12 +102,18 @@ class NaturalItemCube extends StaticGameObject {
       isoCoordinate.isoX,
       isoCoordinate.isoY,
       elevation,
+      _id,
       [
         vertices.rSTransforms,
         vertices.rects,
       ],
       _isVisible,
     ];
+  }
+
+  @override
+  int getId() {
+    return _id;
   }
 }
 

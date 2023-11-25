@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'package:anki/game_objects/dynamic/gold_coin.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
@@ -7,7 +6,6 @@ import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
 import '../dto/drawing_dto.dart';
 import '../coordinates/iso_coordinate.dart';
-import 'dynamic/bird.dart';
 import 'dynamic/missile.dart';
 import 'dynamic/player.dart';
 import 'dart:math';
@@ -76,30 +74,6 @@ class PlayerToDrawingDTO {
       player.isoCoordinate,
       player.elevation,
       scale: player.width,
-    );
-  }
-}
-
-class GoldCoinToDrawingDTO {
-  static DrawingDTO create(GoldCoin coin) {
-    var type = coin.getSpriteSheetRect();
-    return createDrawingDTO(
-      type,
-      coin.isoCoordinate,
-      coin.elevation,
-      scale: coin.width,
-    );
-  }
-}
-
-class BirdToDrawingDTO {
-  static DrawingDTO create(Bird bird) {
-    var texture = getTileTextureCoordinatesRect(TileType.snow.spriteSheet);
-    return createDrawingDTO(
-      texture,
-      bird.isoCoordinate,
-      bird.elevation,
-      scale: bird.sideWidth,
     );
   }
 }

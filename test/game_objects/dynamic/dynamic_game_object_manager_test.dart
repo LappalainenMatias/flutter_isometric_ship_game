@@ -2,7 +2,6 @@ import 'package:anki/camera/camera.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
 import 'package:anki/map/map.dart';
-import 'package:anki/region/region_creation_queue.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import '../../test_utils/test_objects.dart';
@@ -13,8 +12,8 @@ void main() {
     camera.setZoomLevel(0.01);
     var map = GameMap(camera);
     var manager = DynamicGameObjectManager(map, camera);
-    var inView = TestDynamicObject(const IsoCoordinate(0, 0), 1);
-    var outOfView = TestDynamicObject(const IsoCoordinate(-10000, -10000), 1);
+    var inView = TestDynamicObject(const IsoCoordinate(0, 0), 1, 0);
+    var outOfView = TestDynamicObject(const IsoCoordinate(-10000, -10000), 1, 0);
     manager.addDynamicGameObject(inView);
     manager.addDynamicGameObject(outOfView);
 

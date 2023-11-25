@@ -15,6 +15,13 @@ mixin Health {
     _health += amount;
   }
 
+  void setHealth(int amount) {
+    if (amount < 0) {
+      throw ArgumentError("Health cannot be negative");
+    }
+    _health = amount;
+  }
+
   int get health => _health;
 
   void destroyItself();

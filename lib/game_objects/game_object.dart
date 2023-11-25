@@ -1,4 +1,3 @@
-import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
@@ -6,6 +5,9 @@ import '../collision/collision_box.dart';
 import '../dto/drawing_dto.dart';
 
 abstract class GameObject implements Comparable<GameObject> {
+  /// Used for identifying the game object
+  int getId();
+
   /// The z-coordinate of the game object.
   /// The screen coordinate is defined by the elevation + IsoCoordinate
   double getElevation();
@@ -85,9 +87,6 @@ abstract class StaticGameObject extends GameObject {}
 /// Dynamic game objects can change. This allows for example moving game objects.
 abstract class DynamicGameObject extends GameObject {
   void update(double dt);
-
-  /// null if no action happens on collision
-  CollisionAction? getCollisionAction();
 
   /// When changed to true the game object will be removed from the game.
   bool destroy = false;

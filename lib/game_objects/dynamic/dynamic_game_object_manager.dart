@@ -1,11 +1,10 @@
+import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/map/map.dart';
-import 'package:anki/online/online.dart';
 import '../../camera/camera.dart';
 import '../../collision/collision_detector.dart';
 import '../../coordinates/coordinate_utils.dart';
-import '../../online/multiplayer.dart';
 import '../../region/region.dart';
 import '../game_object.dart';
 
@@ -13,7 +12,6 @@ import '../game_object.dart';
 /// Updates dynamic game object which are in the camera's view.
 /// Adds multip
 class DynamicGameObjectManager {
-  //Multiplayer? _multiplayer;
   final Map<DynamicGameObject, Region> _gameObjectToRegion = {};
   final GameMap _map;
   final Camera _camera;
@@ -102,23 +100,22 @@ class DynamicGameObjectManager {
   }
 
   void _checkCollisions() {
-    for (var dynamicGameObject in _gameObjectToRegion.keys) {
-      var collisionAction = dynamicGameObject.getCollisionAction();
-      if (collisionAction == null) {
-        continue;
-      }
-      var collisions = findCollisions(
-          _gameObjectToRegion[dynamicGameObject]!.getAllGameObjects(),
-          dynamicGameObject);
-      if (collisions.isNotEmpty) {
-        collisionAction.execute(collisions);
+    for (var dgo in _gameObjectToRegion.keys) {
+      if (dgo is CollisionAction) {
+        var collisionAction = (dgo as CollisionAction);
+        var collisions = findCollisions(
+            _gameObjectToRegion[dgo]!.getAllGameObjects(),
+            dgo);
+        if (collisions.isNotEmpty) {
+          collisionAction.execute(dgo, collisions);
+        }
       }
     }
   }
 
-  void addMultiplayerGameObjects(MultiplayerGameObject newMP) {
+  void addMultiplayerGameObjects(Player newMP) {
     for (var go in _gameObjectToRegion.keys) {
-      if (go is MultiplayerGameObject && go.id == newMP.id) {
+      if (go is Player && go.getId() == newMP.getId()) {
         go.isoCoordinate = newMP.isoCoordinate;
         return;
       }

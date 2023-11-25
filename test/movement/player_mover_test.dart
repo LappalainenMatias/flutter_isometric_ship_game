@@ -6,7 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("With high dt player should move more", () {
-    var player = Player(const IsoCoordinate(0, 0), 0);
+    var player = Player(const IsoCoordinate(0, 0), 0, 0);
     var playerMover = KeyboardPlayerMover(player);
     playerMover.pressed(LogicalKeyboardKey.keyW);
     playerMover.pressed(LogicalKeyboardKey.keyD);

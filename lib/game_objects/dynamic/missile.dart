@@ -7,16 +7,17 @@ import 'package:anki/game_objects/game_object_to_drawing_data.dart';
 import '../../health_and_damage/damage.dart';
 import '../../collision/collision_box.dart';
 
-class Missile extends DynamicGameObject with Damage {
-  late final CollisionAction? collisionAction;
+class Missile extends DynamicGameObject with Damage, CollisionAction {
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile? projectile;
   double elevation = 0.0;
   double width;
   late CollisionBox collisionBox;
+  late final int _id;
 
-  Missile(this.isoCoordinate, this.elevation, this.width) {
+  Missile(this.isoCoordinate, this.elevation, this.width, int id) {
     collisionBox = CollisionBox(isoCoordinate, width, elevation);
+    _id = id;
   }
 
   @override
@@ -81,8 +82,8 @@ class Missile extends DynamicGameObject with Damage {
   }
 
   @override
-  CollisionAction? getCollisionAction() {
-    return collisionAction;
+  int getId() {
+    return _id;
   }
 }
 

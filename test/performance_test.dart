@@ -23,8 +23,8 @@ void main() {
     List<List> gameObjects = [];
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < width; j++) {
-        gameObjects.add(Tile(
-                TileType.grass, IsoCoordinate(i.toDouble(), j.toDouble()), 0, 1)
+        gameObjects.add(Tile(TileType.grass,
+                IsoCoordinate(i.toDouble(), j.toDouble()), 0, 1, 0)
             .gameObjectToList());
       }
     }
@@ -59,7 +59,7 @@ void main() {
     List<StaticGameObject> staticGameObjects = [];
     for (int i = 0; i < 62 * 62; i += 1) {
       staticGameObjects.add(Tile(
-          TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1));
+          TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1, 0));
     }
     staticGameObjects.sort();
     IsoCoordinate bottomCoordinate = const IsoCoordinate(0, 0);
@@ -103,7 +103,8 @@ void main() {
     var tiles = <Tile>[];
     for (int i = 0; i < 128 * 128; i++) {
       tiles.add(
-        Tile(TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1),
+        Tile(
+            TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1, 0),
       );
     }
     Stopwatch stopwatch = Stopwatch()..start();
@@ -166,7 +167,10 @@ void main() {
     }
     Stopwatch stopwatch = Stopwatch()..start();
     for (var coordinate in coordinates) {
-      createDrawingDTO(getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1), coordinate, 1);
+      createDrawingDTO(
+          getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1),
+          coordinate,
+          1);
     }
     stopwatch.stop();
     print(

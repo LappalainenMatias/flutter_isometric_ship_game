@@ -3,16 +3,17 @@ import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
+import 'package:anki/utils/random_id.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Create borders from game objects", () {
     var gameObjects = <GameObject>[
-      Tile(TileType.grass, const IsoCoordinate.fromIso(5, 10), 1, 1),
-      Tile(TileType.grass, const IsoCoordinate.fromIso(10, 5), -1, 1),
-      Tile(TileType.grass, const IsoCoordinate.fromIso(5, -10), -1, 1),
-      Tile(TileType.grass, const IsoCoordinate.fromIso(-10, 5), 1, 1),
-      Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 0, 1),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(5, 10), 1, 1, getRandomId()),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(10, 5), -1, 1, getRandomId()),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(5, -10), -1, 1, getRandomId()),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(-10, 5), 1, 1, getRandomId()),
+      Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 0, 1, getRandomId()),
     ];
     var borders = createBorders(gameObjects);
 

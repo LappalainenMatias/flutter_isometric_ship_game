@@ -3,17 +3,15 @@ import 'dart:typed_data';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
-import 'package:anki/game_objects/dynamic/gold_coin.dart';
+import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/movement/joystick_player_mover.dart';
+import 'package:anki/utils/random_id.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'camera/camera.dart';
-import 'game_objects/dynamic/bird.dart';
 import 'game_objects/dynamic/missile.dart';
-import 'game_objects/game_object.dart';
 import 'map/map.dart';
 import 'movement/keyboard_player_mover.dart';
-import 'online/multiplayer.dart';
 
 /// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {
@@ -22,12 +20,11 @@ class Game extends ChangeNotifier {
   late final DynamicGameObjectManager _dynamicGameObjectManager;
   late final KeyboardPlayerMover? _keyboardPlayerMover;
   late final JoyStickPlayerMover? _joyStickPlayerMover;
-  final player = MultiplayerGameObject(const IsoCoordinate(0, 0), 0);
+  final player = Player(const IsoCoordinate(0, 0), 0, getRandomId());
   int _amountOfGameObjects = 0;
   int _amountOfGameObjectsRendered = 0;
 
   Game({bool isMultiplayer = false}) {
-    player.addCollisionAction(CollisionActionType.collectGoldCoin);
     _map = GameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(player);
@@ -128,22 +125,17 @@ class Game extends ChangeNotifier {
 
   void shootMissile(IsoCoordinate target) {
     var shooter = player;
-    var missile = Missile(player.getIsoCoordinate(), player.elevation, 0.4);
-    var skipCollisions = HashSet<GameObject>()..add(shooter);
-    missile.collisionAction = CollisionAction(
-        [CollisionActionType.destroyItself, CollisionActionType.causeDamage],
-        missile,
-        skipCollisions);
+    var missile = Missile(
+        player.getIsoCoordinate(), player.elevation, 0.4, getRandomId());
+    missile.actionTypes = {
+      CollisionActionType.destroyItself,
+      CollisionActionType.causeDamage
+    };
+    missile.skipCollisionAction.add(shooter.getId());
     var unitVectorFromPlayerToTarget =
         (target - player.isoCoordinate).toUnitVector();
     missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));
     _dynamicGameObjectManager.addDynamicGameObject(missile);
-  }
-
-  void addBird() {
-    var bird =
-        Bird(_camera.center, 10, Flying(const IsoCoordinate(50, 50), 10, 0.5));
-    _dynamicGameObjectManager.addDynamicGameObject(bird);
   }
 
   void keyDownEvent(LogicalKeyboardKey logicalKey) {
@@ -167,14 +159,15 @@ class Game extends ChangeNotifier {
 
   void addOpponent() {
     var coordinate = _camera.center + const IsoCoordinate(20, 20);
-    var coin = GoldCoin(coordinate, 0);
-    _dynamicGameObjectManager.addDynamicGameObject(coin);
+    var opponent = Player(coordinate, 0, getRandomId());
+    _dynamicGameObjectManager.addDynamicGameObject(opponent);
   }
 
-  void updateMultiplayerGameObjects(List<MultiplayerGameObject> gameObjects) {
+  void updateMultiplayerGameObjects(List<Player> gameObjects) {
     for (var gameObject in gameObjects) {
-      if (gameObject.id == player.id) continue;
-      _dynamicGameObjectManager.addMultiplayerGameObjects(gameObject);
+      if (gameObject.getId() != player.getId()) {
+        _dynamicGameObjectManager.addMultiplayerGameObjects(gameObject);
+      }
     }
   }
 }

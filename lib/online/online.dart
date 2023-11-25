@@ -2,11 +2,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import '../constants.dart';
-import 'multiplayer.dart';
+import '../game_objects/dynamic/player.dart';
 
 class Online extends ChangeNotifier {
   late WebSocketChannel _channel;
-  List<MultiplayerGameObject> _opponents = [];
+  List<Player> _opponents = [];
   String connectionStatus = 'disconnected';
 
   Online() {
@@ -38,26 +38,21 @@ class Online extends ChangeNotifier {
     );
   }
 
-  List<MultiplayerGameObject> _decodePlayerList(String jsonString) {
+  List<Player> _decodePlayerList(String jsonString) {
     List<dynamic> jsonList = jsonDecode(jsonString);
-    var states = jsonList.map((json) => MultiplayerState.fromJson(json)).toList();
-    List<MultiplayerGameObject> multiplayerGameObjects = [];
-    for (MultiplayerState state in states) {
-      multiplayerGameObjects.add(MultiplayerGameObject.fromState(state));
-    }
-    return multiplayerGameObjects;
+    return jsonList.map((json) => Player.fromJson(json)).toList()
+        as List<Player>;
   }
 
   void disconnect() {
     _channel.sink.close();
   }
 
-  void update(MultiplayerState ourPlayer) {
-    _channel.sink.add(
-        '__updatePlayer__:${ourPlayer.id}:${ourPlayer.isoX}:${ourPlayer.isoY}:${ourPlayer.elevation}');
+  void update(Player ourPlayer) {
+    _channel.sink.add('__updatePlayer__:${ourPlayer.toJson()}');
   }
 
-  List<MultiplayerGameObject> getOpponents() {
+  List<Player> getOpponents() {
     return _opponents;
   }
 }

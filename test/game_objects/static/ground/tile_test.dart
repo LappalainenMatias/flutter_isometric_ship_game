@@ -1,15 +1,21 @@
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/utils/random_id.dart';
 import 'package:test/test.dart';
 
 void main() {
   test("Sort tiles", () {
-    Tile t1 = Tile(TileType.grass, const IsoCoordinate(1, 1), 1, 1);
-    Tile t2 = Tile(TileType.grass, const IsoCoordinate(0, 1), 1, 1);
-    Tile t3 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1);
-    Tile t4 = Tile(TileType.grass, const IsoCoordinate(-1, 0), 1, 1);
-    Tile t5 = Tile(TileType.grass, const IsoCoordinate(-1, -1), 1, 1);
+    Tile t1 =
+        Tile(TileType.grass, const IsoCoordinate(1, 1), 1, 1, getRandomId());
+    Tile t2 =
+        Tile(TileType.grass, const IsoCoordinate(0, 1), 1, 1, getRandomId());
+    Tile t3 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1, getRandomId());
+    Tile t4 =
+        Tile(TileType.grass, const IsoCoordinate(-1, 0), 1, 1, getRandomId());
+    Tile t5 =
+        Tile(TileType.grass, const IsoCoordinate(-1, -1), 1, 1, getRandomId());
     List<Tile> tiles = [t4, t5, t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t5);
@@ -37,9 +43,12 @@ void main() {
    */
 
   test("Sort tiles with different heights", () {
-    Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);
-    Tile t2 = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 2);
-    Tile t3 = Tile(TileType.grass, const IsoCoordinate(0, 0), 3, 1);
+    Tile t1 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3, getRandomId());
+    Tile t2 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 2, getRandomId());
+    Tile t3 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 3, 1, getRandomId());
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -48,9 +57,12 @@ void main() {
   });
 
   test("Sort tiles with different heights", () {
-    Tile t1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3);
-    Tile t2 = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1);
-    Tile t3 = Tile(TileType.grass, const IsoCoordinate(0, 0), 5, 1);
+    Tile t1 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3, getRandomId());
+    Tile t2 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1, getRandomId());
+    Tile t3 =
+        Tile(TileType.grass, const IsoCoordinate(0, 0), 5, 1, getRandomId());
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
     expect(tiles[0], t1);
@@ -64,6 +76,7 @@ void main() {
       const IsoCoordinate.fromIso(2, 2),
       2,
       1,
+      getRandomId(),
       isVisible: false,
     );
     List encoded = tile.gameObjectToList();
@@ -75,8 +88,8 @@ void main() {
   });
 
   test("Decode and encode 2x2 tile", () {
-    Tile tile =
-        Tile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, 2);
+    Tile tile = Tile(TileType.grass, const IsoCoordinate.fromIso(-1, -1), -1, 2,
+        getRandomId());
     List encoded = tile.gameObjectToList();
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, -1);

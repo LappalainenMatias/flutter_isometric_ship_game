@@ -7,6 +7,8 @@ import '../map/map_creation_rules.dart';
 import '../coordinates/iso_coordinate.dart';
 import 'dart:math';
 
+import '../utils/random_id.dart';
+
 class TileCreator {
   static Tile create(
     double elevation,
@@ -17,7 +19,7 @@ class TileCreator {
     for (var rule in rules) {
       if (rule.match(elevation, moisture)) {
         elevation = elevation.floor().toDouble();
-        return Tile(rule.type, IsoCoordinate(point.x, point.y), elevation, 1);
+        return Tile(rule.type, IsoCoordinate(point.x, point.y), elevation, 1, getRandomId());
       }
     }
     throw Exception(

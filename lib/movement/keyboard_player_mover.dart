@@ -73,23 +73,23 @@ class KeyboardPlayerMover {
       return;
     }
     if (_movingUp && _movingRight) {
-      player.animation = redShipUpRight;
+      player.animationParts = redShipUpRight;
     } else if (_movingUp && _movingLeft) {
-      player.animation = redShipUpLeft;
+      player.animationParts = redShipUpLeft;
     } else if (_movingDown && _movingRight) {
-      player.animation = redShipDownRight;
+      player.animationParts = redShipDownRight;
     } else if (_movingDown && _movingLeft) {
-      player.animation = redShipDownLeft;
+      player.animationParts = redShipDownLeft;
     } else if (_movingUp) {
-      player.animation = redShipUp;
+      player.animationParts = redShipUp;
     } else if (_movingDown) {
-      player.animation = redShipDown;
+      player.animationParts = redShipDown;
     } else if (_movingLeft) {
-      player.animation = redShipLeft;
+      player.animationParts = redShipLeft;
     } else if (_movingRight) {
-      player.animation = redShipRight;
+      player.animationParts = redShipRight;
     } else {
-      player.animation = redShipUp;
+      player.animationParts = redShipUp;
     }
   }
 

@@ -9,12 +9,12 @@ void main() {
   test("Multiple tiles to large tile", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1, 0),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -25,12 +25,12 @@ void main() {
   test("Multiple tiles to large tile", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 1), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 1), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 1, 1, 0),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -41,28 +41,28 @@ void main() {
   test("Multiple tiles to large large tile.", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 0), 1, 1),
+        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 0), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 1), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 1), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 2), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 2), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 3), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 3), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 3), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 3), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 3), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 3), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 3), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 3), 1, 1, 0),
       ],
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -74,28 +74,28 @@ void main() {
   test("Complex simplification", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 0), 1, 1),
-        Tile(TileType.sand, const IsoCoordinate.fromIso(3, 0), 1, 1),
+        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 0), 1, 1, 0),
+        Tile(TileType.sand, const IsoCoordinate.fromIso(3, 0), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 1), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 1), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 2), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 2), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 2), 1, 1, 0),
       ],
       [
-        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 3), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 3), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 3), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 3), 1, 1),
+        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 3), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 3), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(2, 3), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(3, 3), 1, 1, 0),
       ],
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -107,7 +107,7 @@ void main() {
   test("No simplification. Only one tile", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -117,12 +117,12 @@ void main() {
   test("No simplification. Different types", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.deathGrass, const IsoCoordinate.fromIso(0, 1), 1, 1),
+        Tile(TileType.sand, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
+        Tile(TileType.deathGrass, const IsoCoordinate.fromIso(0, 1), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1),
-        Tile(TileType.snow, const IsoCoordinate.fromIso(1, 1), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1, 0),
+        Tile(TileType.snow, const IsoCoordinate.fromIso(1, 1), 1, 1, 0),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -132,12 +132,12 @@ void main() {
   test("No simplification. Different height", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 2, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 2, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 3, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 4, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 3, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 4, 1, 0),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);
@@ -148,12 +148,12 @@ void main() {
   test("No simplification. One tile has different height", () {
     List<List<Tile>> tiles = [
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 0), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 0), 1, 1, 0),
       ],
       [
-        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1),
-        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 2, 1),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(0, 1), 1, 1, 0),
+        Tile(TileType.grass, const IsoCoordinate.fromIso(1, 1), 2, 1, 0),
       ]
     ];
     List<Tile> simplifiedTiles = simplifyTiles(tiles);

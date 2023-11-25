@@ -14,12 +14,14 @@ class Tile extends StaticGameObject {
   int width;
   late final CollisionBox collisionBox;
   bool _isVisible = true;
+  int _id = 0;
 
   Tile(
     this.type,
     this.isoCoordinate,
     this.elevation,
-    this.width, {
+    this.width,
+    this._id, {
     DrawingDTO? vertices,
     bool isVisible = true,
   }) {
@@ -42,11 +44,12 @@ class Tile extends StaticGameObject {
       ),
       list[4],
       list[5],
+      list[6],
       vertices: DrawingDTO(
-        (list[6][0] as Float32List),
-        (list[6][1] as Float32List),
+        (list[7][0] as Float32List),
+        (list[7][1] as Float32List),
       ),
-      isVisible: list[7],
+      isVisible: list[8],
     );
   }
 
@@ -60,6 +63,7 @@ class Tile extends StaticGameObject {
       isoCoordinate.isoY,
       elevation,
       width,
+      _id,
       [
         vertices.rSTransforms,
         vertices.rects,
@@ -71,10 +75,7 @@ class Tile extends StaticGameObject {
   @override
   ({double distance, double elevation}) nearness() {
     /// Todo this could be defined in consctructor
-    return (
-      distance: isoCoordinate.isoY,
-      elevation: elevation
-    );
+    return (distance: isoCoordinate.isoY, elevation: elevation);
   }
 
   @override
@@ -105,5 +106,10 @@ class Tile extends StaticGameObject {
   @override
   double getElevation() {
     return elevation;
+  }
+
+  @override
+  int getId() {
+    return _id;
   }
 }

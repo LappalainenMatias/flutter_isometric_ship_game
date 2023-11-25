@@ -8,32 +8,32 @@ mixin Animation {
   double _timeSinceLastFrame = 0;
   int _frameIndex = 0;
 
+  List<SpriteSheetItem> animationParts = [];
+
   /// Updates the SpriteSheetItem to be drawn
   void updateAnimation(double dt) {
-    if (currentAnimation().isEmpty) {
+    if (animationParts.isEmpty) {
       return;
     }
     _timeSinceLastFrame += dt;
-    if (_timeSinceLastFrame > animationLength / currentAnimation().length) {
+    if (_timeSinceLastFrame > animationLength / animationParts.length) {
       _timeSinceLastFrame = 0;
       _frameIndex++;
-      if (_frameIndex >= currentAnimation().length) {
+      if (_frameIndex >= animationParts.length) {
         _frameIndex = 0;
       }
     }
   }
 
   Float32List getSpriteSheetRect() {
-    if (_frameIndex > currentAnimation().length) {
+    if (_frameIndex > animationParts.length) {
       _frameIndex = 0;
     }
-    if (currentAnimation().isEmpty) {
+    if (animationParts.isEmpty) {
       return getTileTextureCoordinatesRect(SpriteSheetItem.tileRed);
     }
-    return getTileTextureCoordinatesRect(currentAnimation()[_frameIndex]);
+    return getTileTextureCoordinatesRect(animationParts[_frameIndex]);
   }
-
-  List<SpriteSheetItem> currentAnimation();
 }
 
 /// Red ship animations

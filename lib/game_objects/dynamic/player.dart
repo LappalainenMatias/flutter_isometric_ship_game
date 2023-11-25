@@ -2,24 +2,21 @@ import 'package:anki/animation/animation.dart';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import '../../health_and_damage/health.dart';
-import 'package:anki/textures/texture_rects.dart';
 import '../../collision/collision_box.dart';
 import '../../dto/drawing_dto.dart';
 import '../game_object.dart';
-import 'dart:math';
 import '../game_object_to_drawing_data.dart';
 
-class Player extends DynamicGameObject with Health, Animation {
-  CollisionAction? collisionAction;
+class Player extends DynamicGameObject with Health, Animation, CollisionAction {
   IsoCoordinate isoCoordinate;
   double elevation;
   late CollisionBox collisionBox;
-  List<SpriteSheetItem> animation = redShipDownLeft;
   double width = 1;
   bool _isVisible = true;
   late DrawingDTO dto;
+  final int _id;
 
-  Player(this.isoCoordinate, this.elevation) {
+  Player(this.isoCoordinate, this.elevation, this._id) {
     collisionBox = CollisionBox(isoCoordinate, width, elevation);
     dto = PlayerToDrawingDTO.create(this);
   }
@@ -31,10 +28,7 @@ class Player extends DynamicGameObject with Health, Animation {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (
-      distance: isoCoordinate.isoY,
-      elevation: elevation
-    );
+    return (distance: isoCoordinate.isoY, elevation: elevation);
   }
 
   @override
@@ -70,11 +64,6 @@ class Player extends DynamicGameObject with Health, Animation {
     _isVisible = isVisible;
   }
 
-  void addCollisionAction(CollisionActionType value) {
-    collisionAction ??= CollisionAction([], this);
-    collisionAction?.actionTypes.add(value);
-  }
-
   @override
   double getElevation() {
     return elevation;
@@ -87,17 +76,44 @@ class Player extends DynamicGameObject with Health, Animation {
   }
 
   @override
-  CollisionAction? getCollisionAction() {
-    return collisionAction;
-  }
-
-  @override
   void destroyItself() {
     destroy = true;
   }
 
   @override
-  List<SpriteSheetItem> currentAnimation() {
-    return animation;
+  int getId() {
+    return _id;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': getId(),
+      'isoX': isoCoordinate.isoX,
+      'isoY': isoCoordinate.isoY,
+      'elevation': elevation,
+      'width': width,
+      'destroy': destroy,
+      'actionTypes': actionTypes,
+      'isVisible': isVisible(),
+      'skipCollisionAction': skipCollisionAction,
+      'health': health,
+      'animationParts': animationParts,
+    };
+  }
+
+  static fromJson(obj) {
+    var go = Player(
+      IsoCoordinate.fromIso(obj['isoX'] as double, obj['isoY'] as double),
+      obj['elevation'],
+      obj['id'],
+    );
+    go.width = obj['width'];
+    go.destroy = obj['destroy'];
+    go.setVisibility(obj['isVisible']);
+    go.skipCollisionAction = obj['skipCollisionAction'];
+    go.setHealth(obj['health']);
+    go.animationParts = obj['animationParts'];
+    go.actionTypes = obj['actionTypes'];
+    return go;
   }
 }

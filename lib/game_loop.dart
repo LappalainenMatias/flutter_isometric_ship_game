@@ -32,7 +32,7 @@ class GameLoop extends ChangeNotifier {
     game.updateDynamicGameObjects(dt);
     game.movePlayer(dt);
     game.updateMultiplayerGameObjects(online.getOpponents());
-    online.update(game.player.getState());
+    online.update(game.player);
   }
 
   @override
