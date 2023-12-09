@@ -6,7 +6,6 @@ import '../../camera/camera.dart';
 import '../../collision/collision_detector.dart';
 import '../../coordinates/coordinate_utils.dart';
 import '../../online/online_game_object_states/missile_state.dart';
-import '../../online/online_game_object_states/online_game_object_state.dart';
 import '../../online/online_game_object_states/player_state.dart';
 import '../../region/region.dart';
 import '../game_object.dart';
@@ -14,7 +13,6 @@ import 'missile.dart';
 
 /// Handles that dynamic game objects are part of the correct region.
 /// Updates dynamic game object which are in the camera's view.
-/// Adds multip
 class DynamicGameObjectManager {
   final Map<DynamicGameObject, Region> _gameObjectToRegion = {};
   final GameMap _map;

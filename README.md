@@ -34,6 +34,13 @@ has a ```nearness()``` value which is used to sort the game objects from farthes
 ```IsoX``` and ```IsoY``` are the coordinates where the game object is located in the game world and in the screen.
 
 ![coordinates.png](readme_images/coordinates.png)
+
+## Diagram
+Simplified version of the class structure which shows the dependencies between classes.
+There are some classes missing and in reality there are more dependencies.
+
+![class_structure.png](readme_images/structure.png)
+
 ## Tests
 Mostly unit tests, some integration tests and performance tests.
 
