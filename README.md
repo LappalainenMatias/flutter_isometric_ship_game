@@ -4,6 +4,8 @@ procedurally generated terrain, collision detection, online multiplayer, animati
 
 This is not a general purpose game engine. It is made for this specific game. I am more or less just experimenting and learning.
 
+Supports Android, iOS, Web and Desktop.
+
 ## Game world
 The game map is made out of regions. Regions are 16x16 tiles wide.
 Regions contain game objects. The game objects are divided into static and dynamic game objects.
