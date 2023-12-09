@@ -30,8 +30,8 @@ has a ```nearness()``` value which is used to sort the game objects from farthes
 
 ![map_screenshot.png](readme_images/map_screenshot.png)
 ## Coordinates
-"IsoCoordinates" are isometric coordinates and they are used when we want to change a Point (for example, procedural noise map) to isometric coordinates.
-IsoX and IsoY are the coordinates where the game object is located in the game world and in the screen.
+```IsoCoordinate``` means isometric coordinate. They are used when we want to change a Point (for example, procedural noise map) to isometric coordinates.
+```IsoX``` and ```IsoY``` are the coordinates where the game object is located in the game world and in the screen.
 
 ![coordinates.png](readme_images/coordinates.png)
 ## Tests
