@@ -5,9 +5,9 @@
 ## Rendering
 
 ## Coordinates
-The game world has different kinds of coordinates. "IsoCoordinates" are isometric coordinates and
-they are used when we want to change a Point (for example, procedural noise coordinates) to isometric coordinates.
-IsoX and IsoY are the coordinates where the game object is located in the game world.
+The game has different kinds of coordinates. "IsoCoordinates" are isometric coordinates and
+they are used when we want to change a Point (for example, procedural noise map) to isometric coordinates.
+IsoX and IsoY are the coordinates where the game object is located in the game world and in the screen.
 ![coordinates.png](coordinates.png)
 
 ## Tests
@@ -16,7 +16,7 @@ To run tests:
 ```flutter test```
 
 ## Todo
-- Update readme coordinates
+- Update readme Game world
 - Fix performance issues with backend
 - Online game object should have getGameState() so that we can get rid of toJson and fromJson in gameobjects
 - Add max dt to game loop so that there is not too large jumps in game state
