@@ -1,10 +1,12 @@
 # 2D isometric game made with Flutter
-My simple custom 2D isometric game made with my own game engine. It contains a simple ```update() -> render() -> update()...``` game loop,
+My simple 2D isometric game made with my own custom game engine. It contains a simple ```update() -> render() -> update()...``` game loop,
 procedurally generated terrain, collision detection, online multiplayer, animations and rendering optimizations.
 
 This is not a general purpose game engine. It is made for this specific game. I am more or less just experimenting and learning.
 
 Supports Android, iOS, Web and Desktop.
+
+![screenshot.png](readme_images/screenshot.png)
 
 ## Game world
 The game map is made out of regions. Regions are 16x16 tiles wide.
