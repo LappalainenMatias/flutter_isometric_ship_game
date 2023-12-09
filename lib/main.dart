@@ -59,8 +59,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    game = Game(isMultiplayer: false);
     online = Online();
+    game = Game(online, isMultiplayer: false);
     gameLoop = GameLoop(this, game, online);
   }
 

@@ -1,10 +1,10 @@
-import 'dart:collection';
 import 'dart:typed_data';
 import 'package:anki/collision/collision_action.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/dynamic/dynamic_game_object_manager.dart';
 import 'package:anki/game_objects/dynamic/player.dart';
 import 'package:anki/movement/joystick_player_mover.dart';
+import 'package:anki/online/online_game_object_states/online_game_object_state.dart';
 import 'package:anki/utils/random_id.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -12,24 +12,34 @@ import 'camera/camera.dart';
 import 'game_objects/dynamic/missile.dart';
 import 'map/map.dart';
 import 'movement/keyboard_player_mover.dart';
+import 'online/online.dart';
+import 'online/online_game_object_states/missile_state.dart';
+import 'online/online_game_object_states/player_state.dart';
 
 /// Todo this is a changenotifier which does not notify anything
 class Game extends ChangeNotifier {
-  final Camera _camera = Camera();
-  late final GameMap _map;
-  late final DynamicGameObjectManager _dynamicGameObjectManager;
-  late final KeyboardPlayerMover? _keyboardPlayerMover;
-  late final JoyStickPlayerMover? _joyStickPlayerMover;
-  final player = Player(const IsoCoordinate(0, 0), 0, getRandomId());
+  late Online _online;
+  late Camera _camera;
+  late GameMap _map;
+  late DynamicGameObjectManager _dynamicGameObjectManager;
+  late KeyboardPlayerMover? _keyboardPlayerMover;
+  late JoyStickPlayerMover? _joyStickPlayerMover;
+  late Player _player;
   int _amountOfGameObjects = 0;
   int _amountOfGameObjectsRendered = 0;
 
-  Game({bool isMultiplayer = false}) {
+  Game(this._online, {bool isMultiplayer = false}) {
+    setupNewGame();
+  }
+
+  setupNewGame() {
+    _camera = Camera();
+    _player = Player(const IsoCoordinate(0, 0), 0, getRandomId());
     _map = GameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
-    _dynamicGameObjectManager.addDynamicGameObject(player);
-    _keyboardPlayerMover = KeyboardPlayerMover(player);
-    _joyStickPlayerMover = JoyStickPlayerMover(player);
+    _dynamicGameObjectManager.addDynamicGameObject(_player);
+    _keyboardPlayerMover = KeyboardPlayerMover(_player);
+    _joyStickPlayerMover = JoyStickPlayerMover(_player);
   }
 
   getDrawingData() {
@@ -63,6 +73,10 @@ class Game extends ChangeNotifier {
       _amountOfGameObjectsRendered += region.gameObjectsVisibleLength();
     });
     return (underWater: underWater, aboveWater: aboveWater);
+  }
+
+  Player getOurPlayer() {
+    return _player;
   }
 
   void moveCamera(double joyStickX, double joyStickY) {
@@ -109,13 +123,13 @@ class Game extends ChangeNotifier {
     var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
     var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
     var canMoveFullStep =
-        _dynamicGameObjectManager.canMove(player, nextCoordinate);
+        _dynamicGameObjectManager.canMove(_player, nextCoordinate);
     var canMoveHalfStep =
-        _dynamicGameObjectManager.canMove(player, halfNextCoordinate);
+        _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
     if (canMoveFullStep && canMoveHalfStep) {
       _keyboardPlayerMover?.move(dt);
       _joyStickPlayerMover?.move(dt);
-      _camera.center = player.getIsoCoordinate();
+      _camera.center = _player.getIsoCoordinate();
     }
   }
 
@@ -124,18 +138,23 @@ class Game extends ChangeNotifier {
   }
 
   void shootMissile(IsoCoordinate target) {
-    var shooter = player;
+    var unitVectorFromPlayerToTarget =
+        (target - _player.isoCoordinate).toUnitVector();
     var missile = Missile(
-        player.getIsoCoordinate(), player.elevation, 0.4, getRandomId());
+      _player.getIsoCoordinate(),
+      _player.elevation,
+      0.4,
+      Projectile(unitVectorFromPlayerToTarget),
+      getRandomId(),
+    );
     missile.actionTypes = {
       CollisionActionType.destroyItself,
       CollisionActionType.causeDamage
     };
-    missile.skipCollisionAction.add(shooter.getId());
-    var unitVectorFromPlayerToTarget =
-        (target - player.isoCoordinate).toUnitVector();
-    missile.addProjectile(Projectile(unitVectorFromPlayerToTarget));
+    // You cannot shoot yourself
+    missile.skipCollisionAction.add(_player.getId());
     _dynamicGameObjectManager.addDynamicGameObject(missile);
+    _online.addMissile(missile);
   }
 
   void keyDownEvent(LogicalKeyboardKey logicalKey) {
@@ -163,12 +182,30 @@ class Game extends ChangeNotifier {
     _dynamicGameObjectManager.addDynamicGameObject(opponent);
   }
 
-  void updateMultiplayerGameObjects(List<Player> gameObjects) {
-    for (var gameObject in gameObjects) {
-      if (gameObject.getId() != player.getId()) {
-        _dynamicGameObjectManager.addMultiplayerGameObjects(gameObject);
+  void updateOnlineGameObjects(List<GameObjectState> states) {
+    for (var state in states) {
+      if (state is PlayerState) {
+        if (state.id != _player.getId()) {
+          // We do not update our own player
+          _dynamicGameObjectManager.updateOnlinePlayer(state);
+        }
+      } else if (state is MissileState) {
+        _dynamicGameObjectManager.updateOnlineMissile(state);
+      } else {
+        throw Exception("Unknown online game object type");
       }
     }
+  }
+
+  void reset() {
+    setupNewGame();
+  }
+
+  GameState getGameState() {
+    if (_player.destroy == true) {
+      return GameState.gameOver;
+    }
+    return GameState.going;
   }
 }
 
@@ -193,3 +230,5 @@ extension GameMapStatisticExtension on Game {
     return _amountOfGameObjectsRendered;
   }
 }
+
+enum GameState { going, gameOver }

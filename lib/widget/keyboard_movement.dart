@@ -19,7 +19,7 @@ class KeyBoardMovement extends StatelessWidget {
           game.keyUpEvent(event.logicalKey);
         }
       },
-      focusNode: FocusNode()..requestFocus(),
+      focusNode: FocusNode(),
       child: child,
     );
   }

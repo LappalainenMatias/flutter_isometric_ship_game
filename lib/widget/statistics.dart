@@ -40,10 +40,10 @@ class _StatisticsState extends State<Statistics> {
               "Center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
-            Text(
-              "Size: ${NumberFormat('###,###,###,###,###').format(game.viewWidth.toInt()).replaceAll(',', ' ')} x ${NumberFormat('###,###,###,###,###').format(game.viewHeight.toInt()).replaceAll(',', ' ')}",
-              style: const TextStyle(color: Colors.white),
-            ),
+            //Text(
+            //  "Size: ${NumberFormat('###,###,###,###,###').format(game.viewWidth.toInt()).replaceAll(',', ' ')} x ${NumberFormat('###,###,###,###,###').format(game.viewHeight.toInt()).replaceAll(',', ' ')}",
+            //  style: const TextStyle(color: Colors.white),
+            //),
             Text(
               "Zoom: ${game.zoomLevel.toStringAsFixed(6)}",
               style: const TextStyle(color: Colors.white),
@@ -58,8 +58,11 @@ class _StatisticsState extends State<Statistics> {
             ),
             Text("Missed frames: ${gameLoop.missedFrames}",
                 style: const TextStyle(color: Colors.white)),
-            Text("Connection: ${online.connectionStatus}",
-                style: const TextStyle(color: Colors.white)),
+            Text("Connection: ${online.connectionStatus.toString()}",
+                style: TextStyle(
+                    color: online.connectionStatus == ConnectionStatus.connected
+                        ? Colors.white
+                        : Colors.red)),
           ],
         ),
       ),

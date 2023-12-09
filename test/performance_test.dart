@@ -14,7 +14,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'test_utils/test_objects.dart';
 
 /// Here we tests the performance of different parts of the game
-/// These do NOT test anything
+/// These tests do not fail but there is times listed in the end so that we can
+/// monitor the performance of the game
 void main() {
   test("Returning data from webworkers", () {
     /// Trying to find best way to decode the data in the main thread because

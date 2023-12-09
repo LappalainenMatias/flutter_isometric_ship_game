@@ -4,7 +4,7 @@ mixin Health {
   int _health = 1;
 
   void takeDamage(Damage damage) {
-    _health -= damage.amount;
+    _health -= damage.damageAmount;
     if (_health <= 0) {
       _health = 0;
       destroyItself();

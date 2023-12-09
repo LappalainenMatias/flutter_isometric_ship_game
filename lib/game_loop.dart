@@ -24,15 +24,18 @@ class GameLoop extends ChangeNotifier {
     }
     _previous = timestamp;
     update(dt);
-    notifyListeners(); // This is Render()
+    notifyListeners(); // This causes map to render gameobjects
   }
 
   void update(var dt) {
+    if (game.getGameState() == GameState.gameOver) {
+      game.reset();
+    }
     game.updateMap();
     game.updateDynamicGameObjects(dt);
     game.movePlayer(dt);
-    game.updateMultiplayerGameObjects(online.getOpponents());
-    online.update(game.player);
+    game.updateOnlineGameObjects(online.getOpponents());
+    online.updatePlayer(game.getOurPlayer());
   }
 
   @override

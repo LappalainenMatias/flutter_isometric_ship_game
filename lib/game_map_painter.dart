@@ -10,7 +10,7 @@ class GameMapPainter extends CustomPainter {
   final ui.FragmentShader _waterShader;
   final _landPaint = Paint();
 
-  // We start with 10 because there is a weird visual effect if you start with 0
+  /// We start with 10 because there is visual effect if you start with 0
   double _timePassed = 10;
   ui.Image textureImage;
 
@@ -29,7 +29,6 @@ class GameMapPainter extends CustomPainter {
 
     /// Draw under water things
     for (var data in atlasData.underWater) {
-      /// data is basically all the under water game objects of one region
       canvas.drawRawAtlas(
         textureImage,
         data.$1,

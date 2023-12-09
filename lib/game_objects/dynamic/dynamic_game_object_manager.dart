@@ -5,8 +5,12 @@ import 'package:anki/map/map.dart';
 import '../../camera/camera.dart';
 import '../../collision/collision_detector.dart';
 import '../../coordinates/coordinate_utils.dart';
+import '../../online/online_game_object_states/missile_state.dart';
+import '../../online/online_game_object_states/online_game_object_state.dart';
+import '../../online/online_game_object_states/player_state.dart';
 import '../../region/region.dart';
 import '../game_object.dart';
+import 'missile.dart';
 
 /// Handles that dynamic game objects are part of the correct region.
 /// Updates dynamic game object which are in the camera's view.
@@ -44,10 +48,6 @@ class DynamicGameObjectManager {
     _updateRegion(player);
     return collisions.isEmpty;
   }
-
-  //void addMultiplayer(Multiplayer multiplayer) {
-  //  _multiplayer = multiplayer;
-  //}
 
   /// Does the following:
   /// 1. Moves game objects to correct regions
@@ -103,9 +103,8 @@ class DynamicGameObjectManager {
     for (var dgo in _gameObjectToRegion.keys) {
       if (dgo is CollisionAction) {
         var collisionAction = (dgo as CollisionAction);
-        var collisions = findCollisions(
-            _gameObjectToRegion[dgo]!.getAllGameObjects(),
-            dgo);
+        var collisions =
+            findCollisions(_gameObjectToRegion[dgo]!.getAllGameObjects(), dgo);
         if (collisions.isNotEmpty) {
           collisionAction.execute(dgo, collisions);
         }
@@ -113,14 +112,29 @@ class DynamicGameObjectManager {
     }
   }
 
-  void addMultiplayerGameObjects(Player newMP) {
+  void updateOnlinePlayer(PlayerState state) {
     for (var go in _gameObjectToRegion.keys) {
-      if (go is Player && go.getId() == newMP.getId()) {
-        go.isoCoordinate = newMP.isoCoordinate;
+      if (go is Player && go.getId() == state.id) {
+        go.matchState(state);
         return;
       }
     }
-    addDynamicGameObject(newMP);
+    /// If the player is new
+    var newPlayer = Player.defaultPlayer(state.id);
+    newPlayer.matchState(state);
+    addDynamicGameObject(newPlayer);
+  }
+
+  void updateOnlineMissile(MissileState state) {
+    for (var go in _gameObjectToRegion.keys) {
+      if (go is Missile && go.getId() == state.id) {
+        return;
+      }
+    }
+    /// If the missiles is new
+    var newMissile = Missile.defaultMissile(state.id);
+    newMissile.matchState(state);
+    addDynamicGameObject(newMissile);
   }
 
   void addDynamicGameObject(DynamicGameObject gameObject) {
