@@ -37,7 +37,7 @@ has a ```nearness()``` value which is used to sort the game objects from farthes
 
 ## Diagram
 Simplified version of the class structure which shows the dependencies between classes.
-There are some classes missing and in reality there are more dependencies.
+There are some classes missing and in reality there are more dependencies. (Updated 2023-12-10)
 
 ![class_structure.png](readme_images/structure.png)
 
