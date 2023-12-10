@@ -1,13 +1,17 @@
 import 'package:anki/game_objects/game_object.dart';
 
 /// Returns empty list if no collisions found
-/// The skip can be used to skip collision detection with certain game objects
-/// like missile cannot collide with the player who shot it.
 List<GameObject> findCollisions(
-    List<GameObject> others, GameObject gameObject) {
+    List<GameObject> others, GameObject go) {
   List<GameObject> collisions = [];
+  var isUnderWater = go.isUnderWater();
   for (var other in others) {
-    if (gameObject.collision(other)) {
+    // Optimizations
+    if (!other.isVisible()) continue;
+    if (isUnderWater != other.isUnderWater()) continue;
+
+    // Check collision
+    if (go.collision(other)) {
       collisions.add(other);
     }
   }

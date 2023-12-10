@@ -29,10 +29,6 @@ class _StatisticsState extends State<Statistics> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Cubes in screen: ${NumberFormat('###,###,###').format(game.amountOfGameObjects()).replaceAll(',', ' ')}",
-              style: const TextStyle(color: Colors.white),
-            ),
-            Text(
               "Cubes rendered: ${NumberFormat('###,###,###').format(game.amountOfGameObjectsRendered()).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),

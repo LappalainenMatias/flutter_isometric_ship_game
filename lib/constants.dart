@@ -3,7 +3,7 @@
 /// The data that comes from webworkers is decoded currenlty on the main thread, so it can cause
 /// lag if the region size is too large. Also if the region contains dynamic game objects,
 /// the painters algorithm and collision detection is slower for larger regions.
-const int regionSideWidth = 16;
+const int regionSideWidth = 64;
 
 /// Amount of regions the game can have before it starts removing regions.
 const int maxRegionCount = 1000;
@@ -15,4 +15,3 @@ const int maxRegionCount = 1000;
 /// 1. change to 'wss://game-backend-7myko4scwa-ew.a.run.app/ws'
 /// 2. Check that the backend is running on the cloud
 const String socket = 'ws://localhost:8080/ws';
-

@@ -22,6 +22,7 @@ class DynamicGameObjectManager {
 
   /// Todo refactor
   bool canMove(Player player, IsoCoordinate newIsoCoordinate) {
+    return true;
     /// Save old coordinate and move player
     var old = player.isoCoordinate.copy();
     player.isoCoordinate = newIsoCoordinate;
@@ -56,7 +57,7 @@ class DynamicGameObjectManager {
     _removeDestroyedGameObjects();
     _updateRegions();
     _updateGameObjects(dt);
-    _checkCollisions();
+    //_checkCollisions();
   }
 
   void _removeDestroyedGameObjects() {

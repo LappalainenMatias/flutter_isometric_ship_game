@@ -1,4 +1,6 @@
 import 'package:anki/camera/camera.dart';
+import 'package:anki/collision/collision_detector.dart';
+import 'package:anki/game_objects/dynamic/missile.dart';
 import 'package:anki/game_objects/game_object.dart';
 import 'package:anki/game_objects/game_object_to_drawing_data.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
@@ -10,8 +12,10 @@ import 'package:anki/region/region.dart';
 import 'package:anki/region/region_creation/region_creator.dart';
 import 'package:anki/region/region_creation_queue.dart';
 import 'package:anki/textures/texture_rects.dart';
+import 'package:anki/utils/random_id.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'test_utils/test_objects.dart';
+import 'dart:math';
 
 /// Here we tests the performance of different parts of the game
 /// These tests do not fail but there is times listed in the end so that we can
@@ -179,5 +183,58 @@ void main() {
 
     /// 1024 * 1024, ms
     /// 1: 63, 64, 67
+  });
+
+  test('Create cube drawing data', () {
+    List<IsoCoordinate> coordinates = [];
+    for (int i = 0; i < 1024 * 1024; i++) {
+      coordinates.add(IsoCoordinate(i.toDouble(), i.toDouble()));
+    }
+    Stopwatch stopwatch = Stopwatch()..start();
+    for (var coordinate in coordinates) {
+      createDrawingDTO(
+          getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1),
+          coordinate,
+          1);
+    }
+    stopwatch.stop();
+    print(
+        'createDrawingDTO took ${stopwatch.elapsedMilliseconds} milliseconds');
+
+    /// 1024 * 1024, ms
+    /// 1: 63, 64, 67
+  });
+
+  test("Region to drawing data", () {
+    RegionCreator regionCreator = RegionCreator();
+    var regionGround = regionCreator.create(128, 128, 0, 0);
+    var region = Region(const IsoCoordinate(0, 0), regionGround);
+    for (int i = 0; i < 1000; i++) {
+      var missile = Missile.defaultMissile(getRandomId());
+      missile.isoCoordinate = IsoCoordinate(
+          Random().nextInt(1000).toDouble(), Random().nextInt(1000).toDouble());
+      region.addDynamicGameObject(missile);
+    }
+    Stopwatch stopwatch = Stopwatch()..start();
+    region.getRstTransformsAndRects();
+    stopwatch.stop();
+    print('Region to drawing data took ${stopwatch.elapsedMilliseconds} ms');
+    /// 128 x 128 + 1000, ms
+    /// 1: 123, 116, 117
+    /// 2: 10, 11, 11 (Removed merging of two lists)
+  });
+
+  test("Collision detector performance", () {
+    var regionCreator = RegionCreator();
+    var regionGround = regionCreator.create(256, 256, 0, 0);
+    var missile = Missile.defaultMissile(getRandomId());
+    Stopwatch stopwatch = Stopwatch()..start();
+    findCollisions(regionGround, missile);
+    stopwatch.stop();
+    print('Collision detection took ${stopwatch.elapsedMilliseconds} ms');
+    /// 256 x 256, ms
+    /// 1: 28, 29, 27
+    /// 2: 17, 18, 17 (Skip collision detection for invisible objects)
+    /// 3: 12, 12, 12 (Skip other one is above water and other one is below water)
   });
 }

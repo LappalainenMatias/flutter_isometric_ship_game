@@ -32,6 +32,9 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/heal
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/health_and_damage/health.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/map/map_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/noise/noise.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/online/online_game_object_states/missile_state.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/online/online_game_object_states/online_game_object_state.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/online/online_game_object_states/player_state.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/jsregionworker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/region_creation/region_creator.dart

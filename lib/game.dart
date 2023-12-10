@@ -122,9 +122,9 @@ class Game extends ChangeNotifier {
     if (_keyboardPlayerMover == null) return;
     var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
     var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
-    var canMoveFullStep =
+    var canMoveFullStep = true;
         _dynamicGameObjectManager.canMove(_player, nextCoordinate);
-    var canMoveHalfStep =
+    var canMoveHalfStep = true;
         _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
     if (canMoveFullStep && canMoveHalfStep) {
       _keyboardPlayerMover?.move(dt);

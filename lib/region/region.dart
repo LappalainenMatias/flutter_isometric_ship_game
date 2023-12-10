@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 import 'package:anki/coordinates/borders.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/region/region_to_vertices.dart';
+import 'package:anki/region/region_to_drawing_dto.dart';
 import '../../game_objects/game_object.dart';
 
 /// The region contains dynamic and static game objects. We update the vertices
@@ -24,6 +24,7 @@ class Region implements Comparable<Region> {
 
   void addDynamicGameObject(DynamicGameObject gameObject) {
     _dynamicGameObjects.add(gameObject);
+    _dynamicGameObjects.sort();
   }
 
   bool isEmpty() {
@@ -52,8 +53,7 @@ class Region implements Comparable<Region> {
   }
 
   void _updateRstTransforms() {
-    final data =
-        GameObjectsToDrawingData.create(_staticGameObjects, _dynamicGameObjects);
+    final data = regionToDrawingDTO(_staticGameObjects, _dynamicGameObjects);
     underWaterrstTransforms = data.underWaterRstTransforms;
     underWaterRects = data.underWaterRects;
     aboveWaterRstTransforms = data.aboveWaterRstTransforms;

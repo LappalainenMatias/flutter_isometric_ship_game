@@ -13,12 +13,14 @@ class RegionCreator {
   final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator(_mapCreationRules);
 
+  /// Returns a sorted list of all game objects in the region.
   List<StaticGameObject> create(int w, int h, int x, int y) {
     final (elevation, moisture) = noise.createComplexNoise(w, h, x, y);
     List<Tile> tiles = _createTiles(x, y, elevation, moisture);
     var allGameObjects = List<StaticGameObject>.from(tiles);
     //allGameObjects.addAll(_createNaturalItems(tiles));
     visibilityChecker(allGameObjects);
+    allGameObjects.removeWhere((element) => !element.isVisible());
     allGameObjects.sort();
     return allGameObjects;
   }
