@@ -7,7 +7,6 @@ List<GameObject> findCollisions(
   var isUnderWater = go.isUnderWater();
   for (var other in others) {
     // Optimizations
-    if (!other.isVisible()) continue;
     if (isUnderWater != other.isUnderWater()) continue;
 
     // Check collision
