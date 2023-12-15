@@ -1,17 +1,16 @@
 import 'dart:collection';
-import 'package:anki/game_objects/game_object.dart';
+import '../game_objects/static/ground/tile.dart';
 
-/// Goes through all game objects and sets their visibility.
-/// This hides game objects that are completele invisible.
-void visibilityChecker(List<GameObject> gameObjects) {
+/// Tiles need to be 1x1x1 in size
+void removeHiddenGameObjects(List<Tile> tiles) {
   HashSet<String> points = HashSet<String>();
-  for (var tile in gameObjects) {
+  for (var tile in tiles) {
     var point = tile.getIsoCoordinate().toPoint();
     var elevation = tile.getElevation().toInt();
     points.add('${point.x.toInt()},${point.y.toInt()},$elevation');
   }
 
-  for (var tile in gameObjects) {
+  tiles.removeWhere((tile) {
     var point = tile.getIsoCoordinate().toPoint();
     var x = point.x.toInt();
     var y = point.y.toInt();
@@ -21,8 +20,8 @@ void visibilityChecker(List<GameObject> gameObjects) {
     var left = '${x + 1},$y,$z';
     var top = '$x,$y,${z + 1}';
 
-    tile.setVisibility(!(points.contains(left) &&
+    return points.contains(left) &&
         points.contains(top) &&
-        points.contains(right)));
-  }
+        points.contains(right);
+  });
 }

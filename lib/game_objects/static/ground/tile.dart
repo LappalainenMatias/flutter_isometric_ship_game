@@ -8,13 +8,12 @@ import '../../game_object_to_drawing_data.dart';
 
 class Tile extends StaticGameObject {
   final TileType type;
-  IsoCoordinate isoCoordinate;
-  double elevation;
-  late DrawingDTO vertices;
-  int width;
+  final IsoCoordinate isoCoordinate;
+  final double elevation;
+  late final DrawingDTO drawingDTO;
+  final int width;
   late final CollisionBox collisionBox;
-  bool _isVisible = true;
-  int _id = 0;
+  final int _id;
 
   Tile(
     this.type,
@@ -22,17 +21,15 @@ class Tile extends StaticGameObject {
     this.elevation,
     this.width,
     this._id, {
-    DrawingDTO? vertices,
-    bool isVisible = true,
+    DrawingDTO? drawingDTO,
   }) {
-    _isVisible = isVisible;
     collisionBox = CollisionBox(isoCoordinate, width.toDouble(), elevation);
-    this.vertices = vertices ?? TileToDrawingDTO.create(this);
+    this.drawingDTO = drawingDTO ?? TileToDrawingDTO.create(this);
   }
 
   @override
   getDrawingData() {
-    return vertices;
+    return drawingDTO;
   }
 
   factory Tile.fromList(List list) {
@@ -45,11 +42,10 @@ class Tile extends StaticGameObject {
       list[4],
       list[5],
       list[6],
-      vertices: DrawingDTO(
+      drawingDTO: DrawingDTO(
         (list[7][0] as Float32List),
         (list[7][1] as Float32List),
       ),
-      isVisible: list[8],
     );
   }
 
@@ -65,16 +61,14 @@ class Tile extends StaticGameObject {
       width,
       _id,
       [
-        vertices.rSTransforms,
-        vertices.rects,
+        drawingDTO.rSTransforms,
+        drawingDTO.rects,
       ],
-      _isVisible,
     ];
   }
 
   @override
   ({double distance, double elevation}) nearness() {
-    /// Todo this could be defined in consctructor
     return (distance: isoCoordinate.isoY, elevation: elevation);
   }
 
@@ -91,16 +85,6 @@ class Tile extends StaticGameObject {
   @override
   IsoCoordinate getIsoCoordinate() {
     return isoCoordinate;
-  }
-
-  @override
-  bool isVisible() {
-    return _isVisible;
-  }
-
-  @override
-  void setVisibility(bool isVisible) {
-    _isVisible = isVisible;
   }
 
   @override

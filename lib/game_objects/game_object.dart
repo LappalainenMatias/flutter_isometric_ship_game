@@ -1,6 +1,7 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
+import 'package:flutter/cupertino.dart';
 import '../collision/collision_box.dart';
 import '../dto/drawing_dto.dart';
 
@@ -28,6 +29,8 @@ abstract class GameObject implements Comparable<GameObject> {
 
   /// If true the game object is drawn under the water plane
   bool isUnderWater();
+
+  bool isVisible();
 
   @override
   int compareTo(GameObject other) {
@@ -72,20 +75,24 @@ abstract class GameObject implements Comparable<GameObject> {
     }
     throw Exception("Not implemented for $gameObjectData");
   }
-
-  /// If false, the gameObject should not be drawn
-  bool isVisible();
-
-  /// If false, the gameObject will not be drawn
-  void setVisibility(bool isVisible);
 }
 
 /// Static game objects cannot change. This allows faster rendering and other
 /// optimizations.
-abstract class StaticGameObject extends GameObject {}
+@immutable
+abstract class StaticGameObject extends GameObject {
+  /// Currently there is no need for invisible static game objects.
+  /// Invisble static game, for example tiles which are behind other tiles
+  /// should be deleted from the game.
+  @override
+  isVisible() => true;
+}
 
 /// Dynamic game objects can change. This allows for example moving game objects.
 abstract class DynamicGameObject extends GameObject {
+  /// If false, the gameObject will not be drawn
+  void setVisibility(bool isVisible);
+
   void update(double dt);
 
   /// When changed to true the game object will be removed from the game.

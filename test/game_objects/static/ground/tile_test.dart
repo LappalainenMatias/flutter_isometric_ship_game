@@ -77,14 +77,13 @@ void main() {
       2,
       1,
       getRandomId(),
-      isVisible: false,
     );
     List encoded = tile.gameObjectToList();
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, 2);
     expect(decoded.type, TileType.grass);
     expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(2, 2));
-    expect(decoded.isVisible(), false);
+    expect(decoded.isVisible(), true);
   });
 
   test("Decode and encode 2x2 tile", () {

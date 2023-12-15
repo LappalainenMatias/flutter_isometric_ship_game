@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/map/map_creation_rules.dart';
-import 'package:anki/optimization/visibility_checker.dart';
+import 'package:anki/optimization/remove_hidden_tiles.dart';
 import '../../../game_objects/create_game_object.dart';
 import '../../../game_objects/game_object.dart';
 import '../../../game_objects/static/ground/tile.dart';
@@ -17,10 +17,9 @@ class RegionCreator {
   List<StaticGameObject> create(int w, int h, int x, int y) {
     final (elevation, moisture) = noise.createComplexNoise(w, h, x, y);
     List<Tile> tiles = _createTiles(x, y, elevation, moisture);
-    var allGameObjects = List<StaticGameObject>.from(tiles);
     //allGameObjects.addAll(_createNaturalItems(tiles));
-    visibilityChecker(allGameObjects);
-    allGameObjects.removeWhere((element) => !element.isVisible());
+    removeHiddenGameObjects(tiles);
+    var allGameObjects = List<StaticGameObject>.from(tiles);
     allGameObjects.sort();
     return allGameObjects;
   }
