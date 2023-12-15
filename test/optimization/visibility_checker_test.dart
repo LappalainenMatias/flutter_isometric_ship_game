@@ -1,7 +1,7 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/optimization/visibility_checker.dart';
+import 'package:anki/optimization/remove_hidden_tiles.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -11,11 +11,12 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(0, 1), 0, 1, 0);
     var left = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1, 0);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1, 0);
-    visibilityChecker([hideThis, left, right, top]);
-    expect(hideThis.isVisible(), false);
-    expect(left.isVisible(), true);
-    expect(right.isVisible(), true);
-    expect(top.isVisible(), true);
+    var tiles = [hideThis, left, right, top];
+    removeHiddenGameObjects(tiles);
+    expect(tiles.contains(hideThis), false);
+    expect(tiles.contains(left), true);
+    expect(tiles.contains(right), true);
+    expect(tiles.contains(top), true);
   });
 
   test('Tile should be visible', () {
@@ -24,11 +25,12 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(0, 1), 0, 1, 0);
     var left = Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1, 0);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1, 0);
-    visibilityChecker([hideThis, left, right, top]);
-    expect(hideThis.isVisible(), true);
-    expect(left.isVisible(), true);
-    expect(right.isVisible(), true);
-    expect(top.isVisible(), true);
+    var tiles = [hideThis, left, right, top];
+    removeHiddenGameObjects(tiles);
+    expect(tiles.contains(hideThis), true);
+    expect(tiles.contains(right), true);
+    expect(tiles.contains(left), true);
+    expect(tiles.contains(top), true);
   });
 
   test('Tile should be visible', () {
@@ -37,11 +39,12 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(0, 1), 0, 1, 0);
     var left = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1, 0);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1, 0);
-    visibilityChecker([hideThis, left, right, top]);
-    expect(hideThis.isVisible(), true);
-    expect(left.isVisible(), true);
-    expect(right.isVisible(), true);
-    expect(top.isVisible(), true);
+    var tiles = [hideThis, left, right, top];
+    removeHiddenGameObjects(tiles);
+    expect(tiles.contains(hideThis), true);
+    expect(tiles.contains(right), true);
+    expect(tiles.contains(left), true);
+    expect(tiles.contains(top), true);
   });
 
   test('Tile should be visible', () {
@@ -50,10 +53,11 @@ void main() {
     var right = Tile(TileType.grass, const IsoCoordinate(1, 1), 0, 1, 0);
     var left = Tile(TileType.grass, const IsoCoordinate(1, 0), 0, 1, 0);
     var top = Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1, 0);
-    visibilityChecker([hideThis, left, right, top]);
-    expect(hideThis.isVisible(), true);
-    expect(left.isVisible(), true);
-    expect(right.isVisible(), true);
-    expect(top.isVisible(), true);
+    var tiles = [hideThis, left, right, top];
+    removeHiddenGameObjects(tiles);
+    expect(tiles.contains(hideThis), true);
+    expect(tiles.contains(right), true);
+    expect(tiles.contains(left), true);
+    expect(tiles.contains(top), true);
   });
 }
