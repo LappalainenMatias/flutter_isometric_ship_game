@@ -56,7 +56,7 @@ class DynamicGameObjectManager {
     _removeDestroyedGameObjects();
     _updateRegions();
     _updateGameObjects(dt);
-    //_checkCollisions();
+    _checkCollisions();
   }
 
   void _removeDestroyedGameObjects() {

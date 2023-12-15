@@ -4,6 +4,7 @@ import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
 import 'package:anki/textures/texture_coordinates.dart';
 import 'package:anki/textures/texture_rects.dart';
+import '../collision/collision_box.dart';
 import '../dto/drawing_dto.dart';
 import '../coordinates/iso_coordinate.dart';
 import 'dynamic/missile.dart';
@@ -74,6 +75,17 @@ class PlayerToDrawingDTO {
       player.isoCoordinate,
       player.elevation,
       scale: player.width,
+    );
+  }
+}
+
+class CollisionBoxToDrawingDTO {
+  static DrawingDTO create(CollisionBox collisionBox) {
+    return createDrawingDTO(
+      getTileTextureCoordinatesRect(SpriteSheetItem.tileGrey),
+      IsoCoordinate(collisionBox.leftX, collisionBox.bottomY),
+      collisionBox.bottomZ,
+      scale: 1
     );
   }
 }
