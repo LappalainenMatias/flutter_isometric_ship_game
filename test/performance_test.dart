@@ -6,7 +6,7 @@ import 'package:anki/game_objects/game_object_to_drawing_data.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/ground/tile_type.dart';
 import 'package:anki/noise/noise.dart';
-import 'package:anki/optimization/visibility_checker.dart';
+import 'package:anki/optimization/remove_hidden_tiles.dart';
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/region/region.dart';
 import 'package:anki/region/region_creation/region_creator.dart';
@@ -113,7 +113,7 @@ void main() {
       );
     }
     Stopwatch stopwatch = Stopwatch()..start();
-    visibilityChecker(tiles);
+    removeHiddenGameObjects(tiles);
     stopwatch.stop();
     print('Visibility checker took ${stopwatch.elapsedMilliseconds} ms');
 
