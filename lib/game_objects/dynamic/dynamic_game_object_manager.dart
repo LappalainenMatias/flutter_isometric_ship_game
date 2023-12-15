@@ -22,25 +22,24 @@ class DynamicGameObjectManager {
 
   /// Todo refactor
   bool canMove(Player player, IsoCoordinate newIsoCoordinate) {
-    return true;
     /// Save old coordinate and move player
     var old = player.isoCoordinate.copy();
     player.isoCoordinate = newIsoCoordinate;
     _updateRegion(player);
 
     /// Find all possible collisions regions
-    var center = regionOf(player);
-    var below = _map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(0, 5));
-    var above = _map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(0, 5));
-    var left = _map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(5, 0));
-    var right = _map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(5, 0));
+    var regions = <Region>{};
+    regions.add(regionOf(player));
+    regions.add(_map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(0, 5)));
+    regions.add(_map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(0, 5)));
+    regions.add(_map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(5, 0)));
+    regions.add(_map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(5, 0)));
 
-    /// Check collisions
-    var collisions = findCollisions(center.getAllGameObjects(), player);
-    collisions.addAll(findCollisions(below.getAllGameObjects(), player));
-    collisions.addAll(findCollisions(above.getAllGameObjects(), player));
-    collisions.addAll(findCollisions(left.getAllGameObjects(), player));
-    collisions.addAll(findCollisions(right.getAllGameObjects(), player));
+    /// Find collisions
+    var collisions = <GameObject>[];
+    for (var region in regions) {
+      collisions.addAll(findCollisions(region.getAllGameObjects(), player));
+    }
 
     /// Move player back to old coordinate
     player.isoCoordinate = old;
@@ -118,6 +117,7 @@ class DynamicGameObjectManager {
         return;
       }
     }
+
     /// If the player is new
     var newPlayer = Player.defaultPlayer(state.id);
     newPlayer.matchState(state);
@@ -130,6 +130,7 @@ class DynamicGameObjectManager {
         return;
       }
     }
+
     /// If the missiles is new
     var newMissile = Missile.defaultMissile(state.id);
     newMissile.matchState(state);

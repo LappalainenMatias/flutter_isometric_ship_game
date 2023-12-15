@@ -19,10 +19,10 @@ class GameMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    /// Updates water shader and creates the illusion of water movement
-    //_timePassed += gameLoop.dt;
-    //_waterShader.setFloat(0, _timePassed);
-
+    _timePassed += gameLoop.dt;
+    _waterShader.setFloat(0, _timePassed);
+    var waterPaint = Paint()..color = const Color(0xF21468D7);
+    waterPaint.shader = _waterShader;
     _transformations(canvas, size);
 
     var atlasData = game.getDrawingData();
@@ -46,7 +46,7 @@ class GameMapPainter extends CustomPainter {
        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
      ),
-     Paint()..color = const Color(0xF21468D7),
+     waterPaint,
    );
 
     /// Draw above water things

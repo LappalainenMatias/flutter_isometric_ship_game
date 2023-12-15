@@ -28,7 +28,7 @@ class Game extends ChangeNotifier {
   int _amountOfGameObjects = 0;
   int _amountOfGameObjectsRendered = 0;
 
-  Game(this._online, {bool isMultiplayer = false}) {
+  Game(this._online) {
     setupNewGame();
   }
 
@@ -122,9 +122,9 @@ class Game extends ChangeNotifier {
     if (_keyboardPlayerMover == null) return;
     var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
     var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
-    var canMoveFullStep = true;
+    var canMoveFullStep =
         _dynamicGameObjectManager.canMove(_player, nextCoordinate);
-    var canMoveHalfStep = true;
+    var canMoveHalfStep =
         _dynamicGameObjectManager.canMove(_player, halfNextCoordinate);
     if (canMoveFullStep && canMoveHalfStep) {
       _keyboardPlayerMover?.move(dt);
