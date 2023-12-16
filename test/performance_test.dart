@@ -91,7 +91,7 @@ void main() {
     stopwatch.reset();
 
     for (int i = 0; i < isoCoordinates.length; i++) {
-      toVertices(TileType.ice, isoCoordinates[i], -1);
+      toVertices(TileType.grass, isoCoordinates[i], -1);
     }
 
     stopwatch.stop();

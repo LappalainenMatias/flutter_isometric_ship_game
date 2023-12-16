@@ -27,13 +27,15 @@ class NoiseCreator {
     List<List<double>> moistureMap = _fixedSizeList(width, height);
 
     /// Increasing frequency adds details to the noise.
-    double frequency1 = mapCreationRules.frequency();
-    double frequency2 = mapCreationRules.frequency() * 4;
-    double frequency3 = mapCreationRules.frequency() * 16;
+    final double frequency1 = mapCreationRules.frequency();
+    final double frequency2 = mapCreationRules.frequency() * 4;
+    final double frequency3 = mapCreationRules.frequency() * 16;
 
-    var amountOfWater = mapCreationRules.amountOfWater();
-    var peakToPeakAmplitude = mapCreationRules.peakToPeakAmplitude();
-    var terrainSharpness = mapCreationRules.terrainSharpness();
+    final amountOfWater = mapCreationRules.amountOfWater();
+    final peakToPeakAmplitude = min(
+        mapCreationRules.maxElevation(), mapCreationRules.minElevation().abs());
+    final terrainSharpness = mapCreationRules.terrainSharpness();
+
     for (int x = 0; x < width; x++) {
       var i = (bottomLeftX + x).toDouble();
       for (int y = 0; y < width; y++) {
@@ -51,6 +53,11 @@ class NoiseCreator {
         e = pow(e, terrainSharpness).toDouble();
         e = e - amountOfWater;
         e = e * peakToPeakAmplitude;
+        if (e < mapCreationRules.minElevation()) {
+          e = mapCreationRules.minElevation();
+        } else if (e > mapCreationRules.maxElevation()) {
+          e = mapCreationRules.maxElevation();
+        }
         elevationMap[x][y] = e.roundToDouble();
 
         double m = _moistureNoise1.noise2(i * frequency1, j * frequency1) +

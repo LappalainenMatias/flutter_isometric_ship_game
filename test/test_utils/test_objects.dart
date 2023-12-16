@@ -48,14 +48,19 @@ class TestMapCreationRules implements MapCreationRules {
   @override
   List<TileRule> tileRules() {
     return [
-      TileRule(TileType.sand, 0.0, null),
-      TileRule(TileType.deathGrass, 2.0, -0.20),
       TileRule(TileType.sand, 2.0, 0.35),
-      TileRule(TileType.grass, 2.0, null),
-      TileRule(TileType.deathGrass, 4.0, -0.20),
       TileRule(TileType.grass, 4.0, null),
-      TileRule(TileType.deathGrass, 10.0, -0.20),
       TileRule(TileType.rock, null, null),
     ];
+  }
+
+  @override
+  double maxElevation() {
+    return 20;
+  }
+
+  @override
+  double minElevation() {
+    return -20;
   }
 }

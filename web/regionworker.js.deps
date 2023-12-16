@@ -35,7 +35,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/nois
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/online/online_game_object_states/missile_state.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/online/online_game_object_states/online_game_object_state.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/online/online_game_object_states/player_state.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/visibility_checker.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/optimization/remove_hidden_tiles.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/jsregionworker.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/region/region_creation/region_creator.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/textures/texture_coordinates.dart

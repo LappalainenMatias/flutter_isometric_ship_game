@@ -14,10 +14,6 @@ abstract class MapCreationRules {
   /// affect the amount of water the map has.
   double amountOfWater();
 
-  /// Needs to be >= 0. Defines max height differences.
-  /// 0 means no height differences.
-  double peakToPeakAmplitude();
-
   /// Needs to be >= 0.
   /// 1 means that there is no affect,
   /// 5 means that there is large height differences.
@@ -27,6 +23,10 @@ abstract class MapCreationRules {
   /// This is the frequency used when creating noise.
   /// For example, 0.008 has more details than 0.004.
   double frequency();
+
+  double minElevation();
+
+  double maxElevation();
 }
 
 class SvalbardCreationRules extends MapCreationRules {
@@ -34,17 +34,15 @@ class SvalbardCreationRules extends MapCreationRules {
   List<TileRule> tileRules() {
     return [
       TileRule(TileType.rock, 0.0, -0.2),
-      TileRule(TileType.deathGrass, 0.0, 0.0),
       TileRule(TileType.sand, 0.0, null),
-      TileRule(TileType.rock, 10.0, -0.2),
-      TileRule(TileType.grass, 10.0, 0.3),
-      TileRule(TileType.deathGrass, 10.0, null),
-      TileRule(TileType.rock, 15.0, -0.2),
-      TileRule(TileType.deathGrass, 15.0, 0.4),
-      TileRule(TileType.grass, 15.0, null),
-      TileRule(TileType.rock, 20.0, 0.5),
-      TileRule(TileType.deathGrass, 20.0, 0.6),
-      TileRule(TileType.snow, null, null),
+      TileRule(TileType.rock, 2.0, -0.2),
+      TileRule(TileType.sand, 2.0, null),
+      TileRule(TileType.rock, 6.0, -0.1),
+      TileRule(TileType.sand, 6.0, 0.0),
+      TileRule(TileType.grass, 6.0, null),
+      TileRule(TileType.rock, 15.0, 0.0),
+      TileRule(TileType.grass, 15.0, 0.4),
+      TileRule(TileType.rock, null, null),
     ];
   }
 
@@ -54,20 +52,12 @@ class SvalbardCreationRules extends MapCreationRules {
       TileType.grass: [
         NaturalItemProbability(NaturalItemType.birch, 0.01),
       ],
-      TileType.deathGrass: [
-        NaturalItemProbability(NaturalItemType.birch, 0.005),
-      ],
     };
   }
 
   @override
   double amountOfWater() {
-    return 0.3;
-  }
-
-  @override
-  double peakToPeakAmplitude() {
-    return 30;
+    return 0.4;
   }
 
   @override
@@ -77,7 +67,17 @@ class SvalbardCreationRules extends MapCreationRules {
 
   @override
   double frequency() {
-    return 0.003;
+    return 0.005;
+  }
+
+  @override
+  double maxElevation() {
+    return 20;
+  }
+
+  @override
+  double minElevation() {
+    return -20;
   }
 }
 

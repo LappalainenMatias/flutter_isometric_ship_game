@@ -30,7 +30,7 @@ mixin Animation {
       _frameIndex = 0;
     }
     if (animationParts.isEmpty) {
-      return getTileTextureCoordinatesRect(SpriteSheetItem.tileRed);
+      return getTileTextureCoordinatesRect(SpriteSheetItem.tileSand);
     }
     return getTileTextureCoordinatesRect(animationParts[_frameIndex]);
   }

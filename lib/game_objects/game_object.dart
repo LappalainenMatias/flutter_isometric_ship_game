@@ -1,7 +1,6 @@
 import 'package:anki/coordinates/iso_coordinate.dart';
 import 'package:anki/game_objects/static/ground/tile.dart';
 import 'package:anki/game_objects/static/natural_items/natural_items.dart';
-import 'package:flutter/cupertino.dart';
 import '../collision/collision_box.dart';
 import '../dto/drawing_dto.dart';
 
@@ -79,7 +78,6 @@ abstract class GameObject implements Comparable<GameObject> {
 
 /// Static game objects cannot change. This allows faster rendering and other
 /// optimizations.
-@immutable
 abstract class StaticGameObject extends GameObject {
   /// Currently there is no need for invisible static game objects.
   /// Invisble static game, for example tiles which are behind other tiles

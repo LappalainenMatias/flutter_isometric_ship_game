@@ -7,16 +7,10 @@ import '../game_objects/static/ground/tile_type.dart';
 Float32List OLD_IMPLEMENTATION_getTileTextureCoordinates(
     TileType type) {
   switch (type) {
-    case TileType.ice:
-      return iceTexture;
     case TileType.grass:
       return grassTexture;
-    case TileType.deathGrass:
-      return deathGrassTexture;
     case TileType.rock:
       return rockTexture;
-    case TileType.snow:
-      return snowTexture;
     case TileType.sand:
       return sandTexture;
   }

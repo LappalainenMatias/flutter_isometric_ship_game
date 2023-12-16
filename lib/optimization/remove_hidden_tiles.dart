@@ -1,7 +1,7 @@
 import 'dart:collection';
 import '../game_objects/static/ground/tile.dart';
 
-/// Tiles need to be 1x1x1 in size
+/// TODO Tiles need to be 1x1x1 in size
 void removeHiddenGameObjects(List<Tile> tiles) {
   HashSet<String> points = HashSet<String>();
   for (var tile in tiles) {

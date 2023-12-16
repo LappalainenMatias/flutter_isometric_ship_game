@@ -125,7 +125,6 @@ enum NaturalItemType {
 /// We have this separate enum so that we can create more complex natural items like the birch tree.
 /// A birch tree is made out of multiple cubes.
 enum NaturalItemPart {
-  rockCube(RockToDrawingDTO.create, true),
   birchTrunkCube(BirchToDrawingDTO.trunk, false),
   birchLeavesCube(BirchToDrawingDTO.leaves, false);
 

@@ -36,25 +36,14 @@ class RegionCreator {
       var moistureRow = moistureNoise[x];
       for (var y = 0; y < elevationNoise[0].length; y++) {
         double height = elevationRow[y];
-        if (height <= 0) {
+        while (height >= _mapCreationRules.minElevation()) {
           final elevation = height.floor().toDouble();
           tiles.add(TileCreator.create(
-            elevation,
-            moistureRow[y],
-            Point((topLeftX + x).toDouble(), (topLeftY + y).toDouble()),
-            _mapCreationRules.tileRules(),
-          ));
-        } else {
-          /// Todo this need refactoring
-          while (height >= 0) {
-            final elevation = height.floor().toDouble();
-            tiles.add(TileCreator.create(
-                elevation,
-                moistureRow[y],
-                Point((topLeftX + x).toDouble(), (topLeftY + y).toDouble()),
-                _mapCreationRules.tileRules()));
-            height -= 1;
-          }
+              elevation,
+              moistureRow[y],
+              Point((topLeftX + x).toDouble(), (topLeftY + y).toDouble()),
+              _mapCreationRules.tileRules()));
+          height -= 1;
         }
       }
     }

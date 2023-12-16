@@ -29,7 +29,7 @@ class _StatisticsState extends State<Statistics> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              "Cubes rendered: ${NumberFormat('###,###,###').format(game.amountOfGameObjectsRendered()).replaceAll(',', ' ')}",
+              "Game objects rendered: ${NumberFormat('###,###,###').format(game.amountOfGameObjectsRendered()).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(
@@ -52,9 +52,9 @@ class _StatisticsState extends State<Statistics> {
               "Region creation queue: ${game.regionCreationQueueStats()}",
               style: const TextStyle(color: Colors.white),
             ),
-            Text("Missed frames: ${gameLoop.missedFrames}",
+            Text("Frames > 16 ms: ${gameLoop.missedFrames}",
                 style: const TextStyle(color: Colors.white)),
-            Text("Connection: ${online.connectionStatus.toString()}",
+            Text("Online: ${online.connectionStatus.toString()}",
                 style: TextStyle(
                     color: online.connectionStatus == ConnectionStatus.connected
                         ? Colors.white

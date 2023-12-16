@@ -13,7 +13,7 @@ import 'dart:math';
 
 class MissileToDrawingDTO {
   static DrawingDTO create(Missile missile) {
-    var texture = getTileTextureCoordinatesRect(SpriteSheetItem.tileRed);
+    var texture = getTileTextureCoordinatesRect(SpriteSheetItem.tileSand);
     return createDrawingDTO(
       texture,
       missile.getIsoCoordinate(),
@@ -25,7 +25,7 @@ class MissileToDrawingDTO {
 
 class BirchToDrawingDTO {
   static DrawingDTO leaves(NaturalItemCube naturalItemCube) {
-    var texture = getTileTextureCoordinatesRect(TileType.snow.spriteSheet);
+    var texture = getTileTextureCoordinatesRect(TileType.grass.spriteSheet);
     return createDrawingDTO(
       texture,
       naturalItemCube.isoCoordinate,
@@ -34,24 +34,11 @@ class BirchToDrawingDTO {
   }
 
   static DrawingDTO trunk(NaturalItemCube naturalItemCube) {
-    var texture = getTileTextureCoordinatesRect(TileType.ice.spriteSheet);
+    var texture = getTileTextureCoordinatesRect(TileType.grass.spriteSheet);
     return createDrawingDTO(
       texture,
       naturalItemCube.isoCoordinate,
       naturalItemCube.elevation,
-    );
-  }
-}
-
-class RockToDrawingDTO {
-  static DrawingDTO create(NaturalItemCube naturalItemCube) {
-    var texture =
-        getTileTextureCoordinatesRect(TileType.deathGrass.spriteSheet);
-    return createDrawingDTO(
-      texture,
-      naturalItemCube.isoCoordinate,
-      naturalItemCube.elevation,
-      scale: 0.6,
     );
   }
 }
@@ -82,7 +69,7 @@ class PlayerToDrawingDTO {
 class CollisionBoxToDrawingDTO {
   static DrawingDTO create(CollisionBox collisionBox) {
     return createDrawingDTO(
-      getTileTextureCoordinatesRect(SpriteSheetItem.tileGrey),
+      getTileTextureCoordinatesRect(SpriteSheetItem.tileRock),
       IsoCoordinate(collisionBox.leftX, collisionBox.bottomY),
       collisionBox.bottomZ,
       scale: 1

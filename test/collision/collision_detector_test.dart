@@ -7,8 +7,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Find collision", () {
-    var others = [Tile(TileType.ice, const IsoCoordinate(0, 0), 0, 1, getRandomId())];
-    var tile = Tile(TileType.ice, const IsoCoordinate(0, 0), 0, 1, getRandomId());
+    var others = [Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1, getRandomId())];
+    var tile = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 1, getRandomId());
     expect(findCollisions(others, tile).length, 1);
   });
 }
