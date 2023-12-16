@@ -50,7 +50,9 @@ Coverage is in:```open coverage/html/lib/index.html```
 
 ## Web
 Web does not support isolates so we need to use webworkers. We need to run this
-everytime we change something that ```regionCreator``` uses.
+everytime we change something that ```RegionCreator``` uses so it updates.
 ```dart compile js -O2 -o web/regionworker.js lib/region/jsregionworker.dart```
-To create a new build:
+
+To create a new build run the previous command and then:
 ```flutter build web --base-href "/flutter_isometric_map_game/"```
+Copy files from web to webBuild/flutter_isometric_map_game/ and push to github.

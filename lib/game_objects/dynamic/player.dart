@@ -16,7 +16,7 @@ class Player extends DynamicGameObject
   IsoCoordinate isoCoordinate;
   double elevation;
   late CollisionBox collisionBox;
-  double width = 1;
+  double width = 2;
   bool _isVisible = true;
   late DrawingDTO dto;
   final int _id;

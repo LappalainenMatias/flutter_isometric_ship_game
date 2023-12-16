@@ -36,3 +36,4 @@ flutter:
     - assets/spritesheet.png
   shaders:
     - shaders/regtanglewater.frag
+    - shaders/clouds.frag

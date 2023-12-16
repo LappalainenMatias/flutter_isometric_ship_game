@@ -7,22 +7,30 @@ import 'game_loop.dart';
 class GameMapPainter extends CustomPainter {
   final GameLoop gameLoop;
   final Game game;
+  final ui.FragmentShader _cloudShader;
   final ui.FragmentShader _waterShader;
   final _landPaint = Paint();
+  var _waterPaint = Paint();
+  var _shadowPaint = Paint();
 
   /// We start with 10 because there is visual effect if you start with 0
   double _timePassed = 10;
   ui.Image textureImage;
 
-  GameMapPainter(this._waterShader, this.gameLoop, this.game, this.textureImage)
+  GameMapPainter(this._waterShader, this._cloudShader, this.gameLoop, this.game, this.textureImage)
       : super(repaint: gameLoop);
 
   @override
   void paint(Canvas canvas, Size size) {
+    /// Set up shaders
     _timePassed += gameLoop.dt;
+    _cloudShader.setFloat(0, _timePassed);
+    _shadowPaint = Paint();
+    _shadowPaint.shader = _cloudShader;
+    _waterPaint = Paint();
     _waterShader.setFloat(0, _timePassed);
-    var waterPaint = Paint()..color = const Color(0xF21468D7);
-    waterPaint.shader = _waterShader;
+    _waterPaint.shader = _waterShader;
+
     _transformations(canvas, size);
 
     var atlasData = game.getDrawingData();
@@ -46,7 +54,7 @@ class GameMapPainter extends CustomPainter {
        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
      ),
-     waterPaint,
+     _waterPaint,
    );
 
     /// Draw above water things
@@ -61,6 +69,15 @@ class GameMapPainter extends CustomPainter {
         _landPaint,
       );
     }
+
+    /// Draw cloud shadows
+    canvas.drawRect(
+      Rect.fromPoints(
+        Offset(game.viewTopLeft.isoX, game.viewTopLeft.isoY),
+        Offset(game.viewBottomRight.isoX, game.viewBottomRight.isoY),
+      ),
+      _shadowPaint,
+    );
   }
 
   void _transformations(Canvas canvas, Size size) {

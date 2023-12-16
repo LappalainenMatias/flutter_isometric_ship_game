@@ -51,21 +51,25 @@ class _GameScreenState extends State<GameScreen> {
                     Align(
                       child: ShaderBuilder(
                         assetKey: 'shaders/regtanglewater.frag',
-                        (context, waterShader, child) => ClickDetector(
-                          screenSize: screenSize,
-                          child: CustomPaint(
-                            size: screenSize,
-                            willChange: true,
-                            painter: GameMapPainter(
-                              waterShader,
-                              gameloop,
-                              game,
-                              textureImage!,
+                        (context, waterShader, child) => ShaderBuilder(
+                          assetKey: 'shaders/clouds.frag',
+                          (context, shadowShader, child) => ClickDetector(
+                            screenSize: screenSize,
+                            child: CustomPaint(
+                              size: screenSize,
+                              willChange: true,
+                              painter: GameMapPainter(
+                                waterShader,
+                                shadowShader,
+                                gameloop,
+                                game,
+                                textureImage!,
+                              ),
                             ),
                           ),
-                        ),
-                        child: const Center(
-                          child: CircularProgressIndicator(),
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
                       ),
                     ),

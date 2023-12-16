@@ -1,1 +1,0 @@
-dart compile js -O2 -o web/regionworker.js lib/map/region/jsregionworker.dart
