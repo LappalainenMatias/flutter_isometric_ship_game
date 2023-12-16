@@ -48,7 +48,9 @@ To run tests:```flutter test```
 
 Coverage is in:```open coverage/html/lib/index.html```
 
-## Todo
-- Fix performance issues with backend
-- Online game object should have getGameState() so that we can get rid of toJson and fromJson in gameobjects
-- Add max dt to game loop so that there is not too large jumps in game state
+## Web
+Web does not support isolates so we need to use webworkers. We need to run this
+everytime we change something that ```regionCreator``` uses.
+```dart compile js -O2 -o web/regionworker.js lib/region/jsregionworker.dart```
+To create a new build:
+```flutter build web --base-href "/flutter_isometric_map_game/"```
