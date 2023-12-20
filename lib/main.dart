@@ -1,17 +1,16 @@
-import 'package:anki/widget/add_opponent.dart';
-import 'package:anki/widget/joystick.dart';
-import 'package:anki/widget/keyboard_movement.dart';
-import 'package:anki/widget/statistics.dart';
-import 'package:anki/widget/zoom_buttons.dart';
+import 'package:anki/ui/widget/input/add_opponent.dart';
+import 'package:anki/ui/widget/input/joystick.dart';
+import 'package:anki/ui/widget/input/keyboard_movement.dart';
+import 'package:anki/ui/widget/input/zoom_buttons.dart';
+import 'package:anki/ui/widget/statistics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
-import 'package:anki/game.dart';
 import 'package:provider/provider.dart';
-import 'game_loop.dart';
+import 'game_specific/ship_game.dart';
+import 'gameloop/game_loop.dart';
 import 'package:flutter/services.dart';
-import 'game_map_screen.dart';
-import 'online/online.dart';
+import 'ui/game_map_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,15 +52,11 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late final GameLoop gameLoop;
-  late final Game game;
-  late final Online online;
 
   @override
   void initState() {
     super.initState();
-    online = Online();
-    game = Game(online);
-    gameLoop = GameLoop(this, game, online);
+    gameLoop = GameLoop(this, ShipGame());
   }
 
   @override
@@ -74,9 +69,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => game),
         ChangeNotifierProvider(create: (_) => gameLoop),
-        ChangeNotifierProvider(create: (_) => online),
       ],
       child: const KeyBoardMovement(
         child: Material(
