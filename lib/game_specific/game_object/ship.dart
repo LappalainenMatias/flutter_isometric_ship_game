@@ -11,20 +11,16 @@ import '../../foundation/game_object/game_object.dart';
 class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
   IsoCoordinate isoCoordinate;
   double elevation;
-  late CollisionBox collisionBox;
+  late CollisionBox _collisionBox;
   double width = 2;
   bool _isVisible = true;
   late RenderingData dto;
   final int _id;
 
   Ship(this.isoCoordinate, this.elevation, this._id) {
-    collisionBox = CollisionBox(isoCoordinate, width, elevation);
+    _collisionBox = CollisionBox(isoCoordinate, width, elevation);
     animationParts = animationRedShipDown;
     dto = PlayerToDrawingDTO.create(this);
-  }
-
-  factory Ship.defaultPlayer(int id) {
-    return Ship(const IsoCoordinate.fromIso(0, 0), 0, id);
   }
 
   @override
@@ -44,13 +40,13 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   CollisionBox getCollisionBox() {
-    collisionBox.update(isoCoordinate, width, elevation);
-    return collisionBox;
+    _collisionBox.update(isoCoordinate, width, elevation);
+    return _collisionBox;
   }
 
   @override
   List gameObjectToList() {
-    // TODO: if we implement this then the game becomes savable because we can save
+    // TODO: if we implement this then the game becomes saveble because we can save
     // all the game objects as a list of values
     throw UnimplementedError();
   }

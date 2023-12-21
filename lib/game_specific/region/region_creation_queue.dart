@@ -41,7 +41,7 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
       var buildNext = _queue[i];
       _queue.removeAt(i);
       _queueIdentifiers.remove(buildNext.identifier);
-      if (isInView(buildNext.regionCoordinate, _camera)) {
+      if (isInView(buildNext.regionCoordinate, _camera, 200)) {
         _created.add(buildNext.identifier);
         return buildNext;
       }
@@ -60,7 +60,6 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
     if (_created.contains(regionBuildRules.identifier)) {
       return;
     }
-    print('Adding region to queue: ${regionBuildRules.regionCoordinate}');
     _queue.add(regionBuildRules);
     _queueIdentifiers.add(regionBuildRules.identifier);
   }

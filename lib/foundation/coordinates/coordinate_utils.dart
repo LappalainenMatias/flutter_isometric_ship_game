@@ -3,11 +3,6 @@ import '../../constants.dart';
 import '../camera/camera.dart';
 import 'iso_coordinate.dart';
 
-/// Some regions are so tall that they are visible even when they are not in
-/// the camera view. This padding fixes that.
-const double _visibleRegionPadding = 128;
-
-/// Todo remove constants
 IsoCoordinate regionPointToIsoCoordinate(Point<int> regionCoordinate) {
   double x = regionCoordinate.x * regionSideWidth.toDouble();
   x = x - x % regionSideWidth;
@@ -25,14 +20,11 @@ Point<int> isoCoordinateToRegionPoint(IsoCoordinate isoCoordinate) {
   return Point(regionX, regionY);
 }
 
-bool isInView(IsoCoordinate coordinate, Camera camera) {
-  /// We add some extra padding because some regions can be so tall (tiles have
+bool isInView(IsoCoordinate coordinate, Camera camera, [double padding = 0.0]) {
+  /// We often add some extra padding because some regions can be so tall (tiles have
   /// large elevation) that they are visible even when their bottom iso coordinate is not in view.
-  IsoCoordinate topLeft = camera.topLeft +
-      const IsoCoordinate.fromIso(
-          -_visibleRegionPadding, -_visibleRegionPadding);
-  IsoCoordinate bottomRight = camera.bottomRight +
-      const IsoCoordinate.fromIso(
-          _visibleRegionPadding, _visibleRegionPadding);
+  var topLeft = camera.topLeft + IsoCoordinate.fromIso(-padding, -padding);
+  var bottomRight =
+      camera.bottomRight + IsoCoordinate.fromIso(padding, padding);
   return coordinate.isBetween(topLeft, bottomRight);
 }

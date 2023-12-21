@@ -34,6 +34,8 @@ class _StatisticsState extends State<Statistics> {
               "Center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
+            Text("Screen: ${game.getCamera().width().toInt()}x${game.getCamera().height().toInt()}",
+                style: const TextStyle(color: Colors.white)),
             Text(
               "Zoom: ${game.zoomLevel.toStringAsFixed(3)}",
               style: const TextStyle(color: Colors.white),

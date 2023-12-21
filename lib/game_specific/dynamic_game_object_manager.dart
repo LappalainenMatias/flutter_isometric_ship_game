@@ -68,7 +68,7 @@ class DynamicGameObjectManager {
 
   void _updateGameObjects(double dt) {
     for (var gameObject in _gameObjectToRegion.keys) {
-      if (!isInView(gameObject.getIsoCoordinate(), _camera)) {
+      if (!isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
         continue;
       }
       gameObject.update(dt);
@@ -77,7 +77,7 @@ class DynamicGameObjectManager {
 
   void _updateRegions() {
     for (var gameObject in _gameObjectToRegion.keys) {
-      if (!isInView(gameObject.getIsoCoordinate(), _camera)) {
+      if (!isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
         continue;
       }
       _updateRegion(gameObject);

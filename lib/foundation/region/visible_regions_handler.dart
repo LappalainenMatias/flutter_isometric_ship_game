@@ -45,14 +45,15 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   }
 
   bool _regionIsInView(Region region) {
-    var rectangle = region.getRectangle();
+    /// Notice that in camera top left is actually at the top left of the screen.
+    /// But in the map y coordinates increase downwards. TODO: This is confusing. Atleast a test should be added.
     var cameraRectangle = Rectangle(
-      top: _camera.topLeft.isoY,
-      bottom: _camera.bottomRight.isoY,
+      top: _camera.bottomRight.isoY,
+      bottom: _camera.topLeft.isoY,
       left: _camera.topLeft.isoX,
       right: _camera.bottomRight.isoX,
     );
-    return rectangle.overlaps(cameraRectangle);
+    return cameraRectangle.overlaps(region.getRectangle());
   }
 
   @override
@@ -81,11 +82,16 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   }
 
   List<IsoCoordinate> _randomCameraCoordinates(int amount, Camera camera) {
+    var padding = 100;
     var random = Random();
     var points = <IsoCoordinate>[];
     for (var i = 0; i < amount; i++) {
-      var x = camera.topLeft.isoX + random.nextInt(camera.width().toInt());
-      var y = camera.topLeft.isoY + random.nextInt(camera.height().toInt());
+      var x = camera.topLeft.isoX -
+          padding +
+          random.nextInt(camera.width().toInt() + 2 * padding);
+      var y = camera.topLeft.isoY -
+          padding +
+          random.nextInt(camera.height().toInt() + 2 * padding);
       points.add(IsoCoordinate.fromIso(x.toDouble(), y.toDouble()));
     }
     return points;

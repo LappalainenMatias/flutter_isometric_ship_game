@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../game_object/game_object.dart';
 import 'iso_coordinate.dart';
 
@@ -22,8 +21,9 @@ class Rectangle {
         bottom < other.top);
   }
 
-  Rect getRect() {
-    return Rect.fromLTRB(left, top, right, bottom);
+  @override
+  toString() {
+    return 'Rectangle: top: $top, bottom: $bottom, left: $left, right: $right';
   }
 }
 

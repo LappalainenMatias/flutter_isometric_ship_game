@@ -13,8 +13,8 @@ class DefaultRegion extends Region {
   late List<StaticGameObject> _staticGameObjects;
   late RenderingData _underWater;
   late RenderingData _aboveWater;
-  late Rectangle rectangle;
-  int _visibleGameObjectsLength = 0;
+  late Rectangle _rectangle;
+  var _visibleGameObjectsLength = 0;
 
   DefaultRegion(this._bottomCoordinate, this._staticGameObjects) {
     _updateRenderingData();
@@ -69,14 +69,14 @@ class DefaultRegion extends Region {
 
   void _updateBorders() {
     if (_staticGameObjects.isNotEmpty) {
-      rectangle = createRectangle(_staticGameObjects);
+      _rectangle = createRectangle(_staticGameObjects);
     } else {
       /// If no static game objects, exist we create a small border.
-      var top = _bottomCoordinate.isoY + 1;
+      var top = _bottomCoordinate.isoY - 1;
       var left = _bottomCoordinate.isoX - 1;
       var right = _bottomCoordinate.isoX + 1;
-      var bottom = _bottomCoordinate.isoY - 1;
-      rectangle = Rectangle(top: top, left: left, right: right, bottom: bottom);
+      var bottom = _bottomCoordinate.isoY + 1;
+      _rectangle = Rectangle(top: top, left: left, right: right, bottom: bottom);
     }
   }
 
@@ -123,6 +123,6 @@ class DefaultRegion extends Region {
 
   @override
   Rectangle getRectangle() {
-    return rectangle;
+    return _rectangle;
   }
 }

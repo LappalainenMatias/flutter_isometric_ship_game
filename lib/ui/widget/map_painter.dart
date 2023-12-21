@@ -45,7 +45,7 @@ class GameMapPainter extends CustomPainter {
         data.$1.rects,
         null,
         null,
-        null,
+        data.$2,
         _landPaint,
       );
     }
