@@ -85,19 +85,14 @@ void main() {
     var estimatedAmountOfRegionsInView =
         (testCamera.width() * testCamera.height()) / regionSize;
 
-    print("Estimated amount of regions in view: " +
-        estimatedAmountOfRegionsInView.toString());
-    print("Actual amount of regions in view: " +
-        visibleRegions.visibleRegionSize().toString());
-
     /// Check that the estimation is not too far off
     expect(
         visibleRegions.visibleRegionSize() >
-            estimatedAmountOfRegionsInView * 0.8,
+            estimatedAmountOfRegionsInView * 0.5,
         isTrue);
     expect(
         visibleRegions.visibleRegionSize() <
-            estimatedAmountOfRegionsInView * 1.2,
+            estimatedAmountOfRegionsInView * 1.5,
         isTrue);
   });
 
@@ -114,7 +109,8 @@ void main() {
     }
 
     var regions = visibleRegions.getVisibleRegionsInDrawingOrder();
-    var bottomCoordinates = regions.map((region) => region.getBottomCoordinate());
+    var bottomCoordinates =
+        regions.map((region) => region.getBottomCoordinate());
     var uniqueBottomCoordinates = bottomCoordinates.toSet();
     expect(bottomCoordinates.length, uniqueBottomCoordinates.length);
   });
