@@ -19,6 +19,8 @@ abstract class RegionCreationQueue {
 /// The idea of this class is to return the region we want to create next.
 /// It prioritizes regions that are in the camera view
 class RegionCreationQueueImpl implements RegionCreationQueue {
+  final int maxQueueSize = 200;
+
   final List<AddGameObjectsTo> _queue = [];
 
   late final Camera _camera;
@@ -49,8 +51,7 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
 
   @override
   void add(AddGameObjectsTo regionBuildRules) {
-    if (_queue.length > 200) {
-      // Prevents the queue from growing too large
+    if (_queue.length >= maxQueueSize) {
       return;
     }
     if (_queueIdentifiers.contains(regionBuildRules.identifier)) {
@@ -59,6 +60,7 @@ class RegionCreationQueueImpl implements RegionCreationQueue {
     if (_created.contains(regionBuildRules.identifier)) {
       return;
     }
+    print('Adding region to queue: ${regionBuildRules.regionCoordinate}');
     _queue.add(regionBuildRules);
     _queueIdentifiers.add(regionBuildRules.identifier);
   }

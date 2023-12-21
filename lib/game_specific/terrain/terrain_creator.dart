@@ -1,24 +1,23 @@
 import 'dart:math';
-import '../../../foundation/game_object/game_object.dart';
-import '../../game_object/create_game_object.dart';
-import '../../game_object/tile.dart';
-import '../../map/terrain_creation_rules.dart';
-import '../../noise/noise.dart';
-import '../../optimization/remove_hidden_tiles.dart';
+import '../../game_specific/game_object/create_game_object.dart';
+import '../../game_specific/game_object/tile.dart';
+import '../../game_specific/map/terrain_creation_rules.dart';
+import '../../game_specific/noise/noise.dart';
+import '../../game_specific/optimization/remove_hidden_tiles.dart';
 
 /// This class and the classes that it uses should NOT use dart:ui so that
 /// we can create regions concurrently (dart:ui only runs in the main thread).
-class RegionCreator {
+class TerrainCreator {
   final _mapCreationRules = SvalbardCreationRules();
   late final noise = NoiseCreator(_mapCreationRules);
 
   /// Returns a sorted list of all game objects in the region.
-  List<StaticGameObject> create(int w, int h, int x, int y) {
+  List<Tile> create(int w, int h, int x, int y) {
     final (elevation, moisture) = noise.createComplexNoise(w, h, x, y);
     List<Tile> tiles = _createTiles(x, y, elevation, moisture);
     //allGameObjects.addAll(_createNaturalItems(tiles));
     removeHiddenGameObjects(tiles);
-    var allGameObjects = List<StaticGameObject>.from(tiles);
+    var allGameObjects = List<Tile>.from(tiles);
     allGameObjects.sort();
     return allGameObjects;
   }

@@ -5,9 +5,10 @@ import 'dart:typed_data';
 /// Useful tool https://codeshack.io/images-sprite-sheet-generator/
 /// The A1, A2,... are animation frames.
 enum SpriteSheetItem {
-  tileGrass(0, 24),
-  tileSand(0, 23),
-  tileRock(0, 25),
+  tileGrass(0, 19),
+  tileSand(0, 21),
+  tileRock(0, 20),
+  collisionBox(0, 18),
   shipRedDownA1(0, 0, cutOff: 0.5),
   shipRedDownA2(0, 1, cutOff: 0.5),
   shipRedDownA3(0, 2, cutOff: 0.5),

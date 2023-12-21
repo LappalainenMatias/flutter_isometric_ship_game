@@ -1,9 +1,9 @@
-import 'package:anki/game_objects/dynamic/player.dart';
-import 'package:anki/game_objects/game_object.dart';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/utils/random_id.dart';
+
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/game_object/game_object.dart';
+import 'package:anki/foundation/utils/random_id.dart';
+import 'package:anki/game_specific/game_object/ship.dart';
+import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
@@ -56,18 +56,18 @@ void main() {
   });
 
   test("Sort different types of game objects", () {
-    var player = Player(const IsoCoordinate.fromIso(-1, -1), 1, getRandomId());
-    var player2 = Player(
+    var ship = Ship(const IsoCoordinate.fromIso(-1, -1), 1, getRandomId());
+    var ship2 = Ship(
         const IsoCoordinate.fromIso(2, -2), 0, getRandomId());
     var tile = Tile(TileType.grass, const IsoCoordinate.fromIso(-10, -3), 1, 1,
         getRandomId());
     var tile2 = Tile(TileType.grass, const IsoCoordinate.fromIso(100, 100), 1,
         1, getRandomId());
-    var list = <GameObject>[player, player2, tile, tile2];
+    var list = <GameObject>[ship, ship2, tile, tile2];
     list.sort();
-    expect(list[0], player2);
+    expect(list[0], ship2);
     expect(list[1], tile);
-    expect(list[2], player);
+    expect(list[2], ship);
     expect(list[3], tile2);
   });
 }

@@ -35,7 +35,7 @@ class _GameScreenState extends State<GameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var screenSize = MediaQuery.of(context).size;
+    var screenSize = MediaQuery.sizeOf(context);
     var gameloop = Provider.of<GameLoop>(context, listen: false);
     return textureImage == null
         ? const Center(child: CircularProgressIndicator())

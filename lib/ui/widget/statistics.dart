@@ -35,7 +35,7 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Zoom: ${game.zoomLevel.toStringAsFixed(6)}",
+              "Zoom: ${game.zoomLevel.toStringAsFixed(3)}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(

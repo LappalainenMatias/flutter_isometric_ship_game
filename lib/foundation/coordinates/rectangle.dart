@@ -1,24 +1,33 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import '../game_object/game_object.dart';
 import 'iso_coordinate.dart';
 
-/// Used for storing the top, bottom, left and right most coordinates of the regions game objects.
-/// This is used for determining which regions are visible.
-/// Because of this borders are the real screen coordinates of the game objects.
-/// In isometric coordinates elevation increases x and y by 1.
-class Borders {
-  IsoCoordinate top;
-  IsoCoordinate bottom;
-  IsoCoordinate left;
-  IsoCoordinate right;
+class Rectangle {
+  final double top;
+  final double bottom;
+  final double left;
+  final double right;
 
-  Borders(this.top, this.bottom, this.left, this.right);
+  Rectangle(
+      {required this.top,
+      required this.bottom,
+      required this.left,
+      required this.right});
+
+  // Check if this rectangle overlaps with another rectangle
+  bool overlaps(Rectangle other) {
+    return (left < other.right &&
+        right > other.left &&
+        top > other.bottom &&
+        bottom < other.top);
+  }
+
   Rect getRect() {
-    return Rect.fromLTRB(left.isoX, top.isoY, right.isoX, bottom.isoY);
+    return Rect.fromLTRB(left, top, right, bottom);
   }
 }
 
-Borders createBorders(List<GameObject> gameObjects) {
+Rectangle createRectangle(List<GameObject> gameObjects) {
   assert(gameObjects.isNotEmpty);
   var elevation = IsoCoordinate(
       gameObjects[0].getElevation(), gameObjects[0].getElevation());
@@ -43,5 +52,6 @@ Borders createBorders(List<GameObject> gameObjects) {
       bottom = coordinate;
     }
   }
-  return Borders(top, bottom, left, right);
+  return Rectangle(
+      top: top.isoY, bottom: bottom.isoY, left: left.isoX, right: right.isoX);
 }

@@ -4,7 +4,6 @@ import '../health_and_damage/damage.dart';
 import '../health_and_damage/health.dart';
 
 /// Defines what happens when a collision occurs
-/// Todo decoding and encoding game object which uses mixins is confusing currently
 mixin CollisionAction {
   Set<CollisionActionType> actionTypes = {};
 

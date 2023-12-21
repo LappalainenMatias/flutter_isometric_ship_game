@@ -4,7 +4,7 @@ import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/game_object/game_object.dart';
 import '../../foundation/rendering_data/rendering_data.dart';
 import '../textures/texture_rects.dart';
-import 'game_object_to_drawing_data.dart';
+import 'game_object_to_rendering_data.dart';
 
 class Tile extends StaticGameObject {
   final TileType type;

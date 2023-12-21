@@ -44,19 +44,19 @@ int amountVisible
     // Count visible, above water, and under water objects
     if (nextObject.isVisible()) {
       if (nextObject.isUnderWater()) {
-        amountUnderWater++;
+        amountUnderWater += nextObject.getDrawingData().rSTTransforms.length;
       } else {
-        amountAboveWater++;
+        amountAboveWater += nextObject.getDrawingData().rSTTransforms.length;
       }
       amountVisible++;
     }
   }
 
   // Initialize the Float32Lists with calculated sizes
-  Float32List underRst = Float32List(4 * amountUnderWater);
-  Float32List underRects = Float32List(4 * amountUnderWater);
-  Float32List aboveRst = Float32List(4 * amountAboveWater);
-  Float32List aboveRects = Float32List(4 * amountAboveWater);
+  Float32List underRst = Float32List(amountUnderWater);
+  Float32List underRects = Float32List(amountUnderWater);
+  Float32List aboveRst = Float32List(amountAboveWater);
+  Float32List aboveRects = Float32List(amountAboveWater);
 
   // Reset indices for processing
   staticIndex = 0;
@@ -90,15 +90,15 @@ int amountVisible
     if (!nextObject.isVisible()) continue;
 
     // Copy data to Float32Lists
-    var vertices = nextObject.getDrawingData();
+    var data = nextObject.getDrawingData();
     if (nextObject.isUnderWater()) {
-      underRst.setAll(underIndex, vertices.rSTTransforms);
-      underRects.setAll(underIndex, vertices.rects);
-      underIndex += 4;
+      underRst.setAll(underIndex, data.rSTTransforms);
+      underRects.setAll(underIndex, data.rects);
+      underIndex += data.rSTTransforms.length;
     } else {
-      aboveRst.setAll(aboveIndex, vertices.rSTTransforms);
-      aboveRects.setAll(aboveIndex, vertices.rects);
-      aboveIndex += 4;
+      aboveRst.setAll(aboveIndex, data.rSTTransforms);
+      aboveRects.setAll(aboveIndex, data.rects);
+      aboveIndex += data.rSTTransforms.length;
     }
   }
 

@@ -4,7 +4,7 @@ import '../../foundation/collision/collision_box.dart';
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/health_and_damage/damage.dart';
 import '../../foundation/rendering_data/rendering_data.dart';
-import 'game_object_to_drawing_data.dart';
+import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
 class Missile extends DynamicGameObject with Damage, CollisionAction {

@@ -1,13 +1,10 @@
-
 import 'dart:math';
 
+import 'package:anki/foundation/coordinates/rectangle.dart';
 import 'package:collection/collection.dart';
-
 import '../camera/camera.dart';
-import '../coordinates/coordinate_utils.dart';
 import '../coordinates/iso_coordinate.dart';
 import '../map/map.dart';
-import 'default_region.dart';
 import 'region.dart';
 
 abstract class VisibleRegionsHandler {
@@ -18,9 +15,6 @@ abstract class VisibleRegionsHandler {
   void update();
 
   int visibleRegionSize();
-
-  /// Used for debugging
-  List<IsoCoordinate> visualizeSpriral();
 }
 
 /// This class keeps track of which regions are visible and returns them in
@@ -37,17 +31,10 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   VisibleRegionsHandlerImpl(this._camera, this._map);
 
-  int _spiralIndex = 0;
-
-  List<IsoCoordinate> _coordinatesInSpiral = [];
-
   void _removeInvisibleRegions() {
     var remove = [];
     for (var region in _sortedVisibleRegions.unorderedElements) {
-      if ((region as DefaultRegion).borders == null) {
-        continue;
-      }
-      if (!regionIsInView(region)) {
+      if (!_regionIsInView(region)) {
         remove.add(region);
       }
     }
@@ -57,14 +44,15 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     }
   }
 
-  bool regionIsInView(Region region) {
-    if ((region as DefaultRegion).borders == null) {
-      return false;
-    }
-    return isInView(region.borders!.top, _camera) ||
-        isInView(region.borders!.bottom, _camera) ||
-        isInView(region.borders!.left, _camera) ||
-        isInView(region.borders!.right, _camera);
+  bool _regionIsInView(Region region) {
+    var rectangle = region.getRectangle();
+    var cameraRectangle = Rectangle(
+      top: _camera.topLeft.isoY,
+      bottom: _camera.bottomRight.isoY,
+      left: _camera.topLeft.isoX,
+      right: _camera.bottomRight.isoX,
+    );
+    return rectangle.overlaps(cameraRectangle);
   }
 
   @override
@@ -78,102 +66,33 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
     _findNewVisibleRegions();
   }
 
+  /// We go through a few random points at the screen and check what region it is part of.
+  /// If the region is not already in the list of visible regions, we add it.
+  /// There are more systematic ways to do this, but this is lightweight and works.
   void _findNewVisibleRegions() {
-    _coordinatesInSpiral =
-        _getSpiralStartingFromCorner(_camera.topLeft, _camera.bottomRight);
-    _spiralIndex = _coordinatesInSpiral.length - 1;
-    while (_spiralIndex >= 0) {
-      IsoCoordinate coordinate = _coordinatesInSpiral[_spiralIndex];
+    for (var coordinate in _randomCameraCoordinates(5, _camera)) {
       Region region = _map.getRegion(coordinate);
       if (!_addedRegionCoordinates.contains(region.getBottomCoordinate()) &&
-          regionIsInView(region)) {
+          _regionIsInView(region)) {
         _sortedVisibleRegions.add(region);
         _addedRegionCoordinates.add(region.getBottomCoordinate());
       }
-      _spiralIndex--;
     }
   }
 
-  /// Returns a list of coordinates which are between the two coordinates in spiral form.
-  /// We do this so that the regions at the center of the screen are created first.
-  /// From:
-  /// [1, 2, 3]
-  /// [4, 5, 6]
-  /// [7, 8, 9]
-  /// to:
-  /// [1, 2, 3, 6, 9, 8, 7, 4, 5]
-  List<IsoCoordinate> _getSpiralStartingFromCorner(
-      IsoCoordinate topLeft, IsoCoordinate bottomRight) {
-    /// We add some random padding so that all regions in the screen are found
-    var xPadding = Random().nextInt(100).toDouble();
-    var yPadding = Random().nextInt(100).toDouble();
-    topLeft += IsoCoordinate.fromIso(-xPadding, -yPadding);
-    bottomRight += IsoCoordinate.fromIso(xPadding, yPadding);
-    int top = bottomRight.isoY.round();
-    int bottom = topLeft.isoY.round();
-    int left = topLeft.isoX.round();
-    int right = bottomRight.isoX.round();
-    int step = ((top - bottom).abs()) ~/ 5;
-
-    int width = right - left;
-    int height = top - bottom;
-
-    if (width <= 0 || height <= 0) {
-      throw Exception("Width and height must be >= 0");
+  List<IsoCoordinate> _randomCameraCoordinates(int amount, Camera camera) {
+    var random = Random();
+    var points = <IsoCoordinate>[];
+    for (var i = 0; i < amount; i++) {
+      var x = camera.topLeft.isoX + random.nextInt(camera.width().toInt());
+      var y = camera.topLeft.isoY + random.nextInt(camera.height().toInt());
+      points.add(IsoCoordinate.fromIso(x.toDouble(), y.toDouble()));
     }
-
-    int size = ((width / step).floor() + 1) * ((height / step).floor() + 1);
-    var spiral = List<IsoCoordinate?>.filled(size, null, growable: false);
-
-    int dir = 1;
-    int index = 0;
-
-    while (top >= bottom && left <= right) {
-      switch (dir) {
-        case 1:
-          for (int i = left; i <= right; i += step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(i.toDouble(), top.toDouble());
-          }
-          top -= step;
-          dir = 2;
-          break;
-        case 2:
-          for (int i = top; i >= bottom; i -= step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(right.toDouble(), i.toDouble());
-          }
-          right -= step;
-          dir = 3;
-          break;
-        case 3:
-          for (int i = right; i >= left; i -= step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(i.toDouble(), bottom.toDouble());
-          }
-          bottom += step;
-          dir = 4;
-          break;
-        case 4:
-          for (int i = bottom; i <= top; i += step) {
-            spiral[index++] =
-                IsoCoordinate.fromIso(left.toDouble(), i.toDouble());
-          }
-          left += step;
-          dir = 1;
-          break;
-      }
-    }
-    return spiral.where((e) => e != null).cast<IsoCoordinate>().toList();
+    return points;
   }
 
   @override
   int visibleRegionSize() {
     return _sortedVisibleRegions.length;
-  }
-
-  @override
-  List<IsoCoordinate> visualizeSpriral() {
-    return _coordinatesInSpiral;
   }
 }

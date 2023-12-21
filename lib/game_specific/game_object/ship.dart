@@ -5,7 +5,7 @@ import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/health_and_damage/health.dart';
 import '../../foundation/rendering_data/rendering_data.dart';
 import '../animation/ship_animation.dart';
-import 'game_object_to_drawing_data.dart';
+import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
 class Ship extends DynamicGameObject with Health, Animation, CollisionAction {

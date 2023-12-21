@@ -175,7 +175,7 @@ class ShipGame extends Game {
         .forEach((region) {
       region = region as DefaultRegion;
       var data = region.getRenderingData();
-      Rect cullingRect = region.borders!.getRect();
+      Rect cullingRect = region.rectangle.getRect();
       underWater.add((data.underWater, cullingRect));
       aboveWater.add((data.aboveWater, cullingRect));
       _amountOfGameObjects += region.gameObjectsLength();

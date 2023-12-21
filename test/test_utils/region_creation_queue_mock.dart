@@ -1,4 +1,6 @@
-import 'package:anki/region/region_creation_queue.dart';
+
+
+import 'package:anki/game_specific/region/region_creation_queue.dart';
 
 /// Does nothing
 class RegionCreationQueueMock extends RegionCreationQueue {

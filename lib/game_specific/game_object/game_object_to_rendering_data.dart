@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 
@@ -33,12 +35,17 @@ class TileToDrawingDTO {
 }
 
 class PlayerToDrawingDTO {
-  static RenderingData create(Ship player) {
-    return createRenderingData(
-      player.getSpriteSheetRect(),
-      player.isoCoordinate,
-      player.elevation,
-      scale: player.width,
+  static RenderingData create(Ship ship) {
+    var ship1 = createRenderingData(
+      ship.getSpriteSheetRect(),
+      ship.isoCoordinate,
+      ship.elevation,
+      scale: ship.width,
+    );
+    var collisionBox = CollisionBoxToDrawingDTO.create(ship.collisionBox);
+    return RenderingData(
+      Float32List.fromList(ship1.rSTTransforms + collisionBox.rSTTransforms),
+      Float32List.fromList(ship1.rects + collisionBox.rects),
     );
   }
 }
@@ -46,9 +53,9 @@ class PlayerToDrawingDTO {
 class CollisionBoxToDrawingDTO {
   static RenderingData create(CollisionBox collisionBox) {
     return createRenderingData(
-        SpriteSheetItem.tileRock.getBorders(),
+        SpriteSheetItem.collisionBox.getBorders(),
         IsoCoordinate(collisionBox.leftX, collisionBox.bottomY),
         collisionBox.bottomZ,
-        scale: 1);
+        scale: (collisionBox.leftX - collisionBox.rightX).abs());
   }
 }

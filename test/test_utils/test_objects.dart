@@ -1,10 +1,12 @@
-import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/game_objects/dynamic/player.dart';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/map/map_creation_rules.dart';
 
-class TestDynamicObject extends Player {
+
+import 'package:anki/foundation/camera/default_camera.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/game_specific/game_object/ship.dart';
+import 'package:anki/game_specific/game_object/tile.dart';
+import 'package:anki/game_specific/map/terrain_creation_rules.dart';
+
+class TestDynamicObject extends Ship {
   bool wasUpdated = false;
 
   TestDynamicObject(super.isoCoordinate, super.elevation, super._id);
@@ -19,7 +21,7 @@ class TestData {
   static Tile tile1 = Tile(TileType.grass, const IsoCoordinate(0, 0), 0, 0, 0);
 }
 
-class TestMapCreationRules implements MapCreationRules {
+class TestMapCreationRules implements TerrainCreationRules {
   @override
   double amountOfWater() {
     return 0.5;
@@ -28,16 +30,6 @@ class TestMapCreationRules implements MapCreationRules {
   @override
   double frequency() {
     return 0.008;
-  }
-
-  @override
-  Map<TileType, List<NaturalItemProbability>> naturalItemProbabilities() {
-    return {};
-  }
-
-  @override
-  double peakToPeakAmplitude() {
-    return 30;
   }
 
   @override
@@ -62,5 +54,25 @@ class TestMapCreationRules implements MapCreationRules {
   @override
   double minElevation() {
     return -20;
+  }
+}
+
+
+class TestCamera extends DefaultCamera {
+  @override
+  var topLeft = IsoCoordinate.fromIso(0, 0);
+
+
+  @override
+  var bottomRight = IsoCoordinate.fromIso(0, 0);
+
+  @override
+  double width() {
+    return (topLeft.isoX - bottomRight.isoX).abs();
+  }
+
+  @override
+  double height() {
+    return (topLeft.isoY - bottomRight.isoY).abs();
   }
 }

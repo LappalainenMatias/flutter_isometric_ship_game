@@ -1,10 +1,9 @@
-import 'package:anki/textures/texture_rects.dart';
+import 'package:anki/game_specific/textures/texture_rects.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Texture rect should have left, right, top and bottom coordinates", () {
-    var textureRect =
-        getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1);
+    var textureRect = SpriteSheetItem.shipRedDownA1.getBorders();
     final left = textureRect[0];
     final right = textureRect[2];
     final top = textureRect[1];

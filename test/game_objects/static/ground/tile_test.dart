@@ -1,20 +1,19 @@
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/utils/random_id.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/utils/random_id.dart';
+import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:test/test.dart';
 
 void main() {
   test("Sort tiles", () {
-    Tile t1 =
+    var t1 =
         Tile(TileType.grass, const IsoCoordinate(1, 1), 1, 1, getRandomId());
-    Tile t2 =
+    var t2 =
         Tile(TileType.grass, const IsoCoordinate(0, 1), 1, 1, getRandomId());
-    Tile t3 =
+    var t3 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 1, getRandomId());
-    Tile t4 =
+    var t4 =
         Tile(TileType.grass, const IsoCoordinate(-1, 0), 1, 1, getRandomId());
-    Tile t5 =
+    var t5 =
         Tile(TileType.grass, const IsoCoordinate(-1, -1), 1, 1, getRandomId());
     List<Tile> tiles = [t4, t5, t3, t1, t2];
     tiles.sort();
@@ -43,11 +42,11 @@ void main() {
    */
 
   test("Sort tiles with different heights", () {
-    Tile t1 =
+    var t1 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3, getRandomId());
-    Tile t2 =
+    var t2 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 2, getRandomId());
-    Tile t3 =
+    var t3 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 3, 1, getRandomId());
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();
@@ -57,11 +56,11 @@ void main() {
   });
 
   test("Sort tiles with different heights", () {
-    Tile t1 =
+    var t1 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 1, 3, getRandomId());
-    Tile t2 =
+    var t2 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 2, 1, getRandomId());
-    Tile t3 =
+    var t3 =
         Tile(TileType.grass, const IsoCoordinate(0, 0), 5, 1, getRandomId());
     List<Tile> tiles = [t3, t1, t2];
     tiles.sort();

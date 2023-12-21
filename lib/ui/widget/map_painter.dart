@@ -1,12 +1,13 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'package:anki/game_specific/ship_game.dart';
 import 'package:flutter/material.dart';
 import '../../foundation/game.dart';
 import '../../gameloop/game_loop.dart';
 
 class GameMapPainter extends CustomPainter {
   final GameLoop gameLoop;
-  final Game game;
+  final ShipGame game;
   final ui.FragmentShader _cloudShader;
   final ui.FragmentShader _waterShader;
   final _landPaint = Paint();
@@ -44,7 +45,7 @@ class GameMapPainter extends CustomPainter {
         data.$1.rects,
         null,
         null,
-        data.$2,
+        null,
         _landPaint,
       );
     }

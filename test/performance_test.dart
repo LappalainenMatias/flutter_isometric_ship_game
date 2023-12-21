@@ -1,18 +1,17 @@
-import 'package:anki/camera/camera.dart';
-import 'package:anki/collision/collision_detector.dart';
-import 'package:anki/game_objects/dynamic/missile.dart';
-import 'package:anki/game_objects/game_object.dart';
-import 'package:anki/game_objects/game_object_to_drawing_data.dart';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/noise/noise.dart';
-import 'package:anki/optimization/remove_hidden_tiles.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/region/region.dart';
-import 'package:anki/region/region_creation/region_creator.dart';
-import 'package:anki/region/region_creation_queue.dart';
-import 'package:anki/textures/texture_rects.dart';
-import 'package:anki/utils/random_id.dart';
+import 'package:anki/foundation/camera/default_camera.dart';
+import 'package:anki/foundation/collision/collision_detector.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/game_object/game_object.dart';
+import 'package:anki/foundation/game_object/render_data_builder.dart';
+import 'package:anki/foundation/region/default_region.dart';
+import 'package:anki/foundation/utils/random_id.dart';
+import 'package:anki/game_specific/game_object/missile.dart';
+import 'package:anki/game_specific/game_object/tile.dart';
+import 'package:anki/game_specific/noise/noise.dart';
+import 'package:anki/game_specific/optimization/remove_hidden_tiles.dart';
+import 'package:anki/game_specific/region/region_creation_queue.dart';
+import 'package:anki/game_specific/terrain/terrain_creator.dart';
+import 'package:anki/game_specific/textures/texture_rects.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'test_utils/test_objects.dart';
 import 'dart:math';
@@ -29,15 +28,15 @@ void main() {
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < width; j++) {
         gameObjects.add(Tile(TileType.grass,
-                IsoCoordinate(i.toDouble(), j.toDouble()), 0, 1, 0)
+            IsoCoordinate(i.toDouble(), j.toDouble()), 0, 1, 0)
             .gameObjectToList());
       }
     }
 
     Stopwatch stopwatch = Stopwatch()..start();
     List<GameObject> gameObjectsDecoded = [];
-    for (List gameObject in gameObjects) {
-      gameObjectsDecoded.add(GameObject.gameObjectFromList(gameObject));
+    for (List decoded in gameObjects) {
+      gameObjectsDecoded.add(Tile.fromList(decoded));
     }
     print("Decoding took ${stopwatch.elapsedMilliseconds} ms");
 
@@ -48,7 +47,7 @@ void main() {
   });
 
   test("Noise performance", () {
-    NoiseCreator first = NoiseCreator(TestMapCreationRules(), 1);
+    var first = NoiseCreator(TestMapCreationRules(), 1);
     int width = 1024;
     Stopwatch stopwatch = Stopwatch()..start();
     first.createComplexNoise(width, width, 0, 0);
@@ -67,41 +66,16 @@ void main() {
           TileType.grass, IsoCoordinate(i.toDouble(), i.toDouble()), 0, 1, 0));
     }
     staticGameObjects.sort();
-    IsoCoordinate bottomCoordinate = const IsoCoordinate(0, 0);
+    var bottomCoordinate = const IsoCoordinate(0, 0);
 
     Stopwatch stopwatch = Stopwatch()..start();
-    Region(bottomCoordinate, staticGameObjects);
+    DefaultRegion(bottomCoordinate, staticGameObjects);
     print("Creating region took ${stopwatch.elapsedMilliseconds} ms");
 
     /// Create 62x62 gameobjects and make region out of them
     /// 1. 21, 22, 22
     /// 2. 16, 16, 16 (Removing sort from the region creation)
     /// 3. 6, 6, 6 (from vertices to atlas)
-  });
-
-  test('Create cube performance', () {
-    Stopwatch stopwatch = Stopwatch()..start();
-    List<IsoCoordinate> isoCoordinates = [];
-    for (int i = 0; i < 256 * 256; i++) {
-      isoCoordinates.add(IsoCoordinate(i.toDouble(), i.toDouble()));
-    }
-
-    print('Creating isoCoordinates ${stopwatch.elapsedMilliseconds} ms');
-
-    stopwatch.reset();
-
-    for (int i = 0; i < isoCoordinates.length; i++) {
-      toVertices(TileType.grass, isoCoordinates[i], -1);
-    }
-
-    stopwatch.stop();
-
-    print('Creating cubes ${stopwatch.elapsedMilliseconds} ms');
-
-    /// 1: 56, 56, 50 (With under water tiles)
-    /// 2: 50, 50, 48 (Without under water tiles)
-    /// 3: 15, 16, 17 (Adding directly to FloatList32 or IntList32)
-    /// 4: 28, 28, 21 (You can now set left, right and top side visiblity)
   });
 
   test('Visiblity checker', () {
@@ -124,13 +98,13 @@ void main() {
   });
 
   test('GetAllGameObjects', () {
-    Region region = Region(const IsoCoordinate(0, 0), []);
-    var regionCreator = RegionCreator();
+    var region = DefaultRegion(const IsoCoordinate(0, 0), []);
+    var regionCreator = TerrainCreator();
     region.changeStaticGameObjects(
         regionCreator.create(32, 32, 0, 0) as List<StaticGameObject>);
     Stopwatch stopwatch = Stopwatch()..start();
     for (int i = 0; i < 1000; i++) {
-      region.getAllGameObjects();
+      region.getGameObjects();
     }
     stopwatch.stop();
     print(
@@ -138,7 +112,7 @@ void main() {
   });
 
   test('Create region game objects', () {
-    RegionCreator regionCreator = RegionCreator();
+    TerrainCreator regionCreator = TerrainCreator();
     Stopwatch stopwatch = Stopwatch()..start();
     regionCreator.create(32, 32, 0, 0);
     stopwatch.stop();
@@ -149,7 +123,7 @@ void main() {
   });
 
   test('Region creation queue performance', () {
-    var camera = Camera(center: const IsoCoordinate(0, 0));
+    var camera = DefaultCamera(center: const IsoCoordinate(0, 0));
     var regionCreationQueue = RegionCreationQueueImpl(camera);
     var list = [];
     for (int i = 0; i < 100 * 100; i++) {
@@ -172,28 +146,8 @@ void main() {
     }
     Stopwatch stopwatch = Stopwatch()..start();
     for (var coordinate in coordinates) {
-      createDrawingDTO(
-          getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1),
-          coordinate,
-          1);
-    }
-    stopwatch.stop();
-    print(
-        'createDrawingDTO took ${stopwatch.elapsedMilliseconds} milliseconds');
-
-    /// 1024 * 1024, ms
-    /// 1: 63, 64, 67
-  });
-
-  test('Create cube drawing data', () {
-    List<IsoCoordinate> coordinates = [];
-    for (int i = 0; i < 1024 * 1024; i++) {
-      coordinates.add(IsoCoordinate(i.toDouble(), i.toDouble()));
-    }
-    Stopwatch stopwatch = Stopwatch()..start();
-    for (var coordinate in coordinates) {
-      createDrawingDTO(
-          getTileTextureCoordinatesRect(SpriteSheetItem.shipRedDownA1),
+      createRenderingData(
+          SpriteSheetItem.shipRedDownA1.getBorders(),
           coordinate,
           1);
     }
@@ -206,17 +160,17 @@ void main() {
   });
 
   test("Region to drawing data", () {
-    RegionCreator regionCreator = RegionCreator();
+    TerrainCreator regionCreator = TerrainCreator();
     var regionGround = regionCreator.create(128, 128, 0, 0);
-    var region = Region(const IsoCoordinate(0, 0), regionGround);
+    var region = DefaultRegion(const IsoCoordinate(0, 0), regionGround);
     for (int i = 0; i < 1000; i++) {
       var missile = Missile.defaultMissile(getRandomId());
       missile.isoCoordinate = IsoCoordinate(
           Random().nextInt(1000).toDouble(), Random().nextInt(1000).toDouble());
-      region.addDynamicGameObject(missile);
+      region.addGameObject(missile);
     }
     Stopwatch stopwatch = Stopwatch()..start();
-    region.getRstTransformsAndRects();
+    region.getRenderingData();
     stopwatch.stop();
     print('Region to drawing data took ${stopwatch.elapsedMilliseconds} ms');
     /// 128 x 128 + 1000, ms
@@ -225,7 +179,7 @@ void main() {
   });
 
   test("Collision detector performance", () {
-    var regionCreator = RegionCreator();
+    var regionCreator = TerrainCreator();
     var regionGround = regionCreator.create(256, 256, 0, 0);
     var missile = Missile.defaultMissile(getRandomId());
     Stopwatch stopwatch = Stopwatch()..start();

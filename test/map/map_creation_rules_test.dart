@@ -1,5 +1,6 @@
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/map/map_creation_rules.dart';
+
+import 'package:anki/game_specific/game_object/tile.dart';
+import 'package:anki/game_specific/map/terrain_creation_rules.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

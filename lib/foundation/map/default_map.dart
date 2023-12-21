@@ -1,8 +1,8 @@
 import 'dart:math';
 import 'package:anki/foundation/game_object/game_object.dart';
+import 'package:anki/game_specific/terrain/concurrent_terrain_creation.dart';
 
 import '../../foundation/map/map.dart';
-import '../../game_specific/region/region_creation/concurrent_region_creator.dart';
 import '../../game_specific/region/region_creation_queue.dart';
 import '../camera/camera.dart';
 import '../coordinates/coordinate_utils.dart';
@@ -12,9 +12,9 @@ import '../region/region.dart';
 import '../region/visible_regions_handler.dart';
 
 
-class DefaultGameMap extends GameMap{
+class DefaultGameMap extends GameMap {
   final Map<Point<int>, Region> _regions = {};
-  final _concurrentRegionCreator = ConcurrentRegionCreator();
+  final _concurrentRegionCreator = ConcurrentTerrainCreator();
   late final RegionCreationQueue _regionCreationQueue;
   late final VisibleRegionsHandler _visibleRegions;
 

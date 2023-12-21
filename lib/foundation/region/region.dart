@@ -1,3 +1,5 @@
+import 'package:anki/foundation/coordinates/rectangle.dart';
+
 import '../coordinates/iso_coordinate.dart';
 import '../game_object/game_object.dart';
 import '../rendering_data/rendering_data.dart';
@@ -16,6 +18,10 @@ abstract class Region implements Comparable<Region> {
   void update();
 
   int nearness();
+
+  /// Borders are used for checking if a region is visible.
+  /// If borders and camera borders intersect, the region is visible.
+  Rectangle getRectangle();
 
   ({
     RenderingData underWater,

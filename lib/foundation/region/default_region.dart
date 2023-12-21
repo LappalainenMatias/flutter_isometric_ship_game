@@ -1,7 +1,7 @@
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/region/region.dart';
 import '../../game_specific/region/region_render_data_builder.dart';
-import '../coordinates/borders.dart';
+import '../coordinates/rectangle.dart';
 import '../game_object/game_object.dart';
 import '../rendering_data/rendering_data.dart';
 
@@ -13,11 +13,11 @@ class DefaultRegion extends Region {
   late List<StaticGameObject> _staticGameObjects;
   late RenderingData _underWater;
   late RenderingData _aboveWater;
-  Borders? borders;
+  late Rectangle rectangle;
   int _visibleGameObjectsLength = 0;
 
   DefaultRegion(this._bottomCoordinate, this._staticGameObjects) {
-    _updateRstTransforms();
+    _updateRenderingData();
     _updateBorders();
   }
 
@@ -41,7 +41,7 @@ class DefaultRegion extends Region {
     RenderingData aboveWater,
   }) getRenderingData() {
     if (_dynamicGameObjects.isNotEmpty) {
-      _updateRstTransforms();
+      _updateRenderingData();
     }
     return (
       underWater: _underWater,
@@ -49,7 +49,7 @@ class DefaultRegion extends Region {
     );
   }
 
-  void _updateRstTransforms() {
+  void _updateRenderingData() {
     final data = regionToDrawingDTO(_staticGameObjects, _dynamicGameObjects);
     _underWater = data.underWater;
     _aboveWater = data.aboveWater;
@@ -63,19 +63,26 @@ class DefaultRegion extends Region {
 
   void changeStaticGameObjects(List<StaticGameObject> staticGameObjects) {
     _staticGameObjects = staticGameObjects;
-    _updateRstTransforms();
+    _updateRenderingData();
     _updateBorders();
   }
 
   void _updateBorders() {
     if (_staticGameObjects.isNotEmpty) {
-      borders = createBorders(_staticGameObjects);
+      rectangle = createRectangle(_staticGameObjects);
+    } else {
+      /// If no static game objects, exist we create a small border.
+      var top = _bottomCoordinate.isoY + 1;
+      var left = _bottomCoordinate.isoX - 1;
+      var right = _bottomCoordinate.isoX + 1;
+      var bottom = _bottomCoordinate.isoY - 1;
+      rectangle = Rectangle(top: top, left: left, right: right, bottom: bottom);
     }
   }
 
   void removeDynamicGameObject(GameObject gameObject) {
     _dynamicGameObjects.remove(gameObject);
-    _updateRstTransforms();
+    _updateRenderingData();
   }
 
   int gameObjectsLength() {
@@ -96,7 +103,7 @@ class DefaultRegion extends Region {
     } else {
       throw Exception('Unknown game object type');
     }
-    _updateRstTransforms();
+    _updateRenderingData();
   }
 
   @override
@@ -112,5 +119,10 @@ class DefaultRegion extends Region {
   @override
   void update() {
     // TODO: implement update
+  }
+
+  @override
+  Rectangle getRectangle() {
+    return rectangle;
   }
 }

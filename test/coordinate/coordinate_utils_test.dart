@@ -1,6 +1,6 @@
 import 'package:anki/constants.dart';
-import 'package:anki/coordinates/coordinate_utils.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/coordinates/coordinate_utils.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:math';
 

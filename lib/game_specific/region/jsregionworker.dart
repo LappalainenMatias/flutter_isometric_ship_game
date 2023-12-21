@@ -1,5 +1,6 @@
-import 'package:anki/game_specific/region/region_creation/region_creator.dart';
+
 import 'package:js/js.dart';
+import '../terrain/terrain_creator.dart';
 
 /// Run dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart
 /// when you change anything about the map because we need to update the web/regionworker.js
@@ -12,7 +13,7 @@ external set jsregionworker(obj);
 /// because they seem to be faster than any other data structure that I have tested.
 void main() {
   jsregionworker = allowInterop((args) {
-    RegionCreator regionCreator = RegionCreator();
+    TerrainCreator regionCreator = TerrainCreator();
     int width = args[0];
     int height = args[1];
     double pointX = args[2];

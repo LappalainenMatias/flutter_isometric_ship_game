@@ -1,13 +1,13 @@
-import 'package:anki/camera/camera.dart';
 import 'package:anki/constants.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/map/map.dart';
+import 'package:anki/foundation/camera/default_camera.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/map/default_map.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   test("Coordinates close to each other should return same region", () {
-    Camera camera = Camera();
-    GameMap map = GameMap(camera);
+    var camera = DefaultCamera();
+    var map = DefaultGameMap(camera);
 
     /// All of these coordinates are part of the same region
     var r1 = map.getRegion(

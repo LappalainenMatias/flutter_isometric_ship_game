@@ -1,13 +1,10 @@
-import 'dart:collection';
-
-import 'package:anki/game_objects/game_object.dart';
-import 'package:anki/region/region_creation/region_creator.dart';
+import 'package:anki/game_specific/terrain/terrain_creator.dart';
 import 'package:test/test.dart';
 
 void main() {
   test('Region should not contain too few or too many gameobjects', () {
-    int width = 32;
-    var regionCreator = RegionCreator();
+    var width = 32;
+    var regionCreator = TerrainCreator();
     var gameObjects = regionCreator.create(width, width, 0, 0);
     expect(gameObjects.length >= width, isTrue);
     // width * width * 2 is just an estimate

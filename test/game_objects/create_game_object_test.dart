@@ -1,8 +1,7 @@
-import 'package:anki/game_objects/create_game_object.dart';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/map/map_creation_rules.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/game_specific/game_object/create_game_object.dart';
+import 'package:anki/game_specific/game_object/tile.dart';
+import 'package:anki/game_specific/map/terrain_creation_rules.dart';
 import 'package:test/test.dart';
 import 'dart:math';
 

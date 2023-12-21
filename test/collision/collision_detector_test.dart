@@ -1,8 +1,7 @@
-import 'package:anki/collision/collision_detector.dart';
-import 'package:anki/coordinates/iso_coordinate.dart';
-import 'package:anki/game_objects/static/ground/tile.dart';
-import 'package:anki/game_objects/static/ground/tile_type.dart';
-import 'package:anki/utils/random_id.dart';
+import 'package:anki/foundation/collision/collision_detector.dart';
+import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/utils/random_id.dart';
+import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
