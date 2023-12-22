@@ -30,10 +30,11 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/missile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/ship.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/tile.dart
-file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/map/terrain_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/noise/noise.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/optimization/remove_hidden_tiles.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/region/jsregionworker.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/terrain/find_terrain_holes.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/terrain/terrain_creation_rules.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/terrain/terrain_creator.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/textures/texture_rects.dart
 org-dartlang-sdk:///lib/_http/crypto.dart

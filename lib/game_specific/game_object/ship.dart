@@ -20,7 +20,7 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
   Ship(this.isoCoordinate, this.elevation, this._id) {
     _collisionBox = CollisionBox(isoCoordinate, width, elevation);
     animationParts = animationRedShipDown;
-    dto = PlayerToDrawingDTO.create(this);
+    dto = ShipToDrawingDTO.create(this);
   }
 
   @override
@@ -73,7 +73,7 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   void update(double dt) {
-    dto = PlayerToDrawingDTO.create(this);
+    dto = ShipToDrawingDTO.create(this);
     updateAnimation(dt);
   }
 

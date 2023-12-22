@@ -40,7 +40,7 @@ The painter's algorithm needs improvement when sorthing different size game obje
 only when the game objects are close to each other in size.
 Also the painters algorithm does not work correctly if the game objects are overlapping.
 
-![map_screenshot.png](readme_images/map_screenshot.png)
+![map_screenshot.png](readme_images/rendering.png)
 ## Coordinates
 ```IsoCoordinate``` means an isometric coordinate. ```IsoCoordinate``` class does the projection from normal cartesian coordinates to isometric coordinates. 
 For example, when we want to change a procedural noise map into isometric terrain.

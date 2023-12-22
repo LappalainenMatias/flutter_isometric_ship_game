@@ -34,19 +34,19 @@ class TileToDrawingDTO {
   }
 }
 
-class PlayerToDrawingDTO {
+class ShipToDrawingDTO {
   static RenderingData create(Ship ship) {
-    var ship1 = createRenderingData(
+    return createRenderingData(
       ship.getSpriteSheetRect(),
       ship.isoCoordinate,
       ship.elevation,
       scale: ship.width,
     );
-    var collisionBox = CollisionBoxToDrawingDTO.create(ship.getCollisionBox());
-    return RenderingData(
-      Float32List.fromList(ship1.rSTTransforms + collisionBox.rSTTransforms),
-      Float32List.fromList(ship1.rects + collisionBox.rects),
-    );
+    //var collisionBox = CollisionBoxToDrawingDTO.create(ship.getCollisionBox());
+    //return RenderingData(
+    //  Float32List.fromList(ship1.rSTTransforms + collisionBox.rSTTransforms),
+    //  Float32List.fromList(ship1.rects + collisionBox.rects),
+    //);
   }
 }
 
