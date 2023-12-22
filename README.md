@@ -55,6 +55,7 @@ Web does not support isolates so we need to use webworkers. We need to run this
 everytime we change something that ```TerrainCreator``` uses so it updates.
 ```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart```
 
-To create a new build run the previous command and then run:
-```flutter build web --base-href "/flutter_isometric_map_game/"```
-Copy the files from web to webBuild/flutter_isometric_map_game/ and push to github.
+### New web build
+1. run: ```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart``` to make sure that regionworker.js is up to date.
+2. run: ```flutter build web --base-href "/flutter_isometric_map_game/"```
+3. copy the files from ```build/web``` to ```webBuild/flutter_isometric_map_game/``` and push to github
