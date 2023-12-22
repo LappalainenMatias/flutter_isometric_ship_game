@@ -44,15 +44,17 @@ There are some classes missing and in reality there are more dependencies. (Upda
 ## Tests
 Mostly unit tests, some integration tests and performance tests.
 
-To run tests:```flutter test```
+To run tests with coverage report:```flutter test --coverage```
 
-Coverage is in:```open coverage/html/lib/index.html```
+To convert Icov.info to html:```genhtml coverage/lcov.info -o coverage/html```
+
+To open coverage:```open coverage/html/index.html```
 
 ## Web
 Web does not support isolates so we need to use webworkers. We need to run this
-everytime we change something that ```RegionCreator``` uses so it updates.
-```dart compile js -O2 -o web/regionworker.js lib/region/jsregionworker.dart```
+everytime we change something that ```TerrainCreator``` uses so it updates.
+```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart```
 
-To create a new build run the previous command and then:
+To create a new build run the previous command and then run:
 ```flutter build web --base-href "/flutter_isometric_map_game/"```
-Copy files from web to webBuild/flutter_isometric_map_game/ and push to github.
+Copy the files from web to webBuild/flutter_isometric_map_game/ and push to github.
