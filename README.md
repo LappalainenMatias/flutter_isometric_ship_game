@@ -13,10 +13,10 @@ Supports Android, iOS, Web and Desktop.
 The game map is made out of regions. Regions are 32x32 tiles wide areas which contain any amount of game objects.
 Regions are important for performance because they allow faster collision detection and rendering.
 
-A game object is something which has a location in the game world and contains rendring data. 
+A game object is something which has a location in the game world and contains rendering data. 
 The game objects are divided into static and dynamic game objects. 
 Static game objects are game objects which do not get updated. For example, ground tiles are static game objects.
-Dynamic game objects have ```update()``` method which is called every frame. For example, the ship and missiles are dynamic game objects.
+Dynamic game objects have an ```update(dt)``` method which gets called every frame. For example, the ship and missiles are dynamic game objects.
 If a region does not contain any dynamic game objects, we do not need to update that region. This is a big performance benefit.
 
 ![game_world.png](readme_images/game_world.png)
@@ -30,21 +30,19 @@ All game objects are currently drawn with ```canvas.drawRawAtlas()```. The game 
 4. We draw a cloud shadow plane which uses a ```FragmentShader```.
 
 To make the rendering faster, a single ```drawRawAtlas()``` draws all under/above water game objects in a region.
-We also only render the regions that are visible on the screen.
+We also only render the regions and game objects that are visible on the screen.
 To solve the correct rendering order, we use painter's algorithm. Each game object and region
-has a ```nearness()``` value which is used for sorting the game objects from farthest to nearest. 
-Nearest basically means bottom of the screen.
+has a ```nearness()``` value which is used for sorting the game objects from the farthest (top of the screen) to the nearest (bottom of the screen). 
 
 The current implentation has some limitations. Game objects are either under or above water. They cannot be partially under water.
-The painter's algorithm needs improvement when sorthing different size game objects. It currently works well but
-only when the game objects are close to each other in size.
+The painter's algorithm needs improvement when sorthing different size game objects. It currently works only when the game objects are close to each other in size.
 Also the painters algorithm does not work correctly if the game objects are overlapping.
 
 ![map_screenshot.png](readme_images/rendering.png)
 ## Coordinates
 ```IsoCoordinate``` means an isometric coordinate. ```IsoCoordinate``` class does the projection from normal cartesian coordinates to isometric coordinates. 
 For example, when we want to change a procedural noise map into isometric terrain.
-```isoX``` and ```isoY``` are normal cartesian coordinates and increasing ```isoY``` by one means that the game object moves
+```isoX``` and ```isoY``` are normal cartesian coordinates and increasing ```isoY``` means that the game object moves
 straight down. Coordinates are one of the more confusing parts of this game and they require some refactoring.
 
 ![coordinates.png](readme_images/coordinates.png)
@@ -62,12 +60,14 @@ To run tests with coverage report:```flutter test --coverage```
 
 To convert Icov.info to html:```genhtml coverage/lcov.info -o coverage/html```
 
-To open coverage:```open coverage/html/index.html```
+To see coverage:```open coverage/html/index.html```
 
 ## Web
-Web does not support isolates so we need to use webworkers. We need to run this
-everytime we change something that ```TerrainCreator``` uses so it updates.
-```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart```
+### Concurrency
+Flutter Web does not support isolates. Because of this we need to use webworkers. Concurrency is important for this game because procedural map generation is a heavy task.
+We need to run this command ```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart```
+everytime we change something that ```TerrainCreator``` uses so it gets updated. Also notice that the concurrent part cannot have references to ```dart:ui``` because
+it can only be run in the main thread.
 
 ### New web build
 1. run: ```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart``` to make sure that regionworker.js is up to date.
