@@ -4,7 +4,7 @@ import 'package:anki/foundation/camera/default_camera.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
 import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
-import 'package:anki/game_specific/map/terrain_creation_rules.dart';
+import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
 
 class TestDynamicObject extends Ship {
   bool wasUpdated = false;

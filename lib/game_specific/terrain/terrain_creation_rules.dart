@@ -44,7 +44,7 @@ class SvalbardCreationRules extends TerrainCreationRules {
 
   @override
   double amountOfWater() {
-    return 0.4;
+    return 0.25;
   }
 
   @override
@@ -54,17 +54,17 @@ class SvalbardCreationRules extends TerrainCreationRules {
 
   @override
   double frequency() {
-    return 0.005;
+    return 0.0045;
   }
 
   @override
   double maxElevation() {
-    return 20;
+    return 15;
   }
 
   @override
   double minElevation() {
-    return -20;
+    return -15;
   }
 }
 

@@ -1,4 +1,4 @@
-import 'package:anki/game_specific/map/terrain_creation_rules.dart';
+import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
 import 'package:anki/game_specific/noise/noise.dart';
 import 'package:test/test.dart';
 import '../test_utils/test_objects.dart';

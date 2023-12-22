@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:open_simplex_2/open_simplex_2.dart';
 
-import '../../game_specific/map/terrain_creation_rules.dart';
+import '../terrain/terrain_creation_rules.dart';
 
 
 /// Todo uses game_specific terrain creation rules
