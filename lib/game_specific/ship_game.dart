@@ -202,8 +202,8 @@ extension GameMapStatisticExtension on ShipGame {
     return _map.getRegionCount();
   }
 
-  String regionCreationQueueStats() {
-    return _map.regionQueueStats();
+  int regionCreationQueueStats() {
+    return _map.regionQueueSize();
   }
 
   int amountOfVisibleRegions() {

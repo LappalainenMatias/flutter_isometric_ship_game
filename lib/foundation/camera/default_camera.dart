@@ -5,7 +5,7 @@ class DefaultCamera extends Camera {
   @override
   IsoCoordinate center;
   double _zoomLevel = 0.5;
-  final double _minWidth = 30;
+  final double _minWidth = 60;
   final double _maxWidth = 500;
   double _aspectRatio = 1.0;
 
@@ -40,8 +40,8 @@ class DefaultCamera extends Camera {
   /// 0 is zoomed in, 1 is zoomed out.
   @override
   void setZoomLevel(double newZoomLevel) {
-    if (newZoomLevel < 0.00001) {
-      _zoomLevel = 0.00001;
+    if (newZoomLevel < 0.01) {
+      _zoomLevel = 0.01;
     } else if (newZoomLevel > 1) {
       _zoomLevel = 1;
     } else {
@@ -51,12 +51,12 @@ class DefaultCamera extends Camera {
 
   @override
   void zoomIn() {
-    setZoomLevel(_zoomLevel - 0.02 * _zoomLevel);
+    setZoomLevel(_zoomLevel - 0.04 * _zoomLevel);
   }
 
   @override
   void zoomOut() {
-    setZoomLevel(_zoomLevel + 0.02 * _zoomLevel);
+    setZoomLevel(_zoomLevel + 0.04 * _zoomLevel);
   }
 
   @override

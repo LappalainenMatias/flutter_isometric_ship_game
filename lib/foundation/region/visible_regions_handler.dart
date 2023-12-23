@@ -47,12 +47,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   bool _regionIsInView(Region region) {
     /// Notice that in camera top left is actually at the top left of the screen.
     /// But in the map y coordinates increase downwards. TODO: This is confusing. Atleast a test should be added.
-    var cameraRectangle = Rectangle(
-      top: _camera.bottomRight.isoY,
-      bottom: _camera.topLeft.isoY,
-      left: _camera.topLeft.isoX,
-      right: _camera.bottomRight.isoX,
-    );
+    var cameraRectangle = _camera.getRectangle()..addPadding(50); // we add some padding because of the terrain elevation changes
     return cameraRectangle.overlaps(region.getRectangle());
   }
 
@@ -72,7 +67,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   /// There are more systematic ways to do this, but this is lightweight and works.
   void _findNewVisibleRegions() {
     for (var coordinate in _randomCameraCoordinates(5, _camera)) {
-      Region region = _map.getRegion(coordinate);
+      var region = _map.getRegion(coordinate);
       if (!_addedRegionCoordinates.contains(region.getBottomCoordinate()) &&
           _regionIsInView(region)) {
         _sortedVisibleRegions.add(region);

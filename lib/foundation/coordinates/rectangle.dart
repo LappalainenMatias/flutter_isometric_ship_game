@@ -2,10 +2,10 @@ import '../game_object/game_object.dart';
 import 'iso_coordinate.dart';
 
 class Rectangle {
-  final double top;
-  final double bottom;
-  final double left;
-  final double right;
+  double top;
+  double bottom;
+  double left;
+  double right;
 
   Rectangle(
       {required this.top,
@@ -24,6 +24,13 @@ class Rectangle {
   @override
   toString() {
     return 'Rectangle: top: $top, bottom: $bottom, left: $left, right: $right';
+  }
+
+  void addPadding(double padding) {
+    top += padding;
+    bottom -= padding;
+    left -= padding;
+    right += padding;
   }
 }
 

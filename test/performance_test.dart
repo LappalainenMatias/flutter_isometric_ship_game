@@ -28,7 +28,7 @@ void main() {
     for (int i = 0; i < width; i++) {
       for (int j = 0; j < width; j++) {
         gameObjects.add(Tile(TileType.grass,
-            IsoCoordinate(i.toDouble(), j.toDouble()), 0, 1, 0)
+                IsoCoordinate(i.toDouble(), j.toDouble()), 0, 1, 0)
             .gameObjectToList());
       }
     }
@@ -124,10 +124,10 @@ void main() {
 
   test('Region creation queue performance', () {
     var camera = DefaultCamera(center: const IsoCoordinate(0, 0));
-    var regionCreationQueue = RegionCreationQueueImpl(camera);
+    var regionCreationQueue = DefaultRegionTerrainCreationQueue(camera);
     var list = [];
     for (int i = 0; i < 100 * 100; i++) {
-      list.add(AddGameObjectsTo(IsoCoordinate(i.toDouble(), i.toDouble())));
+      list.add(DefaultRegion(IsoCoordinate(i.toDouble(), i.toDouble()), []));
     }
     Stopwatch stopwatch = Stopwatch()..start();
     for (var item in list) {
@@ -147,9 +147,7 @@ void main() {
     Stopwatch stopwatch = Stopwatch()..start();
     for (var coordinate in coordinates) {
       createRenderingData(
-          SpriteSheetItem.shipRedDownA1.getBorders(),
-          coordinate,
-          1);
+          SpriteSheetItem.shipRedDownA1.getBorders(), coordinate, 1);
     }
     stopwatch.stop();
     print(
@@ -173,6 +171,7 @@ void main() {
     region.getRenderingData();
     stopwatch.stop();
     print('Region to drawing data took ${stopwatch.elapsedMilliseconds} ms');
+
     /// 128 x 128 + 1000, ms
     /// 1: 123, 116, 117
     /// 2: 10, 11, 11 (Removed merging of two lists)
@@ -186,6 +185,7 @@ void main() {
     findCollisions(regionGround, missile);
     stopwatch.stop();
     print('Collision detection took ${stopwatch.elapsedMilliseconds} ms');
+
     /// 256 x 256, ms
     /// 1: 28, 29, 27
     /// 2: 17, 18, 17 (Skip collision detection for invisible objects)

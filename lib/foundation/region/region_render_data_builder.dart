@@ -1,6 +1,6 @@
 import 'dart:typed_data';
-import '../../foundation/game_object/game_object.dart';
-import '../../foundation/rendering_data/rendering_data.dart';
+import '../game_object/game_object.dart';
+import '../rendering_data/rendering_data.dart';
 
 /// The original implementation used to merge two list together and created the drawing data from that.
 /// This implementation does that same thing but does not create a new list.

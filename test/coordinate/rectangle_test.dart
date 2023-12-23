@@ -26,42 +26,41 @@ void main() {
         (const IsoCoordinate.fromIso(5, 10) + const IsoCoordinate(1, 1)).isoY);
 
     /// bottom is - (1, 1) because of the elevation
-    expect(rectangles.bottom,
-        (const IsoCoordinate.fromIso(5, -10) + const IsoCoordinate(-1, -1)).isoY);
+    expect(
+        rectangles.bottom,
+        (const IsoCoordinate.fromIso(5, -10) + const IsoCoordinate(-1, -1))
+            .isoY);
     expect(rectangles.left,
         (const IsoCoordinate.fromIso(-10, 5) + const IsoCoordinate(1, 1)).isoX);
-    expect(rectangles.right,
-        (const IsoCoordinate.fromIso(10, 5) + const IsoCoordinate(-1, -1)).isoX);
+    expect(
+        rectangles.right,
+        (const IsoCoordinate.fromIso(10, 5) + const IsoCoordinate(-1, -1))
+            .isoX);
   });
 
-
   test("Check if rectangles overlap", () {
-    var rectangle1 = Rectangle(
-        top: 10,
-        bottom: 0,
-        left: 0,
-        right: 10
-    );
-    var rectangle2 = Rectangle(
-        top: 10,
-        bottom: 0,
-        left: 0,
-        right: 10
-    );
-    var rectangle3 = Rectangle(
-        top: 100,
-        bottom: 100,
-        left: 100,
-        right: 105
-    );
-    var rectangle4 = Rectangle(
-        top: 5,
-        bottom: 4,
-        left: 4,
-        right: 5
-    );
+    var rectangle1 = Rectangle(top: 10, bottom: 0, left: 0, right: 10);
+    var rectangle2 = Rectangle(top: 10, bottom: 0, left: 0, right: 10);
+    var rectangle3 = Rectangle(top: 100, bottom: 100, left: 100, right: 105);
+    var rectangle4 = Rectangle(top: 5, bottom: 4, left: 4, right: 5);
     expect(rectangle1.overlaps(rectangle2), true);
     expect(rectangle1.overlaps(rectangle3), false);
     expect(rectangle1.overlaps(rectangle4), true);
+  });
+
+  test("Add padding to rectangle", () {
+    var rectangle = Rectangle(top: 10, bottom: 0, left: 0, right: 10);
+    //positive padding
+    rectangle.addPadding(2);
+    expect(rectangle.top, 12);
+    expect(rectangle.bottom, -2);
+    expect(rectangle.left, -2);
+    expect(rectangle.right, 12);
+    //negative padding
+    rectangle.addPadding(-2);
+    expect(rectangle.top, 10);
+    expect(rectangle.bottom, 0);
+    expect(rectangle.left, 0);
+    expect(rectangle.right, 10);
   });
 }

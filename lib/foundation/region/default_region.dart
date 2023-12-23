@@ -1,6 +1,6 @@
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/region/region.dart';
-import '../../game_specific/region/region_render_data_builder.dart';
+import 'region_render_data_builder.dart';
 import '../coordinates/rectangle.dart';
 import '../game_object/game_object.dart';
 import '../rendering_data/rendering_data.dart';

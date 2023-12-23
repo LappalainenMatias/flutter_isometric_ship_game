@@ -3,85 +3,73 @@ import 'dart:collection';
 import '../../foundation/camera/camera.dart';
 import '../../foundation/coordinates/coordinate_utils.dart';
 import '../../foundation/coordinates/iso_coordinate.dart';
+import '../../foundation/region/region.dart';
 
-abstract class RegionCreationQueue {
+abstract class RegionTerrainCreationQueue {
   /// Returns the region we should create next
   /// Returns null if there is no region to create
-  AddGameObjectsTo? next();
+  Region? next();
 
   /// Adds a region to the queue if it is not already in the queue
-  void add(AddGameObjectsTo regionBuildRules);
+  void add(Region region);
 
   /// Returns the number of items in the queue
   int size();
 }
 
-/// The idea of this class is to return the region we want to create next.
-/// It prioritizes regions that are in the camera view
-class RegionCreationQueueImpl implements RegionCreationQueue {
-  final int maxQueueSize = 200;
+/// Returns the region we should add terrain next
+/// Priority is based on how close the region is to the camera center
+class DefaultRegionTerrainCreationQueue implements RegionTerrainCreationQueue {
+  final int _maxQueueSize = 20;
 
-  final List<AddGameObjectsTo> _queue = [];
+  final Set<Region> _queue = {};
 
   late final Camera _camera;
 
   /// This variable was created to make sure that same region does not get
   /// created twice. This can happen in the time between next() and when the
-  /// region is actually created.
-  final HashSet<String> _created = HashSet();
+  /// region is actually created. TODO: what happens if region gets removed?
+  final HashSet<IsoCoordinate> _created = HashSet();
 
-  RegionCreationQueueImpl(this._camera);
-
-  /// Tracks that the queue has each item only once
-  final Set<String> _queueIdentifiers = {};
+  DefaultRegionTerrainCreationQueue(this._camera);
 
   @override
-  AddGameObjectsTo? next() {
-    for (int i = 0; i < _queue.length; i++) {
-      var buildNext = _queue[i];
-      _queue.removeAt(i);
-      _queueIdentifiers.remove(buildNext.identifier);
-      if (isInView(buildNext.regionCoordinate, _camera, 200)) {
-        _created.add(buildNext.identifier);
-        return buildNext;
+  Region? next() {
+    if (_queue.isEmpty) {
+      return null;
+    }
+    // Find the region which is closes to the camera center
+    var closestRegion = _queue.first;
+    var lowestDistance =
+        closestRegion.getBottomCoordinate().manhattanDistanceTo(_camera.center);
+    for (var region in _queue) {
+      var newDistance =
+          region.getBottomCoordinate().manhattanDistanceTo(_camera.center);
+      if (newDistance < lowestDistance) {
+        lowestDistance = newDistance;
+        closestRegion = region;
       }
     }
-    return null;
+    _queue.remove(closestRegion);
+    return closestRegion;
   }
 
   @override
-  void add(AddGameObjectsTo regionBuildRules) {
-    if (_queue.length >= maxQueueSize) {
+  void add(Region region) {
+    if (_queue.length >= _maxQueueSize) {
       return;
     }
-    if (_queueIdentifiers.contains(regionBuildRules.identifier)) {
+    if (_created.contains(region.getBottomCoordinate())) {
       return;
     }
-    if (_created.contains(regionBuildRules.identifier)) {
+    if (_queue.contains(region)) {
       return;
     }
-    _queue.add(regionBuildRules);
-    _queueIdentifiers.add(regionBuildRules.identifier);
-  }
-
-  @override
-  toString() {
-    return _queue.length.toString();
+    _queue.add(region);
   }
 
   @override
   int size() {
     return _queue.length;
-  }
-}
-
-/// Todo this class is unnecessary because lod does not exist anymore
-class AddGameObjectsTo {
-  IsoCoordinate regionCoordinate;
-
-  AddGameObjectsTo(this.regionCoordinate);
-
-  String get identifier {
-    return "${regionCoordinate.isoX.toInt()},${regionCoordinate.isoY.toInt()}";
   }
 }

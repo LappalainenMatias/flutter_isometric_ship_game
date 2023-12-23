@@ -31,21 +31,17 @@ class _StatisticsState extends State<Statistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
+              "Camera center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
-            Text("Screen: ${game.getCamera().width().toInt()}x${game.getCamera().height().toInt()}",
-                style: const TextStyle(color: Colors.white)),
+            //Text("Screen: ${game.getCamera().width().toInt()}x${game.getCamera().height().toInt()}",
+            //    style: const TextStyle(color: Colors.white)),
             Text(
-              "Zoom: ${game.zoomLevel.toStringAsFixed(3)}",
-              style: const TextStyle(color: Colors.white),
-            ),
-            Text(
-              "Total regions: ${game.getRegionCount()} Visible: ${game.amountOfVisibleRegions()}",
+              "Camera zoom: ${game.zoomLevel.toStringAsFixed(2)}",
               style: const TextStyle(color: Colors.white),
             ),
             Text(
-              "Region creation queue: ${game.regionCreationQueueStats()}",
+              "Regions total/visible/queue: ${game.getRegionCount()}/${game.amountOfVisibleRegions()}/${game.regionCreationQueueStats()}",
               style: const TextStyle(color: Colors.white),
             ),
             Text("Frames > 16 ms: ${gameLoop.missedFrames}",

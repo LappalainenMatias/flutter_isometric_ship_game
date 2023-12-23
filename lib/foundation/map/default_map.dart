@@ -14,12 +14,12 @@ import '../region/visible_regions_handler.dart';
 
 class DefaultGameMap extends GameMap {
   final Map<Point<int>, Region> _regions = {};
-  final _concurrentRegionCreator = ConcurrentTerrainCreator();
-  late final RegionCreationQueue _regionCreationQueue;
+  final _concurrentTerrainCreator = ConcurrentTerrainCreator();
+  late final RegionTerrainCreationQueue _regionTerrainCreationQueue;
   late final VisibleRegionsHandler _visibleRegions;
 
   DefaultGameMap(Camera camera) {
-    _regionCreationQueue = RegionCreationQueueImpl(camera);
+    _regionTerrainCreationQueue = DefaultRegionTerrainCreationQueue(camera);
     _visibleRegions = VisibleRegionsHandlerImpl(camera, this);
   }
 
@@ -38,7 +38,7 @@ class DefaultGameMap extends GameMap {
       _regions[point] = DefaultRegion.empty(isoCoordinate);
     }
     if (_regions[point]!.isEmpty()) {
-      _regionCreationQueue.add(AddGameObjectsTo(isoCoordinate));
+      _regionTerrainCreationQueue.add(_regions[point]!);
     }
 
     return _regions[point]!;
@@ -62,17 +62,16 @@ class DefaultGameMap extends GameMap {
   }
 
   void _addGameObjectsToRegion() {
-    if (_concurrentRegionCreator.isAvailable()) {
-      AddGameObjectsTo? next = _regionCreationQueue.next();
+    if (_concurrentTerrainCreator.isAvailable()) {
+      var next = _regionTerrainCreationQueue.next();
       if (next != null) {
-        var region = getRegion(next.regionCoordinate);
-        _concurrentRegionCreator.addGameObjects(region);
+        _concurrentTerrainCreator.addTerrain(next);
       }
     }
   }
 
-  String regionQueueStats() {
-    return _regionCreationQueue.toString();
+  int regionQueueSize() {
+    return _regionTerrainCreationQueue.size();
   }
 
   List<Region> getVisibleRegionsInDrawingOrder() {

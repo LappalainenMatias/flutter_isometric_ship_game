@@ -24,7 +24,7 @@ class ConcurrentTerrainCreator {
     }
   }
 
-  void addGameObjects(Region region) {
+  void addTerrain(Region region) {
     _runningCount++;
     if (kIsWeb) {
       // Web does not support isolate, so we use a web worker instead.
