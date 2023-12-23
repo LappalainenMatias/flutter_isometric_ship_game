@@ -34,10 +34,6 @@ We also only render the regions and game objects that are visible on the screen.
 To solve the correct rendering order, we use painter's algorithm. Each game object and region
 has a ```nearness()``` value which is used for sorting the game objects from the farthest (top of the screen) to the nearest (bottom of the screen). 
 
-The current implentation has some limitations. Game objects are either under or above water. They cannot be partially under water.
-The painter's algorithm needs improvement when sorthing different size game objects. It currently works only when the game objects are close to each other in size.
-Also the painters algorithm does not work correctly if the game objects are overlapping.
-
 ![map_screenshot.png](readme_images/rendering.png)
 ## Coordinates
 ```IsoCoordinate``` means an isometric coordinate. ```IsoCoordinate``` class does the projection from normal cartesian coordinates to isometric coordinates. 
