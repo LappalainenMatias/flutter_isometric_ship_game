@@ -34,11 +34,6 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
   }
 
   @override
-  isUnderWater() {
-    return elevation < 0;
-  }
-
-  @override
   CollisionBox getCollisionBox() {
     _collisionBox.update(isoCoordinate, width, elevation);
     return _collisionBox;

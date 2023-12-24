@@ -25,12 +25,12 @@ void main() {
     vec2 gridPos = floor(uv / tileSize);
 
     // Define two colors
-    float diff = 1.04;
-    vec4 colorA = vec4(7.0 * diff / 255.0, 95.0 * diff / 255.0, 187.0 * diff / 255.0, 240 / 255.0);
-    vec4 colorB = vec4(7.0 / 255.0, 95.0 / 255.0, 187.0 / 255.0, 240.0 / 255.0);
+    float diff = 1.08;
+    vec4 colorA = vec4(7.0 * diff / 255.0, 95.0 * diff / 255.0, 187.0 * diff / 255.0, 255.0 / 255.0);
+    vec4 colorB = vec4(7.0 / 255.0, 95.0 / 255.0, 187.0 / 255.0, 255.0 / 255.0);
 
     // Calculate color based on time and grid position
     vec2 r = rand(gridPos);
-    float t = (1.0 + sin(iTime * 0.7 * (0.5 + r.x) + r.y));
+    float t = (1.0 + sin(iTime * 0.4 * (0.5 + r.x) + r.y));
     fragColor = mix(colorB, colorA, t);
 }

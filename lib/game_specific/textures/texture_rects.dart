@@ -4,11 +4,20 @@ import 'dart:typed_data';
 /// Tells where the graphics are located in the sprite sheet
 /// Useful tool https://codeshack.io/images-sprite-sheet-generator/
 /// The A1, A2,... are animation frames.
+/// The D1, D2,... are depth values.
 enum SpriteSheetItem {
-  tileGrass(0, 19),
-  tileSand(0, 21),
-  tileRock(0, 20),
-  collisionBox(0, 18),
+  tileGrass(0, 26),
+  tileSand(0, 29),
+  tileRock(0, 28),
+  tileRockD1(0, 18),
+  tileRockD2(0, 19),
+  tileRockD3(0, 20),
+  tileRockD4(0, 21),
+  tileSandD1(0, 22),
+  tileSandD2(0, 23),
+  tileSandD3(0, 24),
+  tileSandD4(0, 25),
+  collisionBox(0, 27),
   shipRedDownA1(0, 0, cutOff: 0.5),
   shipRedDownA2(0, 1, cutOff: 0.5),
   shipRedDownA3(0, 2, cutOff: 0.5),

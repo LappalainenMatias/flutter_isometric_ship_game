@@ -9,7 +9,7 @@ float rand(vec2 co) {
     return fract(sin(dot(co.xy, vec2(12.9898,78.233))) * 43758.5453);
 }
 
-float noise(vec2 st) {
+float baseNoise(vec2 st) {
     vec2 i = floor(st);
     vec2 f = fract(st);
 
@@ -25,19 +25,34 @@ float noise(vec2 st) {
     (d - b) * u.x * u.y;
 }
 
+float noise(vec2 st) {
+    float noiseVal = 0.0;
+    float amplitude = 0.5;
+    float frequency = 1.0;
+
+    for(int i = 0; i < 3; i++) {
+        noiseVal += amplitude * baseNoise(st * frequency);
+        amplitude *= 0.5;
+        frequency *= 2.0;
+    }
+
+    return noiseVal;
+}
+
 void main() {
     vec2 uv = gl_FragCoord.xy / vec2(1000, 500); // Normalized pixel coordinates
 
+    // Distort UVs
+    uv += noise(uv * 0.1 - iTime * 0.01) * 0.15;
+
     // Calculate noise value for shadow
-    float scale = 10.0; // Scale of the noise
-    float n = noise((uv - vec2(0.5)) * scale - iTime * 0.05); // Moving noise pattern
+    float n = noise(uv * 10.0 - iTime * 0.05); // Moving noise pattern
 
     // Create shadow strength based on noise
-    float shadowAlpha = smoothstep(0.6, 0.9, n); // The range where the shadows fall
+    float shadowAlpha = smoothstep(0.5, 0.8, n); // Adjusted range for shadows
 
-    // Set shadow color to a dark color, could be any color you want the shadow to be
+    // Set shadow color to a dark color
     vec3 shadowColor = vec3(0.0, 0.0, 0.0); // Black for shadow
-
     shadowAlpha *= 0.30;
 
     // Output the shadow color and alpha value

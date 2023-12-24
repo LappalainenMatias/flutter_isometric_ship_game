@@ -25,7 +25,9 @@ abstract class GameObject implements Comparable<GameObject> {
   ({double distance, double elevation}) nearness();
 
   /// If true the game object is drawn under the water plane
-  bool isUnderWater();
+  bool isUnderWater() {
+    return getElevation() < 0;
+  }
 
   bool isVisible();
 

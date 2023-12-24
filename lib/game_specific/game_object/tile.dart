@@ -73,11 +73,6 @@ class Tile extends StaticGameObject {
   }
 
   @override
-  bool isUnderWater() {
-    return elevation < 0;
-  }
-
-  @override
   CollisionBox? getCollisionBox() {
     return collisionBox;
   }
@@ -99,11 +94,7 @@ class Tile extends StaticGameObject {
 }
 
 enum TileType {
-  grass(SpriteSheetItem.tileGrass),
-  rock(SpriteSheetItem.tileRock),
-  sand(SpriteSheetItem.tileSand);
-
-  const TileType(this.spriteSheet);
-
-  final SpriteSheetItem spriteSheet;
+  grass,
+  rock,
+  sand;
 }

@@ -53,11 +53,6 @@ class Missile extends DynamicGameObject with Damage, CollisionAction {
   }
 
   @override
-  bool isUnderWater() {
-    return elevation < 0;
-  }
-
-  @override
   bool isVisible() {
     return _isVisible;
   }

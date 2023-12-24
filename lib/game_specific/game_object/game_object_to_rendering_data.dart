@@ -24,13 +24,45 @@ class MissileToDrawingDTO {
 
 class TileToDrawingDTO {
   static RenderingData create(Tile tile) {
-    var texture = tile.type.spriteSheet.getBorders();
+    var texture = rect(tile.type, tile.elevation);
     return createRenderingData(
       texture,
       tile.isoCoordinate,
       tile.elevation,
       scale: tile.width.toDouble(),
     );
+  }
+
+  static Float32List rect(TileType type, double elevation) {
+    /// Todo this system needs refactoring
+    if (type == TileType.grass) {
+      return SpriteSheetItem.tileGrass.getBorders();
+    } else if (type == TileType.rock) {
+      if (elevation >= 0.0) {
+        return SpriteSheetItem.tileRock.getBorders();
+      } else if (elevation > -2) {
+        return SpriteSheetItem.tileRockD1.getBorders();
+      } else if (elevation > -4) {
+        return SpriteSheetItem.tileRockD2.getBorders();
+      } else if (elevation > -8) {
+        return SpriteSheetItem.tileRockD3.getBorders();
+      } else if (elevation <= -8) {
+        return SpriteSheetItem.tileRockD4.getBorders();
+      }
+    } else if (type == TileType.sand) {
+      if (elevation >= 0.0) {
+        return SpriteSheetItem.tileSand.getBorders();
+      } else if (elevation > -2) {
+        return SpriteSheetItem.tileSandD1.getBorders();
+      } else if (elevation > -4) {
+        return SpriteSheetItem.tileSandD2.getBorders();
+      } else if (elevation > -8) {
+        return SpriteSheetItem.tileSandD3.getBorders();
+      } else if (elevation <= -8) {
+        return SpriteSheetItem.tileSandD4.getBorders();
+      }
+    }
+    throw Exception("Tile type not found");
   }
 }
 

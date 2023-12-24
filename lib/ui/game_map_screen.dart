@@ -46,7 +46,8 @@ class _GameScreenState extends State<GameScreen> {
               return SizedBox(
                 child: Stack(
                   children: [
-                    Align(
+                    Container(
+                      color: Colors.blue.withOpacity(0.7),
                       child: ShaderBuilder(
                         assetKey: 'shaders/regtanglewater.frag',
                         (context, waterShader, child) => ShaderBuilder(
