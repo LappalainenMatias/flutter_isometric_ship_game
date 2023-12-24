@@ -11,7 +11,7 @@ vec2 rand(vec2 co){
 
 
 void main() {
-    vec2 uv =  FlutterFragCoord().xy / vec2(1000, 1000 / 2);
+    vec2 uv =  FlutterFragCoord().xy / vec2(1000, 500);
 
     uv = uv * 2.0 - vec2(1.0);
 
@@ -31,6 +31,6 @@ void main() {
 
     // Calculate color based on time and grid position
     vec2 r = rand(gridPos);
-    float t = (1.0 + sin(iTime * 0.4 * (0.5 + r.x) + r.y));
+    float t = (1.0 + sin(iTime * 0.6 * (0.5 + r.x) + r.y));
     fragColor = mix(colorB, colorA, t);
 }

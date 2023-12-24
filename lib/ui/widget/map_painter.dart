@@ -32,7 +32,7 @@ class GameMapPainter extends CustomPainter {
     _waterPaint = Paint()..blendMode = BlendMode.srcOver;
     _waterPaint.color = Colors.blue[500]!.withOpacity(0.4);
     _waterShader.setFloat(0, _timePassed);
-    //_waterPaint.shader = _waterShader;
+    _waterPaint.shader = _waterShader;
 
     _transformations(canvas, size);
 

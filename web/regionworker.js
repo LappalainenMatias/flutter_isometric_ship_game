@@ -1725,11 +1725,11 @@ else if(a===B.e){if(b>=0)return B.dC.t()
 else if(b>-2)return B.dt.t()
 else if(b>-4)return B.du.t()
 else if(b>-8)return B.dv.t()
-else if(b>-10)return B.dw.t()}else if(a===B.f)if(b>=0)return B.dD.t()
+else if(b<=-8)return B.dw.t()}else if(a===B.f)if(b>=0)return B.dD.t()
 else if(b>-2)return B.dx.t()
 else if(b>-4)return B.dy.t()
 else if(b>-8)return B.dz.t()
-else if(b>-10)return B.dA.t()
+else if(b<=-8)return B.dA.t()
 throw A.b(A.cR("Tile type not found"))},
 f6(a){var t,s=a^48
 if(s<10)return s

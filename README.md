@@ -29,6 +29,9 @@ All game objects are currently drawn with ```canvas.drawRawAtlas()```. The game 
 3. We draw all game objects that are above water.
 4. We draw a cloud shadow plane which uses a ```FragmentShader```.
 
+The water depth is created by drawing more bluish tiles when the elevation is low.
+This approach is not very flexible but it looks okay and does not have any impact on performance.
+
 To make the rendering faster, a single ```drawRawAtlas()``` draws all under/above water game objects in a region.
 We also only render the regions and game objects that are visible on the screen.
 To solve the correct rendering order, we use painter's algorithm. Each game object and region
@@ -43,11 +46,11 @@ straight down. Coordinates are one of the more confusing parts of this game and 
 
 ![coordinates.png](readme_images/coordinates.png)
 
-## Diagram
-Simplified version of the class structure which shows the dependencies between classes.
-There are some classes missing and in reality there are more dependencies. (Updated 2023-12-10)
+## Architecture
+The main idea of the architecture is to seperate the specific game logic from the general game logic
+so that the more general game logic code could be reused in the future.
 
-![class_structure.png](readme_images/structure.png)
+![class_structure.png](readme_images/architecture.png)
 
 ## Tests
 Mostly unit tests, some integration tests and performance tests.
