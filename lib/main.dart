@@ -65,6 +65,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     super.dispose();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -73,7 +74,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       ],
       child: const KeyBoardMovement(
         child: Material(
-          color: Colors.black,
           child: Stack(
             children: [
               GameScreen(),

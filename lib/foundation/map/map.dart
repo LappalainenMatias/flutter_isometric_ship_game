@@ -5,8 +5,7 @@ import '../region/region.dart';
 abstract class GameMap {
   /// Always returns a region. If the region does not exist, we return a new empty region.
   Region getRegion(IsoCoordinate isoCoordinate);
-  void addRegion(Region region);
   void addGameObject(GameObject gameObject);
   void removeGameObject(GameObject gameObject);
-  void updateGameMap(double dt);
+  void update(double dt);
 }

@@ -40,9 +40,6 @@ class DefaultRegion extends Region {
     RenderingData underWater,
     RenderingData aboveWater,
   }) getRenderingData() {
-    if (_dynamicGameObjects.isNotEmpty) {
-      _updateRenderingData();
-    }
     return (
       underWater: _underWater,
       aboveWater: _aboveWater,
@@ -118,7 +115,9 @@ class DefaultRegion extends Region {
 
   @override
   void update() {
-    // TODO: implement update
+    if (_dynamicGameObjects.isNotEmpty) {
+      _updateRenderingData();
+    }
   }
 
   @override

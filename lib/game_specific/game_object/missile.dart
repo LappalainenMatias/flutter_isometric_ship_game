@@ -1,4 +1,7 @@
 import 'dart:math';
+import 'package:anki/foundation/animation/animation.dart';
+import 'package:anki/game_specific/animation/canon_animation.dart';
+
 import '../../foundation/collision/collision_action.dart';
 import '../../foundation/collision/collision_box.dart';
 import '../../foundation/coordinates/iso_coordinate.dart';
@@ -7,7 +10,7 @@ import '../../foundation/rendering_data/rendering_data.dart';
 import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
-class Missile extends DynamicGameObject with Damage, CollisionAction {
+class Missile extends DynamicGameObject with Damage, CollisionAction, Animation{
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile projectile;
   double elevation = 0.0;
@@ -23,6 +26,8 @@ class Missile extends DynamicGameObject with Damage, CollisionAction {
     this.projectile,
     this._id,
   ) {
+    animationParts = animationCanonBall;
+    animationLengthInSeconds = 0.25;
     collisionBox = CollisionBox(isoCoordinate, width, elevation);
   }
 
@@ -97,7 +102,7 @@ class Projectile {
   /// Makes sure that missiles don't fly forever
   double flyingTime = 5;
 
-  Projectile(this.unitVector, [this.speed = 100]);
+  Projectile(this.unitVector, [this.speed = 50]);
 
   void update(double dt, Missile missile) {
     if (flyingTime <= 0) {

@@ -1,7 +1,7 @@
 import 'dart:typed_data';
 
 mixin Animation {
-  final double _animationLengthInSeconds = 1;
+  double animationLengthInSeconds = 1;
   double _timeSinceLastFrameInSeconds = 0;
   int _frameIndex = 0;
 
@@ -15,7 +15,7 @@ mixin Animation {
       return;
     }
     _timeSinceLastFrameInSeconds += dt;
-    if (_timeSinceLastFrameInSeconds > _animationLengthInSeconds / animationParts.length) {
+    if (_timeSinceLastFrameInSeconds > animationLengthInSeconds / animationParts.length) {
       _timeSinceLastFrameInSeconds = 0;
       _frameIndex++;
       if (_frameIndex >= animationParts.length) {

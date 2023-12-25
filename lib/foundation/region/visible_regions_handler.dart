@@ -60,6 +60,13 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   void update() {
     _removeInvisibleRegions();
     _findNewVisibleRegions();
+    _updateVisibleRegions();
+  }
+
+  void _updateVisibleRegions() {
+    for (var region in _sortedVisibleRegions.toList()) {
+      region.update();
+    }
   }
 
   /// We go through a few random points at the screen and check what region it is part of.

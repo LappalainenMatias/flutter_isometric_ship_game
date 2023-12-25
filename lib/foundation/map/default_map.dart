@@ -56,16 +56,17 @@ class DefaultGameMap extends GameMap {
     return _regions.length;
   }
 
-  void update() {
+  @override
+  void update(double dt) {
     _visibleRegions.update();
-    _addGameObjectsToRegion();
+    _createTerrain();
   }
 
-  void _addGameObjectsToRegion() {
+  void _createTerrain() {
     if (_concurrentTerrainCreator.isAvailable()) {
-      var next = _regionTerrainCreationQueue.next();
-      if (next != null) {
-        _concurrentTerrainCreator.addTerrain(next);
+      var region = _regionTerrainCreationQueue.next();
+      if (region != null) {
+        _concurrentTerrainCreator.addTerrain(region);
       }
     }
   }
@@ -80,16 +81,6 @@ class DefaultGameMap extends GameMap {
 
   int getVisibleRegionsSize() {
     return _visibleRegions.visibleRegionSize();
-  }
-
-  @override
-  void addRegion(Region region) {
-    // TODO: implement addRegion
-  }
-
-  @override
-  void updateGameMap(double dt) {
-    // TODO: implement updateGameMap
   }
 
   @override

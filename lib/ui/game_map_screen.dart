@@ -36,43 +36,37 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.sizeOf(context);
+    var aspectRatio = screenSize.aspectRatio;
     var gameloop = Provider.of<GameLoop>(context, listen: false);
     return textureImage == null
         ? const Center(child: CircularProgressIndicator())
         : LayoutBuilder(
             builder: (context, constraints) {
-              gameloop.game.updateScreenAspectRatio(
-                  screenSize.width / screenSize.height);
-              return SizedBox(
-                child: Stack(
-                  children: [
-                    Container(
-                      color: Colors.blue.withOpacity(0.7),
-                      child: ShaderBuilder(
-                        assetKey: 'shaders/regtanglewater.frag',
-                        (context, waterShader, child) => ShaderBuilder(
-                          assetKey: 'shaders/clouds.frag',
-                          (context, shadowShader, child) => ClickDetector(
-                            screenSize: screenSize,
-                            child: CustomPaint(
-                              size: screenSize,
-                              willChange: true,
-                              painter: GameMapPainter(
-                                waterShader,
-                                shadowShader,
-                                gameloop,
-                                gameloop.game,
-                                textureImage!,
-                              ),
-                            ),
-                          ),
-                          child: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
+              gameloop.game.setScreenAspectRatio(aspectRatio);
+              return Container(
+                color: Colors.blue[800]!,
+                child: ShaderBuilder(
+                  assetKey: 'shaders/regtanglewater.frag',
+                  (context, waterShader, child) => ShaderBuilder(
+                    assetKey: 'shaders/clouds.frag',
+                    (context, shadowShader, child) => ClickDetector(
+                      screenSize: screenSize,
+                      child: CustomPaint(
+                        size: screenSize,
+                        willChange: true,
+                        painter: GameMapPainter(
+                          waterShader,
+                          shadowShader,
+                          gameloop,
+                          gameloop.game,
+                          textureImage!,
                         ),
                       ),
                     ),
-                  ],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
                 ),
               );
             },

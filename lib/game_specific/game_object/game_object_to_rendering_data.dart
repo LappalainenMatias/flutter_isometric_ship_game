@@ -12,9 +12,8 @@ import 'missile.dart';
 
 class MissileToDrawingDTO {
   static RenderingData create(Missile missile) {
-    var texture = SpriteSheetItem.tileSand.getBorders();
     return createRenderingData(
-      texture,
+      missile.getSpriteSheetRect(),
       missile.getIsoCoordinate(),
       missile.getElevation(),
       scale: missile.width,

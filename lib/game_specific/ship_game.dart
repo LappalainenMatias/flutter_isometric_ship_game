@@ -14,16 +14,14 @@ import 'game_object/ship.dart';
 import 'movement/joystick_ship_mover.dart';
 import 'movement/keyboard_ship_mover.dart';
 
-/// Todo this is a changenotifier which does not notify anything
-class ShipGame extends Game {
+class ShipGame {
   late DefaultCamera _camera;
   late DefaultGameMap _map;
   late DynamicGameObjectManager _dynamicGameObjectManager;
   late KeyboardShipMover? _keyboardPlayerMover;
   late JoyStickShipMover? _joyStickPlayerMover;
   late Ship _ship;
-  int _amountOfGameObjects = 0;
-  int _amountOfGameObjectsRendered = 0;
+  var _amountOfGameObjectsRendered = 0;
 
   ShipGame() {
     setupNewGame();
@@ -55,8 +53,7 @@ class ShipGame extends Game {
 
   double get zoomLevel => _camera.zoomLevel;
 
-  /// When the screen size changes the aspect ratio of the camera needs to be updated.
-  void updateScreenAspectRatio(double ratio) {
+  void setScreenAspectRatio(double ratio) {
     _camera.aspectRatio = ratio;
   }
 
@@ -73,11 +70,11 @@ class ShipGame extends Game {
     _camera.zoomOut();
   }
 
-  void updateMap() {
-    _map.update();
+  void updateMap(double dt) {
+    _map.update(dt);
   }
 
-  void movePlayer(double dt) {
+  void _movePlayer(double dt) {
     /// Todo refactor
     if (_keyboardPlayerMover == null) return;
     var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
@@ -93,7 +90,7 @@ class ShipGame extends Game {
     }
   }
 
-  void updateDynamicGameObjects(double dt) {
+  void _updateDynamicGameObjects(double dt) {
     _dynamicGameObjectManager.update(dt);
   }
 
@@ -103,7 +100,7 @@ class ShipGame extends Game {
     var missile = Missile(
       _ship.getIsoCoordinate(),
       _ship.elevation,
-      0.4,
+      1,
       Projectile(unitVectorFromPlayerToTarget),
       getRandomId(),
     );
@@ -163,9 +160,8 @@ class ShipGame extends Game {
     List<(RenderingData, Rect)> underWater,
     List<(RenderingData, Rect)> aboveWater
   ) renderingData() {
-    List<(RenderingData underWater, Rect cullingRect)> underWater = [];
-    List<(RenderingData aboveWater, Rect cullingRect)> aboveWater = [];
-    _amountOfGameObjects = 0;
+    var underWater = <(RenderingData underWater, Rect cullingRect)>[];
+    var aboveWater = <(RenderingData underWater, Rect cullingRect)>[];
     _amountOfGameObjectsRendered = 0;
 
     /// Change regions to drawable format
@@ -180,24 +176,23 @@ class ShipGame extends Game {
           rectangle.left, rectangle.top, rectangle.right, rectangle.bottom);
       underWater.add((data.underWater, cullingRect));
       aboveWater.add((data.aboveWater, cullingRect));
-      _amountOfGameObjects += region.gameObjectsLength();
       _amountOfGameObjectsRendered += region.gameObjectsVisibleLength();
     });
     return (underWater, aboveWater);
   }
 
-  @override
   void update(double dt) {
     if (getGameState() == GameState.gameOver) {
       reset();
+    } else {
+      _map.update(dt);
+      _updateDynamicGameObjects(dt);
+      _movePlayer(dt);
     }
-    _map.update();
-    updateDynamicGameObjects(dt);
-    movePlayer(dt);
   }
 }
 
-extension GameMapStatisticExtension on ShipGame {
+extension ShipGameStatisticExtension on ShipGame {
   int getRegionCount() {
     return _map.getRegionCount();
   }
@@ -208,10 +203,6 @@ extension GameMapStatisticExtension on ShipGame {
 
   int amountOfVisibleRegions() {
     return _map.getVisibleRegionsSize();
-  }
-
-  int amountOfGameObjects() {
-    return _amountOfGameObjects;
   }
 
   int amountOfGameObjectsRendered() {

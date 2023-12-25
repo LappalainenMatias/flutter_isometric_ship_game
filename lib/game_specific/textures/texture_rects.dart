@@ -6,6 +6,9 @@ import 'dart:typed_data';
 /// The A1, A2,... are animation frames.
 /// The D1, D2,... are depth values.
 enum SpriteSheetItem {
+  canonBallA1(0, 30),
+  canonBallA2(1, 30),
+  canonBallA3(0, 31),
   tileGrass(0, 26),
   tileSand(0, 29),
   tileRock(0, 28),

@@ -24,6 +24,9 @@ abstract class Camera {
 
   void zoomOut();
 
+  /// Turns screen coordinates into game coordinates.
+  /// (1.0, 1.0) is the bottom right corner of the screen.
+  /// (0.5, 0.5) is the center of the screen.
   IsoCoordinate getGameCoordinate(
       double screenXPercentage, double screenYPercentage) {
     return IsoCoordinate.fromIso(topLeft.isoX + screenXPercentage * width(),
