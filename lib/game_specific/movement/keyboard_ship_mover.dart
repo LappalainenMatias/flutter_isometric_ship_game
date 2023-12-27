@@ -1,20 +1,17 @@
+import 'package:anki/game_specific/movement/ship_mover.dart';
 import 'package:flutter/services.dart';
-
 import '../../foundation/coordinates/iso_coordinate.dart';
-import '../animation/ship_animation.dart';
 import '../game_object/ship.dart';
 
 /// Moves ship according to the delta time and the pressed keys.
-class KeyboardShipMover {
+class KeyboardShipMover extends ShipMover {
   bool _movingUp = false;
   bool _movingDown = false;
   bool _movingLeft = false;
   bool _movingRight = false;
-  final Ship ship;
-  final double _movementDistance = 50.0;
-  final double speedMultiplier = 1;
+  final Ship _ship;
 
-  KeyboardShipMover(this.ship);
+  KeyboardShipMover(this._ship);
 
   void pressed(LogicalKeyboardKey logicalKey) {
     if (logicalKey == LogicalKeyboardKey.keyW) {
@@ -46,70 +43,45 @@ class KeyboardShipMover {
     }
   }
 
-  /// (0, 1) = up, (-1, 0) = left.
-  void move(double dt) {
-    _updateAnimation();
+  @override
+  Set<Direction> getMovingDirections() {
+    var directions = <Direction>{};
     if (_movingUp) {
-      ship.isoCoordinate +=
-          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
+      directions.add(Direction.up);
     }
     if (_movingDown) {
-      ship.isoCoordinate +=
-          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
+      directions.add(Direction.down);
     }
     if (_movingLeft) {
-      ship.isoCoordinate +=
-          IsoCoordinate.fromIso(-_movementDistance * speedMultiplier * dt, 0);
+      directions.add(Direction.left);
     }
     if (_movingRight) {
-      ship.isoCoordinate +=
-          IsoCoordinate.fromIso(_movementDistance * speedMultiplier * dt, 0);
+      directions.add(Direction.right);
     }
+    return directions;
   }
 
-  void _updateAnimation() {
-    if (!_movingUp && !_movingDown && !_movingLeft && !_movingRight) {
-      return;
-    }
-    if (_movingUp && _movingRight) {
-      ship.animationParts = animationRedShipUpRight;
-    } else if (_movingUp && _movingLeft) {
-      ship.animationParts = animationRedShipUpLeft;
-    } else if (_movingDown && _movingRight) {
-      ship.animationParts = animationRedShipDownRight;
-    } else if (_movingDown && _movingLeft) {
-      ship.animationParts = animationRedShipDownLeft;
-    } else if (_movingUp) {
-      ship.animationParts = animationRedShipUp;
-    } else if (_movingDown) {
-      ship.animationParts = animationRedShipDown;
-    } else if (_movingLeft) {
-      ship.animationParts = animationRedShipLeft;
-    } else if (_movingRight) {
-      ship.animationParts = animationRedShipRight;
-    } else {
-      ship.animationParts = animationRedShipUp;
-    }
+  @override
+  Ship getShip() {
+    return _ship;
   }
 
+  @override
   IsoCoordinate nextCoordinate(double dt) {
-    var nextPosition = ship.isoCoordinate;
-    if (_movingUp) {
-      nextPosition +=
-          IsoCoordinate.fromIso(0, -_movementDistance * speedMultiplier * dt);
+    var nextCoordinate = getShip().isoCoordinate.copy();
+    var speed = 50;
+    if (getMovingDirections().contains(Direction.up)) {
+      nextCoordinate += IsoCoordinate.fromIso(0, -speed * dt);
     }
-    if (_movingDown) {
-      nextPosition +=
-          IsoCoordinate.fromIso(0, _movementDistance * speedMultiplier * dt);
+    if (getMovingDirections().contains(Direction.down)) {
+      nextCoordinate += IsoCoordinate.fromIso(0, speed * dt);
     }
-    if (_movingLeft) {
-      nextPosition +=
-          IsoCoordinate.fromIso(-_movementDistance * speedMultiplier * dt, 0);
+    if (getMovingDirections().contains(Direction.left)) {
+      nextCoordinate += IsoCoordinate.fromIso(-speed * dt, 0);
     }
-    if (_movingRight) {
-      nextPosition +=
-          IsoCoordinate.fromIso(_movementDistance * speedMultiplier * dt, 0);
+    if (getMovingDirections().contains(Direction.right)) {
+      nextCoordinate += IsoCoordinate.fromIso(speed * dt, 0);
     }
-    return nextPosition;
+    return nextCoordinate;
   }
 }
