@@ -10,7 +10,8 @@ import '../../foundation/rendering_data/rendering_data.dart';
 import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
-class Missile extends DynamicGameObject with Damage, CollisionAction, Animation{
+class Missile extends DynamicGameObject
+    with Damage, CollisionAction, Animation {
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile projectile;
   double elevation = 0.0;
