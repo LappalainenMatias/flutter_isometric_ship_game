@@ -1715,8 +1715,8 @@ r=i*16
 h=new Float32Array(4)
 h[0]=j
 h[1]=i
-h[2]=n-(q*2-2*q)+0+-j*16+r
-h[3]=o-(q+q)+2-r-j*16
+h[2]=n-(q*2-2*q)+-j*16+r
+h[3]=o-(q+q)-r-j*16
 r=new A.bj(h,k)
 m.d=u.R.a(r)
 return m}}throw A.b(A.cR("No tile type found for elevation: "+A.i(a)+", moisture: "+A.i(b)+". Fix the rules!"))},

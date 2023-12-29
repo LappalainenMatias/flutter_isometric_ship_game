@@ -14,7 +14,7 @@ class AddOpponent extends StatelessWidget {
       onPressed: () {
         gameloop.game.addOpponent();
       },
-      child: const Text("Add opponent"),
+      child: const Text("Add ship"),
     );
   }
 }
