@@ -10,7 +10,7 @@ import '../../foundation/rendering_data/rendering_data.dart';
 import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
-class Missile extends DynamicGameObject
+class Cannonball extends DynamicGameObject
     with Damage, CollisionAction, Animation {
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile projectile;
@@ -20,7 +20,7 @@ class Missile extends DynamicGameObject
   late CollisionBox collisionBox;
   final int _id;
 
-  Missile(
+  Cannonball(
     this.isoCoordinate,
     this.elevation,
     this.width,
@@ -49,8 +49,8 @@ class Missile extends DynamicGameObject
 
   @override
   RenderingData getDrawingData() {
-    // Missiles move a lot and because of that we create a new drawingDTO every frame.
-    return MissileToDrawingDTO.create(this);
+    // Cannonballs move a lot and because of that we create a new drawingDTO every frame.
+    return CannonballToDrawingDTO.create(this);
   }
 
   @override
@@ -79,7 +79,7 @@ class Missile extends DynamicGameObject
 
   @override
   CollisionBox getCollisionBox() {
-    // We update collision box every frame because missiles move a lot.
+    // We update collision box every frame because cannonballs move a lot.
     collisionBox.update(isoCoordinate, width, elevation);
     return collisionBox;
   }
@@ -89,28 +89,28 @@ class Missile extends DynamicGameObject
     return _id;
   }
 
-  static defaultMissile(int id) {
-    return Missile(const IsoCoordinate(0, 0), 0, 0,
+  static defaultCannonball(int id) {
+    return Cannonball(const IsoCoordinate(0, 0), 0, 0,
         Projectile(const IsoCoordinate(0, 0)), id);
   }
 }
 
 class Projectile {
-  /// Missile moves to this direction
+  /// cannonball moves to this direction
   IsoCoordinate unitVector;
   double speed;
 
-  /// Makes sure that missiles don't fly forever
+  /// Makes sure that cannonballs don't fly forever
   double flyingTime = 5;
 
   Projectile(this.unitVector, [this.speed = 80]);
 
-  void update(double dt, Missile missile) {
+  void update(double dt, Cannonball cannonball) {
     if (flyingTime <= 0) {
-      missile.destroy = true;
+      cannonball.destroy = true;
       return;
     }
     flyingTime -= dt;
-    missile.isoCoordinate += unitVector * dt * speed;
+    cannonball.isoCoordinate += unitVector * dt * speed;
   }
 }

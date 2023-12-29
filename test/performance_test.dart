@@ -5,7 +5,7 @@ import 'package:anki/foundation/game_object/game_object.dart';
 import 'package:anki/foundation/game_object/render_data_builder.dart';
 import 'package:anki/foundation/region/default_region.dart';
 import 'package:anki/foundation/utils/random_id.dart';
-import 'package:anki/game_specific/game_object/missile.dart';
+import 'package:anki/game_specific/game_object/cannonball.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:anki/game_specific/noise/noise.dart';
 import 'package:anki/game_specific/optimization/remove_hidden_tiles.dart';
@@ -162,10 +162,10 @@ void main() {
     var regionGround = regionCreator.create(128, 128, 0, 0);
     var region = DefaultRegion(const IsoCoordinate(0, 0), regionGround);
     for (int i = 0; i < 1000; i++) {
-      var missile = Missile.defaultMissile(getRandomId());
-      missile.bottomCenter = IsoCoordinate(
+      var cannonball = Cannonball.defaultCannonball(getRandomId());
+      cannonball.bottomCenter = IsoCoordinate(
           Random().nextInt(1000).toDouble(), Random().nextInt(1000).toDouble());
-      region.addGameObject(missile);
+      region.addGameObject(cannonball);
     }
     Stopwatch stopwatch = Stopwatch()..start();
     region.getRenderingData();
@@ -180,9 +180,9 @@ void main() {
   test("Collision detector performance", () {
     var regionCreator = TerrainCreator();
     var regionGround = regionCreator.create(256, 256, 0, 0);
-    var missile = Missile.defaultMissile(getRandomId());
+    var cannonball = Cannonball.defaultCannonball(getRandomId());
     Stopwatch stopwatch = Stopwatch()..start();
-    findCollisions(regionGround, missile);
+    findCollisions(regionGround, cannonball);
     stopwatch.stop();
     print('Collision detection took ${stopwatch.elapsedMilliseconds} ms');
 

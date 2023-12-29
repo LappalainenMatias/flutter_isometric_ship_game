@@ -18,7 +18,7 @@ class ClickDetector extends StatelessWidget {
         var screenXPercentage = event.localPosition.dx / screenSize.width;
         var screenYPercentage = event.localPosition.dy / screenSize.height;
         var target = gameloop.game.getGameCoordinate(screenXPercentage, screenYPercentage);
-        gameloop.game.shootMissile(target);
+        gameloop.game.shootCannonball(target);
       },
       child: child,
     );

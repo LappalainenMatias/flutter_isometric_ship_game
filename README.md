@@ -16,7 +16,7 @@ Regions are important for performance because they allow faster collision detect
 A game object is something which has a location in the game world and contains rendering data. 
 The game objects are divided into static and dynamic game objects. 
 Static game objects are game objects which do not get updated. For example, ground tiles are static game objects.
-Dynamic game objects have an ```update(dt)``` method which gets called every frame. For example, the ship and missiles are dynamic game objects.
+Dynamic game objects have an ```update(dt)``` method which gets called every frame. For example, the ship and cannonball are dynamic game objects.
 If a region does not contain any dynamic game objects, we do not need to update that region. This is a big performance benefit.
 
 ![game_world.png](readme_images/game_world.png)

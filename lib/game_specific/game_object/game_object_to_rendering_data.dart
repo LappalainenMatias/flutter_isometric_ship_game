@@ -8,15 +8,15 @@ import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/game_object/render_data_builder.dart';
 import '../../foundation/rendering_data/rendering_data.dart';
 import '../textures/texture_rects.dart';
-import 'missile.dart';
+import 'cannonball.dart';
 
-class MissileToDrawingDTO {
-  static RenderingData create(Missile missile) {
+class CannonballToDrawingDTO {
+  static RenderingData create(Cannonball cannonball) {
     return createRenderingData(
-      missile.getSpriteSheetRect(),
-      missile.getIsoCoordinate(),
-      missile.getElevation(),
-      scale: missile.width,
+      cannonball.getSpriteSheetRect(),
+      cannonball.getIsoCoordinate(),
+      cannonball.getElevation(),
+      scale: cannonball.width,
     );
   }
 }
@@ -67,17 +67,6 @@ class TileToDrawingDTO {
 
 class ShipToDrawingDTO {
   static RenderingData create(Ship ship) {
-    var ship1 = createRenderingData(
-      ship.getSpriteSheetRect(),
-      ship.topLeft,
-      ship.elevation,
-      scale: ship.width,
-    );
-    var collisionBox = CollisionBoxToDrawingDTO.create(ship.getCollisionBox());
-    return RenderingData(
-      Float32List.fromList(ship1.rSTTransforms + collisionBox.rSTTransforms),
-      Float32List.fromList(ship1.rects + collisionBox.rects),
-    );
     return createRenderingData(
       ship.getSpriteSheetRect(),
       ship.topLeft,

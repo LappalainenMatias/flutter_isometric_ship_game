@@ -9,7 +9,7 @@ import '../foundation/region/default_region.dart';
 import '../foundation/rendering_data/rendering_data.dart';
 import '../foundation/utils/random_id.dart';
 import 'dynamic_game_object_manager.dart';
-import 'game_object/missile.dart';
+import 'game_object/cannonball.dart';
 import 'game_object/ship.dart';
 import 'movement/joystick_ship_mover.dart';
 import 'movement/keyboard_ship_mover.dart';
@@ -90,10 +90,10 @@ class ShipGame extends Game {
     _dynamicGameObjectManager.update(dt);
   }
 
-  void shootMissile(IsoCoordinate target) {
-    // Create missile
+  void shootCannonball(IsoCoordinate target) {
+    // Create cannonball
     var unitVectorFromPlayerToTarget = (target - _ship.topLeft).toUnitVector();
-    var missile = Missile(
+    var cannonball = Cannonball(
       _ship.getIsoCoordinate(),
       _ship.elevation,
       1,
@@ -102,16 +102,16 @@ class ShipGame extends Game {
     );
 
     // Define what happens in collisions
-    missile.actionTypes = {
+    cannonball.actionTypes = {
       CollisionActionType.destroyItself,
       CollisionActionType.causeDamage
     };
 
     // You cannot shoot yourself
-    _ship.skipCollisionAction.add(missile.getId());
-    missile.skipCollisionAction.add(_ship.getId());
+    _ship.skipCollisionAction.add(cannonball.getId());
+    cannonball.skipCollisionAction.add(_ship.getId());
 
-    _dynamicGameObjectManager.addDynamicGameObject(missile);
+    _dynamicGameObjectManager.addDynamicGameObject(cannonball);
   }
 
   void keyDownEvent(LogicalKeyboardKey logicalKey) {
