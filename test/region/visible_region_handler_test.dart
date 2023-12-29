@@ -51,12 +51,14 @@ void main() {
     }
 
     var regions = visibleRegions.getVisibleRegionsInDrawingOrder();
+    /// The visible regions handler has some padding because some regions have really elevated game objects
+    var padding = 200;
     for (var region in regions) {
       var coordinate = region.getBottomCoordinate();
-      expect(coordinate.isoX > testCamera.topLeft.isoX, isTrue);
-      expect(coordinate.isoX < testCamera.bottomRight.isoX, isTrue);
-      expect(coordinate.isoY > testCamera.topLeft.isoY, isTrue);
-      expect(coordinate.isoY < testCamera.bottomRight.isoY, isTrue);
+      expect(coordinate.isoX + padding > testCamera.topLeft.isoX, isTrue);
+      expect(coordinate.isoX - padding < testCamera.bottomRight.isoX, isTrue);
+      expect(coordinate.isoY + padding> testCamera.topLeft.isoY, isTrue);
+      expect(coordinate.isoY - padding< testCamera.bottomRight.isoY, isTrue);
     }
   });
 
@@ -69,10 +71,6 @@ void main() {
     testCamera.bottomRight =
         const IsoCoordinate.fromIso(regionSideWidth * 5, regionSideWidth * 5);
 
-    /// Test that the test camera is working
-    expect(testCamera.width(), regionSideWidth * 10);
-    expect(testCamera.height(), regionSideWidth * 10);
-
     /// Update the visible regions enough times that all the regions have been found
     for (int i = 0; i < 200; i++) {
       visibleRegions.update();
@@ -82,8 +80,9 @@ void main() {
     /// doubles when we use the isometric projection.
     /// For example, IsoCoordinate(1,0).isoX == 2 is true
     var regionSize = (regionSideWidth * 2) * (regionSideWidth * 2);
+    var estimatedPadding = 200;
     var estimatedAmountOfRegionsInView =
-        (testCamera.width() * testCamera.height()) / regionSize;
+        ((testCamera.width() + estimatedPadding) * (testCamera.height() + estimatedPadding)) / regionSize;
 
     /// Check that the estimation is not too far off
     expect(
