@@ -8,7 +8,6 @@ class AddOpponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// todo
     var gameloop = Provider.of<GameLoop>(context, listen: false);
     return ElevatedButton(
       onPressed: () {

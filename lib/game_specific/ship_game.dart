@@ -91,8 +91,8 @@ class ShipGame extends Game {
   }
 
   void shootMissile(IsoCoordinate target) {
-    var unitVectorFromPlayerToTarget =
-        (target - _ship.topLeft).toUnitVector();
+    // Create missile
+    var unitVectorFromPlayerToTarget = (target - _ship.topLeft).toUnitVector();
     var missile = Missile(
       _ship.getIsoCoordinate(),
       _ship.elevation,
@@ -100,12 +100,17 @@ class ShipGame extends Game {
       Projectile(unitVectorFromPlayerToTarget),
       getRandomId(),
     );
+
+    // Define what happens in collisions
     missile.actionTypes = {
       CollisionActionType.destroyItself,
       CollisionActionType.causeDamage
     };
+
     // You cannot shoot yourself
+    _ship.skipCollisionAction.add(missile.getId());
     missile.skipCollisionAction.add(_ship.getId());
+
     _dynamicGameObjectManager.addDynamicGameObject(missile);
   }
 

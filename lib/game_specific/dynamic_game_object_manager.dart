@@ -31,6 +31,9 @@ class DynamicGameObjectManager {
       collisions.addAll(findCollisions(region.getGameObjects(), ship));
     }
 
+    collisions.removeWhere(
+        (element) => ship.skipCollisionAction.contains(element.getId()));
+
     /// Move player back to old coordinate
     ship.topLeft = old;
     return collisions.isEmpty;
@@ -79,7 +82,7 @@ class DynamicGameObjectManager {
     var currentRegion = _gameObjectToRegion[gameObject]!;
     var newRegion = _map.getRegion(gameObject.getIsoCoordinate());
     if (currentRegion != newRegion) {
-     currentRegion.removeGameObject(gameObject);
+      currentRegion.removeGameObject(gameObject);
       newRegion.addGameObject(gameObject);
       _gameObjectToRegion[gameObject] = newRegion;
     }
