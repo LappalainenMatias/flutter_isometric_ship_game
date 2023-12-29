@@ -10,14 +10,14 @@ void main() {
     var shipMover = KeyboardShipMover(ship);
     shipMover.pressed(LogicalKeyboardKey.keyW);
     shipMover.pressed(LogicalKeyboardKey.keyD);
-    var firstX = ship.isoCoordinate.isoX;
-    var firstY = ship.isoCoordinate.isoY;
+    var firstX = ship.topLeft.isoX;
+    var firstY = ship.topLeft.isoY;
     shipMover.move(1);
-    var secondX = ship.isoCoordinate.isoX;
-    var secondY = ship.isoCoordinate.isoY;
+    var secondX = ship.topLeft.isoX;
+    var secondY = ship.topLeft.isoY;
     shipMover.move(2);
-    var thirdX = ship.isoCoordinate.isoX;
-    var thirdY = ship.isoCoordinate.isoY;
+    var thirdX = ship.topLeft.isoX;
+    var thirdY = ship.topLeft.isoY;
 
     var firstDiff = (secondX - firstX).abs() + (secondY - firstY).abs();
     var secondDiff = (thirdX - secondX).abs() + (thirdY - secondY).abs();

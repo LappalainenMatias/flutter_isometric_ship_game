@@ -68,7 +68,6 @@ class SvalbardCreationRules extends TerrainCreationRules {
   }
 }
 
-/// Returns true if the elevation and moisture limitations are met.
 class TileRule {
   final TileType type;
   final double? elevationLimit;
@@ -76,6 +75,7 @@ class TileRule {
 
   TileRule(this.type, this.elevationLimit, this.moistureLimit);
 
+  /// Returns true if the elevation and moisture limitations are met.
   bool match(double inputElevation, double inputMoisture) {
     return (elevationLimit == null || inputElevation < elevationLimit!) &&
         (moistureLimit == null || inputMoisture < moistureLimit!);

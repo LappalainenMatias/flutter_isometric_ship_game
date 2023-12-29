@@ -163,7 +163,7 @@ void main() {
     var region = DefaultRegion(const IsoCoordinate(0, 0), regionGround);
     for (int i = 0; i < 1000; i++) {
       var missile = Missile.defaultMissile(getRandomId());
-      missile.isoCoordinate = IsoCoordinate(
+      missile.bottomCenter = IsoCoordinate(
           Random().nextInt(1000).toDouble(), Random().nextInt(1000).toDouble());
       region.addGameObject(missile);
     }

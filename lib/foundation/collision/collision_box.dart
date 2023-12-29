@@ -15,8 +15,8 @@ class CollisionBox {
   late double bottomZ;
   late double topZ;
 
-  CollisionBox(IsoCoordinate isoCoordinate, this._sideWidth, this._elevation) {
-    _point = isoCoordinate.toPoint();
+  CollisionBox(IsoCoordinate topLeft, this._sideWidth, this._elevation) {
+    _point = topLeft.toPoint();
     leftX = _point.x;
     rightX = _point.x + _sideWidth;
     bottomY = _point.y;

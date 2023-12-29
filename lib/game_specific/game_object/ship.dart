@@ -9,7 +9,7 @@ import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
 class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
-  IsoCoordinate isoCoordinate;
+  IsoCoordinate topLeft;
   double elevation;
   late CollisionBox _collisionBox;
   double width = 2;
@@ -17,8 +17,8 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
   late RenderingData dto;
   final int _id;
 
-  Ship(this.isoCoordinate, this.elevation, this._id) {
-    _collisionBox = CollisionBox(isoCoordinate, width, elevation);
+  Ship(this.topLeft, this.elevation, this._id) {
+    _collisionBox = CollisionBox(topLeft, width - 0.2, elevation);
     animationParts = animationRedShipDown;
     dto = ShipToDrawingDTO.create(this);
   }
@@ -30,12 +30,12 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (distance: isoCoordinate.isoY, elevation: elevation);
+    return (distance: topLeft.isoY, elevation: elevation);
   }
 
   @override
   CollisionBox getCollisionBox() {
-    _collisionBox.update(isoCoordinate, width, elevation);
+    _collisionBox.update(topLeft, width, elevation);
     return _collisionBox;
   }
 
@@ -48,7 +48,7 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   IsoCoordinate getIsoCoordinate() {
-    return isoCoordinate;
+    return topLeft;
   }
 
   @override

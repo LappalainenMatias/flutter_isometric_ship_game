@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:anki/ui/widget/input/canvas_click_detector.dart';
+import 'package:anki/ui/widget/input/dialog_movement_option.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
@@ -18,18 +19,18 @@ class _GameScreenState extends State<GameScreen> {
   @override
   void initState() {
     super.initState();
-    _loadTexture();
+    _loadShipGameSpriteSheet();
   }
 
-  ui.Image? textureImage;
+  ui.Image? _spritesheetShipGame;
 
-  Future<void> _loadTexture() async {
+  Future<void> _loadShipGameSpriteSheet() async {
     final textureData = await rootBundle.load('assets/spritesheet.png');
     final bytes = textureData.buffer.asUint8List();
     final codec = await ui.instantiateImageCodec(bytes);
     final frame = await codec.getNextFrame();
     setState(() {
-      textureImage = frame.image;
+      _spritesheetShipGame = frame.image;
     });
   }
 
@@ -38,8 +39,8 @@ class _GameScreenState extends State<GameScreen> {
     var screenSize = MediaQuery.sizeOf(context);
     var aspectRatio = screenSize.aspectRatio;
     var gameloop = Provider.of<GameLoop>(context, listen: false);
-    return textureImage == null
-        ? const Center(child: CircularProgressIndicator())
+    return _spritesheetShipGame == null
+        ? const Center(child: CircularProgressIndicator(),)
         : LayoutBuilder(
             builder: (context, constraints) {
               gameloop.game.setScreenAspectRatio(aspectRatio);
@@ -59,7 +60,7 @@ class _GameScreenState extends State<GameScreen> {
                           shadowShader,
                           gameloop,
                           gameloop.game,
-                          textureImage!,
+                          _spritesheetShipGame!,
                         ),
                       ),
                     ),

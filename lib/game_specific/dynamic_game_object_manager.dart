@@ -18,28 +18,21 @@ class DynamicGameObjectManager {
   DynamicGameObjectManager(this._map, this._camera);
 
   /// Todo refactor
-  bool canMove(Ship ship, IsoCoordinate newIsoCoordinate) {
+  bool canMove(Ship ship, IsoCoordinate nextCoordinate) {
     /// Save old coordinate and move player
-    var old = ship.isoCoordinate.copy();
-    ship.isoCoordinate = newIsoCoordinate;
+    var old = ship.topLeft.copy();
+    ship.topLeft = nextCoordinate;
     _updateRegion(ship);
 
-    /// Find all possible collisions regions
-    var regions = <Region>{};
-    regions.add(regionOf(ship));
-    regions.add(_map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(0, 5)));
-    regions.add(_map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(0, 5)));
-    regions.add(_map.getRegion(newIsoCoordinate - IsoCoordinate.fromIso(5, 0)));
-    regions.add(_map.getRegion(newIsoCoordinate + IsoCoordinate.fromIso(5, 0)));
-
     /// Find collisions
+    var regions = <Region>{regionOf(ship)};
     var collisions = <GameObject>[];
     for (var region in regions) {
       collisions.addAll(findCollisions(region.getGameObjects(), ship));
     }
 
     /// Move player back to old coordinate
-    ship.isoCoordinate = old;
+    ship.topLeft = old;
     _updateRegion(ship);
     return collisions.isEmpty;
   }

@@ -8,7 +8,7 @@ import 'game_object_to_rendering_data.dart';
 
 class Tile extends StaticGameObject {
   final TileType type;
-  final IsoCoordinate isoCoordinate;
+  final IsoCoordinate topLeft;
   final double elevation;
   late final RenderingData drawingDTO;
   final int width;
@@ -17,13 +17,13 @@ class Tile extends StaticGameObject {
 
   Tile(
     this.type,
-    this.isoCoordinate,
+    this.topLeft,
     this.elevation,
     this.width,
     this._id, {
     RenderingData? drawingDTO,
   }) {
-    collisionBox = CollisionBox(isoCoordinate, width.toDouble(), elevation);
+    collisionBox = CollisionBox(topLeft, width.toDouble(), elevation);
     this.drawingDTO = drawingDTO ?? TileToDrawingDTO.create(this);
   }
 
@@ -55,8 +55,8 @@ class Tile extends StaticGameObject {
     return [
       "Tile",
       type.name,
-      isoCoordinate.isoX,
-      isoCoordinate.isoY,
+      topLeft.isoX,
+      topLeft.isoY,
       elevation,
       width,
       _id,
@@ -69,7 +69,7 @@ class Tile extends StaticGameObject {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (distance: isoCoordinate.isoY, elevation: elevation);
+    return (distance: topLeft.isoY, elevation: elevation);
   }
 
   @override
@@ -79,7 +79,7 @@ class Tile extends StaticGameObject {
 
   @override
   IsoCoordinate getIsoCoordinate() {
-    return isoCoordinate;
+    return topLeft;
   }
 
   @override

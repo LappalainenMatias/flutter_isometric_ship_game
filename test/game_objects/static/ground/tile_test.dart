@@ -81,7 +81,7 @@ void main() {
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, 2);
     expect(decoded.type, TileType.grass);
-    expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(2, 2));
+    expect(decoded.topLeft, const IsoCoordinate.fromIso(2, 2));
     expect(decoded.isVisible(), true);
   });
 
@@ -92,7 +92,7 @@ void main() {
     Tile decoded = Tile.fromList(encoded);
     expect(decoded.elevation, -1);
     expect(decoded.type, TileType.grass);
-    expect(decoded.isoCoordinate, const IsoCoordinate.fromIso(-1, -1));
+    expect(decoded.topLeft, const IsoCoordinate.fromIso(-1, -1));
     expect(decoded.width, 2);
   });
 }

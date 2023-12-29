@@ -6,7 +6,7 @@ abstract class ShipMover {
   /// (0, 1) = up, (-1, 0) = left.
   void move(double dt) {
     setCorrectAnimation();
-    getShip().isoCoordinate = nextCoordinate(dt);
+    getShip().topLeft = nextCoordinate(dt);
   }
 
   void setCorrectAnimation() {

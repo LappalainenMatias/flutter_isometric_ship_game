@@ -53,6 +53,6 @@ void main() {
     Tile tile = TileCreator.create(
         1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules());
     expect(tile.elevation, 1.0);
-    expect(tile.isoCoordinate, const IsoCoordinate(1, 1));
+    expect(tile.topLeft, const IsoCoordinate(1, 1));
   });
 }

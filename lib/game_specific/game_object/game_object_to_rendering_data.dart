@@ -23,10 +23,10 @@ class MissileToDrawingDTO {
 
 class TileToDrawingDTO {
   static RenderingData create(Tile tile) {
-    var texture = rect(tile.type, tile.elevation);
+    var spritesheetRect = rect(tile.type, tile.elevation);
     return createRenderingData(
-      texture,
-      tile.isoCoordinate,
+      spritesheetRect,
+      tile.topLeft,
       tile.elevation,
       scale: tile.width.toDouble(),
     );
@@ -67,17 +67,23 @@ class TileToDrawingDTO {
 
 class ShipToDrawingDTO {
   static RenderingData create(Ship ship) {
-    return createRenderingData(
+    var ship1 = createRenderingData(
       ship.getSpriteSheetRect(),
-      ship.isoCoordinate,
+      ship.topLeft,
       ship.elevation,
       scale: ship.width,
     );
-    //var collisionBox = CollisionBoxToDrawingDTO.create(ship.getCollisionBox());
-    //return RenderingData(
-    //  Float32List.fromList(ship1.rSTTransforms + collisionBox.rSTTransforms),
-    //  Float32List.fromList(ship1.rects + collisionBox.rects),
-    //);
+    var collisionBox = CollisionBoxToDrawingDTO.create(ship.getCollisionBox());
+    return RenderingData(
+      Float32List.fromList(ship1.rSTTransforms + collisionBox.rSTTransforms),
+      Float32List.fromList(ship1.rects + collisionBox.rects),
+    );
+    return createRenderingData(
+      ship.getSpriteSheetRect(),
+      ship.topLeft,
+      ship.elevation,
+      scale: ship.width,
+    );
   }
 }
 

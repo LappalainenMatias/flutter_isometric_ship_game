@@ -1,4 +1,5 @@
 import 'package:anki/ui/widget/input/add_opponent.dart';
+import 'package:anki/ui/widget/input/dialog_movement_option.dart';
 import 'package:anki/ui/widget/input/joystick.dart';
 import 'package:anki/ui/widget/input/keyboard_movement.dart';
 import 'package:anki/ui/widget/input/zoom_buttons.dart';
