@@ -3,11 +3,6 @@ import 'dart:math';
 import '../coordinates/iso_coordinate.dart';
 
 class CollisionBox {
-  /// Bottom left point of the collision box
-  late Point<double> _point;
-  double _sideWidth;
-  double _elevation;
-
   late double leftX;
   late double rightX;
   late double bottomY;
@@ -15,14 +10,14 @@ class CollisionBox {
   late double bottomZ;
   late double topZ;
 
-  CollisionBox(IsoCoordinate topLeft, this._sideWidth, this._elevation) {
-    _point = topLeft.toPoint();
-    leftX = _point.x;
-    rightX = _point.x + _sideWidth;
-    bottomY = _point.y;
-    topY = _point.y + _sideWidth;
-    bottomZ = _elevation;
-    topZ = _elevation + _sideWidth;
+  CollisionBox(IsoCoordinate topLeft, double sideWidth, double elevation) {
+    final point = topLeft.toPoint();
+    leftX = point.x;
+    rightX = point.x + sideWidth;
+    bottomY = point.y;
+    topY = point.y + sideWidth;
+    bottomZ = elevation;
+    topZ = elevation + sideWidth;
   }
 
   bool overlaps(CollisionBox other) {
@@ -34,14 +29,12 @@ class CollisionBox {
 
   void update(
       IsoCoordinate newIsoCoordinate, double newWidth, double newElevation) {
-    _point = newIsoCoordinate.toPoint();
-    _sideWidth = newWidth;
-    _elevation = newElevation;
-    leftX = _point.x;
-    rightX = _point.x + _sideWidth;
-    bottomY = _point.y;
-    topY = _point.y + _sideWidth;
-    bottomZ = _elevation;
-    topZ = _elevation + _sideWidth;
+    final point = newIsoCoordinate.toPoint();
+    leftX = point.x;
+    rightX = point.x + newWidth;
+    bottomY = point.y;
+    topY = point.y + newWidth;
+    bottomZ = newElevation;
+    topZ = newElevation + newWidth;
   }
 }
