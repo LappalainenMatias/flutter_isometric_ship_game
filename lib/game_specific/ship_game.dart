@@ -13,13 +13,15 @@ import 'game_object/missile.dart';
 import 'game_object/ship.dart';
 import 'movement/joystick_ship_mover.dart';
 import 'movement/keyboard_ship_mover.dart';
+import 'movement/ship_mover.dart';
 
-class ShipGame {
+class ShipGame extends Game {
   late DefaultCamera _camera;
   late DefaultGameMap _map;
   late DynamicGameObjectManager _dynamicGameObjectManager;
-  late KeyboardShipMover? _keyboardPlayerMover;
-  late JoyStickShipMover? _joyStickPlayerMover;
+  late ShipMover _currentShipMover;
+  late KeyboardShipMover _keyboardShipMover;
+  late JoyStickShipMover _joyStickShipMover;
   late Ship _ship;
   var _amountOfGameObjectsRendered = 0;
 
@@ -29,12 +31,13 @@ class ShipGame {
 
   setupNewGame() {
     _camera = DefaultCamera();
-    _ship = Ship(const IsoCoordinate(0, 0), 0, getRandomId());
+    _ship = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId());
     _map = DefaultGameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
     _dynamicGameObjectManager.addDynamicGameObject(_ship);
-    _keyboardPlayerMover = KeyboardShipMover(_ship);
-    _joyStickPlayerMover = JoyStickShipMover(_ship);
+    _joyStickShipMover = JoyStickShipMover(_ship);
+    _keyboardShipMover = KeyboardShipMover(_ship);
+    _currentShipMover = _keyboardShipMover;
   }
 
   Ship getOurPlayer() {
@@ -74,18 +77,11 @@ class ShipGame {
     _map.update(dt);
   }
 
-  void _movePlayer(double dt) {
-    /// Todo refactor
-    if (_keyboardPlayerMover == null) return;
-    var nextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt);
-    var halfNextCoordinate = _keyboardPlayerMover!.nextCoordinate(dt / 8);
-    var canMoveFullStep =
-        _dynamicGameObjectManager.canMove(_ship, nextCoordinate);
-    var canMoveHalfStep =
-        _dynamicGameObjectManager.canMove(_ship, halfNextCoordinate);
-    if (canMoveFullStep && canMoveHalfStep) {
-      _keyboardPlayerMover?.move(dt);
-      _joyStickPlayerMover?.move(dt);
+  void _moveShip(double dt) {
+    var nextCoordinate = _currentShipMover.nextCoordinate(dt);
+    var canMove = _dynamicGameObjectManager.canMove(_ship, nextCoordinate);
+    if (canMove) {
+      _currentShipMover.move(dt);
       _camera.center = _ship.getIsoCoordinate();
     }
   }
@@ -96,7 +92,7 @@ class ShipGame {
 
   void shootMissile(IsoCoordinate target) {
     var unitVectorFromPlayerToTarget =
-        (target - _ship.isoCoordinate).toUnitVector();
+        (target - _ship.topLeft).toUnitVector();
     var missile = Missile(
       _ship.getIsoCoordinate(),
       _ship.elevation,
@@ -114,15 +110,15 @@ class ShipGame {
   }
 
   void keyDownEvent(LogicalKeyboardKey logicalKey) {
-    _keyboardPlayerMover?.pressed(logicalKey);
+    _keyboardShipMover.pressed(logicalKey);
   }
 
   void keyUpEvent(LogicalKeyboardKey logicalKey) {
-    _keyboardPlayerMover?.unPressed(logicalKey);
+    _keyboardShipMover.unPressed(logicalKey);
   }
 
   void joystickEvent(double x, double y) {
-    _joyStickPlayerMover?.updateJoystick(x, y);
+    _joyStickShipMover.updateJoystick(x, y);
   }
 
   /// x = 0.5, y = 0.5 is the center of the screen
@@ -181,14 +177,23 @@ class ShipGame {
     return (underWater, aboveWater);
   }
 
+  @override
   void update(double dt) {
     if (getGameState() == GameState.gameOver) {
       reset();
     } else {
       _map.update(dt);
       _updateDynamicGameObjects(dt);
-      _movePlayer(dt);
+      _moveShip(dt);
     }
+  }
+
+  void useJoystick() {
+    _currentShipMover = _joyStickShipMover;
+  }
+
+  void useKeyboard() {
+    _currentShipMover = _keyboardShipMover;
   }
 }
 
