@@ -103,7 +103,7 @@ class Projectile {
   /// Makes sure that missiles don't fly forever
   double flyingTime = 5;
 
-  Projectile(this.unitVector, [this.speed = 50]);
+  Projectile(this.unitVector, [this.speed = 80]);
 
   void update(double dt, Missile missile) {
     if (flyingTime <= 0) {
