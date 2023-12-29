@@ -22,10 +22,10 @@ class DynamicGameObjectManager {
     /// Save old coordinate and move player
     var old = ship.topLeft.copy();
     ship.topLeft = nextCoordinate;
-    _updateRegion(ship);
+    var newRegion = _map.getRegion(nextCoordinate);
 
     /// Find collisions
-    var regions = <Region>{regionOf(ship)};
+    var regions = <Region>{newRegion};
     var collisions = <GameObject>[];
     for (var region in regions) {
       collisions.addAll(findCollisions(region.getGameObjects(), ship));
@@ -33,7 +33,6 @@ class DynamicGameObjectManager {
 
     /// Move player back to old coordinate
     ship.topLeft = old;
-    _updateRegion(ship);
     return collisions.isEmpty;
   }
 
@@ -53,7 +52,7 @@ class DynamicGameObjectManager {
     for (var gameObject in _gameObjectToRegion.keys) {
       if (gameObject.destroy) {
         var region = _gameObjectToRegion[gameObject]!;
-        (region as DefaultRegion).removeDynamicGameObject(gameObject);
+        region.removeGameObject(gameObject);
       }
     }
     _gameObjectToRegion.removeWhere((gameObject, value) => gameObject.destroy);
@@ -70,10 +69,9 @@ class DynamicGameObjectManager {
 
   void _updateRegions() {
     for (var gameObject in _gameObjectToRegion.keys) {
-      if (!isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
-        continue;
+      if (isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
+        _updateRegion(gameObject);
       }
-      _updateRegion(gameObject);
     }
   }
 
@@ -81,8 +79,8 @@ class DynamicGameObjectManager {
     var currentRegion = _gameObjectToRegion[gameObject]!;
     var newRegion = _map.getRegion(gameObject.getIsoCoordinate());
     if (currentRegion != newRegion) {
-      (currentRegion as DefaultRegion).removeDynamicGameObject(gameObject);
-      (newRegion as DefaultRegion).addGameObject(gameObject);
+     currentRegion.removeGameObject(gameObject);
+      newRegion.addGameObject(gameObject);
       _gameObjectToRegion[gameObject] = newRegion;
     }
   }

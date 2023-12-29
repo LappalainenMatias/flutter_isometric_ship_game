@@ -77,15 +77,6 @@ class DefaultRegion extends Region {
     }
   }
 
-  void removeDynamicGameObject(GameObject gameObject) {
-    _dynamicGameObjects.remove(gameObject);
-    _updateRenderingData();
-  }
-
-  int gameObjectsLength() {
-    return _staticGameObjects.length + _dynamicGameObjects.length;
-  }
-
   int gameObjectsVisibleLength() {
     return _visibleGameObjectsLength;
   }
@@ -110,7 +101,12 @@ class DefaultRegion extends Region {
 
   @override
   void removeGameObject(GameObject gameObject) {
-    // TODO: implement removeGameObject
+    if (gameObject is DynamicGameObject) {
+      _dynamicGameObjects.remove(gameObject);
+    } else {
+      _staticGameObjects.remove(gameObject);
+    }
+    _updateRenderingData();
   }
 
   @override
