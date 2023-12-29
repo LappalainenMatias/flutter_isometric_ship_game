@@ -17,8 +17,8 @@ class DynamicGameObjectManager {
 
   DynamicGameObjectManager(this._map, this._camera);
 
-  /// Todo refactor
-  bool canMove(Ship ship, IsoCoordinate nextCoordinate) {
+  /// Returns true if there are no collisions
+  bool isAbleToMove(Ship ship, IsoCoordinate nextCoordinate) {
     /// Save old coordinate and move player
     var old = ship.topLeft.copy();
     ship.topLeft = nextCoordinate;

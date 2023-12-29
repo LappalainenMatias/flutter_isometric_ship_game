@@ -79,8 +79,7 @@ class ShipGame extends Game {
 
   void _moveShip(double dt) {
     var nextCoordinate = _currentShipMover.nextCoordinate(dt);
-    var canMove = _dynamicGameObjectManager.canMove(_ship, nextCoordinate);
-    if (canMove) {
+    if (_dynamicGameObjectManager.isAbleToMove(_ship, nextCoordinate)) {
       _currentShipMover.move(dt);
       _camera.center = _ship.getIsoCoordinate();
     }
@@ -91,6 +90,7 @@ class ShipGame extends Game {
   }
 
   void shootCannonball(IsoCoordinate target) {
+    // Todo this should be refactored to somewhere else
     // Create cannonball
     var unitVectorFromPlayerToTarget = (target - _ship.topLeft).toUnitVector();
     var cannonball = Cannonball(
@@ -124,6 +124,10 @@ class ShipGame extends Game {
 
   void joystickEvent(double x, double y) {
     _joyStickShipMover.updateJoystick(x, y);
+  }
+
+  bool isJoystickActive() {
+    return _currentShipMover is JoyStickShipMover;
   }
 
   /// x = 0.5, y = 0.5 is the center of the screen
