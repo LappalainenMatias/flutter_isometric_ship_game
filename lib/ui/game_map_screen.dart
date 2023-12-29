@@ -20,6 +20,14 @@ class _GameScreenState extends State<GameScreen> {
   void initState() {
     super.initState();
     _loadShipGameSpriteSheet();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return const SelectMovementOption();
+        },
+      );
+    });
   }
 
   ui.Image? _spritesheetShipGame;

@@ -16,6 +16,7 @@ class SelectMovementOption extends StatelessWidget {
         SimpleDialogOption(
           onPressed: () {
             game.useJoystick();
+            Navigator.of(context).pop();
           },
           child: const Text('Joystick'),
         ),
@@ -28,6 +29,5 @@ class SelectMovementOption extends StatelessWidget {
         ),
       ],
     );
-    ;
   }
 }

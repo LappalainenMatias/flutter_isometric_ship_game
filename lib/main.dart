@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:anki/ui/widget/input/add_opponent.dart';
 import 'package:anki/ui/widget/input/dialog_movement_option.dart';
 import 'package:anki/ui/widget/input/joystick.dart';
@@ -19,7 +21,7 @@ void main() async {
     [DeviceOrientation.portraitUp],
   );
 
-  /// Used for running region creation web worker
+  /// Used for running region terrain creation web worker
   if (kIsWeb) {
     await JsIsolatedWorker().importScripts(['regionworker.js']);
   }
@@ -27,17 +29,28 @@ void main() async {
   runApp(const IsometricMapApp());
 }
 
-class IsometricMapApp extends StatelessWidget {
+class IsometricMapApp extends StatefulWidget {
   const IsometricMapApp({super.key});
 
   @override
+  State<IsometricMapApp> createState() => _IsometricMapAppState();
+}
+
+class _IsometricMapAppState extends State<IsometricMapApp>
+    with TickerProviderStateMixin {
+  @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Isometric map',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GameLoop(this, ShipGame())),
+      ],
+      child: MaterialApp(
+        title: 'Isometric map',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const MainScreen(title: 'Isometric map'),
       ),
-      home: const MainScreen(title: 'Isometric map'),
     );
   }
 }
@@ -52,64 +65,48 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
-  late final GameLoop _gameLoop;
-
-  @override
-  void initState() {
-    super.initState();
-    _gameLoop = GameLoop(this, ShipGame());
-  }
-
-  @override
-  void dispose() {
-    _gameLoop.dispose();
-    super.dispose();
-  }
-
-
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => _gameLoop),
-      ],
-      child: const KeyBoardMovement(
-        child: Material(
-          child: Stack(
-            children: [
-              GameScreen(),
-              Padding(
+    var gameloop = Provider.of<GameLoop>(context, listen: false);
+    return KeyBoardMovement(
+      child: Material(
+        child: Stack(
+          children: [
+            const GameScreen(),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Statistics(),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: ZoomButtons(),
+                  ),
+                  gameloop.game.isJoystickActive()
+                      ? const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: JoyStick(),
+                        )
+                      : Container(),
+                ],
+              ),
+            ),
+            const Align(
+              alignment: Alignment.bottomLeft,
+              child: Padding(
                 padding: EdgeInsets.all(8.0),
-                child: Align(
-                  alignment: Alignment.topLeft,
-                  child: Statistics(),
-                ),
+                child: AddOpponent(),
               ),
-              Align(
-                alignment: Alignment.bottomRight,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: ZoomButtons(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: JoyStick(),
-                    )
-                  ],
-                ),
-              ),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: AddOpponent(),
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
