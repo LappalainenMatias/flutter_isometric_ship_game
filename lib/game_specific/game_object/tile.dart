@@ -15,14 +15,8 @@ class Tile extends StaticGameObject {
   late final CollisionBox collisionBox;
   final int _id;
 
-  Tile(
-    this.type,
-    this.topLeft,
-    this.elevation,
-    this.width,
-    this._id, {
-    RenderingData? drawingDTO,
-  }) {
+  Tile(this.type, this.topLeft, this.elevation, this.width, this._id,
+      {RenderingData? drawingDTO}) {
     collisionBox = CollisionBox(topLeft, width.toDouble(), elevation);
     this.drawingDTO = drawingDTO ?? TileToDrawingDTO.create(this);
   }

@@ -4,6 +4,7 @@ import 'package:anki/foundation/coordinates/iso_coordinate.dart';
 import 'package:anki/foundation/game_object/game_object.dart';
 import 'package:anki/foundation/game_object/render_data_builder.dart';
 import 'package:anki/foundation/region/default_region.dart';
+import 'package:anki/foundation/region/region_render_data_builder.dart';
 import 'package:anki/foundation/utils/random_id.dart';
 import 'package:anki/game_specific/game_object/cannonball.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
@@ -44,6 +45,7 @@ void main() {
     /// 1: 650, 670, 603 (Encode Gameobjects but create verticesDTO in the main thread)
     /// 2: 2091, 2079 (Tried encoding and decoding also the vertices)
     /// 3: 38, 40, 39 (Return the data in List<List> format and change that to gameobjects in the main thread)
+    /// 4: 85, 82, 79 (The increases is caused by the collision box
   });
 
   test("Noise performance", () {
@@ -95,13 +97,13 @@ void main() {
     /// 1: 1977, 1959, 1955
     /// 2: 1260, 1243, 1265 (Changed set to hashset)
     /// 3: 24, 24, 24 (Changed from custom Point3D class to String)
+    /// 4: 12, 12, 12 (Changed from String to int)
   });
 
   test('GetAllGameObjects', () {
     var region = DefaultRegion(const IsoCoordinate(0, 0), []);
-    var regionCreator = TerrainCreator();
-    region.changeStaticGameObjects(
-        regionCreator.create(32, 32, 0, 0) as List<StaticGameObject>);
+    var terrainCreator = TerrainCreator();
+    region.changeStaticGameObjects(terrainCreator.create(32, 32, 0, 0));
     Stopwatch stopwatch = Stopwatch()..start();
     for (int i = 0; i < 1000; i++) {
       region.getGameObjects();
@@ -111,7 +113,7 @@ void main() {
         'GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
   });
 
-  test('Create region game objects', () {
+  test('Create region terrain', () {
     TerrainCreator regionCreator = TerrainCreator();
     Stopwatch stopwatch = Stopwatch()..start();
     regionCreator.create(32, 32, 0, 0);
@@ -120,23 +122,25 @@ void main() {
 
     /// 32 x 32
     /// 1. 64, 62, 62
+    /// 2. 56, 55, 56
   });
 
   test('Region creation queue performance', () {
     var camera = DefaultCamera(center: const IsoCoordinate(0, 0));
     var regionCreationQueue = DefaultRegionTerrainCreationQueue(camera);
-    var list = [];
+    var regions = [];
     for (int i = 0; i < 100 * 100; i++) {
-      list.add(DefaultRegion(IsoCoordinate(i.toDouble(), i.toDouble()), []));
+      regions.add(DefaultRegion(IsoCoordinate(i.toDouble(), i.toDouble()), []));
     }
     Stopwatch stopwatch = Stopwatch()..start();
-    for (var item in list) {
-      regionCreationQueue.add(item);
-      //regionCreationQueue.next();
+    for (var region in regions) {
+      regionCreationQueue.add(region);
     }
     stopwatch.stop();
     print(
         'Region creation queue took ${stopwatch.elapsedMilliseconds} milliseconds');
+    /// 100 * 100
+    /// 1: 2, 1, 2
   });
 
   test('Create cube drawing data', () {
@@ -155,26 +159,7 @@ void main() {
 
     /// 1024 * 1024, ms
     /// 1: 63, 64, 67
-  });
-
-  test("Region to drawing data", () {
-    TerrainCreator regionCreator = TerrainCreator();
-    var regionGround = regionCreator.create(128, 128, 0, 0);
-    var region = DefaultRegion(const IsoCoordinate(0, 0), regionGround);
-    for (int i = 0; i < 1000; i++) {
-      var cannonball = Cannonball.defaultCannonball(getRandomId());
-      cannonball.bottomCenter = IsoCoordinate(
-          Random().nextInt(1000).toDouble(), Random().nextInt(1000).toDouble());
-      region.addGameObject(cannonball);
-    }
-    Stopwatch stopwatch = Stopwatch()..start();
-    region.getRenderingData();
-    stopwatch.stop();
-    print('Region to drawing data took ${stopwatch.elapsedMilliseconds} ms');
-
-    /// 128 x 128 + 1000, ms
-    /// 1: 123, 116, 117
-    /// 2: 10, 11, 11 (Removed merging of two lists)
+    /// 2: 123, 127, 125
   });
 
   test("Collision detector performance", () {
@@ -190,5 +175,6 @@ void main() {
     /// 1: 28, 29, 27
     /// 2: 17, 18, 17 (Skip collision detection for invisible objects)
     /// 3: 12, 12, 12 (Skip other one is above water and other one is below water)
+    /// 4: 7, 7, 7
   });
 }
