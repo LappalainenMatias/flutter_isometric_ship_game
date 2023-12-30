@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_joystick/flutter_joystick.dart';
 import 'package:provider/provider.dart';
-
-import '../../../gameloop/game_loop.dart';
+import '../../../gameloop/ship_game_input.dart';
 
 class JoyStick extends StatefulWidget {
   const JoyStick({super.key});
@@ -14,8 +13,8 @@ class JoyStick extends StatefulWidget {
 class _JoyStickState extends State<JoyStick> {
   @override
   Widget build(BuildContext context) {
-    var gameloop = Provider.of<GameLoop>(context, listen: false);
-    return SizedBox(
+    var shipGameInput = Provider.of<ShipGameInput>(context, listen: true);
+    return shipGameInput.joystickSelected ? SizedBox(
       width: 100,
       height: 100,
       child: Joystick(
@@ -34,12 +33,12 @@ class _JoyStickState extends State<JoyStick> {
         period: const Duration(milliseconds: 16),
         mode: JoystickMode.all,
         listener: (details) {
-          gameloop.game.joystickEvent(details.x, details.y);
+          shipGameInput.joystickEvent(details.x, details.y);
         },
         onStickDragEnd: () {
-          gameloop.game.joystickEvent(0, 0);
+          shipGameInput.joystickEvent(0, 0);
         }
       ),
-    );
+    ) : Container();
   }
 }

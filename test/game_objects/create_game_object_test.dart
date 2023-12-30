@@ -1,5 +1,5 @@
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
-import 'package:anki/game_specific/game_object/create_game_object.dart';
+import 'package:anki/game_specific/game_object/tile_creator.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
 import 'package:test/test.dart';

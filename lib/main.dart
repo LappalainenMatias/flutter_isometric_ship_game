@@ -1,15 +1,15 @@
-import 'dart:io';
-
+import 'package:anki/game_specific/game_object/ship.dart';
+import 'package:anki/gameloop/ship_game_input.dart';
 import 'package:anki/ui/widget/input/add_opponent.dart';
-import 'package:anki/ui/widget/input/dialog_movement_option.dart';
 import 'package:anki/ui/widget/input/joystick.dart';
 import 'package:anki/ui/widget/input/keyboard_movement.dart';
 import 'package:anki/ui/widget/input/zoom_buttons.dart';
-import 'package:anki/ui/widget/statistics.dart';
+import 'package:anki/ui/widget/ship_game_statistics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:provider/provider.dart';
+import 'foundation/game.dart';
 import 'game_specific/ship_game.dart';
 import 'gameloop/game_loop.dart';
 import 'package:flutter/services.dart';
@@ -26,23 +26,28 @@ void main() async {
     await JsIsolatedWorker().importScripts(['regionworker.js']);
   }
 
-  runApp(const IsometricMapApp());
+  runApp(ShipGameWidget(
+    game: ShipGame(),
+  ));
 }
 
-class IsometricMapApp extends StatefulWidget {
-  const IsometricMapApp({super.key});
+class ShipGameWidget extends StatefulWidget {
+  final ShipGame game;
+
+  const ShipGameWidget({super.key, required this.game});
 
   @override
-  State<IsometricMapApp> createState() => _IsometricMapAppState();
+  State<ShipGameWidget> createState() => _ShipGameWidgetState();
 }
 
-class _IsometricMapAppState extends State<IsometricMapApp>
+class _ShipGameWidgetState extends State<ShipGameWidget>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => GameLoop(this, ShipGame())),
+        ChangeNotifierProvider(create: (_) => GameLoop(this, widget.game)),
+        ChangeNotifierProvider(create: (_) => ShipGameInput(widget.game)),
       ],
       child: MaterialApp(
         title: 'Isometric map',
@@ -67,47 +72,42 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    var gameloop = Provider.of<GameLoop>(context, listen: false);
-    return KeyBoardMovement(
-      child: Material(
-        child: Stack(
-          children: [
-            const GameScreen(),
-            const Padding(
+    return const Material(
+      child: Stack(
+        children: [
+          GameScreen(),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: ShipGameStatistics(),
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: ZoomButtons(),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: JoyStick(),
+                ),
+              ],
+            ),
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
               padding: EdgeInsets.all(8.0),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: Statistics(),
-              ),
+              child: AddOpponent(),
             ),
-            Align(
-              alignment: Alignment.bottomRight,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: ZoomButtons(),
-                  ),
-                  gameloop.game.isJoystickActive()
-                      ? const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: JoyStick(),
-                        )
-                      : Container(),
-                ],
-              ),
-            ),
-            const Align(
-              alignment: Alignment.bottomLeft,
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: AddOpponent(),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

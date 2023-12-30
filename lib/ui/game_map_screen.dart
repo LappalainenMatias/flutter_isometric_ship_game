@@ -1,11 +1,13 @@
 import 'dart:ui' as ui;
+import 'package:anki/gameloop/game_loop.dart';
 import 'package:anki/ui/widget/input/canvas_click_detector.dart';
 import 'package:anki/ui/widget/input/dialog_movement_option.dart';
+import 'package:anki/ui/widget/input/keyboard_movement.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_shaders/flutter_shaders.dart';
 import 'package:provider/provider.dart';
-import '../gameloop/game_loop.dart';
+import '../gameloop/ship_game_input.dart';
 import 'widget/map_painter.dart';
 
 class GameScreen extends StatefulWidget {
@@ -46,29 +48,33 @@ class _GameScreenState extends State<GameScreen> {
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.sizeOf(context);
     var aspectRatio = screenSize.aspectRatio;
+    var shipGameInput = Provider.of<ShipGameInput>(context, listen: false);
     var gameloop = Provider.of<GameLoop>(context, listen: false);
     return _spritesheetShipGame == null
-        ? const Center(child: CircularProgressIndicator(),)
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
         : LayoutBuilder(
             builder: (context, constraints) {
-              gameloop.game.setScreenAspectRatio(aspectRatio);
+              shipGameInput.aspectRatioChange(aspectRatio);
               return Container(
                 color: Colors.blue[800]!,
                 child: ShaderBuilder(
                   assetKey: 'shaders/regtanglewater.frag',
                   (context, waterShader, child) => ShaderBuilder(
                     assetKey: 'shaders/clouds.frag',
-                    (context, shadowShader, child) => ClickDetector(
-                      screenSize: screenSize,
-                      child: CustomPaint(
-                        size: screenSize,
-                        willChange: true,
-                        painter: GameMapPainter(
-                          waterShader,
-                          shadowShader,
-                          gameloop,
-                          gameloop.game,
-                          _spritesheetShipGame!,
+                    (context, shadowShader, child) => KeyBoardMovement(
+                      child: ClickDetector(
+                        screenSize: screenSize,
+                        child: CustomPaint(
+                          size: screenSize,
+                          willChange: true,
+                          painter: GameMapPainter(
+                            waterShader,
+                            shadowShader,
+                            gameloop,
+                            _spritesheetShipGame!,
+                          ),
                         ),
                       ),
                     ),

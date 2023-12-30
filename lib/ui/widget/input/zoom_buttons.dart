@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../gameloop/game_loop.dart';
+import '../../../gameloop/ship_game_input.dart';
 
 class ZoomButtons extends StatefulWidget {
   const ZoomButtons({Key? key}) : super(key: key);
@@ -18,9 +17,9 @@ class _ZoomButtonsState extends State<ZoomButtons> {
   void _startZooming() {
     _timer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
       if (_zoomDirection == ZoomDirection.zoomOut) {
-        Provider.of<GameLoop>(context, listen: false).game.zoomOut();
+        Provider.of<ShipGameInput>(context, listen: false).zoomOut();
       } else if (_zoomDirection == ZoomDirection.zoomIn) {
-        Provider.of<GameLoop>(context, listen: false).game.zoomIn();
+        Provider.of<ShipGameInput>(context, listen: false).zoomIn();
       }
     });
   }

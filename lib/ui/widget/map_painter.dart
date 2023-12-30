@@ -2,12 +2,12 @@ import 'dart:math';
 import 'dart:ui' as ui;
 import 'package:anki/game_specific/ship_game.dart';
 import 'package:flutter/material.dart';
+import '../../foundation/camera/camera.dart';
 import '../../foundation/game.dart';
 import '../../gameloop/game_loop.dart';
 
 class GameMapPainter extends CustomPainter {
   final GameLoop gameLoop;
-  final ShipGame game;
   final ui.FragmentShader _cloudShader;
   final ui.FragmentShader _waterShader;
   final _landPaint = Paint();
@@ -18,8 +18,8 @@ class GameMapPainter extends CustomPainter {
   double _timePassed = 10;
   ui.Image textureImage;
 
-  GameMapPainter(this._waterShader, this._cloudShader, this.gameLoop, this.game,
-      this.textureImage)
+  GameMapPainter(
+      this._waterShader, this._cloudShader, this.gameLoop, this.textureImage)
       : super(repaint: gameLoop);
 
   @override
@@ -34,9 +34,10 @@ class GameMapPainter extends CustomPainter {
     _waterShader.setFloat(0, _timePassed);
     _waterPaint.shader = _waterShader;
 
-    _transformations(canvas, size);
+    var camera = gameLoop.game.getCamera();
+    var data = gameLoop.renderingData();
 
-    var data = game.renderingData();
+    _transformations(canvas, size, camera);
 
     /// Draw under water things
     for (var data in data.$1) {
@@ -54,9 +55,8 @@ class GameMapPainter extends CustomPainter {
     /// Draw water plane
     canvas.drawRect(
       Rect.fromPoints(
-        Offset(game.getCamera().topLeft.isoX, game.getCamera().topLeft.isoY),
-        Offset(game.getCamera().bottomRight.isoX,
-            game.getCamera().bottomRight.isoY),
+        Offset(camera.topLeft.isoX, camera.topLeft.isoY),
+        Offset(camera.bottomRight.isoX, camera.bottomRight.isoY),
       ),
       _waterPaint,
     );
@@ -77,22 +77,21 @@ class GameMapPainter extends CustomPainter {
     /// Draw cloud shadows
     canvas.drawRect(
       Rect.fromPoints(
-        Offset(game.getCamera().topLeft.isoX, game.getCamera().topLeft.isoY),
-        Offset(game.getCamera().bottomRight.isoX,
-            game.getCamera().bottomRight.isoY),
+        Offset(camera.topLeft.isoX, camera.topLeft.isoY),
+        Offset(camera.bottomRight.isoX, camera.bottomRight.isoY),
       ),
       _shadowPaint,
     );
   }
 
-  void _transformations(Canvas canvas, Size size) {
-    double viewWidth = game.getCamera().width();
-    double viewHeight = game.getCamera().height();
+  void _transformations(Canvas canvas, Size size, Camera camera) {
+    double viewWidth = camera.width();
+    double viewHeight = camera.height();
     double scale = min(size.width / viewWidth, size.height / viewHeight);
     canvas.scale(scale, scale);
     canvas.translate(
-      -game.getCamera().center.isoX.toDouble() + size.width / scale / 2,
-      -game.getCamera().center.isoY.toDouble() + size.height / scale / 2,
+      -camera.center.isoX.toDouble() + size.width / scale / 2,
+      -camera.center.isoY.toDouble() + size.height / scale / 2,
     );
   }
 

@@ -1,8 +1,7 @@
+import 'package:anki/gameloop/ship_game_input.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-
-import '../../../gameloop/game_loop.dart';
 
 class KeyBoardMovement extends StatelessWidget {
   final Widget child;
@@ -10,18 +9,23 @@ class KeyBoardMovement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var gameloop = Provider.of<GameLoop>(context, listen: true);
-    return RawKeyboardListener(
-      autofocus: true,
-      onKey: (event) {
-        if (event is RawKeyDownEvent) {
-          gameloop.game.keyDownEvent(event.logicalKey);
-        } else if (event is RawKeyUpEvent) {
-          gameloop.game.keyUpEvent(event.logicalKey);
-        }
+    var shipGameInput = Provider.of<ShipGameInput>(context, listen: false);
+    return Focus(
+      onFocusChange: (hasFocus) {
+        print('hasFocus: $hasFocus');
       },
-      focusNode: FocusNode(),
-      child: child,
+      child: RawKeyboardListener(
+        autofocus: true,
+        onKey: (event) {
+          if (event is RawKeyDownEvent) {
+            shipGameInput.keyDownEvent(event.logicalKey);
+          } else if (event is RawKeyUpEvent) {
+            shipGameInput.keyUpEvent(event.logicalKey);
+          }
+        },
+        focusNode: FocusNode(),
+        child: child,
+      ),
     );
   }
 }

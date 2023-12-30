@@ -4,20 +4,18 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../gameloop/game_loop.dart';
 
-class Statistics extends StatefulWidget {
-  const Statistics({
-    super.key,
-  });
+class ShipGameStatistics extends StatefulWidget {
+  const ShipGameStatistics({super.key});
 
   @override
-  State<Statistics> createState() => _StatisticsState();
+  State<ShipGameStatistics> createState() => _ShipGameStatisticsState();
 }
 
-class _StatisticsState extends State<Statistics> {
+class _ShipGameStatisticsState extends State<ShipGameStatistics> {
   @override
   Widget build(BuildContext context) {
     var gameLoop = Provider.of<GameLoop>(context, listen: true);
-    var game = gameLoop.game;
+    var game = gameLoop.game as ShipGame;
     return Container(
       color: Colors.black.withOpacity(0.6),
       child: Padding(
@@ -34,8 +32,6 @@ class _StatisticsState extends State<Statistics> {
               "Camera center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
-            //Text("Screen: ${game.getCamera().width().toInt()}x${game.getCamera().height().toInt()}",
-            //    style: const TextStyle(color: Colors.white)),
             Text(
               "Camera zoom: ${game.zoomLevel.toStringAsFixed(2)}",
               style: const TextStyle(color: Colors.white),

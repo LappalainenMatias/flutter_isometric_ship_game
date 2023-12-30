@@ -1,12 +1,11 @@
+import 'package:anki/foundation/game.dart';
+import 'package:anki/foundation/rendering_data/rendering_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../foundation/game.dart';
-import '../game_specific/ship_game.dart';
-
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;
-  late final ShipGame game;
+  late final Game game;
   double dt = 0.0;
   Duration _previous = Duration.zero;
   int missedFrames = 0;
@@ -23,7 +22,7 @@ class GameLoop extends ChangeNotifier {
     }
     _previous = timestamp;
     update(dt);
-    notifyListeners(); // This causes map to render gameobjects
+    notifyListeners(); // This is Render()
   }
 
   void update(var dt) {
@@ -34,5 +33,12 @@ class GameLoop extends ChangeNotifier {
   void dispose() {
     _ticker.dispose();
     super.dispose();
+  }
+
+  (
+  List<(RenderingData, Rect)> underWater,
+  List<(RenderingData, Rect)> aboveWater
+  ) renderingData() {
+    return game.renderingData();
   }
 }

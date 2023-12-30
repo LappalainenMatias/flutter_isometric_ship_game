@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
-
-import '../../../gameloop/game_loop.dart';
+import '../../../gameloop/ship_game_input.dart';
 
 class ClickDetector extends StatelessWidget {
   final Widget child;
@@ -12,13 +11,12 @@ class ClickDetector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var gameloop = Provider.of<GameLoop>(context, listen: false);
+    var shipGameInput = Provider.of<ShipGameInput>(context, listen: false);
     return Listener(
       onPointerDown: (PointerDownEvent event) {
         var screenXPercentage = event.localPosition.dx / screenSize.width;
         var screenYPercentage = event.localPosition.dy / screenSize.height;
-        var target = gameloop.game.getGameCoordinate(screenXPercentage, screenYPercentage);
-        gameloop.game.shootCannonball(target);
+        shipGameInput.screenClicked(screenXPercentage, screenYPercentage);
       },
       child: child,
     );

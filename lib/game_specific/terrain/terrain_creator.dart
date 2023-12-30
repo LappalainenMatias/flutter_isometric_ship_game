@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'package:anki/game_specific/terrain/find_terrain_holes.dart';
 
-import '../../game_specific/game_object/create_game_object.dart';
+import '../../game_specific/game_object/tile_creator.dart';
 import '../../game_specific/game_object/tile.dart';
 import 'terrain_creation_rules.dart';
 import '../../game_specific/noise/noise.dart';

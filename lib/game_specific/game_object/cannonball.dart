@@ -1,6 +1,6 @@
 import 'dart:math';
 import 'package:anki/foundation/animation/animation.dart';
-import 'package:anki/game_specific/animation/canon_animation.dart';
+import 'package:anki/game_specific/animation/canonball_animation.dart';
 
 import '../../foundation/collision/collision_action.dart';
 import '../../foundation/collision/collision_box.dart';
