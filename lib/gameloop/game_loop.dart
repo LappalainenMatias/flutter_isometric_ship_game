@@ -6,6 +6,8 @@ import 'package:flutter/scheduler.dart';
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;
   late final Game game;
+  /// We start with 10 because there is a visual side effect if you start with 0
+  double timePassed = 10.0;
   double dt = 0.0;
   Duration _previous = Duration.zero;
   int missedFrames = 0;
@@ -21,6 +23,7 @@ class GameLoop extends ChangeNotifier {
       missedFrames++;
     }
     _previous = timestamp;
+    timePassed += dt;
     update(dt);
     notifyListeners(); // This is Render()
   }

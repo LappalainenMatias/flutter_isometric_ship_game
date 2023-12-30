@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:anki/game_specific/ship_game.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +15,7 @@ class GameMapPainter extends CustomPainter {
   var _waterPaint = Paint();
   var _shadowPaint = Paint();
 
-  /// We start with 10 because there is visual effect if you start with 0
+  // We start with 10 because there is a visual side effect if you start with 0
   double _timePassed = 10;
   ui.Image textureImage;
 
@@ -24,14 +25,15 @@ class GameMapPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    /// Set up shaders
-    _timePassed += gameLoop.dt;
-    _cloudShader.setFloat(0, _timePassed);
+    // Set up shaders
+    _cloudShader.setFloat(0, gameLoop.timePassed);
+    _cloudShader.setFloat(1, size.width);
+    _cloudShader.setFloat(2, size.height);
     _shadowPaint = Paint();
     _shadowPaint.shader = _cloudShader;
     _waterPaint = Paint()..blendMode = BlendMode.srcOver;
     _waterPaint.color = Colors.blue[500]!.withOpacity(0.4);
-    _waterShader.setFloat(0, _timePassed);
+    _waterShader.setFloat(0, gameLoop.timePassed);
     _waterPaint.shader = _waterShader;
 
     var camera = gameLoop.game.getCamera();
@@ -39,7 +41,7 @@ class GameMapPainter extends CustomPainter {
 
     _transformations(canvas, size, camera);
 
-    /// Draw under water things
+    // Draw under water things
     for (var data in data.$1) {
       canvas.drawRawAtlas(
         textureImage,
@@ -52,7 +54,7 @@ class GameMapPainter extends CustomPainter {
       );
     }
 
-    /// Draw water plane
+    // Draw water plane
     canvas.drawRect(
       Rect.fromPoints(
         Offset(camera.topLeft.isoX, camera.topLeft.isoY),
@@ -61,7 +63,7 @@ class GameMapPainter extends CustomPainter {
       _waterPaint,
     );
 
-    /// Draw above water things
+    // Draw above water things
     for (var data in data.$2) {
       canvas.drawRawAtlas(
         textureImage,
@@ -74,7 +76,7 @@ class GameMapPainter extends CustomPainter {
       );
     }
 
-    /// Draw cloud shadows
+    // Draw cloud shadows
     canvas.drawRect(
       Rect.fromPoints(
         Offset(camera.topLeft.isoX, camera.topLeft.isoY),

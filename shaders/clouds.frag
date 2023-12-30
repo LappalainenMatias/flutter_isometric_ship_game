@@ -2,7 +2,7 @@
 
 precision mediump float;
 uniform float iTime; // Time variable to enable animation
-uniform vec2 uResolution; // The resolution of your canvas
+uniform vec2 uResolution;
 out vec4 fragColor;
 
 float rand(vec2 co) {
@@ -40,7 +40,7 @@ float noise(vec2 st) {
 }
 
 void main() {
-    vec2 uv = gl_FragCoord.xy / vec2(1000, 500); // Normalized pixel coordinates
+    vec2 uv = gl_FragCoord.xy / uResolution * vec2(0.5, 1.0); // Normalized pixel coordinates
 
     // Distort UVs
     uv += noise(uv * 0.1 - iTime * 0.01) * 0.15;

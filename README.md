@@ -1,6 +1,7 @@
 # 2D isometric game made with Flutter
 This is my 2D isometric game made with my own custom game engine. It contains a simple game loop,
-procedurally generated terrain, collision detection, animations and some other features.
+procedurally generated terrain, collision detection, animations and some other features. It is still
+work in progress.
 
 This is not a general purpose game engine. It is made for this specific game. I am more or less just experimenting and learning.
 Check Flame (https://docs.flame-engine.org/latest/) for more general purpose game engine.
@@ -30,7 +31,8 @@ All game objects are currently drawn with ```canvas.drawRawAtlas()```. The game 
 4. We draw a cloud shadow plane which uses a ```FragmentShader```.
 
 The water depth is created by drawing more bluish tiles when the elevation is low.
-This approach is not very flexible but it looks okay and does not have any impact on performance.
+This approach is not flexible but it looks okay and does not have any impact on performance. 
+Another approach could be to create a water depth map and use ```FragmentShader```.
 
 To make the rendering faster, a single ```drawRawAtlas()``` draws all under/above water game objects in a region.
 We also only render the regions and game objects that are visible on the screen.
@@ -40,14 +42,14 @@ has a ```nearness()``` value which is used for sorting the game objects from the
 ![map_screenshot.png](readme_images/rendering.png)
 ## Coordinates
 ```IsoCoordinate``` means an isometric coordinate. ```IsoCoordinate``` class does the projection from normal cartesian coordinates to isometric coordinates. 
-For example, when we want to change a procedural noise map into isometric terrain.
+For example, when we want to change a procedurally generated noise map into isometric terrain.
 ```isoX``` and ```isoY``` are normal cartesian coordinates and increasing ```isoY``` means that the game object moves
 straight down. Coordinates are one of the more confusing parts of this game and they require some refactoring.
 
 ![coordinates.png](readme_images/coordinates.png)
 
 ## Architecture
-The main idea of the architecture is to seperate the specific game logic from the general game logic
+The main idea of the architecture is to separate the specific game logic from the general game logic
 so that the more general game logic code could be reused in the future.
 
 ![class_structure.png](readme_images/architecture.png)

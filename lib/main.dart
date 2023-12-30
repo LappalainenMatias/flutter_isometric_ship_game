@@ -1,15 +1,12 @@
-import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/gameloop/ship_game_input.dart';
 import 'package:anki/ui/widget/input/add_opponent.dart';
 import 'package:anki/ui/widget/input/joystick.dart';
-import 'package:anki/ui/widget/input/keyboard_movement.dart';
 import 'package:anki/ui/widget/input/zoom_buttons.dart';
 import 'package:anki/ui/widget/ship_game_statistics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:isolated_worker/js_isolated_worker.dart';
 import 'package:provider/provider.dart';
-import 'foundation/game.dart';
 import 'game_specific/ship_game.dart';
 import 'gameloop/game_loop.dart';
 import 'package:flutter/services.dart';
