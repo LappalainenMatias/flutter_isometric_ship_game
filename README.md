@@ -8,6 +8,8 @@ Check Flame (https://docs.flame-engine.org/latest/) for more general purpose gam
 
 Supports Android, iOS, Web and Desktop.
 
+You can test the project here (https://lappalainenmatias.github.io/flutter_isometric_map_game/)
+
 ![screenshot.png](readme_images/screenshot.png)
 
 ## Game world
