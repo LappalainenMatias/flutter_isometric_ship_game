@@ -73,11 +73,13 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
       child: Stack(
         children: [
           GameScreen(),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: ShipGameStatistics(),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: ShipGameStatistics(),
+              ),
             ),
           ),
           Align(
@@ -91,7 +93,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                   child: ZoomButtons(),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(16.0),
                   child: JoyStick(),
                 ),
               ],
