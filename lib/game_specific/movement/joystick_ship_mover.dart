@@ -5,7 +5,7 @@ import '../game_object/ship.dart';
 
 class JoyStickShipMover extends ShipMover {
   final Ship _ship;
-  final double _maxSpeed = 50;
+  final double _maxSpeed;
   double _joystickX = 0;
   double _joystickY = 0;
   bool _movingUp = false;
@@ -13,7 +13,7 @@ class JoyStickShipMover extends ShipMover {
   bool _movingLeft = false;
   bool _movingRight = false;
 
-  JoyStickShipMover(this._ship);
+  JoyStickShipMover(this._ship, [this._maxSpeed = 50]);
 
   /// (0,0) = center, (1, 0) = right.
   void updateJoystick(double x, double y) {

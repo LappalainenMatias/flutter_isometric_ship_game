@@ -1,3 +1,5 @@
+import 'package:anki/game_specific/game_object/ai_ship.dart';
+
 import '../foundation/camera/camera.dart';
 import '../foundation/collision/collision_action.dart';
 import '../foundation/collision/collision_detector.dart';
@@ -37,6 +39,16 @@ class DynamicGameObjectManager {
     /// Move player back to old coordinate
     ship.topLeft = old;
     return collisions.isEmpty;
+  }
+
+  List<int> getAllAIShipIds() {
+    var aiShipIds = <int>[];
+    for (var gameObject in _gameObjectToRegion.keys) {
+      if (gameObject is AIShip) {
+        aiShipIds.add(gameObject.getId());
+      }
+    }
+    return aiShipIds;
   }
 
   /// Does the following:

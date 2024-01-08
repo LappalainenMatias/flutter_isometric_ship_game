@@ -41,8 +41,7 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   List gameObjectToList() {
-    // TODO: if we implement this then the game becomes saveble because we can save
-    // all the game objects as a list of values
+    // TODO: if we implement this then the game becomes savable because we can save all the game objects as a list of values
     throw UnimplementedError();
   }
 

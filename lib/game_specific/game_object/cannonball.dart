@@ -52,7 +52,7 @@ class Cannonball extends DynamicGameObject
 
   @override
   RenderingData getDrawingData() {
-    // Cannonballs move a lot and because of that we create a new drawingDTO every frame.
+    // Cannonballs move a lot and because of that we create a new rendering data every frame.
     return CannonballToDrawingDTO.create(this);
   }
 
@@ -118,8 +118,10 @@ class Projectile {
   }
 }
 
+/// Shoots a cannonball from a ship to a target
+/// angleRange is used to make shooting more random
 void shootCannonball(DynamicGameObjectManager dynamicGameObjectManager,
-    IsoCoordinate target, Ship shooter) {
+    IsoCoordinate target, Ship shooter, [double angleRange = 0]) {
   var unitVectorFromPlayerToTarget = (target - shooter.topLeft).toUnitVector();
   var cannonball = Cannonball(
     shooter.getIsoCoordinate(),
