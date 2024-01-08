@@ -11,7 +11,7 @@ class ShipGameInput extends ChangeNotifier {
 
   void screenClicked(double xPercent, double yPercent) {
     var target = _shipGame.getGameCoordinate(xPercent, yPercent);
-    _shipGame.shootCannonball(target);
+    _shipGame.playerShootCannonball(target);
   }
 
   void addOpponent() {

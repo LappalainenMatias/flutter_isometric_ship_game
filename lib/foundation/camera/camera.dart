@@ -13,6 +13,8 @@ abstract class Camera {
 
   double get zoomLevel;
 
+  double get aspectRatio;
+
   /// 0 is zoomed in, 1 is zoomed out.
   void setZoomLevel(double newZoomLevel);
 

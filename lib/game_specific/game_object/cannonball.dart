@@ -1,12 +1,15 @@
 import 'dart:math';
 import 'package:anki/foundation/animation/animation.dart';
 import 'package:anki/game_specific/animation/canonball_animation.dart';
+import 'package:anki/game_specific/dynamic_game_object_manager.dart';
+import 'package:anki/game_specific/game_object/ship.dart';
 
 import '../../foundation/collision/collision_action.dart';
 import '../../foundation/collision/collision_box.dart';
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/health_and_damage/damage.dart';
 import '../../foundation/rendering_data/rendering_data.dart';
+import '../../foundation/utils/random_id.dart';
 import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
@@ -113,4 +116,29 @@ class Projectile {
     flyingTime -= dt;
     cannonball.isoCoordinate += unitVector * dt * speed;
   }
+}
+
+void shootCannonball(DynamicGameObjectManager dynamicGameObjectManager,
+    IsoCoordinate target, Ship shooter) {
+  var unitVectorFromPlayerToTarget = (target - shooter.topLeft).toUnitVector();
+  var cannonball = Cannonball(
+    shooter.getIsoCoordinate(),
+    shooter.elevation,
+    1,
+    Projectile(unitVectorFromPlayerToTarget),
+    getRandomId(),
+  );
+
+  // Define what happens in collisions
+  cannonball.actionTypes = {
+    CollisionActionType.destroyItself,
+    CollisionActionType.causeDamage
+  };
+
+  // You cannot shoot yourself
+  shooter.skipCollisionAction.add(cannonball.getId());
+  cannonball.skipCollisionAction.add(shooter.getId());
+
+  // Add cannonball to dynamic game object manager which updates it every frame
+  dynamicGameObjectManager.addDynamicGameObject(cannonball);
 }

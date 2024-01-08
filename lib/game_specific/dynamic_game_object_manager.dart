@@ -62,7 +62,7 @@ class DynamicGameObjectManager {
   }
 
   void _updateGameObjects(double dt) {
-    for (var gameObject in _gameObjectToRegion.keys) {
+    for (var gameObject in _gameObjectToRegion.keys.toList()) {
       if (!isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
         continue;
       }

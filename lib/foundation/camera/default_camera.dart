@@ -9,7 +9,9 @@ class DefaultCamera extends Camera {
   final double _maxWidth = 500;
   double _aspectRatio = 1.0;
 
-  DefaultCamera({this.center = const IsoCoordinate(0, 0)});
+  DefaultCamera({this.center = const IsoCoordinate(0, 0), double aspectRatio = 1.0}) {
+    this.aspectRatio = aspectRatio;
+  }
 
   set aspectRatio(double ratio) {
     if (ratio > 0) _aspectRatio = ratio;
@@ -68,4 +70,7 @@ class DefaultCamera extends Camera {
     return IsoCoordinate.fromIso(topLeft.isoX + screenXPercentage * width(),
         topLeft.isoY + screenYPercentage * height());
   }
+
+  @override
+  double get aspectRatio => _aspectRatio;
 }

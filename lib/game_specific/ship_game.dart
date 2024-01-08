@@ -1,7 +1,7 @@
+import 'package:anki/game_specific/game_object/ai_ship.dart';
 import 'package:flutter/services.dart';
 import '../foundation/camera/camera.dart';
 import '../foundation/camera/default_camera.dart';
-import '../foundation/collision/collision_action.dart';
 import '../foundation/coordinates/iso_coordinate.dart';
 import '../foundation/game.dart';
 import '../foundation/map/default_map.dart';
@@ -22,26 +22,27 @@ class ShipGame extends Game {
   late ShipMover _currentShipMover;
   late KeyboardShipMover _keyboardShipMover;
   late JoyStickShipMover _joyStickShipMover;
-  late Ship _ship;
+  late Ship _player;
   var _amountOfGameObjectsRendered = 0;
 
-  ShipGame() {
-    setupNewGame();
+  /// The screen aspect ratio gets updated when the screen is resized or built.
+  ShipGame({double screenAspectRatio = 1.0}) {
+    setupNewGame(screenAspectRatio);
   }
 
-  setupNewGame() {
-    _camera = DefaultCamera();
-    _ship = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId());
+  setupNewGame(double aspectRatio) {
+    _camera = DefaultCamera(aspectRatio: aspectRatio);
+    _player = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId());
     _map = DefaultGameMap(_camera);
     _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
-    _dynamicGameObjectManager.addDynamicGameObject(_ship);
-    _joyStickShipMover = JoyStickShipMover(_ship);
-    _keyboardShipMover = KeyboardShipMover(_ship);
+    _dynamicGameObjectManager.addDynamicGameObject(_player);
+    _joyStickShipMover = JoyStickShipMover(_player);
+    _keyboardShipMover = KeyboardShipMover(_player);
     _currentShipMover = _keyboardShipMover;
   }
 
   Ship getOurPlayer() {
-    return _ship;
+    return _player;
   }
 
   double get viewWidth => _camera.width();
@@ -79,9 +80,9 @@ class ShipGame extends Game {
 
   void _moveShip(double dt) {
     var nextCoordinate = _currentShipMover.nextCoordinate(dt);
-    if (_dynamicGameObjectManager.isAbleToMove(_ship, nextCoordinate)) {
+    if (_dynamicGameObjectManager.isAbleToMove(_player, nextCoordinate)) {
       _currentShipMover.move(dt);
-      _camera.center = _ship.getIsoCoordinate();
+      _camera.center = _player.getIsoCoordinate();
     }
   }
 
@@ -89,29 +90,8 @@ class ShipGame extends Game {
     _dynamicGameObjectManager.update(dt);
   }
 
-  void shootCannonball(IsoCoordinate target) {
-    // Todo this should be refactored to somewhere else
-    // Create cannonball
-    var unitVectorFromPlayerToTarget = (target - _ship.topLeft).toUnitVector();
-    var cannonball = Cannonball(
-      _ship.getIsoCoordinate(),
-      _ship.elevation,
-      1,
-      Projectile(unitVectorFromPlayerToTarget),
-      getRandomId(),
-    );
-
-    // Define what happens in collisions
-    cannonball.actionTypes = {
-      CollisionActionType.destroyItself,
-      CollisionActionType.causeDamage
-    };
-
-    // You cannot shoot yourself
-    _ship.skipCollisionAction.add(cannonball.getId());
-    cannonball.skipCollisionAction.add(_ship.getId());
-
-    _dynamicGameObjectManager.addDynamicGameObject(cannonball);
+  void playerShootCannonball(IsoCoordinate target) {
+    shootCannonball(_dynamicGameObjectManager, target, _player);
   }
 
   void keyDownEvent(LogicalKeyboardKey logicalKey) {
@@ -138,18 +118,23 @@ class ShipGame extends Game {
   }
 
   void addOpponent() {
-    var coordinate = _camera.center + const IsoCoordinate(20, 20);
-    var opponent = Ship(coordinate, 0, getRandomId());
-    _dynamicGameObjectManager.addDynamicGameObject(opponent);
+    var enemy = AIShip(
+      _dynamicGameObjectManager,
+      _player,
+      _camera.center + const IsoCoordinate(20, 20),
+      0,
+      getRandomId(),
+    );
+    _dynamicGameObjectManager.addDynamicGameObject(enemy);
   }
 
   void reset() {
-    setupNewGame();
+    setupNewGame(_camera.aspectRatio);
   }
 
   @override
   GameState getGameState() {
-    if (_ship.destroy == true) {
+    if (_player.destroy == true) {
       return GameState.gameOver;
     }
     return GameState.going;
