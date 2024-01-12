@@ -3,24 +3,50 @@ import 'package:open_simplex_2/open_simplex_2.dart';
 
 import '../terrain/terrain_creation_rules.dart';
 
+/// Todo uses game_specific terrain creation rules and needs some refactoring
+final class NoiseCreator {
+  final OpenSimplex2F _elevationNoise1 = OpenSimplex2F(2);
+  final OpenSimplex2F _elevationNoise2 = OpenSimplex2F(3);
+  final OpenSimplex2F _elevationNoise3 = OpenSimplex2F(4);
+  final OpenSimplex2F _moistureNoise1 = OpenSimplex2F(12);
+  final OpenSimplex2F _moistureNoise2 = OpenSimplex2F(13);
+  final OpenSimplex2F _moistureNoise3 = OpenSimplex2F(14);
+  final mapCreationRules = DefaultTerrainCreationRules();
+  late final double amountOfWater;
+  late final double peakToPeakAmplitude;
+  late final double terrainSharpness;
+  late final double frequency1;
+  late final double frequency2;
+  late final double frequency3;
 
-/// Todo uses game_specific terrain creation rules
-class NoiseCreator {
-  late OpenSimplex2F _elevationNoise1;
-  late OpenSimplex2F _elevationNoise2;
-  late OpenSimplex2F _elevationNoise3;
-  late OpenSimplex2F _moistureNoise1;
-  late OpenSimplex2F _moistureNoise2;
-  late OpenSimplex2F _moistureNoise3;
-  TerrainCreationRules mapCreationRules;
+  static final NoiseCreator _instance = NoiseCreator._internal();
 
-  NoiseCreator(this.mapCreationRules, [int seed = 1]) {
-    _elevationNoise1 = OpenSimplex2F(seed + 1);
-    _elevationNoise2 = OpenSimplex2F(seed + 2);
-    _elevationNoise3 = OpenSimplex2F(seed + 3);
-    _moistureNoise1 = OpenSimplex2F(seed + 11);
-    _moistureNoise2 = OpenSimplex2F(seed + 12);
-    _moistureNoise3 = OpenSimplex2F(seed + 13);
+  NoiseCreator._internal() {
+    amountOfWater = mapCreationRules.amountOfWater();
+    peakToPeakAmplitude = min(
+        mapCreationRules.maxElevation(), mapCreationRules.minElevation().abs());
+    terrainSharpness = mapCreationRules.terrainSharpness();
+    frequency1 = mapCreationRules.frequency();
+    frequency2 = mapCreationRules.frequency() * 4;
+    frequency3 = mapCreationRules.frequency() * 16;
+  }
+
+  factory NoiseCreator() {
+    return _instance;
+  }
+
+  /// Means that between the start and end point there is no point with greater elevation
+  bool isLineOfSightBlocked(
+      double startAndEndElevation, Point<double> start, Point<double> end) {
+    for (double i = 0; i < 1; i += 0.1) {
+      double x = start.x + (end.x - start.x) * i;
+      double y = start.y + (end.y - start.y) * i;
+      var elevation = getElevation(x, y);
+      if (elevation.toInt() >= startAndEndElevation.toInt()) {
+        return true;
+      }
+    }
+    return false;
   }
 
   (List<List<double>>, List<List<double>>) createComplexNoise(
@@ -28,48 +54,43 @@ class NoiseCreator {
     List<List<double>> elevationMap = _fixedSizeList(width, height);
     List<List<double>> moistureMap = _fixedSizeList(width, height);
 
-    /// Increasing frequency adds details to the noise.
-    final double frequency1 = mapCreationRules.frequency();
-    final double frequency2 = mapCreationRules.frequency() * 4;
-    final double frequency3 = mapCreationRules.frequency() * 16;
-
-    final amountOfWater = mapCreationRules.amountOfWater();
-    final peakToPeakAmplitude = min(
-        mapCreationRules.maxElevation(), mapCreationRules.minElevation().abs());
-    final terrainSharpness = mapCreationRules.terrainSharpness();
-
     for (int x = 0; x < width; x++) {
       var i = (bottomLeftX + x).toDouble();
       for (int y = 0; y < width; y++) {
         var j = (bottomRightY + y).toDouble();
+        elevationMap[x][y] = getElevation(i, j);
 
-        // Here we add multiple noises together to add complexity
-        double e = _elevationNoise1.noise2(i * frequency1, j * frequency1);
-        e += 0.5 * _elevationNoise2.noise2(i * frequency2, j * frequency2);
-        e += 0.25 * _elevationNoise3.noise2(i * frequency3, j * frequency3);
-
-        // Normalize values to 0 - 1
-        e = e / 1.75;
-
-        // Makes terrain more interesting
-        e = pow(e, terrainSharpness).toDouble();
-        e = e - amountOfWater;
-        e = e * peakToPeakAmplitude;
-        if (e < mapCreationRules.minElevation()) {
-          e = mapCreationRules.minElevation();
-        } else if (e > mapCreationRules.maxElevation()) {
-          e = mapCreationRules.maxElevation();
-        }
-        elevationMap[x][y] = e.roundToDouble();
-
-        double m = _moistureNoise1.noise2(i * frequency1, j * frequency1) +
-            0.5 * _moistureNoise2.noise2(i * frequency2, j * frequency2) +
-            0.25 * _moistureNoise3.noise2(i * frequency3, j * frequency3);
-        m = m / 1.75; // Normalize to 0 - 1;
-        moistureMap[x][y] = m;
+        moistureMap[x][y] = getMoisture(i, j);
       }
     }
     return (elevationMap, moistureMap);
+  }
+
+  double getMoisture(double x, double y) {
+    double m = _moistureNoise1.noise2(x * frequency1, y * frequency1) +
+        0.5 * _moistureNoise2.noise2(x * frequency2, y * frequency2) +
+        0.25 * _moistureNoise3.noise2(x * frequency3, y * frequency3);
+    m = m / 1.75;
+    return m;
+  }
+
+  double getElevation(double x, double y) {
+    double e = _elevationNoise1.noise2(x * frequency1, y * frequency1);
+    e += 0.5 * _elevationNoise2.noise2(x * frequency2, y * frequency2);
+    e += 0.25 * _elevationNoise3.noise2(x * frequency3, y * frequency3);
+
+    e = e / 1.75;
+
+    e = pow(e, terrainSharpness).toDouble();
+    e = e - amountOfWater;
+    e = e * peakToPeakAmplitude;
+    if (e < mapCreationRules.minElevation()) {
+      e = mapCreationRules.minElevation();
+    } else if (e > mapCreationRules.maxElevation()) {
+      e = mapCreationRules.maxElevation();
+    }
+    var res = e.roundToDouble();
+    return res;
   }
 
   List<List<double>> _fixedSizeList(int width, int height) {

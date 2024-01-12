@@ -1,7 +1,6 @@
 import 'dart:collection';
 
 import '../../foundation/camera/camera.dart';
-import '../../foundation/coordinates/coordinate_utils.dart';
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/region/region.dart';
 

@@ -12,11 +12,11 @@ void main() {
   test("Should have regions after it gets updated", () {
     var camera = DefaultCamera();
     var map = DefaultGameMap(camera);
-    var visibleRegions = VisibleRegionsHandlerImpl(camera, map);
+    var visibleRegions = DefaultVisibleRegionsHandler(camera, map);
 
     expect(visibleRegions.visibleRegionSize(), 0);
 
-    visibleRegions.update();
+    visibleRegions.update(0.016);
     expect(visibleRegions.visibleRegionSize() >= 0, isTrue);
   });
 
@@ -24,7 +24,7 @@ void main() {
     var camera = DefaultCamera();
     var map = DefaultGameMap(camera);
     VisibleRegionsHandler visibleRegions =
-        VisibleRegionsHandlerImpl(camera, map);
+        DefaultVisibleRegionsHandler(camera, map);
 
     expect(visibleRegions.visibleRegionSize(), 0);
 
@@ -33,7 +33,7 @@ void main() {
     for (int i = 0; i < 1000; i++) {
       camera.center = IsoCoordinate(
           random.nextDouble() * 1000000, random.nextDouble() * 1000000);
-      visibleRegions.update();
+      visibleRegions.update(0.016);
     }
     expect(visibleRegions.visibleRegionSize() < 1000, isTrue);
   });
@@ -41,13 +41,13 @@ void main() {
   test("No region should be outside the camera view", () {
     var testCamera = TestCamera();
     var map = DefaultGameMap(testCamera);
-    var visibleRegions = VisibleRegionsHandlerImpl(testCamera, map);
+    var visibleRegions = DefaultVisibleRegionsHandler(testCamera, map);
     testCamera.topLeft = const IsoCoordinate.fromIso(-1000, -1000);
     testCamera.bottomRight = const IsoCoordinate.fromIso(1000, 1000);
 
     /// Update visible regions enough times that all the regions have been found
     for (int i = 0; i < 200; i++) {
-      visibleRegions.update();
+      visibleRegions.update(0.016);
     }
 
     var regions = visibleRegions.getVisibleRegionsInDrawingOrder();
@@ -65,7 +65,7 @@ void main() {
   test("Check that there aren't too few or many visible region", () {
     var testCamera = TestCamera();
     var map = DefaultGameMap(testCamera);
-    var visibleRegions = VisibleRegionsHandlerImpl(testCamera, map);
+    var visibleRegions = DefaultVisibleRegionsHandler(testCamera, map);
     testCamera.topLeft =
         const IsoCoordinate.fromIso(-regionSideWidth * 5, -regionSideWidth * 5);
     testCamera.bottomRight =
@@ -73,7 +73,7 @@ void main() {
 
     /// Update the visible regions enough times that all the regions have been found
     for (int i = 0; i < 200; i++) {
-      visibleRegions.update();
+      visibleRegions.update(0.016);
     }
 
     /// Estimate the amount of visible regions in the view. The side width
@@ -98,13 +98,13 @@ void main() {
   test("Check that visible regions do not contain duplicates", () {
     var testCamera = TestCamera();
     var map = DefaultGameMap(testCamera);
-    var visibleRegions = VisibleRegionsHandlerImpl(testCamera, map);
+    var visibleRegions = DefaultVisibleRegionsHandler(testCamera, map);
     testCamera.topLeft = const IsoCoordinate.fromIso(-1000, -1000);
     testCamera.bottomRight = const IsoCoordinate.fromIso(1000, 1000);
 
     /// Update the visible regions enough times that all the regions have been found
     for (int i = 0; i < 200; i++) {
-      visibleRegions.update();
+      visibleRegions.update(0.016);
     }
 
     var regions = visibleRegions.getVisibleRegionsInDrawingOrder();

@@ -110,8 +110,11 @@ class DefaultRegion extends Region {
   }
 
   @override
-  void update() {
+  void update(double dt) {
     if (_dynamicGameObjects.isNotEmpty) {
+      for (var gameObject in _dynamicGameObjects.toList()) {
+        gameObject.update(dt);
+      }
       _updateRenderingData();
     }
   }

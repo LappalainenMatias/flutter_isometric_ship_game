@@ -20,9 +20,9 @@ Point<int> isoCoordinateToRegionPoint(IsoCoordinate isoCoordinate) {
   return Point(regionX, regionY);
 }
 
+/// We often add some extra padding because some regions can be so tall (tiles have
+/// large elevation) that they are visible even when their bottom iso coordinate is not in view.
 bool isInView(IsoCoordinate coordinate, Camera camera, [double padding = 0.0]) {
-  /// We often add some extra padding because some regions can be so tall (tiles have
-  /// large elevation) that they are visible even when their bottom iso coordinate is not in view.
   var topLeft = camera.topLeft + IsoCoordinate.fromIso(-padding, -padding);
   var bottomRight =
       camera.bottomRight + IsoCoordinate.fromIso(padding, padding);

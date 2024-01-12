@@ -3,6 +3,7 @@ import 'package:anki/foundation/game_object/game_object.dart';
 import 'package:anki/game_specific/terrain/concurrent_terrain_creation.dart';
 
 import '../../foundation/map/map.dart';
+import '../../game_specific/dynamic_game_object_manager.dart';
 import '../../game_specific/region/region_creation_queue.dart';
 import '../camera/camera.dart';
 import '../coordinates/coordinate_utils.dart';
@@ -11,8 +12,8 @@ import '../region/default_region.dart';
 import '../region/region.dart';
 import '../region/visible_regions_handler.dart';
 
-
 class DefaultGameMap extends GameMap {
+  late DynamicGameObjectManager _dynamicGameObjectManager;
   final Map<Point<int>, Region> _regions = {};
   final _concurrentTerrainCreator = ConcurrentTerrainCreator();
   late final RegionTerrainCreationQueue _regionTerrainCreationQueue;
@@ -20,7 +21,8 @@ class DefaultGameMap extends GameMap {
 
   DefaultGameMap(Camera camera) {
     _regionTerrainCreationQueue = DefaultRegionTerrainCreationQueue(camera);
-    _visibleRegions = VisibleRegionsHandlerImpl(camera, this);
+    _visibleRegions = DefaultVisibleRegionsHandler(camera, this);
+    _dynamicGameObjectManager = DynamicGameObjectManager(this, camera);
   }
 
   /// Finds the region the isoCoordinate is part of. If the region does not exist,
@@ -45,7 +47,9 @@ class DefaultGameMap extends GameMap {
   }
 
   bool _tooManyRegionsExist() {
-    return getRegionCount() > 1000; /// todo
+    return getRegionCount() > 1000;
+
+    /// todo
   }
 
   void _removeFarawayRegions(IsoCoordinate coordinate) {
@@ -58,7 +62,8 @@ class DefaultGameMap extends GameMap {
 
   @override
   void update(double dt) {
-    _visibleRegions.update();
+    _dynamicGameObjectManager.update(dt);
+    _visibleRegions.update(dt);
     _createTerrain();
   }
 
@@ -85,11 +90,27 @@ class DefaultGameMap extends GameMap {
 
   @override
   void addGameObject(GameObject gameObject) {
-    // TODO: implement addGameObject
+    if (gameObject is DynamicGameObject) {
+      _dynamicGameObjectManager.addDynamicGameObject(gameObject);
+    } else {
+      throw Exception("Only dynamic game objects are supported at the moment");
+
+      /// Todo implement. Take into account what happens when the region terrain gets created after the game object is added into the region. Does it remove it?
+    }
   }
 
   @override
   void removeGameObject(GameObject gameObject) {
-    // TODO: implement removeGameObject
+    throw Exception("implement removeGameObject");
+  }
+
+  @override
+  bool move(DynamicGameObject dynamicGameObject, IsoCoordinate nextCoordinate) {
+    if (_dynamicGameObjectManager.isAbleToMove(
+        dynamicGameObject, nextCoordinate)) {
+      dynamicGameObject.setIsoCoordinate(nextCoordinate);
+      return true;
+    }
+    return false;
   }
 }

@@ -1,26 +1,28 @@
+import 'package:anki/foundation/camera/default_camera.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/map/default_map.dart';
+import 'package:anki/foundation/utils/random_id.dart';
 import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/movement/keyboard_ship_mover.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test("With high dt player should move more", () {
-    var ship = Ship(const IsoCoordinate(0, 0), 0, 0);
-    var shipMover = KeyboardShipMover(ship);
-    shipMover.pressed(LogicalKeyboardKey.keyW);
-    shipMover.pressed(LogicalKeyboardKey.keyD);
-    var firstX = ship.topLeft.isoX;
-    var firstY = ship.topLeft.isoY;
-    shipMover.move(1);
-    var secondX = ship.topLeft.isoX;
-    var secondY = ship.topLeft.isoY;
-    shipMover.move(2);
-    var thirdX = ship.topLeft.isoX;
-    var thirdY = ship.topLeft.isoY;
-
-    var firstDiff = (secondX - firstX).abs() + (secondY - firstY).abs();
-    var secondDiff = (thirdX - secondX).abs() + (thirdY - secondY).abs();
-    expect(firstDiff * 2, secondDiff);
+  test("Next coordinate should not change current coordinate", () {
+    var camera = DefaultCamera();
+    camera.setZoomLevel(0.1);
+    var gameMap = DefaultGameMap(camera);
+    for (var i = 0; i < 100; i++) {
+      gameMap.update(0.016);
+    }
+    var ship = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId(), gameMap);
+    var ship2 = Ship(const IsoCoordinate.fromIso(0, -10), 0, getRandomId(), gameMap);
+    ship.shipMover = KeyboardShipMover(ship)..pressed(LogicalKeyboardKey.keyW);
+    gameMap.addGameObject(ship);
+    gameMap.addGameObject(ship2);
+    for (var i = 0; i < 20; i++) {
+      gameMap.update(0.016);
+    }
+    expect(ship.collision(ship2), isFalse);
   });
 }

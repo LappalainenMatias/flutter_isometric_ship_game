@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:anki/game_specific/game_object/ship.dart';
 import '../game_object/game_object.dart';
 import '../health_and_damage/damage.dart';
 import '../health_and_damage/health.dart';
@@ -7,10 +8,10 @@ import '../health_and_damage/health.dart';
 mixin CollisionAction {
   Set<CollisionActionType> actionTypes = {};
 
-  /// Skip collision detection with these game objects
+  /// Skip collision detection with these game object ids
   HashSet<int> skipCollisionAction = HashSet<int>();
 
-  void execute(GameObject collider, List<GameObject> collisions) {
+  void executeCollisionAction(GameObject collider, List<GameObject> collisions) {
     if (skipCollisionAction.isNotEmpty) {
       collisions.removeWhere(
           (element) => skipCollisionAction.contains(element.getId()));
@@ -26,6 +27,19 @@ mixin CollisionAction {
         case CollisionActionType.causeDamage:
           _causeDamage(collider, collisions);
           break;
+        case CollisionActionType.collectItem:
+          _collectItem(collider, collisions);
+          break;
+      }
+    }
+  }
+
+  /// Todo we now have reference to game specific bottle so we need to refactor
+  void _collectItem(GameObject collider, List<GameObject> collisions) {
+    for (var collision in collisions) {
+      if (collider is Ship && collision is Collectable) {
+        collision.collectItem(collider);
+        collision.destroy = true;
       }
     }
   }
@@ -51,4 +65,4 @@ mixin CollisionAction {
   }
 }
 
-enum CollisionActionType { destroyItself, causeDamage }
+enum CollisionActionType { destroyItself, causeDamage, collectItem }

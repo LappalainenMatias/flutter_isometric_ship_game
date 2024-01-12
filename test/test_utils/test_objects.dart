@@ -2,6 +2,8 @@
 
 import 'package:anki/foundation/camera/default_camera.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
+import 'package:anki/foundation/game_object/game_object.dart';
+import 'package:anki/game_specific/dynamic_game_object_manager.dart';
 import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
@@ -14,6 +16,11 @@ class TestDynamicObject extends Ship {
   @override
   update(double dt) {
     wasUpdated = true;
+  }
+
+  @override
+  void setIsoCoordinate(IsoCoordinate isoCoordinate) {
+
   }
 }
 
@@ -74,5 +81,15 @@ class TestCamera extends DefaultCamera {
   @override
   double height() {
     return (topLeft.isoY - bottomRight.isoY).abs();
+  }
+}
+
+class TestDynamicGameObjectManager extends DynamicGameObjectManager {
+  @override
+  TestDynamicGameObjectManager(super._map, super._camera);
+
+  @override
+  bool isAbleToMove(DynamicGameObject dynamicGameObject, IsoCoordinate nextCoordinate) {
+    return true;
   }
 }

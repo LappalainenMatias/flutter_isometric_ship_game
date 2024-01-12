@@ -1,10 +1,7 @@
 import 'dart:math';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
-import 'package:anki/game_specific/ship_game.dart';
 import 'package:flutter/material.dart';
 import '../../foundation/camera/camera.dart';
-import '../../foundation/game.dart';
 import '../../gameloop/game_loop.dart';
 
 class GameMapPainter extends CustomPainter {
@@ -14,9 +11,6 @@ class GameMapPainter extends CustomPainter {
   final _landPaint = Paint();
   var _waterPaint = Paint();
   var _shadowPaint = Paint();
-
-  // We start with 10 because there is a visual side effect if you start with 0
-  double _timePassed = 10;
   ui.Image textureImage;
 
   GameMapPainter(

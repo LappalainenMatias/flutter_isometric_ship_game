@@ -8,20 +8,15 @@ import '../foundation/map/default_map.dart';
 import '../foundation/region/default_region.dart';
 import '../foundation/rendering_data/rendering_data.dart';
 import '../foundation/utils/random_id.dart';
-import 'dynamic_game_object_manager.dart';
+import 'game_object/bottle.dart';
 import 'game_object/cannonball.dart';
 import 'game_object/ship.dart';
 import 'movement/joystick_ship_mover.dart';
 import 'movement/keyboard_ship_mover.dart';
-import 'movement/ship_mover.dart';
 
 class ShipGame extends Game {
   late DefaultCamera _camera;
   late DefaultGameMap _map;
-  late DynamicGameObjectManager _dynamicGameObjectManager;
-  late ShipMover _currentShipMover;
-  late KeyboardShipMover _keyboardShipMover;
-  late JoyStickShipMover _joyStickShipMover;
   late Ship _player;
   var _amountOfGameObjectsRendered = 0;
 
@@ -32,13 +27,90 @@ class ShipGame extends Game {
 
   setupNewGame(double aspectRatio) {
     _camera = DefaultCamera(aspectRatio: aspectRatio);
-    _player = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId());
     _map = DefaultGameMap(_camera);
-    _dynamicGameObjectManager = DynamicGameObjectManager(_map, _camera);
-    _dynamicGameObjectManager.addDynamicGameObject(_player);
-    _joyStickShipMover = JoyStickShipMover(_player);
-    _keyboardShipMover = KeyboardShipMover(_player);
-    _currentShipMover = _keyboardShipMover;
+    _player = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId(), _map);
+    _player.setShipMover(KeyboardShipMover(_player));
+    _player.bulletFlightSeconds = 1.0;
+    _player.setHealth(2);
+    _map.addGameObject(_player);
+    _createDynamicGameObjects();
+  }
+
+  void _createDynamicGameObjects() {
+    _addBottle(const IsoCoordinate.fromIso(-93, -173));
+    _addBottle(const IsoCoordinate.fromIso(34, 123));
+    _addBottle(const IsoCoordinate.fromIso(470, 47));
+    _addBottle(const IsoCoordinate.fromIso(480, 47));
+    _addBottle(const IsoCoordinate.fromIso(494, 47));
+    _addBottle(const IsoCoordinate.fromIso(290, -141));
+    _addBottle(const IsoCoordinate.fromIso(539, 399));
+    _addBottle(const IsoCoordinate.fromIso(535, 408));
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(313, -127),
+      const IsoCoordinate.fromIso(311,  -148),
+      const IsoCoordinate.fromIso(296, -148)
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(102, 137),
+      const IsoCoordinate.fromIso(67, 137),
+      const IsoCoordinate.fromIso(67, 116)
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(436, -13),
+      const IsoCoordinate.fromIso(436, -113),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(468, -113),
+      const IsoCoordinate.fromIso(468, -22),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(506, 79),
+      const IsoCoordinate.fromIso(530, 90),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(511, 37),
+      const IsoCoordinate.fromIso(494, 37),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(505, 399),
+      const IsoCoordinate.fromIso(468, 399),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(405, 410),
+      const IsoCoordinate.fromIso(405, 345),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(422, 410),
+      const IsoCoordinate.fromIso(422, 345),
+    ]);
+    _addPathAIShip([
+      const IsoCoordinate.fromIso(238, 372),
+      const IsoCoordinate.fromIso(272, 289),
+      const IsoCoordinate.fromIso(353, 234),
+    ]);
+    _addBasicAIShip(const IsoCoordinate.fromIso(499, 19));
+    _addBasicAIShip(const IsoCoordinate.fromIso(546, 34));
+    _addBasicAIShip(const IsoCoordinate.fromIso(480, 224));
+    _addBasicAIShip(const IsoCoordinate.fromIso(492, 224));
+    _addBasicAIShip(const IsoCoordinate.fromIso(513, 224));
+    _addBasicAIShip(const IsoCoordinate.fromIso(704, 75));
+  }
+
+  void _addPathAIShip(List<IsoCoordinate> path) {
+    var aiShip = FollowPathAIShip(path.first, 0,
+        getRandomId(), _map, _player, path);
+    _map.addGameObject(aiShip);
+  }
+
+  void _addBasicAIShip(IsoCoordinate isoCoordinate) {
+    var aiShip = BasicAIShip(
+        isoCoordinate, 0, getRandomId(), _map, _player);
+    _map.addGameObject(aiShip);
+  }
+
+  void _addBottle(IsoCoordinate isoCoordinate) {
+    var bottle = Bottle(isoCoordinate, 0, getRandomId());
+    _map.addGameObject(bottle);
   }
 
   Ship getOurPlayer() {
@@ -74,40 +146,28 @@ class ShipGame extends Game {
     _camera.zoomOut();
   }
 
-  void updateMap(double dt) {
-    _map.update(dt);
-  }
-
-  void _moveShip(double dt) {
-    var nextCoordinate = _currentShipMover.nextCoordinate(dt);
-    if (_dynamicGameObjectManager.isAbleToMove(_player, nextCoordinate)) {
-      _currentShipMover.move(dt);
-      _camera.center = _player.getIsoCoordinate();
+  void playerShootCannonball(IsoCoordinate target) {
+    if (_player.isAbleToShoot()) {
+      shootCannonball(_map, target, _player);
     }
   }
 
-  void _updateDynamicGameObjects(double dt) {
-    _dynamicGameObjectManager.update(dt);
-  }
-
-  void playerShootCannonball(IsoCoordinate target) {
-    shootCannonball(_dynamicGameObjectManager, target, _player);
-  }
-
   void keyDownEvent(LogicalKeyboardKey logicalKey) {
-    _keyboardShipMover.pressed(logicalKey);
+    if (_player.shipMover is KeyboardShipMover) {
+      (_player.shipMover as KeyboardShipMover).pressed(logicalKey);
+    }
   }
 
   void keyUpEvent(LogicalKeyboardKey logicalKey) {
-    _keyboardShipMover.unPressed(logicalKey);
+    if (_player.shipMover is KeyboardShipMover) {
+      (_player.shipMover as KeyboardShipMover).unPressed(logicalKey);
+    }
   }
 
   void joystickEvent(double x, double y) {
-    _joyStickShipMover.updateJoystick(x, y);
-  }
-
-  bool isJoystickActive() {
-    return _currentShipMover is JoyStickShipMover;
+    if (_player.shipMover is JoyStickShipMover) {
+      (_player.shipMover as JoyStickShipMover).setJoystick(x, y);
+    }
   }
 
   /// x = 0.5, y = 0.5 is the center of the screen
@@ -118,14 +178,14 @@ class ShipGame extends Game {
   }
 
   void addOpponent() {
-    var enemy = AIShip(
-      _dynamicGameObjectManager,
-      _player,
+    var enemy = BasicAIShip(
       _camera.center + const IsoCoordinate(20, 20),
       0,
       getRandomId(),
+      _map,
+      _player,
     );
-    _dynamicGameObjectManager.addDynamicGameObject(enemy);
+    _map.addGameObject(enemy);
   }
 
   void reset() {
@@ -177,17 +237,24 @@ class ShipGame extends Game {
       reset();
     } else {
       _map.update(dt);
-      _updateDynamicGameObjects(dt);
-      _moveShip(dt);
+      _camera.center = _player.getIsoCoordinate();
     }
   }
 
   void useJoystick() {
-    _currentShipMover = _joyStickShipMover;
+    _player.shipMover = JoyStickShipMover(_player);
   }
 
   void useKeyboard() {
-    _currentShipMover = _keyboardShipMover;
+    _player.shipMover = KeyboardShipMover(_player);
+  }
+
+  void addBottleButton() {
+    _addBottle(_camera.center + const IsoCoordinate(20, 20));
+  }
+
+  int getHealth() {
+    return _player.health;
   }
 }
 
@@ -206,5 +273,13 @@ extension ShipGameStatisticExtension on ShipGame {
 
   int amountOfGameObjectsRendered() {
     return _amountOfGameObjectsRendered;
+  }
+
+  int shootingSpeedMS() {
+    return _player.shootingSpeedMS;
+  }
+
+  double bulletFlightTime() {
+    return _player.bulletFlightSeconds;
   }
 }

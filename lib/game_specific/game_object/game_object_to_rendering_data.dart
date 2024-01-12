@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:anki/game_specific/game_object/bottle.dart';
 import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 
@@ -69,9 +70,20 @@ class ShipToDrawingDTO {
   static RenderingData create(Ship ship) {
     return createRenderingData(
       ship.getSpriteSheetRect(),
-      ship.topLeft,
+      ship.getIsoCoordinate(),
       ship.elevation,
       scale: ship.width,
+    );
+  }
+}
+
+class BottleToDrawingDTO {
+  static RenderingData create(Bottle bottle) {
+    return createRenderingData(
+      bottle.getSpriteSheetRect(),
+      bottle.topLeft,
+      bottle.elevation,
+      scale: bottle.width,
     );
   }
 }

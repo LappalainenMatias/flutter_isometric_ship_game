@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:anki/foundation/game.dart';
 import 'package:anki/foundation/rendering_data/rendering_data.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,7 @@ import 'package:flutter/scheduler.dart';
 class GameLoop extends ChangeNotifier {
   late final Ticker _ticker;
   late final Game game;
+
   /// We start with 10 because there is a visual side effect if you start with 0
   double timePassed = 10.0;
   double dt = 0.0;
@@ -22,6 +25,7 @@ class GameLoop extends ChangeNotifier {
     if (dt > 0.017) {
       missedFrames++;
     }
+    dt = min(dt, 0.017 * 4); // Having a really large dt can cause problems
     _previous = timestamp;
     timePassed += dt;
     update(dt);
@@ -39,8 +43,8 @@ class GameLoop extends ChangeNotifier {
   }
 
   (
-  List<(RenderingData, Rect)> underWater,
-  List<(RenderingData, Rect)> aboveWater
+    List<(RenderingData, Rect)> underWater,
+    List<(RenderingData, Rect)> aboveWater
   ) renderingData() {
     return game.renderingData();
   }

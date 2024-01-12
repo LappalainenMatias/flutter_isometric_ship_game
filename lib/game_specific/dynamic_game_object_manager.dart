@@ -1,7 +1,4 @@
-import 'package:anki/game_specific/game_object/ai_ship.dart';
-
 import '../foundation/camera/camera.dart';
-import '../foundation/collision/collision_action.dart';
 import '../foundation/collision/collision_detector.dart';
 import '../foundation/coordinates/coordinate_utils.dart';
 import '../foundation/coordinates/iso_coordinate.dart';
@@ -9,9 +6,9 @@ import '../foundation/game_object/game_object.dart';
 import '../foundation/map/map.dart';
 import '../foundation/region/default_region.dart';
 import '../foundation/region/region.dart';
-import 'game_object/ship.dart';
 
-/// Updates dynamic game object which are in the camera's view.
+/// Todo refactor this under the map class. This should not be part of the game class
+/// Todo because it is confusing that we add dynamic game object to this class and not to map.
 class DynamicGameObjectManager {
   final Map<DynamicGameObject, Region> _gameObjectToRegion = {};
   final GameMap _map;
@@ -19,48 +16,42 @@ class DynamicGameObjectManager {
 
   DynamicGameObjectManager(this._map, this._camera);
 
-  /// Returns true if there are no collisions
-  bool isAbleToMove(Ship ship, IsoCoordinate nextCoordinate) {
-    /// Save old coordinate and move player
-    var old = ship.topLeft.copy();
-    ship.topLeft = nextCoordinate;
-    var newRegion = _map.getRegion(nextCoordinate);
+  /// Returns true if the dynamic game object is able to move into the new coordinate.
+  bool isAbleToMove(
+      DynamicGameObject dynamicGameObject, IsoCoordinate nextCoordinate) {
+    // Save old coordinate and move the dynamic game object to the next coordinate
+    var old = dynamicGameObject.getIsoCoordinate().copy();
+    dynamicGameObject.setIsoCoordinate(nextCoordinate);
 
-    /// Find collisions
-    var regions = <Region>{newRegion};
+    // Find collisions
+    var regions = <Region>{
+      _map.getRegion(dynamicGameObject.getIsoCoordinate())
+    }; // Todo improvement here would be to check other regions which are close to the player
     var collisions = <GameObject>[];
     for (var region in regions) {
-      collisions.addAll(findCollisions(region.getGameObjects(), ship));
+      collisions
+          .addAll(findCollisions(region.getGameObjects(), dynamicGameObject));
     }
 
-    collisions.removeWhere(
-        (element) => ship.skipCollisionAction.contains(element.getId()));
+    // Remove collisions which should be skipped
+    // Todo maybe this skipping should be implemented in the collision detector
+    collisions.removeWhere((element) =>
+        dynamicGameObject.skipCollisionAction.contains(element.getId()));
+    collisions.removeWhere((element) => element is Collectable);
 
-    /// Move player back to old coordinate
-    ship.topLeft = old;
+    // Move player back to the old coordinate
+    dynamicGameObject.setIsoCoordinate(old);
     return collisions.isEmpty;
   }
 
-  List<int> getAllAIShipIds() {
-    var aiShipIds = <int>[];
-    for (var gameObject in _gameObjectToRegion.keys) {
-      if (gameObject is AIShip) {
-        aiShipIds.add(gameObject.getId());
-      }
-    }
-    return aiShipIds;
-  }
-
   /// Does the following:
-  /// 1. Moves game objects to correct regions
-  /// 2. Updates game objects
+  /// 1. Removes destroyed game objects from the game
+  /// 2. Checks that dynamic game objects are part of the correct region
   /// 3. Checks if collisions exist and executes collision actions
-  /// 4. Removes destroyed game objects
   void update(double dt) {
     _removeDestroyedGameObjects();
-    _updateRegions();
-    _updateGameObjects(dt);
-    _checkCollisions();
+    _moveGameObjectsToCorrectRegions();
+    _executeCollisionActions();
   }
 
   void _removeDestroyedGameObjects() {
@@ -73,16 +64,7 @@ class DynamicGameObjectManager {
     _gameObjectToRegion.removeWhere((gameObject, value) => gameObject.destroy);
   }
 
-  void _updateGameObjects(double dt) {
-    for (var gameObject in _gameObjectToRegion.keys.toList()) {
-      if (!isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
-        continue;
-      }
-      gameObject.update(dt);
-    }
-  }
-
-  void _updateRegions() {
+  void _moveGameObjectsToCorrectRegions() {
     for (var gameObject in _gameObjectToRegion.keys) {
       if (isInView(gameObject.getIsoCoordinate(), _camera, 200)) {
         _updateRegion(gameObject);
@@ -100,15 +82,12 @@ class DynamicGameObjectManager {
     }
   }
 
-  void _checkCollisions() {
+  void _executeCollisionActions() {
     for (var dgo in _gameObjectToRegion.keys) {
-      if (dgo is CollisionAction) {
-        var collisionAction = (dgo as CollisionAction);
-        var collisions =
-            findCollisions(_gameObjectToRegion[dgo]!.getGameObjects(), dgo);
-        if (collisions.isNotEmpty) {
-          collisionAction.execute(dgo, collisions);
-        }
+      var collisions =
+          findCollisions(_gameObjectToRegion[dgo]!.getGameObjects(), dgo);
+      if (collisions.isNotEmpty) {
+        dgo.executeCollisionAction(dgo, collisions);
       }
     }
   }

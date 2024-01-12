@@ -23,7 +23,7 @@ void removeHiddenGameObjects(List<Tile> tiles) {
   });
 }
 
-/// Using encoded point is faster than using a point class or string. Check performance test
+/// Using encoded point is faster than using a point class or string. Check the performance test
 int encodePoint(int x, int y, int z) {
   return x * 1000000 + y * 1000 + z;
 }

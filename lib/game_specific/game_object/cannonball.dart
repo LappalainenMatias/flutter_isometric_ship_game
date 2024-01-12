@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:anki/foundation/animation/animation.dart';
+import 'package:anki/foundation/map/map.dart';
 import 'package:anki/game_specific/animation/canonball_animation.dart';
 import 'package:anki/game_specific/dynamic_game_object_manager.dart';
 import 'package:anki/game_specific/game_object/ship.dart';
@@ -13,8 +14,7 @@ import '../../foundation/utils/random_id.dart';
 import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
-class Cannonball extends DynamicGameObject
-    with Damage, CollisionAction, Animation {
+class Cannonball extends DynamicGameObject with Damage, Animation {
   IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
   Projectile projectile;
   double elevation = 0.0;
@@ -68,6 +68,7 @@ class Cannonball extends DynamicGameObject
 
   @override
   ({double distance, double elevation}) nearness() {
+    /// Todo this implentation differs from other implementations. It does not show because cannonballs destroy themselves after collision.
     Point point = isoCoordinate.toPoint();
     return (
       distance: -1 * (point.x + point.y + width).toDouble(),
@@ -94,40 +95,43 @@ class Cannonball extends DynamicGameObject
 
   static defaultCannonball(int id) {
     return Cannonball(const IsoCoordinate(0, 0), 0, 0,
-        Projectile(const IsoCoordinate(0, 0)), id);
+        Projectile(const IsoCoordinate(0, 0), 5), id);
+  }
+
+  @override
+  void setIsoCoordinate(IsoCoordinate isoCoordinate) {
+    this.isoCoordinate = isoCoordinate.copy();
   }
 }
 
 class Projectile {
-  /// cannonball moves to this direction
+  /// Cannonball moves to this direction
   IsoCoordinate unitVector;
   double speed;
 
   /// Makes sure that cannonballs don't fly forever
-  double flyingTime = 5;
+  double _flyingTimeSeconds;
 
-  Projectile(this.unitVector, [this.speed = 80]);
+  Projectile(this.unitVector, this._flyingTimeSeconds, [this.speed = 80]);
 
   void update(double dt, Cannonball cannonball) {
-    if (flyingTime <= 0) {
+    if (_flyingTimeSeconds <= 0) {
       cannonball.destroy = true;
       return;
     }
-    flyingTime -= dt;
+    _flyingTimeSeconds -= dt;
     cannonball.isoCoordinate += unitVector * dt * speed;
   }
 }
 
-/// Shoots a cannonball from a ship to a target
-/// angleRange is used to make shooting more random
-void shootCannonball(DynamicGameObjectManager dynamicGameObjectManager,
-    IsoCoordinate target, Ship shooter, [double angleRange = 0]) {
-  var unitVectorFromPlayerToTarget = (target - shooter.topLeft).toUnitVector();
+/// Shoots a cannonball from a ship to the target
+void shootCannonball(GameMap gameMap, IsoCoordinate target, Ship shooter) {
+  var unitVectorFromPlayerToTarget = (target - shooter.getIsoCoordinate()).toUnitVector();
   var cannonball = Cannonball(
     shooter.getIsoCoordinate(),
     shooter.elevation,
     1,
-    Projectile(unitVectorFromPlayerToTarget),
+    Projectile(unitVectorFromPlayerToTarget, shooter.bulletFlightSeconds),
     getRandomId(),
   );
 
@@ -142,5 +146,6 @@ void shootCannonball(DynamicGameObjectManager dynamicGameObjectManager,
   cannonball.skipCollisionAction.add(shooter.getId());
 
   // Add cannonball to dynamic game object manager which updates it every frame
-  dynamicGameObjectManager.addDynamicGameObject(cannonball);
+  gameMap.addGameObject(cannonball);
+  shooter.lastShot = DateTime.now();
 }

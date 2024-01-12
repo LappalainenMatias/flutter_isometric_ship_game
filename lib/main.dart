@@ -1,4 +1,5 @@
 import 'package:anki/gameloop/ship_game_input.dart';
+import 'package:anki/ui/widget/input/add_bottle.dart';
 import 'package:anki/ui/widget/input/add_opponent.dart';
 import 'package:anki/ui/widget/input/joystick.dart';
 import 'package:anki/ui/widget/input/zoom_buttons.dart';
@@ -101,9 +102,18 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           ),
           Align(
             alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: EdgeInsets.all(8.0),
-              child: AddOpponent(),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: AddOpponent(),
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: AddBottle(),
+                ),
+              ],
             ),
           ),
         ],

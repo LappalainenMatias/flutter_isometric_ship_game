@@ -16,7 +16,7 @@ class JoyStickShipMover extends ShipMover {
   JoyStickShipMover(this._ship, [this._maxSpeed = 50]);
 
   /// (0,0) = center, (1, 0) = right.
-  void updateJoystick(double x, double y) {
+  void setJoystick(double x, double y) {
     _joystickX = x;
     _joystickY = y;
     if (x.abs() + y.abs() < 0.02) {
@@ -78,12 +78,12 @@ class JoyStickShipMover extends ShipMover {
 
   @override
   IsoCoordinate nextCoordinate(double dt) {
-    var copy = _ship.getIsoCoordinate().copy();
     var speed = min(
         sqrt(_joystickX * _joystickX + _joystickY * _joystickY) * _maxSpeed,
         _maxSpeed);
-    copy += IsoCoordinate.fromIso(speed * _joystickX * dt, speed * _joystickY * dt);
-    return copy;
+    var nextCoordinate = _ship.getIsoCoordinate() +
+        IsoCoordinate.fromIso(speed * _joystickX * dt, speed * _joystickY * dt);
+    return nextCoordinate;
   }
 
   @override

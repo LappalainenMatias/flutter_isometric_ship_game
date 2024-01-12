@@ -1,6 +1,4 @@
 import 'dart:math';
-
-import 'package:anki/foundation/coordinates/rectangle.dart';
 import 'package:collection/collection.dart';
 import '../camera/camera.dart';
 import '../coordinates/iso_coordinate.dart';
@@ -11,15 +9,15 @@ abstract class VisibleRegionsHandler {
   /// This list of regions has been sorted by the nearness value (Painter's algorithm).
   List<Region> getVisibleRegionsInDrawingOrder();
 
-  /// Removes unvisible regions and adds new visible regions.
-  void update();
+  /// Removes invisible regions and adds new visible regions.
+  void update(double dt);
 
   int visibleRegionSize();
 }
 
 /// This class keeps track of which regions are visible and returns them in
 /// correct order for drawing (Painter's algorithm).
-class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
+class DefaultVisibleRegionsHandler implements VisibleRegionsHandler {
   final Camera _camera;
   final GameMap _map;
 
@@ -29,7 +27,7 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
 
   final Set<IsoCoordinate> _addedRegionCoordinates = {};
 
-  VisibleRegionsHandlerImpl(this._camera, this._map);
+  DefaultVisibleRegionsHandler(this._camera, this._map);
 
   void _removeInvisibleRegions() {
     var remove = [];
@@ -57,15 +55,11 @@ class VisibleRegionsHandlerImpl implements VisibleRegionsHandler {
   }
 
   @override
-  void update() {
+  void update(double dt) {
     _removeInvisibleRegions();
     _findNewVisibleRegions();
-    _updateVisibleRegions();
-  }
-
-  void _updateVisibleRegions() {
     for (var region in _sortedVisibleRegions.toList()) {
-      region.update();
+      region.update(dt);
     }
   }
 

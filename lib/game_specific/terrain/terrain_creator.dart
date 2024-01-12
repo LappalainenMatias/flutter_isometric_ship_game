@@ -10,8 +10,8 @@ import '../../game_specific/optimization/remove_hidden_tiles.dart';
 /// This class and the classes that it uses should NOT use dart:ui so that
 /// we can create regions concurrently (dart:ui only runs in the main thread).
 class TerrainCreator {
-  final _mapCreationRules = SvalbardCreationRules();
-  late final noise = NoiseCreator(_mapCreationRules);
+  final _mapCreationRules = DefaultTerrainCreationRules();
+  late final noise = NoiseCreator();
 
   /// Returns a sorted list of all game objects in the region.
   List<Tile> create(int w, int h, int x, int y) {

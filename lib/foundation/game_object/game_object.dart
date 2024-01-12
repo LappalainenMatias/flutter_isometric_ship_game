@@ -1,3 +1,5 @@
+import 'package:anki/foundation/collision/collision_action.dart';
+
 import '../collision/collision_box.dart';
 import '../coordinates/iso_coordinate.dart';
 import '../rendering_data/rendering_data.dart';
@@ -33,7 +35,7 @@ abstract class GameObject implements Comparable<GameObject> {
 
   @override
   int compareTo(GameObject other) {
-    // we use this to sort game objects in a way that the last game object
+    // we use this to sort the game objects in a way that the last game object
     // is bottom most item in the screen. (Painter's algorithm)
     final nearness = this.nearness();
     final otherNearness = other.nearness();
@@ -59,8 +61,7 @@ abstract class GameObject implements Comparable<GameObject> {
 
   /// Webworkers can only return basic data types like lists, int, string. Because of
   /// this we need to convert the game object into a list before sending it to the main thread.
-  /// Encoding and decoding the game object to json is not an option because it is slow.
-  /// [0] should always contain the game object type (Notice gameObjectFromList)
+  /// Encoding and decoding the game object into json is not an option because it is slow.
   List gameObjectToList();
 }
 
@@ -68,21 +69,27 @@ abstract class GameObject implements Comparable<GameObject> {
 /// optimizations.
 abstract class StaticGameObject extends GameObject {
   /// Currently there is no need for invisible static game objects.
-  /// Invisble static game, for example tiles which are behind other tiles
+  /// Invisible static game, for example tiles which are behind other tiles
   /// should be deleted from the game.
-  /// Todo this is not actually true. There can be invisible game objects. Tile behind a mountain should be invisble but is
-  /// also needed for collision detection.
+  /// Todo this is not actually true. There can be invisible static game objects. Tile behind a mountain should be invisible but it is also needed for collision detection.
   @override
   isVisible() => true;
 }
 
 /// Dynamic game objects can change. This allows for example moving game objects.
-abstract class DynamicGameObject extends GameObject {
+abstract class DynamicGameObject extends GameObject with CollisionAction {
   /// If false, the gameObject will not be drawn
   void setVisibility(bool isVisible);
+
+  void setIsoCoordinate(IsoCoordinate isoCoordinate);
 
   void update(double dt);
 
   /// When changed to true the game object will be removed from the game.
   bool destroy = false;
+}
+
+abstract class Collectable extends DynamicGameObject {
+  /// Defines what happens when the item gets collected
+  void collectItem(GameObject collector);
 }

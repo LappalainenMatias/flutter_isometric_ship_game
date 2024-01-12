@@ -25,7 +25,7 @@ abstract class TerrainCreationRules {
   double maxElevation();
 }
 
-class SvalbardCreationRules extends TerrainCreationRules {
+class DefaultTerrainCreationRules extends TerrainCreationRules {
   @override
   List<TileRule> tileRules() {
     return [

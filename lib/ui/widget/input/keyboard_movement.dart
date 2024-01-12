@@ -11,9 +11,6 @@ class KeyBoardMovement extends StatelessWidget {
   Widget build(BuildContext context) {
     var shipGameInput = Provider.of<ShipGameInput>(context, listen: false);
     return Focus(
-      onFocusChange: (hasFocus) {
-        print('hasFocus: $hasFocus');
-      },
       child: RawKeyboardListener(
         autofocus: true,
         onKey: (event) {

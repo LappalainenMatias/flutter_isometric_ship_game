@@ -7,16 +7,21 @@ class IsoCoordinate {
   final double isoX;
   final double isoY;
 
+  /// Use this only when changing from "normal" cartesian coordinates
+  /// to isometric coordinates because it does the projection
+  /// Most of the time you should use [IsoCoordinate.fromIso]
   const IsoCoordinate(double pointX, double pointY)
       : isoX = pointX * 2 - 2 * pointY,
         isoY = pointX + pointY;
 
+  /// Does not do the projection and works like a normal 2D point
   const IsoCoordinate.fromIso(this.isoX, this.isoY);
 
   IsoCoordinate operator +(IsoCoordinate other) {
     return IsoCoordinate.fromIso(isoX + other.isoX, isoY + other.isoY);
   }
 
+  /// Does the projection to opposite direction
   Point<double> toPoint() {
     double y = isoY / 2 - isoX / 4;
     double x = isoY - y;

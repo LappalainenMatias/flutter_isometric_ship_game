@@ -22,15 +22,15 @@ void main() {
     /// Get tile throws error if no tile rule matches
     /// Always one tile rule should match
     TileCreator.create(
-        0.0, 0.0, const Point(0, 0), SvalbardCreationRules().tileRules());
+        0.0, 0.0, const Point(0, 0), DefaultTerrainCreationRules().tileRules());
     TileCreator.create(-1000000, -1000000, const Point(-1000000, -1000000),
-        SvalbardCreationRules().tileRules());
+        DefaultTerrainCreationRules().tileRules());
     TileCreator.create(1000000, 1000000, const Point(1000000, 1000000),
-        SvalbardCreationRules().tileRules());
+        DefaultTerrainCreationRules().tileRules());
     TileCreator.create(-1000000, 1000000, const Point(-1000000, 1000000),
-        SvalbardCreationRules().tileRules());
+        DefaultTerrainCreationRules().tileRules());
     TileCreator.create(1000000, -1000000, const Point(1000000, -1000000),
-        SvalbardCreationRules().tileRules());
+        DefaultTerrainCreationRules().tileRules());
   });
 
   test("Create tile from elevation and moisture for finland creation rules",
@@ -51,7 +51,7 @@ void main() {
 
   test("Check that elevation and coordinate stays the same", () {
     Tile tile = TileCreator.create(
-        1.0, 0.0, const Point(1, 1), SvalbardCreationRules().tileRules());
+        1.0, 0.0, const Point(1, 1), DefaultTerrainCreationRules().tileRules());
     expect(tile.elevation, 1.0);
     expect(tile.topLeft, const IsoCoordinate(1, 1));
   });

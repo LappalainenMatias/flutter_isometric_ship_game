@@ -1,4 +1,3 @@
-import 'package:anki/foundation/camera/camera.dart';
 import 'package:anki/foundation/camera/default_camera.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
 import 'package:test/test.dart';

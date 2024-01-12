@@ -1,26 +1,39 @@
+import 'package:anki/game_specific/movement/ship_mover.dart';
+
 import '../../foundation/animation/animation.dart';
 import '../../foundation/collision/collision_action.dart';
 import '../../foundation/collision/collision_box.dart';
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../../foundation/health_and_damage/health.dart';
+import '../../foundation/map/map.dart';
 import '../../foundation/rendering_data/rendering_data.dart';
 import '../animation/ship_animation.dart';
 import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
-class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
-  IsoCoordinate topLeft;
+class Ship extends DynamicGameObject with Health, Animation {
+  ShipMover? shipMover;
+  IsoCoordinate _topLeft;
   double elevation;
   late CollisionBox _collisionBox;
   double width = 2;
   bool _isVisible = true;
   late RenderingData dto;
   final int _id;
+  DateTime lastShot = DateTime.now();
+  int shootingSpeedMS = 500; /// Todo change times to seconds
+  double bulletFlightSeconds = 5;
+  GameMap gameMap;
 
-  Ship(this.topLeft, this.elevation, this._id) {
-    _collisionBox = CollisionBox(topLeft, width - 0.2, elevation);
+  Ship(this._topLeft, this.elevation, this._id, this.gameMap) {
+    actionTypes.add(CollisionActionType.collectItem);
+    _collisionBox = CollisionBox(_topLeft, width - 0.2, elevation);
     animationParts = animationRedShipDown;
     dto = ShipToDrawingDTO.create(this);
+  }
+
+  void setShipMover(ShipMover shipMover) {
+    this.shipMover = shipMover;
   }
 
   @override
@@ -30,12 +43,12 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (distance: topLeft.isoY, elevation: elevation);
+    return (distance: _topLeft.isoY, elevation: elevation);
   }
 
   @override
   CollisionBox getCollisionBox() {
-    _collisionBox.update(topLeft, width, elevation);
+    _collisionBox.update(_topLeft, width, elevation);
     return _collisionBox;
   }
 
@@ -47,7 +60,7 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   IsoCoordinate getIsoCoordinate() {
-    return topLeft;
+    return _topLeft;
   }
 
   @override
@@ -67,8 +80,12 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
 
   @override
   void update(double dt) {
-    dto = ShipToDrawingDTO.create(this);
+    if (shipMover != null) {
+      var moved = gameMap.move(this, shipMover!.nextCoordinate(dt));
+      shipMover!.update(dt);
+    }
     updateAnimation(dt);
+    dto = ShipToDrawingDTO.create(this);
   }
 
   @override
@@ -79,5 +96,14 @@ class Ship extends DynamicGameObject with Health, Animation, CollisionAction {
   @override
   int getId() {
     return _id;
+  }
+
+  @override
+  void setIsoCoordinate(IsoCoordinate isoCoordinate) {
+    _topLeft = isoCoordinate.copy();
+  }
+
+  bool isAbleToShoot() {
+    return DateTime.now().difference(lastShot).inMilliseconds > shootingSpeedMS;
   }
 }

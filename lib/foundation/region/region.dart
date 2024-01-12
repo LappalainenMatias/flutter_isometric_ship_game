@@ -15,7 +15,7 @@ abstract class Region implements Comparable<Region> {
 
   void removeGameObject(GameObject gameObject);
 
-  void update();
+  void update(double dt);
 
   int nearness();
 

@@ -28,7 +28,7 @@ class _ShipGameStatisticsState extends State<ShipGameStatistics> {
               "Game objects rendered: ${NumberFormat('###,###,###').format(game.amountOfGameObjectsRendered()).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
-            Text(
+            SelectableText(
               "Camera center: ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoX).replaceAll(',', ' ')}, ${NumberFormat('###,###,###,###,###').format(game.viewCenter.isoY).replaceAll(',', ' ')}",
               style: const TextStyle(color: Colors.white),
             ),
@@ -41,6 +41,10 @@ class _ShipGameStatisticsState extends State<ShipGameStatistics> {
               style: const TextStyle(color: Colors.white),
             ),
             Text("Frames > 16 ms: ${gameLoop.missedFrames}",
+                style: const TextStyle(color: Colors.white)),
+            Text("Health: ${game.getHealth()}, Shooting speed: ${game.shootingSpeedMS()} ms",
+                style: const TextStyle(color: Colors.white)),
+            Text("Bullet flight time: ${game.bulletFlightTime()} s",
                 style: const TextStyle(color: Colors.white)),
           ],
         ),

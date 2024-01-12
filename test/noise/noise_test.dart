@@ -1,11 +1,9 @@
-import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
 import 'package:anki/game_specific/noise/noise.dart';
 import 'package:test/test.dart';
-import '../test_utils/test_objects.dart';
 
 void main() {
   test("Elevation and moisture noise should be same size", () {
-    var noise = NoiseCreator(TestMapCreationRules(), 0);
+    var noise = NoiseCreator();
     int width = 128;
     int height = 256;
     var (elevation, moisture) = noise.createComplexNoise(width, height, 0, 0);
@@ -17,7 +15,7 @@ void main() {
   });
 
   test("Noise values should be in resonable limits", () {
-    var noise = NoiseCreator(TestMapCreationRules(), 1);
+    var noise = NoiseCreator();
     var (elevation, moisture) = noise.createComplexNoise(256, 256, 0, 0);
     for (var column in elevation) {
       for (var val in column) {
@@ -37,7 +35,7 @@ void main() {
 
   test("4 small part should have same values as 1 large", () {
     // This checks that y-coordinates are increasing towards south in noise creation
-    var noise = NoiseCreator(SvalbardCreationRules(), 10);
+    var noise = NoiseCreator();
     var (large, moisture) = noise.createComplexNoise(2, 2, 0, 0);
     var (part1, moisture2) = noise.createComplexNoise(1, 1, 0, 0);
     var (part2, moisture3) = noise.createComplexNoise(1, 1, 1, 0);

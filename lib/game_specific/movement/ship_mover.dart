@@ -1,15 +1,47 @@
+import 'dart:typed_data';
+
 import '../../foundation/coordinates/iso_coordinate.dart';
 import '../animation/ship_animation.dart';
 import '../game_object/ship.dart';
 
 abstract class ShipMover {
-  /// (0, 1) = up, (-1, 0) = left.
-  void move(double dt) {
-    setCorrectAnimation();
-    getShip().topLeft = nextCoordinate(dt);
+  void update(double dt) {
+    _setCorrectAnimation();
   }
 
-  void setCorrectAnimation() {
+  List<Float32List> getAnimationUp() {
+    return animationRedShipUp;
+  }
+
+  List<Float32List> getAnimationDown() {
+    return animationRedShipDown;
+  }
+
+  List<Float32List> getAnimationLeft() {
+    return animationRedShipLeft;
+  }
+
+  List<Float32List> getAnimationRight() {
+    return animationRedShipRight;
+  }
+
+  List<Float32List> getAnimationUpLeft() {
+    return animationRedShipUpLeft;
+  }
+
+  List<Float32List> getAnimationUpRight() {
+    return animationRedShipUpRight;
+  }
+
+  List<Float32List> getAnimationDownLeft() {
+    return animationRedShipDownLeft;
+  }
+
+  List<Float32List> getAnimationDownRight() {
+    return animationRedShipDownRight;
+  }
+
+  void _setCorrectAnimation() {
     if (getMovingDirections().isEmpty) {
       return;
     }
@@ -18,23 +50,23 @@ abstract class ShipMover {
     var movingLeft = getMovingDirections().contains(Direction.left);
     var movingRight = getMovingDirections().contains(Direction.right);
     if (movingUp && movingRight) {
-      getShip().animationParts = animationRedShipUpRight;
+      getShip().animationParts = getAnimationUpRight();
     } else if (movingUp && movingLeft) {
-      getShip().animationParts = animationRedShipUpLeft;
+      getShip().animationParts = getAnimationUpLeft();
     } else if (movingDown && movingRight) {
-      getShip().animationParts = animationRedShipDownRight;
+      getShip().animationParts = getAnimationDownRight();
     } else if (movingDown && movingLeft) {
-      getShip().animationParts = animationRedShipDownLeft;
+      getShip().animationParts = getAnimationDownLeft();
     } else if (movingUp) {
-      getShip().animationParts = animationRedShipUp;
+      getShip().animationParts = getAnimationUp();
     } else if (movingDown) {
-      getShip().animationParts = animationRedShipDown;
+      getShip().animationParts = getAnimationDown();
     } else if (movingLeft) {
-      getShip().animationParts = animationRedShipLeft;
+        getShip().animationParts = getAnimationLeft();
     } else if (movingRight) {
-      getShip().animationParts = animationRedShipRight;
+      getShip().animationParts = getAnimationRight();
     } else {
-      getShip().animationParts = animationRedShipUp;
+      getShip().animationParts = getAnimationUp();
     }
   }
 

@@ -1,4 +1,3 @@
-import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/ship_game.dart';
 import 'package:test/test.dart';
 

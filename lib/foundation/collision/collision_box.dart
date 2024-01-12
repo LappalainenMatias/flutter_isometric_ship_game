@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import '../coordinates/iso_coordinate.dart';
 
 class CollisionBox {

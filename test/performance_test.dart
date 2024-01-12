@@ -3,10 +3,12 @@ import 'package:anki/foundation/collision/collision_detector.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
 import 'package:anki/foundation/game_object/game_object.dart';
 import 'package:anki/foundation/game_object/render_data_builder.dart';
+import 'package:anki/foundation/map/default_map.dart';
 import 'package:anki/foundation/region/default_region.dart';
-import 'package:anki/foundation/region/region_render_data_builder.dart';
 import 'package:anki/foundation/utils/random_id.dart';
+import 'package:anki/game_specific/game_object/ai_ship.dart';
 import 'package:anki/game_specific/game_object/cannonball.dart';
+import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 import 'package:anki/game_specific/noise/noise.dart';
 import 'package:anki/game_specific/optimization/remove_hidden_tiles.dart';
@@ -15,7 +17,6 @@ import 'package:anki/game_specific/terrain/terrain_creator.dart';
 import 'package:anki/game_specific/textures/texture_rects.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'test_utils/test_objects.dart';
-import 'dart:math';
 
 /// Here we tests the performance of different parts of the game
 /// These tests do not fail but there is times listed in the end so that we can
@@ -49,7 +50,7 @@ void main() {
   });
 
   test("Noise performance", () {
-    var first = NoiseCreator(TestMapCreationRules(), 1);
+    var first = NoiseCreator();
     int width = 1024;
     Stopwatch stopwatch = Stopwatch()..start();
     first.createComplexNoise(width, width, 0, 0);
@@ -139,6 +140,7 @@ void main() {
     stopwatch.stop();
     print(
         'Region creation queue took ${stopwatch.elapsedMilliseconds} milliseconds');
+
     /// 100 * 100
     /// 1: 2, 1, 2
   });
@@ -176,5 +178,37 @@ void main() {
     /// 2: 17, 18, 17 (Skip collision detection for invisible objects)
     /// 3: 12, 12, 12 (Skip other one is above water and other one is below water)
     /// 4: 7, 7, 7
+  });
+
+  test("Follow path ai ship can see performance", () {
+    var target = Ship(
+      const IsoCoordinate.fromIso(20, 20),
+      0,
+      0,
+    );
+    var camera = TestCamera();
+    var dynamicGameObjectManager =
+        TestDynamicGameObjectManager(DefaultGameMap(camera), camera);
+    var followPathAi = FollowPathAIShip(
+      const IsoCoordinate.fromIso(0, 0),
+      0,
+      0,
+      dynamicGameObjectManager,
+      target,
+      [
+        const IsoCoordinate.fromIso(0, 0),
+        const IsoCoordinate.fromIso(2, 2),
+      ],
+    );
+
+    Stopwatch stopwatch = Stopwatch()..start();
+    for (int i = 0; i < 1000; i++) {
+      followPathAi.update(0.016);
+    }
+    print('Follow path ai ship took ${stopwatch.elapsedMilliseconds} ms');
+    /// Update 1000 times (ms)
+    /// 1: 4691, 4681, 4739
+    /// 2: 58, 50, 51 (Made the NoiseCreator into singleton so that it is created only ones)
+    /// 3: TODO We could try to storage the noise so that it does not have to be recreated every time
   });
 }

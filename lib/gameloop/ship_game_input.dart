@@ -50,6 +50,10 @@ class ShipGameInput extends ChangeNotifier {
     _shipGame.joystickEvent(x, y);
   }
 
+  void addBottle() {
+    _shipGame.addBottleButton();
+  }
+
   void aspectRatioChange(double aspectRatio) {
     _shipGame.setScreenAspectRatio(aspectRatio);
   }

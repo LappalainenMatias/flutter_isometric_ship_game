@@ -68,7 +68,7 @@ class KeyboardShipMover extends ShipMover {
 
   @override
   IsoCoordinate nextCoordinate(double dt) {
-    var nextCoordinate = getShip().topLeft.copy();
+    var nextCoordinate = getShip().getIsoCoordinate().copy();
     var speed = 50;
     if (getMovingDirections().contains(Direction.up)) {
       nextCoordinate += IsoCoordinate.fromIso(0, -speed * dt);
