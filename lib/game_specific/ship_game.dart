@@ -11,6 +11,7 @@ import '../foundation/utils/random_id.dart';
 import 'game_object/bottle.dart';
 import 'game_object/cannonball.dart';
 import 'game_object/ship.dart';
+import 'level/level.dart';
 import 'movement/joystick_ship_mover.dart';
 import 'movement/keyboard_ship_mover.dart';
 
@@ -19,6 +20,7 @@ class ShipGame extends Game {
   late DefaultGameMap _map;
   late Ship _player;
   var _amountOfGameObjectsRendered = 0;
+  late final Level _level;
 
   /// The screen aspect ratio gets updated when the screen is resized or built.
   ShipGame({double screenAspectRatio = 1.0}) {
@@ -33,84 +35,7 @@ class ShipGame extends Game {
     _player.bulletFlightSeconds = 1.0;
     _player.setHealth(2);
     _map.addGameObject(_player);
-    _createDynamicGameObjects();
-  }
-
-  void _createDynamicGameObjects() {
-    _addBottle(const IsoCoordinate.fromIso(-93, -173));
-    _addBottle(const IsoCoordinate.fromIso(34, 123));
-    _addBottle(const IsoCoordinate.fromIso(470, 47));
-    _addBottle(const IsoCoordinate.fromIso(480, 47));
-    _addBottle(const IsoCoordinate.fromIso(494, 47));
-    _addBottle(const IsoCoordinate.fromIso(290, -141));
-    _addBottle(const IsoCoordinate.fromIso(539, 399));
-    _addBottle(const IsoCoordinate.fromIso(535, 408));
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(313, -127),
-      const IsoCoordinate.fromIso(311,  -148),
-      const IsoCoordinate.fromIso(296, -148)
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(102, 137),
-      const IsoCoordinate.fromIso(67, 137),
-      const IsoCoordinate.fromIso(67, 116)
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(436, -13),
-      const IsoCoordinate.fromIso(436, -113),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(468, -113),
-      const IsoCoordinate.fromIso(468, -22),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(506, 79),
-      const IsoCoordinate.fromIso(530, 90),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(511, 37),
-      const IsoCoordinate.fromIso(494, 37),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(505, 399),
-      const IsoCoordinate.fromIso(468, 399),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(405, 410),
-      const IsoCoordinate.fromIso(405, 345),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(422, 410),
-      const IsoCoordinate.fromIso(422, 345),
-    ]);
-    _addPathAIShip([
-      const IsoCoordinate.fromIso(238, 372),
-      const IsoCoordinate.fromIso(272, 289),
-      const IsoCoordinate.fromIso(353, 234),
-    ]);
-    _addBasicAIShip(const IsoCoordinate.fromIso(499, 19));
-    _addBasicAIShip(const IsoCoordinate.fromIso(546, 34));
-    _addBasicAIShip(const IsoCoordinate.fromIso(480, 224));
-    _addBasicAIShip(const IsoCoordinate.fromIso(492, 224));
-    _addBasicAIShip(const IsoCoordinate.fromIso(513, 224));
-    _addBasicAIShip(const IsoCoordinate.fromIso(704, 75));
-  }
-
-  void _addPathAIShip(List<IsoCoordinate> path) {
-    var aiShip = FollowPathAIShip(path.first, 0,
-        getRandomId(), _map, _player, path);
-    _map.addGameObject(aiShip);
-  }
-
-  void _addBasicAIShip(IsoCoordinate isoCoordinate) {
-    var aiShip = BasicAIShip(
-        isoCoordinate, 0, getRandomId(), _map, _player);
-    _map.addGameObject(aiShip);
-  }
-
-  void _addBottle(IsoCoordinate isoCoordinate) {
-    var bottle = Bottle(isoCoordinate, 0, getRandomId());
-    _map.addGameObject(bottle);
+    _level = Level(_map, _player)..setup();
   }
 
   Ship getOurPlayer() {
@@ -250,7 +175,11 @@ class ShipGame extends Game {
   }
 
   void addBottleButton() {
-    _addBottle(_camera.center + const IsoCoordinate(20, 20));
+    var bottle = Bottle(
+        _player.getIsoCoordinate() + const IsoCoordinate.fromIso(0, 20),
+        0,
+        getRandomId());
+    _map.addGameObject(bottle);
   }
 
   int getHealth() {
