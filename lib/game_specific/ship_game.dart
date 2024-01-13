@@ -20,7 +20,6 @@ class ShipGame extends Game {
   late DefaultGameMap _map;
   late Ship _player;
   var _amountOfGameObjectsRendered = 0;
-  late final Level _level;
 
   /// The screen aspect ratio gets updated when the screen is resized or built.
   ShipGame({double screenAspectRatio = 1.0}) {
@@ -30,12 +29,12 @@ class ShipGame extends Game {
   setupNewGame(double aspectRatio) {
     _camera = DefaultCamera(aspectRatio: aspectRatio);
     _map = DefaultGameMap(_camera);
-    _player = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId(), _map);
-    _player.setShipMover(KeyboardShipMover(_player));
-    _player.bulletFlightSeconds = 1.0;
-    _player.setHealth(2);
+    _player = Ship(const IsoCoordinate.fromIso(0, 0), 0, getRandomId(), _map)
+      ..setHealth(2)
+      ..bulletFlightSeconds = 1.0
+      ..setShipMover(KeyboardShipMover());
     _map.addGameObject(_player);
-    _level = Level(_map, _player)..setup();
+    Level(_map, _player).setup();
   }
 
   Ship getOurPlayer() {
@@ -102,17 +101,6 @@ class ShipGame extends Game {
     return _camera.getGameCoordinate(screenXPercentage, screenYPercentage);
   }
 
-  void addOpponent() {
-    var enemy = BasicAIShip(
-      _camera.center + const IsoCoordinate(20, 20),
-      0,
-      getRandomId(),
-      _map,
-      _player,
-    );
-    _map.addGameObject(enemy);
-  }
-
   void reset() {
     setupNewGame(_camera.aspectRatio);
   }
@@ -167,14 +155,14 @@ class ShipGame extends Game {
   }
 
   void useJoystick() {
-    _player.shipMover = JoyStickShipMover(_player);
+    _player.setShipMover(JoyStickShipMover());
   }
 
   void useKeyboard() {
-    _player.shipMover = KeyboardShipMover(_player);
+    _player.setShipMover(KeyboardShipMover());
   }
 
-  void addBottleButton() {
+  void addBottle() {
     var bottle = Bottle(
         _player.getIsoCoordinate() + const IsoCoordinate.fromIso(0, 20),
         0,
@@ -182,8 +170,15 @@ class ShipGame extends Game {
     _map.addGameObject(bottle);
   }
 
-  int getHealth() {
-    return _player.health;
+  void addOpponent() {
+    var enemy = BasicAIShip(
+      _camera.center + const IsoCoordinate(20, 20),
+      0,
+      getRandomId(),
+      _map,
+      _player,
+    );
+    _map.addGameObject(enemy);
   }
 }
 
@@ -210,5 +205,9 @@ extension ShipGameStatisticExtension on ShipGame {
 
   double bulletFlightTime() {
     return _player.bulletFlightSeconds;
+  }
+
+  int getHealth() {
+    return _player.health;
   }
 }

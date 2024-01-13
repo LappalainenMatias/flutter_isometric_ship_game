@@ -81,8 +81,8 @@ class Ship extends DynamicGameObject with Health, Animation {
   @override
   void update(double dt) {
     if (shipMover != null) {
-      var moved = gameMap.move(this, shipMover!.nextCoordinate(dt));
-      shipMover!.update(dt);
+      var moved = gameMap.move(this, shipMover!.nextCoordinate(dt, this));
+      shipMover!.update(dt, this);
     }
     updateAnimation(dt);
     dto = ShipToDrawingDTO.create(this);

@@ -9,9 +9,8 @@ class KeyboardShipMover extends ShipMover {
   bool _movingDown = false;
   bool _movingLeft = false;
   bool _movingRight = false;
-  final Ship _ship;
 
-  KeyboardShipMover(this._ship);
+  KeyboardShipMover();
 
   void pressed(LogicalKeyboardKey logicalKey) {
     if (logicalKey == LogicalKeyboardKey.keyW) {
@@ -62,13 +61,8 @@ class KeyboardShipMover extends ShipMover {
   }
 
   @override
-  Ship getShip() {
-    return _ship;
-  }
-
-  @override
-  IsoCoordinate nextCoordinate(double dt) {
-    var nextCoordinate = getShip().getIsoCoordinate().copy();
+  IsoCoordinate nextCoordinate(double dt, Ship ship) {
+    var nextCoordinate = ship.getIsoCoordinate().copy();
     var speed = 50;
     if (getMovingDirections().contains(Direction.up)) {
       nextCoordinate += IsoCoordinate.fromIso(0, -speed * dt);

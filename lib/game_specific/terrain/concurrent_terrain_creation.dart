@@ -13,7 +13,7 @@ import '../game_object/tile.dart';
 
 class ConcurrentTerrainCreator {
   var _runningCount = 0;
-  final _regionCreator = TerrainCreator();
+  final _terrainCreator = TerrainCreator();
   late final int maxNumberOfIsolates;
 
   ConcurrentTerrainCreator() {
@@ -75,7 +75,7 @@ class ConcurrentTerrainCreator {
 
   List<StaticGameObject> _createGameObjects(Map args) {
     Point<int> regionCoordinate = Point(args['x'], args['y']);
-    var gameObjects = _regionCreator.create(
+    var gameObjects = _terrainCreator.create(
       args['regionSideWidth'],
       args['regionSideWidth'],
       (regionCoordinate.x * args['regionSideWidth']).toInt(),

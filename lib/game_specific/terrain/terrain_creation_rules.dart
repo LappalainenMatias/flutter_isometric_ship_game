@@ -1,28 +1,17 @@
+import 'dart:math';
+
 import '../game_object/tile.dart';
 
 /// Guides how to map terrain will be created
 abstract class TerrainCreationRules {
+  int getSeed();
+
+  double frequency();
+
   /// return the tiletype of the first rule that matches.
   List<TileRule> tileRules();
 
-  /// 1 means 100% of water, 0 means 0% of water.
-  /// 0.5 does not mean 50% of water because other map creation rules can
-  /// affect the amount of water the map has.
-  double amountOfWater();
-
-  /// Needs to be >= 0.
-  /// 1 means that there is no affect,
-  /// 5 means that there is large height differences.
-  double terrainSharpness();
-
-  /// Needs to be >= 0.
-  /// This is the frequency used when creating noise.
-  /// For example, 0.008 has more details than 0.004.
-  double frequency();
-
-  double minElevation();
-
-  double maxElevation();
+  double elevationTransformation(double e);
 }
 
 class DefaultTerrainCreationRules extends TerrainCreationRules {
@@ -42,13 +31,11 @@ class DefaultTerrainCreationRules extends TerrainCreationRules {
     ];
   }
 
-  @override
-  double amountOfWater() {
+  double _amountOfWater() {
     return 0.25;
   }
 
-  @override
-  double terrainSharpness() {
+  double _terrainSharpness() {
     return 1;
   }
 
@@ -57,14 +44,31 @@ class DefaultTerrainCreationRules extends TerrainCreationRules {
     return 0.0045;
   }
 
-  @override
-  double maxElevation() {
+  double _maxElevation() {
     return 15;
   }
 
-  @override
-  double minElevation() {
+  double _minElevation() {
     return -15;
+  }
+
+  @override
+  int getSeed() {
+    return 2;
+  }
+
+  @override
+  double elevationTransformation(double e) {
+    var peakToPeakAmplitude = min(_maxElevation(), _minElevation().abs());
+    e = pow(e, _terrainSharpness()).toDouble();
+    e = e - _amountOfWater();
+    e = e * peakToPeakAmplitude;
+    if (e < _minElevation()) {
+      e = _minElevation();
+    } else if (e > _maxElevation()) {
+      e = _maxElevation();
+    }
+    return e.roundToDouble();
   }
 }
 

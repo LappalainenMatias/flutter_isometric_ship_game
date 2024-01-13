@@ -51,7 +51,7 @@ class ShipGameInput extends ChangeNotifier {
   }
 
   void addBottle() {
-    _shipGame.addBottleButton();
+    _shipGame.addBottle();
   }
 
   void aspectRatioChange(double aspectRatio) {

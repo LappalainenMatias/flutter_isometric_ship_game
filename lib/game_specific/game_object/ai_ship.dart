@@ -18,7 +18,7 @@ class BasicAIShip extends Ship {
     super.gameMap,
     this._target,
   ) {
-    shipMover = JoyStickShipMover(this, _speed);
+    shipMover = JoyStickShipMover(_speed);
   }
 
   @override

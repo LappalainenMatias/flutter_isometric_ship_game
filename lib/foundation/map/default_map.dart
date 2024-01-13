@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:anki/foundation/game_object/game_object.dart';
 import 'package:anki/game_specific/terrain/concurrent_terrain_creation.dart';
+import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
 
 import '../../foundation/map/map.dart';
 import '../../game_specific/dynamic_game_object_manager.dart';
@@ -16,6 +17,7 @@ class DefaultGameMap extends GameMap {
   late DynamicGameObjectManager _dynamicGameObjectManager;
   final Map<Point<int>, Region> _regions = {};
   final _concurrentTerrainCreator = ConcurrentTerrainCreator();
+  final _terrainCreationRules = DefaultTerrainCreationRules();
   late final RegionTerrainCreationQueue _regionTerrainCreationQueue;
   late final VisibleRegionsHandler _visibleRegions;
 

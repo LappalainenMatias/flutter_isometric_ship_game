@@ -5,8 +5,8 @@ import '../animation/ship_animation.dart';
 import '../game_object/ship.dart';
 
 abstract class ShipMover {
-  void update(double dt) {
-    _setCorrectAnimation();
+  void update(double dt, Ship ship) {
+    _setCorrectAnimation(ship);
   }
 
   List<Float32List> getAnimationUp() {
@@ -41,7 +41,7 @@ abstract class ShipMover {
     return animationRedShipDownRight;
   }
 
-  void _setCorrectAnimation() {
+  void _setCorrectAnimation(Ship ship) {
     if (getMovingDirections().isEmpty) {
       return;
     }
@@ -50,31 +50,29 @@ abstract class ShipMover {
     var movingLeft = getMovingDirections().contains(Direction.left);
     var movingRight = getMovingDirections().contains(Direction.right);
     if (movingUp && movingRight) {
-      getShip().animationParts = getAnimationUpRight();
+      ship.animationParts = getAnimationUpRight();
     } else if (movingUp && movingLeft) {
-      getShip().animationParts = getAnimationUpLeft();
+      ship.animationParts = getAnimationUpLeft();
     } else if (movingDown && movingRight) {
-      getShip().animationParts = getAnimationDownRight();
+      ship.animationParts = getAnimationDownRight();
     } else if (movingDown && movingLeft) {
-      getShip().animationParts = getAnimationDownLeft();
+      ship.animationParts = getAnimationDownLeft();
     } else if (movingUp) {
-      getShip().animationParts = getAnimationUp();
+      ship.animationParts = getAnimationUp();
     } else if (movingDown) {
-      getShip().animationParts = getAnimationDown();
+      ship.animationParts = getAnimationDown();
     } else if (movingLeft) {
-        getShip().animationParts = getAnimationLeft();
+      ship.animationParts = getAnimationLeft();
     } else if (movingRight) {
-      getShip().animationParts = getAnimationRight();
+      ship.animationParts = getAnimationRight();
     } else {
-      getShip().animationParts = getAnimationUp();
+      ship.animationParts = getAnimationUp();
     }
   }
 
-  Ship getShip();
-
   Set<Direction> getMovingDirections();
 
-  IsoCoordinate nextCoordinate(double dt);
+  IsoCoordinate nextCoordinate(double dt, Ship ship);
 }
 
 enum Direction {
