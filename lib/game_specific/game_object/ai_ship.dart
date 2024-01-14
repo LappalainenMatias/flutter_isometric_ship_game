@@ -11,6 +11,7 @@ class BasicAIShip extends Ship {
   final int _accuracy = 10; // This value was created by trial and error.
   final double _speed = 20; // This value was created by trial and error.
 
+
   BasicAIShip(
     super.topLeft,
     super.elevation,
@@ -54,7 +55,7 @@ class BasicAIShip extends Ship {
 
   bool _isCloseToTarget() {
     return getIsoCoordinate().manhattanDistanceTo(_target.getIsoCoordinate()) <
-        150;
+        300;
   }
 
   bool _canSeeTarget() {

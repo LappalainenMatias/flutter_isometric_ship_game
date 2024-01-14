@@ -33,6 +33,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/foun
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/foundation/region/region_render_data_builder.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/foundation/rendering_data/rendering_data.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/foundation/utils/random_id.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/animation/anchor_animation.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/animation/bottle_animation.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/animation/canonball_animation.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/animation/ship_animation.dart
@@ -41,6 +42,7 @@ file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/bottle.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/cannonball.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/game_object_to_rendering_data.dart
+file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/golden_anchor.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/ship.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/tile.dart
 file:///Users/matiaslappalainen/Documents/flutter_projects/infinite_map/lib/game_specific/game_object/tile_creator.dart

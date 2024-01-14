@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:anki/game_specific/game_object/bottle.dart';
+import 'package:anki/game_specific/game_object/golden_anchor.dart';
 import 'package:anki/game_specific/game_object/ship.dart';
 import 'package:anki/game_specific/game_object/tile.dart';
 
@@ -84,6 +85,17 @@ class BottleToDrawingDTO {
       bottle.topLeft,
       bottle.elevation,
       scale: bottle.width,
+    );
+  }
+}
+
+class GoldenAnchorToDrawingDTO {
+  static RenderingData create(GoldenAnchor anchor) {
+    return createRenderingData(
+      anchor.getSpriteSheetRect(),
+      anchor.topLeft,
+      anchor.elevation,
+      scale: anchor.width,
     );
   }
 }

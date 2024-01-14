@@ -4,7 +4,7 @@ import 'package:anki/game_specific/movement/ship_mover.dart';
 import '../game_object/ship.dart';
 
 class JoyStickShipMover extends ShipMover {
-  final double _maxSpeed;
+  double maxMovementSpeed;
   double _joystickX = 0;
   double _joystickY = 0;
   bool _movingUp = false;
@@ -12,7 +12,7 @@ class JoyStickShipMover extends ShipMover {
   bool _movingLeft = false;
   bool _movingRight = false;
 
-  JoyStickShipMover([this._maxSpeed = 50]);
+  JoyStickShipMover([this.maxMovementSpeed = 50]);
 
   /// (0,0) = center, (1, 0) = right.
   void setJoystick(double x, double y) {
@@ -78,8 +78,8 @@ class JoyStickShipMover extends ShipMover {
   @override
   IsoCoordinate nextCoordinate(double dt, Ship ship) {
     var speed = min(
-        sqrt(_joystickX * _joystickX + _joystickY * _joystickY) * _maxSpeed,
-        _maxSpeed);
+        sqrt(_joystickX * _joystickX + _joystickY * _joystickY) * maxMovementSpeed,
+        maxMovementSpeed);
     var nextCoordinate = ship.getIsoCoordinate() +
         IsoCoordinate.fromIso(speed * _joystickX * dt, speed * _joystickY * dt);
     return nextCoordinate;

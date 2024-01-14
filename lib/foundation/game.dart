@@ -15,4 +15,4 @@ abstract class Game {
   GameState getGameState();
 }
 
-enum GameState { going, gameOver }
+enum GameState { going, gameOver, won }

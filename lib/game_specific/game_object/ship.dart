@@ -12,6 +12,7 @@ import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
 class Ship extends DynamicGameObject with Health, Animation {
+  int collectedGoldAnchors = 0;
   ShipMover? shipMover;
   IsoCoordinate _topLeft;
   double elevation;

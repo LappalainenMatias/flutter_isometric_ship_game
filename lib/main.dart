@@ -100,22 +100,22 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: AddOpponent(),
-                ),
-                Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: AddBottle(),
-                ),
-              ],
-            ),
-          ),
+          //Align(
+          //  alignment: Alignment.bottomLeft,
+          //  child: Column(
+          //    mainAxisAlignment: MainAxisAlignment.end,
+          //    children: [
+          //      Padding(
+          //        padding: EdgeInsets.all(8.0),
+          //        child: AddOpponent(),
+          //      ),
+          //      Padding(
+          //        padding: EdgeInsets.all(8.0),
+          //        child: AddBottle(),
+          //      ),
+          //    ],
+          //  ),
+          //),
         ],
       ),
     );

@@ -110,6 +110,9 @@ class ShipGame extends Game {
     if (_player.destroy == true) {
       return GameState.gameOver;
     }
+    if (_player.collectedGoldAnchors == 3) {
+      return GameState.won;
+    }
     return GameState.going;
   }
 
@@ -209,5 +212,9 @@ extension ShipGameStatisticExtension on ShipGame {
 
   int getHealth() {
     return _player.health;
+  }
+
+  int goldAnchorsCollected() {
+    return _player.collectedGoldAnchors;
   }
 }

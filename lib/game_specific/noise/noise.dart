@@ -79,7 +79,7 @@ final class NoiseCreator {
     e += 0.5 * _elevationNoise2.noise2(x * frequency2, y * frequency2);
     e += 0.25 * _elevationNoise3.noise2(x * frequency3, y * frequency3);
     e = e / 1.75;
-    return mapCreationRules.elevationTransformation(e);
+    return mapCreationRules.elevationTransformation(e, x.toInt(), y.toInt());
   }
 
   List<List<double>> _fixedSizeList(int width, int height) {

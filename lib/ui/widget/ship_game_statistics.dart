@@ -42,9 +42,15 @@ class _ShipGameStatisticsState extends State<ShipGameStatistics> {
             ),
             Text("Frames > 16 ms: ${gameLoop.missedFrames}",
                 style: const TextStyle(color: Colors.white)),
-            Text("Health: ${game.getHealth()}, Shooting speed: ${game.shootingSpeedMS()} ms",
+            Text(
+                "Health: ${game.getHealth()}, Shooting speed: ${game.shootingSpeedMS()} ms",
                 style: const TextStyle(color: Colors.white)),
             Text("Bullet flight time: ${game.bulletFlightTime()} s",
+                style: const TextStyle(color: Colors.white)),
+            Text(
+                game.goldAnchorsCollected() != 4
+                    ? "Gold anchors: ${game.goldAnchorsCollected()} / 4"
+                    : "YOU HAVE COLLECTED ALL GOLD ANCHORS!",
                 style: const TextStyle(color: Colors.white)),
           ],
         ),

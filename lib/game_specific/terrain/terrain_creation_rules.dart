@@ -4,6 +4,8 @@ import '../game_object/tile.dart';
 
 /// Guides how to map terrain will be created
 abstract class TerrainCreationRules {
+  void setSeed(int seed);
+
   int getSeed();
 
   double frequency();
@@ -11,10 +13,19 @@ abstract class TerrainCreationRules {
   /// return the tiletype of the first rule that matches.
   List<TileRule> tileRules();
 
-  double elevationTransformation(double e);
+  /// Transform the elevation value to a value that is used in the game.
+  /// The x and y can be used to increase a wall like effect to close the map.
+  double elevationTransformation(double e, int x, int y);
 }
 
 class DefaultTerrainCreationRules extends TerrainCreationRules {
+  int _seed = 10;
+
+  @override
+  void setSeed(int seed) {
+    _seed = seed;
+  }
+
   @override
   List<TileRule> tileRules() {
     return [
@@ -32,7 +43,7 @@ class DefaultTerrainCreationRules extends TerrainCreationRules {
   }
 
   double _amountOfWater() {
-    return 0.25;
+    return 0.40;
   }
 
   double _terrainSharpness() {
@@ -54,11 +65,11 @@ class DefaultTerrainCreationRules extends TerrainCreationRules {
 
   @override
   int getSeed() {
-    return 2;
+    return _seed;
   }
 
   @override
-  double elevationTransformation(double e) {
+  double elevationTransformation(double e, int x, int y) {
     var peakToPeakAmplitude = min(_maxElevation(), _minElevation().abs());
     e = pow(e, _terrainSharpness()).toDouble();
     e = e - _amountOfWater();
@@ -68,6 +79,7 @@ class DefaultTerrainCreationRules extends TerrainCreationRules {
     } else if (e > _maxElevation()) {
       e = _maxElevation();
     }
+    e += (x.abs() + y.abs()) / 50;
     return e.roundToDouble();
   }
 }
