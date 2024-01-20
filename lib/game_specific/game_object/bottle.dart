@@ -11,16 +11,16 @@ import '../animation/bottle_animation.dart';
 import 'game_object_to_rendering_data.dart';
 
 class Bottle extends Collectable with Animation {
-  IsoCoordinate topLeft;
-  double elevation;
+  IsoCoordinate _topLeft;
+  final double _elevation;
   late CollisionBox _collisionBox;
-  double width = 1.0;
+  double _width = 1.0;
   bool _isVisible = true;
   late RenderingData dto;
   final int _id;
 
-  Bottle(this.topLeft, this.elevation, this._id) {
-    _collisionBox = CollisionBox(topLeft, width, elevation);
+  Bottle(this._topLeft, this._elevation, this._id) {
+    _collisionBox = CollisionBox(_topLeft, _width, _elevation);
     animationParts = bottleAnimation;
     dto = BottleToDrawingDTO.create(this);
   }
@@ -32,12 +32,11 @@ class Bottle extends Collectable with Animation {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (distance: topLeft.isoY, elevation: elevation);
+    return (distance: _topLeft.isoY, elevation: _elevation);
   }
 
   @override
   CollisionBox getCollisionBox() {
-    _collisionBox.update(topLeft, width, elevation);
     return _collisionBox;
   }
 
@@ -49,7 +48,7 @@ class Bottle extends Collectable with Animation {
 
   @override
   IsoCoordinate getIsoCoordinate() {
-    return topLeft;
+    return _topLeft;
   }
 
   @override
@@ -64,7 +63,7 @@ class Bottle extends Collectable with Animation {
 
   @override
   double getElevation() {
-    return elevation;
+    return _elevation;
   }
 
   @override
@@ -80,7 +79,8 @@ class Bottle extends Collectable with Animation {
 
   @override
   void setIsoCoordinate(IsoCoordinate isoCoordinate) {
-    topLeft = isoCoordinate.copy();
+    _topLeft = isoCoordinate;
+    _collisionBox.update(_topLeft, _width, _elevation);
   }
 
   @override
@@ -102,4 +102,6 @@ class Bottle extends Collectable with Animation {
       throw Exception('Invalid number in collectItem: $num');
     }
   }
+
+  double getWidth() => _width;
 }

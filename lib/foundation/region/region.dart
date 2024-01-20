@@ -7,7 +7,14 @@ import '../rendering_data/rendering_data.dart';
 abstract class Region implements Comparable<Region> {
   IsoCoordinate getBottomCoordinate();
 
-  List<GameObject> getGameObjects();
+  // We have all these separate getters for performance reasons.
+  List<StaticGameObject> getUnderWaterStaticGameObjects();
+
+  List<StaticGameObject> getAboveWaterStaticGameObjects();
+
+  List<DynamicGameObject> getUnderWaterDynamicGameObjects();
+
+  List<DynamicGameObject> getAboveWaterDynamicGameObjects();
 
   bool isEmpty();
 

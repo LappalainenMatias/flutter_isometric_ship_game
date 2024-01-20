@@ -155,7 +155,7 @@ class Level {
   void _addGiantPathAIShip(List<IsoCoordinate> path) {
     var aiShip =
         FollowPathAIShip(path.first, 0, getRandomId(), _map, _player, path)
-          ..width = 3.0
+          ..setWidth(3.0)
           ..setHealth(3)
           ..shootingSpeedMS = 300;
     _map.addGameObject(aiShip);
@@ -164,7 +164,7 @@ class Level {
   void _addSuperGiantPathAIShip(List<IsoCoordinate> path) {
     var aiShip =
     FollowPathAIShip(path.first, 0, getRandomId(), _map, _player, path)
-      ..width = 5.0
+      ..setWidth(5.0)
       ..setHealth(6)
       ..shootingSpeedMS = 500;
     if (aiShip.shipMover is JoyStickShipMover) {

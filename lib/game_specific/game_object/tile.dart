@@ -7,16 +7,16 @@ import 'game_object_to_rendering_data.dart';
 
 class Tile extends StaticGameObject {
   final TileType type;
-  final IsoCoordinate topLeft;
-  final double elevation;
+  final IsoCoordinate _topLeft;
+  final double _elevation;
   late final RenderingData drawingDTO;
-  final int width;
+  final int _width;
   late final CollisionBox collisionBox;
   final int _id;
 
-  Tile(this.type, this.topLeft, this.elevation, this.width, this._id,
+  Tile(this.type, this._topLeft, this._elevation, this._width, this._id,
       {RenderingData? drawingDTO}) {
-    collisionBox = CollisionBox(topLeft, width.toDouble(), elevation);
+    collisionBox = CollisionBox(_topLeft, _width.toDouble(), _elevation);
     this.drawingDTO = drawingDTO ?? TileToDrawingDTO.create(this);
   }
 
@@ -48,10 +48,10 @@ class Tile extends StaticGameObject {
     return [
       "Tile",
       type.name,
-      topLeft.isoX,
-      topLeft.isoY,
-      elevation,
-      width,
+      _topLeft.isoX,
+      _topLeft.isoY,
+      _elevation,
+      _width,
       _id,
       [
         drawingDTO.rSTTransforms,
@@ -62,28 +62,30 @@ class Tile extends StaticGameObject {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (distance: topLeft.isoY, elevation: elevation);
+    return (distance: _topLeft.isoY, elevation: _elevation);
   }
 
   @override
-  CollisionBox? getCollisionBox() {
+  CollisionBox getCollisionBox() {
     return collisionBox;
   }
 
   @override
   IsoCoordinate getIsoCoordinate() {
-    return topLeft;
+    return _topLeft;
   }
 
   @override
   double getElevation() {
-    return elevation;
+    return _elevation;
   }
 
   @override
   int getId() {
     return _id;
   }
+
+  double getWidth() => _width.toDouble();
 }
 
 enum TileType {

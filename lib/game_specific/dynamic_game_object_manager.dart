@@ -18,29 +18,38 @@ class DynamicGameObjectManager {
 
   /// Returns true if the dynamic game object is able to move into the new coordinate.
   bool isAbleToMove(
-      DynamicGameObject dynamicGameObject, IsoCoordinate nextCoordinate) {
+      DynamicGameObject dgo, IsoCoordinate nextCoordinate) {
     // Save old coordinate and move the dynamic game object to the next coordinate
-    var old = dynamicGameObject.getIsoCoordinate().copy();
-    dynamicGameObject.setIsoCoordinate(nextCoordinate);
+    var old = dgo.getIsoCoordinate().copy();
+    dgo.setIsoCoordinate(nextCoordinate);
 
     // Find collisions
     var regions = <Region>{
-      _map.getRegion(dynamicGameObject.getIsoCoordinate())
+      _map.getRegion(dgo.getIsoCoordinate())
     }; // Todo improvement here would be to check other regions which are close to the player
     var collisions = <GameObject>[];
     for (var region in regions) {
-      collisions
-          .addAll(findCollisions(region.getGameObjects(), dynamicGameObject));
+      if (dgo.isUnderWater()) {
+        collisions.addAll(
+            findCollisions(region.getUnderWaterStaticGameObjects(), dgo));
+        collisions.addAll(
+            findCollisions(region.getUnderWaterDynamicGameObjects(), dgo));
+      } else {
+        collisions.addAll(
+            findCollisions(region.getAboveWaterStaticGameObjects(), dgo));
+        collisions.addAll(
+            findCollisions(region.getAboveWaterDynamicGameObjects(), dgo));
+      }
     }
 
     // Remove collisions which should be skipped
     // Todo maybe this skipping should be implemented in the collision detector
     collisions.removeWhere((element) =>
-        dynamicGameObject.skipCollisionAction.contains(element.getId()));
+        dgo.skipCollisionAction.contains(element.getId()));
     collisions.removeWhere((element) => element is Collectable);
 
     // Move player back to the old coordinate
-    dynamicGameObject.setIsoCoordinate(old);
+    dgo.setIsoCoordinate(old);
     return collisions.isEmpty;
   }
 
@@ -84,8 +93,19 @@ class DynamicGameObjectManager {
 
   void _executeCollisionActions() {
     for (var dgo in _gameObjectToRegion.keys) {
-      var collisions =
-          findCollisions(_gameObjectToRegion[dgo]!.getGameObjects(), dgo);
+      var region = _gameObjectToRegion[dgo]!;
+      var collisions = <GameObject>[];
+      if (dgo.isUnderWater()) {
+        collisions.addAll(
+            findCollisions(region.getUnderWaterStaticGameObjects(), dgo));
+        collisions.addAll(
+            findCollisions(region.getUnderWaterDynamicGameObjects(), dgo));
+      } else {
+        collisions.addAll(
+            findCollisions(region.getAboveWaterStaticGameObjects(), dgo));
+        collisions.addAll(
+            findCollisions(region.getAboveWaterDynamicGameObjects(), dgo));
+      }
       if (collisions.isNotEmpty) {
         dgo.executeCollisionAction(dgo, collisions);
       }

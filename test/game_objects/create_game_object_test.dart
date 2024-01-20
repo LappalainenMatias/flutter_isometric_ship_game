@@ -52,7 +52,7 @@ void main() {
   test("Check that elevation and coordinate stays the same", () {
     Tile tile = TileCreator.create(
         1.0, 0.0, const Point(1, 1), DefaultTerrainCreationRules().tileRules());
-    expect(tile.elevation, 1.0);
-    expect(tile.topLeft, const IsoCoordinate(1, 1));
+    expect(tile.getElevation(), 1.0);
+    expect(tile.getIsoCoordinate(), const IsoCoordinate(1, 1));
   });
 }

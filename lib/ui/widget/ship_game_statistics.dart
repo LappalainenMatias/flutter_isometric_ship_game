@@ -50,8 +50,8 @@ class _ShipGameStatisticsState extends State<ShipGameStatistics> {
             Text(
                 game.goldAnchorsCollected() != 4
                     ? "Gold anchors: ${game.goldAnchorsCollected()} / 4"
-                    : "YOU HAVE COLLECTED ALL GOLD ANCHORS!",
-                style: const TextStyle(color: Colors.white)),
+                    : "YOU HAVE COLLECTED ALL THE GOLD ANCHORS!",
+                style: game.goldAnchorsCollected() != 4 ? const TextStyle(color: Colors.white) : const TextStyle(color: Colors.amber)),
           ],
         ),
       ),

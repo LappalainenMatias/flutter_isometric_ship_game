@@ -15,9 +15,9 @@ class Ship extends DynamicGameObject with Health, Animation {
   int collectedGoldAnchors = 0;
   ShipMover? shipMover;
   IsoCoordinate _topLeft;
-  double elevation;
+  final double _elevation;
   late CollisionBox _collisionBox;
-  double width = 2;
+  double _width = 2;
   bool _isVisible = true;
   late RenderingData dto;
   final int _id;
@@ -26,9 +26,9 @@ class Ship extends DynamicGameObject with Health, Animation {
   double bulletFlightSeconds = 5;
   GameMap gameMap;
 
-  Ship(this._topLeft, this.elevation, this._id, this.gameMap) {
+  Ship(this._topLeft, this._elevation, this._id, this.gameMap) {
     actionTypes.add(CollisionActionType.collectItem);
-    _collisionBox = CollisionBox(_topLeft, width - 0.2, elevation);
+    _collisionBox = CollisionBox(_topLeft, _width - 0.2, _elevation);
     animationParts = animationRedShipDown;
     dto = ShipToDrawingDTO.create(this);
   }
@@ -44,12 +44,11 @@ class Ship extends DynamicGameObject with Health, Animation {
 
   @override
   ({double distance, double elevation}) nearness() {
-    return (distance: _topLeft.isoY, elevation: elevation);
+    return (distance: _topLeft.isoY, elevation: _elevation);
   }
 
   @override
   CollisionBox getCollisionBox() {
-    _collisionBox.update(_topLeft, width, elevation);
     return _collisionBox;
   }
 
@@ -76,7 +75,7 @@ class Ship extends DynamicGameObject with Health, Animation {
 
   @override
   double getElevation() {
-    return elevation;
+    return _elevation;
   }
 
   @override
@@ -101,10 +100,20 @@ class Ship extends DynamicGameObject with Health, Animation {
 
   @override
   void setIsoCoordinate(IsoCoordinate isoCoordinate) {
-    _topLeft = isoCoordinate.copy();
+    _topLeft = isoCoordinate;
+    _collisionBox.update(_topLeft, _width, _elevation);
   }
 
   bool isAbleToShoot() {
     return DateTime.now().difference(lastShot).inMilliseconds > shootingSpeedMS;
+  }
+
+  double getWidth() {
+    return _width;
+  }
+
+  void setWidth(double width) {
+    _width = width;
+    _collisionBox.update(_topLeft, _width, _elevation);
   }
 }

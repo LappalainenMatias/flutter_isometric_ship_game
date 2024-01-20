@@ -9,11 +9,11 @@ class CollisionBox {
   late double topZ;
 
   CollisionBox(IsoCoordinate topLeft, double sideWidth, double elevation) {
-    final point = topLeft.toPoint();
-    leftX = point.x;
-    rightX = point.x + sideWidth;
-    bottomY = point.y;
-    topY = point.y + sideWidth;
+    var point = topLeft.isoToCartesian();
+    leftX = point.$1;
+    rightX = point.$1 + sideWidth;
+    bottomY = point.$2;
+    topY = point.$2 + sideWidth;
     bottomZ = elevation;
     topZ = elevation + sideWidth;
   }
@@ -27,11 +27,11 @@ class CollisionBox {
 
   void update(
       IsoCoordinate newIsoCoordinate, double newWidth, double newElevation) {
-    final point = newIsoCoordinate.toPoint();
-    leftX = point.x;
-    rightX = point.x + newWidth;
-    bottomY = point.y;
-    topY = point.y + newWidth;
+    var point = newIsoCoordinate.isoToCartesian();
+    leftX = point.$1;
+    rightX = point.$1 + newWidth;
+    bottomY = point.$2;
+    topY = point.$2 + newWidth;
     bottomZ = newElevation;
     topZ = newElevation + newWidth;
   }

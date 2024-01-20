@@ -14,9 +14,9 @@ IsoCoordinate regionPointToIsoCoordinate(Point<int> regionCoordinate) {
 
 /// Returns the region coordinate which the isoCoordinate is part of
 Point<int> isoCoordinateToRegionPoint(IsoCoordinate isoCoordinate) {
-  Point isoPoint = isoCoordinate.toPoint();
-  int regionX = (isoPoint.x / regionSideWidth).floor();
-  int regionY = (isoPoint.y / regionSideWidth).floor();
+  var point = isoCoordinate.isoToCartesian();
+  int regionX = (point.$1 / regionSideWidth).floor();
+  int regionY = (point.$2 / regionSideWidth).floor();
   return Point(regionX, regionY);
 }
 

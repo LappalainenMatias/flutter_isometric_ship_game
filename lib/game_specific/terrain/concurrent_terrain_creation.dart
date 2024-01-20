@@ -35,7 +35,8 @@ class ConcurrentTerrainCreator {
   }
 
   void _webAddGameObjects(Region region) async {
-    var regionCoordinate = isoCoordinateToRegionPoint(region.getBottomCoordinate());
+    var regionCoordinate =
+        isoCoordinateToRegionPoint(region.getBottomCoordinate());
 
     /// This part is concurrent
     var result = await JsIsolatedWorker().run(
@@ -50,17 +51,26 @@ class ConcurrentTerrainCreator {
 
     /// This part is not concurrent and encodes the result, because we cannot
     /// return a list of GameObjects from the web worker.
-    List<StaticGameObject> staticGameObjects = [];
+    List<StaticGameObject> staticUnderWater = [];
+    List<StaticGameObject> staticAboveWater = [];
     for (List encoded in result) {
-      staticGameObjects.add(Tile.fromList(encoded));
+      var tile = Tile.fromList(encoded);
+      if (tile.isUnderWater()) {
+        staticUnderWater.add(tile);
+      } else {
+        staticAboveWater.add(tile);
+      }
     }
-    (region as DefaultRegion).changeStaticGameObjects(staticGameObjects);
+    (region as DefaultRegion).changeStaticGameObjects(
+      underWater: staticUnderWater,
+      aboveWater: staticAboveWater,
+    );
     _runningCount--;
   }
 
   void _otherPlatformsAddGameObjects(Region region) async {
     Point<int> regionCoordinate =
-    isoCoordinateToRegionPoint(region.getBottomCoordinate());
+        isoCoordinateToRegionPoint(region.getBottomCoordinate());
 
     final args = {
       'x': regionCoordinate.x,
@@ -69,11 +79,15 @@ class ConcurrentTerrainCreator {
     };
 
     final gameObjects = await compute(_createGameObjects, args);
-    (region as DefaultRegion).changeStaticGameObjects(gameObjects);
+    (region as DefaultRegion).changeStaticGameObjects(
+      underWater: gameObjects.$1,
+      aboveWater: gameObjects.$2,
+    );
     _runningCount--;
   }
 
-  List<StaticGameObject> _createGameObjects(Map args) {
+  (List<StaticGameObject> underWater, List<StaticGameObject> aboveWater)
+      _createGameObjects(Map args) {
     Point<int> regionCoordinate = Point(args['x'], args['y']);
     var gameObjects = _terrainCreator.create(
       args['regionSideWidth'],
@@ -81,7 +95,11 @@ class ConcurrentTerrainCreator {
       (regionCoordinate.x * args['regionSideWidth']).toInt(),
       (regionCoordinate.y * args['regionSideWidth']).toInt(),
     );
-    return gameObjects;
+    var underWater =
+        gameObjects.where((element) => element.isUnderWater()).toList();
+    var aboveWater =
+        gameObjects.where((element) => !element.isUnderWater()).toList();
+    return (underWater, aboveWater);
   }
 
   /// Returns true if there are not too many concurrent operatations running

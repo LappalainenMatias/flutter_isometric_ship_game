@@ -76,3 +76,8 @@ it can only be run in the main thread.
 1. run: ```dart compile js -O2 -o web/regionworker.js lib/game_specific/region/jsregionworker.dart``` to make sure that regionworker.js is up to date.
 2. run: ```flutter build web --base-href "/flutter_isometric_map_game/"```
 3. copy the files from ```build/web``` to ```webBuild/flutter_isometric_map_game/``` and push to github
+
+### Current bottlenecks:
+1. finding collisions (findCollisions()).
+2. updating region drawing data (regionToDrawingDTO())
+![bottleneck-2024-01-20.png](readme_images/bottleneck-2024-01-20.png)

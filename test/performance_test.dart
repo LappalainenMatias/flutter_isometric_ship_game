@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:anki/foundation/camera/default_camera.dart';
 import 'package:anki/foundation/collision/collision_detector.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
@@ -5,6 +7,7 @@ import 'package:anki/foundation/game_object/game_object.dart';
 import 'package:anki/foundation/game_object/render_data_builder.dart';
 import 'package:anki/foundation/map/default_map.dart';
 import 'package:anki/foundation/region/default_region.dart';
+import 'package:anki/foundation/region/region_render_data_builder.dart';
 import 'package:anki/foundation/utils/random_id.dart';
 import 'package:anki/game_specific/game_object/ai_ship.dart';
 import 'package:anki/game_specific/game_object/cannonball.dart';
@@ -101,19 +104,6 @@ void main() {
     /// 4: 12, 12, 12 (Changed from String to int)
   });
 
-  test('GetAllGameObjects', () {
-    var region = DefaultRegion(const IsoCoordinate(0, 0), []);
-    var terrainCreator = TerrainCreator();
-    region.changeStaticGameObjects(terrainCreator.create(32, 32, 0, 0));
-    Stopwatch stopwatch = Stopwatch()..start();
-    for (int i = 0; i < 1000; i++) {
-      region.getGameObjects();
-    }
-    stopwatch.stop();
-    print(
-        'GetAllGameObjects took ${stopwatch.elapsedMicroseconds} microseconds');
-  });
-
   test('Create region terrain', () {
     TerrainCreator regionCreator = TerrainCreator();
     Stopwatch stopwatch = Stopwatch()..start();
@@ -167,7 +157,8 @@ void main() {
   test("Collision detector performance", () {
     var regionCreator = TerrainCreator();
     var regionGround = regionCreator.create(256, 256, 0, 0);
-    var cannonball = Cannonball.defaultCannonball(getRandomId());
+    var projectile = Projectile(const IsoCoordinate(0.1, 0.0), 1);
+    var cannonball = Cannonball(const IsoCoordinate(0, 0), 0, 1, projectile, 1);
     Stopwatch stopwatch = Stopwatch()..start();
     findCollisions(regionGround, cannonball);
     stopwatch.stop();
@@ -181,19 +172,13 @@ void main() {
   });
 
   test("Follow path ai ship can see performance", () {
-    var target = Ship(
-      const IsoCoordinate.fromIso(20, 20),
-      0,
-      0,
-    );
-    var camera = TestCamera();
-    var dynamicGameObjectManager =
-        TestDynamicGameObjectManager(DefaultGameMap(camera), camera);
+    var map = DefaultGameMap(TestCamera());
+    var target = Ship(const IsoCoordinate.fromIso(20, 20), 0, 0, map);
     var followPathAi = FollowPathAIShip(
       const IsoCoordinate.fromIso(0, 0),
       0,
       0,
-      dynamicGameObjectManager,
+      map,
       target,
       [
         const IsoCoordinate.fromIso(0, 0),
@@ -206,9 +191,51 @@ void main() {
       followPathAi.update(0.016);
     }
     print('Follow path ai ship took ${stopwatch.elapsedMilliseconds} ms');
+
     /// Update 1000 times (ms)
     /// 1: 4691, 4681, 4739
     /// 2: 58, 50, 51 (Made the NoiseCreator into singleton so that it is created only ones)
     /// 3: TODO We could try to storage the noise so that it does not have to be recreated every time
+  });
+
+  test("game objects to rendering data", () {
+    var staticAbove = <StaticGameObject>[];
+    var staticUnder = <StaticGameObject>[];
+    for (int i = 0; i < 512 * 512; i++) {
+      var isUnder = i % 2 == 0;
+      if (isUnder) {
+        staticUnder.add(Tile(TileType.grass,
+            IsoCoordinate(i.toDouble(), i.toDouble()), -1, 1, 0));
+      } else {
+        staticAbove.add(Tile(TileType.grass,
+            IsoCoordinate(i.toDouble(), i.toDouble()), 1, 1, 0));
+      }
+    }
+    var dynamicAbove = <DynamicGameObject>[];
+    var dynamicUnder = <DynamicGameObject>[];
+    for (int i = 0; i < 100; i++) {
+      var isUnder = i % 2 == 0;
+      if (isUnder) {
+        dynamicUnder.add(Ship(IsoCoordinate(i.toDouble() * 5, i.toDouble() * 5),
+            0, 0, DefaultGameMap(TestCamera())));
+      } else {
+        dynamicAbove.add(Ship(IsoCoordinate(i.toDouble() * 5, i.toDouble() * 5),
+            0, 0, DefaultGameMap(TestCamera())));
+      }
+    }
+
+    Stopwatch stopwatch = Stopwatch()..start();
+    var res = regionToDrawingDTO2(
+      staticUnderWater: staticUnder,
+      staticAboveWater: staticAbove,
+      dynamicUnderWater: dynamicUnder,
+      dynamicAboveWater: dynamicAbove,
+    );
+    stopwatch.stop();
+    print(
+        'game objects to rendering data took ${stopwatch.elapsedMilliseconds} ms');
+
+    /// 256 * 256 tiles + 100 ships
+    /// 1: 46, 44, 49
   });
 }

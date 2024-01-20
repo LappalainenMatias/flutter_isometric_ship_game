@@ -23,9 +23,14 @@ class IsoCoordinate {
 
   /// Does the projection to opposite direction
   Point<double> toPoint() {
+    var pointData = isoToCartesian();
+    return Point(pointData.$1, pointData.$2);
+  }
+
+  (double x, double y) isoToCartesian() {
     double y = isoY / 2 - isoX / 4;
     double x = isoY - y;
-    return Point(x, y);
+    return (x, y);
   }
 
   double manhattanDistanceTo(IsoCoordinate other) {

@@ -18,19 +18,19 @@ class CannonballToDrawingDTO {
       cannonball.getSpriteSheetRect(),
       cannonball.getIsoCoordinate(),
       cannonball.getElevation(),
-      scale: cannonball.width,
+      scale: cannonball.getWidth(),
     );
   }
 }
 
 class TileToDrawingDTO {
   static RenderingData create(Tile tile) {
-    var spritesheetRect = rect(tile.type, tile.elevation);
+    var spritesheetRect = rect(tile.type, tile.getElevation());
     return createRenderingData(
       spritesheetRect,
-      tile.topLeft,
-      tile.elevation,
-      scale: tile.width.toDouble(),
+      tile.getIsoCoordinate(),
+      tile.getElevation(),
+      scale: tile.getWidth().toDouble(),
     );
   }
 
@@ -72,8 +72,8 @@ class ShipToDrawingDTO {
     return createRenderingData(
       ship.getSpriteSheetRect(),
       ship.getIsoCoordinate(),
-      ship.elevation,
-      scale: ship.width,
+      ship.getElevation(),
+      scale: ship.getWidth(),
     );
   }
 }
@@ -82,9 +82,9 @@ class BottleToDrawingDTO {
   static RenderingData create(Bottle bottle) {
     return createRenderingData(
       bottle.getSpriteSheetRect(),
-      bottle.topLeft,
-      bottle.elevation,
-      scale: bottle.width,
+      bottle.getIsoCoordinate(),
+      bottle.getElevation(),
+      scale: bottle.getWidth(),
     );
   }
 }
@@ -93,9 +93,9 @@ class GoldenAnchorToDrawingDTO {
   static RenderingData create(GoldenAnchor anchor) {
     return createRenderingData(
       anchor.getSpriteSheetRect(),
-      anchor.topLeft,
-      anchor.elevation,
-      scale: anchor.width,
+      anchor.getIsoCoordinate(),
+      anchor.getElevation(),
+      scale: anchor.getWidth(),
     );
   }
 }

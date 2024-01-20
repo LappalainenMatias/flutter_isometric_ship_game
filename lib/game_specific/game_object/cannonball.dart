@@ -15,24 +15,24 @@ import 'game_object_to_rendering_data.dart';
 import '../../foundation/game_object/game_object.dart';
 
 class Cannonball extends DynamicGameObject with Damage, Animation {
-  IsoCoordinate isoCoordinate = const IsoCoordinate(0, 0);
+  IsoCoordinate _isoCoordinate;
   Projectile projectile;
-  double elevation = 0.0;
-  double width;
+  double _elevation = 0.0;
+  double _width;
   bool _isVisible = true;
   late CollisionBox collisionBox;
   final int _id;
 
   Cannonball(
-    this.isoCoordinate,
-    this.elevation,
-    this.width,
+    this._isoCoordinate,
+    this._elevation,
+    this._width,
     this.projectile,
     this._id,
   ) {
     animationParts = animationCanonBall;
     animationLengthInSeconds = 0.25;
-    collisionBox = CollisionBox(isoCoordinate, width, elevation);
+    collisionBox = CollisionBox(_isoCoordinate, _width, _elevation);
   }
 
   @override
@@ -42,12 +42,12 @@ class Cannonball extends DynamicGameObject with Damage, Animation {
 
   @override
   double getElevation() {
-    return elevation;
+    return _elevation;
   }
 
   @override
   IsoCoordinate getIsoCoordinate() {
-    return isoCoordinate;
+    return _isoCoordinate;
   }
 
   @override
@@ -67,13 +67,8 @@ class Cannonball extends DynamicGameObject with Damage, Animation {
   }
 
   @override
-  ({double distance, double elevation}) nearness() {
-    /// Todo this implentation differs from other implementations. It does not show because cannonballs destroy themselves after collision.
-    Point point = isoCoordinate.toPoint();
-    return (
-      distance: -1 * (point.x + point.y + width).toDouble(),
-      elevation: elevation
-    );
+    ({double distance, double elevation}) nearness() {
+    return (distance: _isoCoordinate.isoY, elevation: _elevation);
   }
 
   @override
@@ -83,8 +78,6 @@ class Cannonball extends DynamicGameObject with Damage, Animation {
 
   @override
   CollisionBox getCollisionBox() {
-    // We update collision box every frame because cannonballs move a lot.
-    collisionBox.update(isoCoordinate, width, elevation);
     return collisionBox;
   }
 
@@ -93,15 +86,13 @@ class Cannonball extends DynamicGameObject with Damage, Animation {
     return _id;
   }
 
-  static defaultCannonball(int id) {
-    return Cannonball(const IsoCoordinate(0, 0), 0, 0,
-        Projectile(const IsoCoordinate(0, 0), 5), id);
-  }
-
   @override
   void setIsoCoordinate(IsoCoordinate isoCoordinate) {
-    this.isoCoordinate = isoCoordinate.copy();
+    _isoCoordinate = isoCoordinate;
+    collisionBox.update(_isoCoordinate, _width, _elevation);
   }
+
+  double getWidth() => _width;
 }
 
 class Projectile {
@@ -120,16 +111,18 @@ class Projectile {
       return;
     }
     _flyingTimeSeconds -= dt;
-    cannonball.isoCoordinate += unitVector * dt * speed;
+    cannonball.setIsoCoordinate(
+        cannonball.getIsoCoordinate() + unitVector * dt * speed);
   }
 }
 
 /// Shoots a cannonball from a ship to the target
 void shootCannonball(GameMap gameMap, IsoCoordinate target, Ship shooter) {
-  var unitVectorFromPlayerToTarget = (target - shooter.getIsoCoordinate()).toUnitVector();
+  var unitVectorFromPlayerToTarget =
+      (target - shooter.getIsoCoordinate()).toUnitVector();
   var cannonball = Cannonball(
     shooter.getIsoCoordinate(),
-    shooter.elevation,
+    shooter.getElevation(),
     1,
     Projectile(unitVectorFromPlayerToTarget, shooter.bulletFlightSeconds),
     getRandomId(),

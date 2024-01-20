@@ -9,9 +9,9 @@ import '../rendering_data/rendering_data.dart';
 RenderingData underWater,
 RenderingData aboveWater,
 int amountVisible
-}) regionToDrawingDTO(
-    List<GameObject> sortedStaticGameObjects, List<GameObject> sortedDynamicGameObjects) {
-
+})
+regionToDrawingDTO(List<GameObject> sortedStaticGameObjects,
+    List<GameObject> sortedDynamicGameObjects) {
   int staticIndex = 0;
   int dynamicIndex = 0;
   int amountAboveWater = 0;
@@ -19,12 +19,15 @@ int amountVisible
   int amountVisible = 0;
 
   // Calculate sizes first
-  while (staticIndex < sortedStaticGameObjects.length || dynamicIndex < sortedDynamicGameObjects.length) {
+  while (staticIndex < sortedStaticGameObjects.length ||
+      dynamicIndex < sortedDynamicGameObjects.length) {
     GameObject nextObject;
 
     // Check if we are still within both lists
-    if (staticIndex < sortedStaticGameObjects.length && dynamicIndex < sortedDynamicGameObjects.length) {
-      if (sortedStaticGameObjects[staticIndex].compareTo(sortedDynamicGameObjects[dynamicIndex]) <= 0) {
+    if (staticIndex < sortedStaticGameObjects.length &&
+        dynamicIndex < sortedDynamicGameObjects.length) {
+      if (sortedStaticGameObjects[staticIndex].compareTo(
+          sortedDynamicGameObjects[dynamicIndex]) <= 0) {
         nextObject = sortedStaticGameObjects[staticIndex];
         staticIndex++;
       } else {
@@ -44,9 +47,15 @@ int amountVisible
     // Count visible, above water, and under water objects
     if (nextObject.isVisible()) {
       if (nextObject.isUnderWater()) {
-        amountUnderWater += nextObject.getDrawingData().rSTTransforms.length;
+        amountUnderWater += nextObject
+            .getDrawingData()
+            .rSTTransforms
+            .length;
       } else {
-        amountAboveWater += nextObject.getDrawingData().rSTTransforms.length;
+        amountAboveWater += nextObject
+            .getDrawingData()
+            .rSTTransforms
+            .length;
       }
       amountVisible++;
     }
@@ -66,12 +75,15 @@ int amountVisible
 
   // Process each object to fill the Float32Lists
   // Similar logic as above, but now copying data to Float32Lists
-  while (staticIndex < sortedStaticGameObjects.length || dynamicIndex < sortedDynamicGameObjects.length) {
+  while (staticIndex < sortedStaticGameObjects.length ||
+      dynamicIndex < sortedDynamicGameObjects.length) {
     GameObject nextObject;
 
     // Choose the next GameObject
-    if (staticIndex < sortedStaticGameObjects.length && dynamicIndex < sortedDynamicGameObjects.length) {
-      if (sortedStaticGameObjects[staticIndex].compareTo(sortedDynamicGameObjects[dynamicIndex]) <= 0) {
+    if (staticIndex < sortedStaticGameObjects.length &&
+        dynamicIndex < sortedDynamicGameObjects.length) {
+      if (sortedStaticGameObjects[staticIndex].compareTo(
+          sortedDynamicGameObjects[dynamicIndex]) <= 0) {
         nextObject = sortedStaticGameObjects[staticIndex];
         staticIndex++;
       } else {
@@ -100,6 +112,83 @@ int amountVisible
       aboveRects.setAll(aboveIndex, data.rects);
       aboveIndex += data.rSTTransforms.length;
     }
+  }
+
+  return (
+      underWater: RenderingData(underRst, underRects),
+  aboveWater: RenderingData(aboveRst, aboveRects),
+  amountVisible:
+  amountVisible
+  ,
+  );
+}
+
+/// This function currently is the bottleneck of the game. So performance here is very important.
+regionToDrawingDTO2({required List<GameObject> staticUnderWater,
+    required List<GameObject> staticAboveWater, required List<GameObject> dynamicUnderWater,
+    required List<GameObject> dynamicAboveWater}) {
+
+  int amountVisible = 0;
+  var aboveRst = Float32List(staticAboveWater.length * 4 + dynamicAboveWater.length * 4);
+  var aboveRects = Float32List(staticAboveWater.length * 4 + dynamicAboveWater.length * 4);
+  int staticIndex = 0;
+  int dynamicIndex = 0;
+  int aboveIndex = 0;
+  int staticAboveWaterLength = staticAboveWater.length;
+  int dynamicAboveWaterLength = dynamicAboveWater.length;
+  while (staticIndex < staticAboveWaterLength || dynamicIndex < dynamicAboveWaterLength) {
+    GameObject nextObject;
+    bool fromStatic = staticIndex < staticAboveWaterLength &&
+        (dynamicIndex >= dynamicAboveWaterLength ||
+            staticAboveWater[staticIndex].compareTo(
+                dynamicAboveWater[dynamicIndex]) <= 0);
+
+    if (fromStatic) {
+      nextObject = staticAboveWater[staticIndex++];
+    } else {
+      nextObject = dynamicAboveWater[dynamicIndex++];
+    }
+
+    if (!nextObject.isVisible()) continue;
+
+    var data = nextObject.getDrawingData();
+
+    aboveRst.setAll(aboveIndex, data.rSTTransforms);
+    aboveRects.setAll(aboveIndex, data.rects);
+    aboveIndex += data.rSTTransforms.length;
+
+    amountVisible++;
+  }
+
+  var underRst = Float32List(staticUnderWater.length * 4 + dynamicUnderWater.length * 4);
+  var underRects = Float32List(staticUnderWater.length * 4 + dynamicUnderWater.length * 4);
+  staticIndex = 0;
+  dynamicIndex = 0;
+  int underIndex = 0;
+  int staticUnderWaterLength = staticUnderWater.length;
+  int dynamicUnderWaterLength = dynamicUnderWater.length;
+  while (staticIndex < staticUnderWaterLength || dynamicIndex < dynamicUnderWaterLength) {
+    GameObject nextObject;
+    bool fromStatic = staticIndex < staticUnderWaterLength &&
+      (dynamicIndex >= dynamicUnderWaterLength ||
+        staticUnderWater[staticIndex].compareTo(
+        dynamicUnderWater[dynamicIndex]) <= 0);
+
+    if (fromStatic) {
+      nextObject = staticUnderWater[staticIndex++];
+    } else {
+      nextObject = dynamicUnderWater[dynamicIndex++];
+    }
+
+    if (!nextObject.isVisible()) continue;
+
+    var data = nextObject.getDrawingData();
+
+    underRst.setAll(underIndex, data.rSTTransforms);
+    underRects.setAll(underIndex, data.rects);
+    underIndex += data.rSTTransforms.length;
+
+    amountVisible++;
   }
 
   return (

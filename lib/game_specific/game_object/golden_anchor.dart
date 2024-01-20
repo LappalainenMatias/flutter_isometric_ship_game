@@ -106,4 +106,6 @@ class GoldenAnchor extends Collectable with Animation {
       collector.collectedGoldAnchors += 1;
     }
   }
+
+  double getWidth() => width;
 }

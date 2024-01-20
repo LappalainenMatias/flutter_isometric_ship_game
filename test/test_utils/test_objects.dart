@@ -1,5 +1,3 @@
-
-
 import 'package:anki/foundation/camera/default_camera.dart';
 import 'package:anki/foundation/coordinates/iso_coordinate.dart';
 import 'package:anki/foundation/game_object/game_object.dart';
@@ -11,7 +9,7 @@ import 'package:anki/game_specific/terrain/terrain_creation_rules.dart';
 class TestDynamicObject extends Ship {
   bool wasUpdated = false;
 
-  TestDynamicObject(super.isoCoordinate, super.elevation, super._id);
+  TestDynamicObject(super.isoCoordinate, super.elevation, super._id, super._map);
 
   @override
   update(double dt) {
@@ -30,18 +28,8 @@ class TestData {
 
 class TestMapCreationRules implements TerrainCreationRules {
   @override
-  double amountOfWater() {
-    return 0.5;
-  }
-
-  @override
   double frequency() {
     return 0.008;
-  }
-
-  @override
-  double terrainSharpness() {
-    return 3;
   }
 
   @override
@@ -54,24 +42,30 @@ class TestMapCreationRules implements TerrainCreationRules {
   }
 
   @override
-  double maxElevation() {
-    return 20;
+  double elevationTransformation(double e, int x, int y) {
+    return e;
   }
 
   @override
-  double minElevation() {
-    return -20;
+  int getSeed() {
+    // TODO: implement getSeed
+    throw UnimplementedError();
+  }
+
+  @override
+  void setSeed(int seed) {
+    // TODO: implement setSeed
   }
 }
 
 
 class TestCamera extends DefaultCamera {
   @override
-  var topLeft = IsoCoordinate.fromIso(0, 0);
+  var topLeft = const IsoCoordinate.fromIso(0, 0);
 
 
   @override
-  var bottomRight = IsoCoordinate.fromIso(0, 0);
+  var bottomRight = const IsoCoordinate.fromIso(0, 0);
 
   @override
   double width() {
